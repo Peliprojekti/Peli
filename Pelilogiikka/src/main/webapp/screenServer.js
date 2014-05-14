@@ -9,7 +9,14 @@ module.exports = new function() {
 			if (request.method !== ("GET")) {
 				return response.end("Simple File Server, only does GET");
 			}
-			fs.createReadStream(__dirname + MAIN_HTML).pipe(response);
+
+			var filename = __dirname + MAIN_HTML;
+			if (request.url == "/javascript/screenComs.js") {
+				console.log("Sending javascript");
+				filename = __dirname + "/.." + request.url;
+			}
+
+			fs.createReadStream(filename).pipe(response);
 		});
 		return server;
 	}
