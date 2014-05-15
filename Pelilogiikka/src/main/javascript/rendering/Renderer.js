@@ -58,15 +58,19 @@
       
         // Pass the matrices to the GPU
         
-        var worldMatrix = myEntity.get_WorldTransformation();         
+        var worldMatrix = myEntity.get_Transformation();// myEntity.get_WorldTransformation();         
         var viewMatrix  = myCamera.get_ViewMatrix(); 
            
+           
+        var worldViewMatrix =  mat4.multiply( viewMatrix , worldMatrix  );
       
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix);
-        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  mat4.multiply( worldMatrix , viewMatrix  )      );
+        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix      );
 
         // Render the entity
         myEntity.draw( this.gl , this.view_Matrix );
         
         this.end();
      }
+     
+     
