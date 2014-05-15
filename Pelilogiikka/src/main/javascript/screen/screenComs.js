@@ -1,4 +1,5 @@
 
+/*
 window.onload = function() { 
 	var socket = io.connect('http://localhost:1339');
 
@@ -10,4 +11,5 @@ window.onload = function() {
 		logWindow.innerHTML = (data.xCoordinate + "<br />" + logWindow.innerHTML);
 	});
 };
+*/
 
