@@ -14,10 +14,12 @@
 
 <script type="text/javascript" src="Material.js"     ></script>
 <script type="text/javascript" src="Texture.js"      ></script>
+
 <script type="text/javascript" src="Buffer.js"       ></script>
 <script type="text/javascript" src="Mesh.js"         ></script>
 <script type="text/javascript" src="Entity.js"       ></script>
 <script type="text/javascript" src="Camera.js"       ></script>
+<script type="text/javascript" src="HUD_Item.js"     ></script>
 
 <script type="text/javascript" src="testCube.js"     ></script>
 
@@ -53,20 +55,71 @@
 </script>
 
 
+
+<script id="HAX_VS" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    attribute vec2 aTextureCoord;
+    
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec2 vTextureCoord;
+    
+    void main(void) 
+    {
+        gl_Position   = uMVMatrix * vec4(aVertexPosition, 1.0);
+        vTextureCoord = aTextureCoord;
+    }
+</script>
+
+
+   
+<script id="HAX_PS" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec2 vTextureCoord;
+    uniform sampler2D uSampler;
+  
+    
+    void main(void) 
+    {
+        vec4 texel_Color = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        gl_FragColor = vec4(texel_Color.rgb , texel_Color.a * 1.0);
+    }
+</script>
+
+
+
+
+
+
+
 <script type="text/javascript">
 
     var myEntity   = null;
     var renderer   = null;    
     var myCamera   = null;
+    
+    var myGui      = null;
   
     var counter    =    0;
-    var dir        =    1
+    var dir        =    1;
+    
+    
+    
     
     function colorHax()
     {
         if( counter > 120 || counter < -120 )   dir *= -1;
         counter += dir;
         renderer.fillColor[2] = 0.5 + counter/250.0;
+
+        var tmp = 0.5 + Math.abs( (counter / 240));
+       
+   //     myGui.scale( [tmp,tmp,tmp]);
+        
+        var tmp2 = counter/100000;
+        //myGui.move( [tmp2,0,0] );
     }
     
     
@@ -88,14 +141,22 @@
         if( key_Down( 37 ) )   myCamera.yaw( 0.05  );
         if( key_Down( 39 ) )   myCamera.yaw( -0.05 );
           
-        if( key_Down( 38 ) )    myCamera.forward( 0.5 );
+        if( key_Down( 38 ) )    myCamera.forward( 0.5 );  
         if( key_Down( 40 ) )   myCamera.backward( 0.5 );
         
-          
-        renderer.begin();
+         
         
+        renderer.begin();
+             
+            renderer.bind_Camera( myCamera );
+            
             // All drawing is to be done here.
-            renderer.draw_Scene(  myEntity, myCamera );    
+            renderer.draw( myEntity );
+            
+            renderer.begin_Blending();
+            renderer.draw_SS( myGui );
+            renderer.end_Blending();
+        
         
         renderer.end();
     }
@@ -113,9 +174,13 @@
         myEntity       =    test_Cube( renderer.gl , myMaterial                      );             
         myCamera       = new   Camera(                                               );
        
-     //   myKeyboard.register_Keyevent( turn_Left(),  37 );
-     //   myKeyboard.register_Keyevent( turn_Right, 37 );
+       
+        var ortShader   = new Shader(  renderer.gl, "HAX_VS", "HAX_PS");
+        var crosshair   = new Texture( renderer.gl, "data/crosshair1.png"            );
+        var guiMaterial = new Material( ortShader, crosshair );
         
+         myGui          = new test_Rectangle( renderer.gl, guiMaterial, [0.08,0.08] );
+         myGui.set_Position( [ 0.0,0.0,0]);                                                 // NOTE! In homogenous screen space! <  -1------+1 >
         document.onkeydown = kbDown_Event;
         document.onkeyup   = kbUp_Event; 
         

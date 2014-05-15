@@ -1,6 +1,28 @@
  
  
- 
+   function test_Rectangle( gl, material, dimensions )
+   {
+    this.width  = dimensions[0];
+    this.height = dimensions[1];
+  
+    
+    var vertices      = [ -this.width,  this.height, 0,   // Top left
+                           this.width,  this.height, 0,   // Top Right
+                           this.width, -this.height, 0,   // Bottom Right
+                          -this.width, -this.height, 0 ]; // Bottom left
+       
+    var indices       = [ 0, 1, 2, 2, 3, 0 ];
+                  
+    var texCoords     = [ 0.0, 0.0, 
+                          1.0, 0.0, 
+                          1.0, 1.0, 
+                          0.0, 1.0 ];   
+                 
+    var rectMesh = new Mesh  ( gl, vertices, indices, texCoords );     
+    var rect     = new Entity( rectMesh, material );
+      
+    return rect; 
+    };
  
  
     function test_Cube( gl, material ) 

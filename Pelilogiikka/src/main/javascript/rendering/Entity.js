@@ -5,7 +5,7 @@
         this.mesh         = mesh;
         this.material     = material;              
         
-        this.position     = [0,0,-15];
+        this.position     = [0,0,0];
         this.scales       = [1,1,1];
         this.angle_Yaw    = 0;
         this.angle_Pitch  = 0;
@@ -27,8 +27,10 @@
                                      
     return  world;
     */
+     
       var worldMatrix = mat4.create();
                         mat4.identity( worldMatrix );
+                        mat4.scale(  worldMatrix, this.scales, worldMatrix );
         
         
          mat4.translate( worldMatrix, [  this.position[0], 
@@ -41,24 +43,13 @@
          mat4.rotate(worldMatrix,  this.angle_Roll,  [0, 0, 1] );
          
          
-
-                   
+      
                
     
     return worldMatrix;
     }
     
-           
-    Entity.prototype.draw = function( gl )
-    {
-        this.mesh.vertices.bind ( gl, this.material.shader.shaderProgram.vertexPositionAttribute );    
-        this.mesh.texCoords.bind( gl, this.material.shader.shaderProgram.textureCoordAttribute   );
-              this.material.bind( gl, gl.TEXTURE0                                                );
-        
-          gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mesh.indices.data );    
-        gl.drawElements(gl.TRIANGLES, this.mesh.indices.data.numItems, gl.UNSIGNED_SHORT, 0);
-    }
-              
+
        
        
        
@@ -95,4 +86,18 @@
 	this.scales[0] = axes[0];
         this.scales[1] = axes[1];
         this.scales[2] = axes[2];    
+    }     
+    
+    
+    Entity.prototype.draw = function( gl )
+    {
+        /*
+        this.mesh.vertices.bind ( gl, this.material.shader.shaderProgram.vertexPositionAttribute );    
+        this.mesh.texCoords.bind( gl, this.material.shader.shaderProgram.textureCoordAttribute   );
+        this.material.bind( gl, gl.TEXTURE0                                                );
+        
+          gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mesh.indices.data );    
+        gl.drawElements(gl.TRIANGLES, this.mesh.indices.data.numItems, gl.UNSIGNED_SHORT, 0);
+        */
     }
+              

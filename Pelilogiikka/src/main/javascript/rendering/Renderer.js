@@ -3,7 +3,8 @@
     
     function Renderer( canvas )
     {
-        this.gl = null;
+        this.gl     = null;
+        this.camera = null;
         
         try 
         {
@@ -30,8 +31,9 @@
      mat4.identity( this.view_Matrix       );
       
       
-       this.gl.enable(this.gl.DEPTH_TEST);
-    }
+     this.gl.enable(this.gl.DEPTH_TEST);                /// ELSEWHERE!
+     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE); //  ANYWHERE ELSE!  
+     }
 
 
     Renderer.prototype.begin = function()
@@ -52,25 +54,81 @@
     }
 
 
-    Renderer.prototype.draw_Scene = function(  myEntity, myCamera   )
+    Renderer.prototype.draw = function(  myEntity  )
     {
-        var shaderProgram = myEntity.material.shader.shaderProgram;
-      
-        // Pass the matrices to the GPU
         
-        var worldMatrix = myEntity.get_Transformation();// myEntity.get_WorldTransformation();         
-        var viewMatrix  = myCamera.get_ViewMatrix(); 
-           
+        var shaderProgram = myEntity.material.shader.shaderProgram;
+        var worldMatrix   = myEntity.get_Transformation();       
+        var viewMatrix    = this.camera.get_ViewMatrix(); 
            
         var worldViewMatrix =  mat4.multiply( viewMatrix , worldMatrix  );
+     
+        myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
       
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix);
         this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix      );
-
-        // Render the entity
-        myEntity.draw( this.gl , this.view_Matrix );
         
-        this.end();
+        myEntity.mesh.vertices.bind ( this.gl, myEntity.material.shader.shaderProgram.vertexPositionAttribute );    
+        myEntity.mesh.texCoords.bind( this.gl, myEntity.material.shader.shaderProgram.textureCoordAttribute   );
+                                                  
+        
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, myEntity.mesh.indices.data );    
+        this.gl.drawElements(this.gl.TRIANGLES, myEntity.mesh.indices.data.numItems, this.gl.UNSIGNED_SHORT, 0);
      }
      
      
+     
+     Renderer.prototype.draw_SS = function( myEntity ) 
+     {
+        var shaderProgram   = myEntity.material.shader.shaderProgram;
+        var worldViewMatrix = myEntity.get_Transformation();
+     
+        myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
+      
+        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix);
+        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix      );
+        
+        myEntity.mesh.vertices.bind ( this.gl, myEntity.material.shader.shaderProgram.vertexPositionAttribute );    
+        myEntity.mesh.texCoords.bind( this.gl, myEntity.material.shader.shaderProgram.textureCoordAttribute   );
+                                                  
+        
+          this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, myEntity.mesh.indices.data );    
+        this.gl.drawElements(this.gl.TRIANGLES, myEntity.mesh.indices.data.numItems, this.gl.UNSIGNED_SHORT, 0);
+         
+         
+     }
+     
+     
+     
+     
+     
+     Renderer.prototype.begin_Blending = function()
+     {
+         this.disable_ZBuffer();
+         this.gl.enable(this.gl.BLEND);
+     }
+     
+     Renderer.prototype.end_Blending = function()
+     {
+         this.enable_ZBuffer();
+         this.gl.disable(this.gl.BLEND);
+     }
+     
+     
+     Renderer.prototype.enable_ZBuffer = function()
+     {
+         this.gl.enable(this.gl.DEPTH_TEST);        /// ELSEWHERE!
+     }
+     
+     
+     Renderer.prototype.disable_ZBuffer = function()
+     {
+         this.gl.disable(this.gl.DEPTH_TEST);        /// ELSEWHERE!
+     }
+     
+     Renderer.prototype.bind_Camera = function( cam )
+     {
+         if( !cam ) alert(" Invalid camera bound! ");
+         
+         this.camera = cam;
+     }
