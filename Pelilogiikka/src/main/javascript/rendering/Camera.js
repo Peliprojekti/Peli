@@ -11,15 +11,10 @@
 
     Camera.prototype.get_ViewMatrix = function()
     {
-        var ret = mat4.transpose( this.orientation);    
-         
-       return ret; 
+        var    ret = mat4.transpose( this.orientation);             
+        return ret; 
     }
-    
-    
-    
-    
-  
+     
     Camera.prototype.pitch = function( radians ) 
     {
         mat4.rotate( this.orientation, radians, [1,0,0], 0 );
