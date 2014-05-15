@@ -4,14 +4,17 @@
 <title>Pelumoottori</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
-<script type="text/javascript" src="glMatrix.js"     ></script>
-<script type="text/javascript" src="webglutils.js"   ></script>
-<script type="text/javascript" src="Renderer.js"     ></script>
-<script type="text/javascript" src="Shaderlib.js"    ></script>
-<script type="text/javascript" src="Material.js"     ></script>
-<script type="text/javascript" src="Texture.js"      ></script>
-<script type="text/javascript" src="Mesh.js"         ></script>
-<script type="text/javascript" src="testCube.js"     ></script>
+<script src="http://localhost:1339/socket.io/socket.io.js"> </script>
+<script src="/javascript/common/log.js"> </script>
+<script src="/javascript/screen/screenComs.js"> </script>
+<script type="text/javascript" src="/javascript/rendering/glMatrix.js"     ></script>
+<script type="text/javascript" src="/javascript/rendering/webglutils.js"   ></script>
+<script type="text/javascript" src="/javascript/rendering/Renderer.js"     ></script>
+<script type="text/javascript" src="/javascript/rendering/Shaderlib.js"    ></script>
+<script type="text/javascript" src="/javascript/rendering/Material.js"     ></script>
+<script type="text/javascript" src="/javascript/rendering/Texture.js"      ></script>
+<script type="text/javascript" src="/javascript/rendering/Mesh.js"         ></script>
+<script type="text/javascript" src="/javascript/rendering/testCube.js"     ></script>
 
 
 
@@ -52,28 +55,13 @@
     var myEntity   = null;
     var renderer   = null;
       
-      
-    var counter = 0;
-    var dir     = 1;
+
     
     function tick() 
     {
         requestAnimFrame(tick);
-        
-          myEntity.yaw(0.01);
-          myEntity.roll(0.001);
-          myEntity.pitch(0.025);
-          myEntity.scale( [2,2,2] );
-          
-        if( counter > 120 || counter < -120 )
-        {
-           dir *= -1;
-        } 
-        
-        counter += dir;
-        renderer.fillColor[2] = 0.5 + counter/250.0;
-        
-        myEntity.move( [(dir*0.01), (dir*-0.01), 0 ]);
+            
+     
         renderer.draw_Scene(  myEntity );
     }
     
@@ -85,9 +73,19 @@
         var myTexture  = new  Texture( renderer.gl , "/data/texture.png"              );  
         var myMaterial = new Material( myShader    , myTexture                       );
         myEntity       =    test_Cube( renderer.gl , myMaterial                      );
+        
+        myEntity.move( [0,0,-30] );
+        
+        var socket = io.connect('http://localhost:1339');
+
+	socket.on('message', function(data) 
+        {
+		
+                myEntity.set_Position( [data.xCoordinate/100, data.yCoordinate/100, -15] );             
+        });
+                
+ 
               
-              
-        if(!myMaterial.texture ) alert("Vituixm än");
         tick();     
     }
 

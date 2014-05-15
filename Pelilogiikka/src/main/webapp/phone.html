@@ -1,150 +1,176 @@
 <!DOCTYPE html>
 <html>
-  <head>
-	<title>Layout Example</title>
+    <head>
+        <title>Layout Example</title>
+        <script src="http://localhost:1338/socket.io/socket.io.js"> </script>
+        <script>
 
-	<meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
-	<style type="text/css">
-	  body,html
-	  {
-		  height: 100%;
-		  margin: 0;
-		  padding: 0;
-		  color: black;
-	  }
+            window.onload = function() {
+                var startGameCallback = function(gameStarted, sessionToken) {
 
-	  #container
-	  {
-		  width: 100%;
-		  height: 100%;
-		  overflow: auto;
-		  background: blue;
-	  }
+                };
 
-	  #container canvas {
-		  vertical-align: top;
-		  display: block;
-		  overflow: auto;
-	  }
+                var connectionOkCallback = function(something, isOK) {
+                    //clientComs.startGame(startGameCallback);
+                    startGameCallback(true, 1);
+                };
 
-	</style>
-  </head>
-  <body>
-	<div id="container">
-	  <canvas id="canvas">
-		HTML5 Canvas not supported. 
-	  </canvas>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-	<script type="text/javascript"> 
-	//http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
+                clientComs.initConnection('localhost', '1338', null, true, connectionOkCallback);
+            };
+        </script>
+        <script src="/javascript/client/clientComs.js"></script>
+        <meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+        <style type="text/css">
+            body,html
+            {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                color: black;
+            }
 
-		function doTouchStart(event){
+            #container
+            {
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background: blue;
+            }
 
-		  var x = event.x;
-		  var y = event.y;
+            #container canvas {
+                vertical-align: top;
+                display: block;
+                overflow: auto;
+            }
 
-		  var canvas = document.getElementById("canvas");
-		  canvas_width = canvas.width;
-		  canvas_height = canvas.height;
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <canvas id="canvas">
+                HTML5 Canvas not supported. 
+            </canvas>
+            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+            <script type="text/javascript">
+            //http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
 
-		  x -= canvas.offsetLeft;
-		  y -= canvas.offsetTop;
-		alert("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
-			+ "\ncanvas height: " + canvas_height);
+            function doTouchStart(event) {
 
-		/*	event.preventDefault();
-			canvas_x = event.targetTouches[0].pageX;
-			canvas_y = event.targetTouches[0].pageY;
-			var canvas = document.getElementById("canvas");
-			canvas_width = canvas.width;
-			canvas_height = canvas.height;
-			alert("X=" + canvas_x + " Y=" + canvas_y + "\ncanvas width: " + canvas_width
-			+ " canvas height: " + canvas_height);*/
-		}
+                var x = event.x;
+                var y = event.y;
 
-	  $(function() { // document ready, resize container
+                var canvas = document.getElementById("canvas");
+                canvas_width = canvas.width;
+                canvas_height = canvas.height;
 
-		  var canvas = document.getElementById("canvas");
+                x -= canvas.offsetLeft;
+                y -= canvas.offsetTop;
+                alert("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
+                        + "\ncanvas height: " + canvas_height);
+                
+                clientComs.send({
+                    xCoordinate: x, 
+                    yCoordinate: y,
+                    width: canvas_width,
+                    height: canvas_height
+                    
+                });
+//                clientComs.send("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
+//                        + "\ncanvas height: " + canvas_height);
 
-		 //canvas.addEventListener("touchstart", doTouchStart, false);
-		canvas.addEventListener("click", doTouchStart, false);
+                /*	event.preventDefault();
+                 canvas_x = event.targetTouches[0].pageX;
+                 canvas_y = event.targetTouches[0].pageY;
+                 var canvas = document.getElementById("canvas");
+                 canvas_width = canvas.width;
+                 canvas_height = canvas.height;
+                 alert("X=" + canvas_x + " Y=" + canvas_y + "\ncanvas width: " + canvas_width
+                 + " canvas height: " + canvas_height);*/
+            }
 
-		  var ctx = canvas.getContext("2d");
+            $(function() { // document ready, resize container
 
-		  var rc = 0;  // resize counter
-		  var oc = 0;  // orientiation counter
-		  var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
+                var canvas = document.getElementById("canvas");
 
+                //canvas.addEventListener("touchstart", doTouchStart, false);
+                canvas.addEventListener("click", doTouchStart, false);
 
-		/* function hideAddressBar(){
-		  if(document.documentElement.scrollHeight<window.outerHeight/window.devicePixelRatio)
-		    document.documentElement.style.height=(window.outerHeight/window.devicePixelRatio)+'px';
-		  setTimeout(window.scrollTo(1,1),0);
-		}
-		window.addEventListener("load",function(){hideAddressBar();});
-		window.addEventListener("scroll",function(){hideAddressBar();});
-		window.addEventListener("orientationchange",function(){hideAddressBar();}); */
+                var ctx = canvas.getContext("2d");
+
+                var rc = 0;  // resize counter
+                var oc = 0;  // orientiation counter
+                var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
 
 
-		  function orientationChange() {
-			  // inc orientation counter
-			  oc++;
-		  }
-		  function resizeCanvas() {
-			  // inc resize counter
-			  rc++;
+                /* function hideAddressBar(){
+                 if(document.documentElement.scrollHeight<window.outerHeight/window.devicePixelRatio)
+                 document.documentElement.style.height=(window.outerHeight/window.devicePixelRatio)+'px';
+                 setTimeout(window.scrollTo(1,1),0);
+                 }
+                 window.addEventListener("load",function(){hideAddressBar();});
+                 window.addEventListener("scroll",function(){hideAddressBar();});
+                 window.addEventListener("orientationchange",function(){hideAddressBar();}); */
 
-              if (ios) {
-                  // increase height to get rid off ios address bar
-                  $("#container").height($(window).height() + 60)
-              }
 
-			  var width = $("#container").width();
-			  var height = $("#container").height();
+                function orientationChange() {
+                    // inc orientation counter
+                    oc++;
+                }
+                function resizeCanvas() {
+                    // inc resize counter
+                    rc++;
 
-			  cheight = height
-			  cwidth = width;
+                    if (ios) {
+                        // increase height to get rid off ios address bar
+                        $("#container").height($(window).height() + 60)
+                    }
 
-			  // set canvas width and height
-			  $("#canvas").attr('width', cwidth);
-			  $("#canvas").attr('height', cheight);
+                    var width = $("#container").width();
+                    var height = $("#container").height();
 
-			  // hides the WebKit url bar
-			  if (ios) {
-				  setTimeout(function() {
-					  window.scrollTo(0, 1);
-				  }, 100);   
-			  }
-			  ctx.fillStyle = 'green';
-			  ctx.fillRect(0, 0, cwidth, cheight);
-			  ctx.fillStyle = 'black';
-			  ctx.fillRect(10, 10, cwidth - 20, cheight - 20)
+                    cheight = height
+                    cwidth = width;
 
-			  // write number of orientation changes and resize events
-			  ctx.fillStyle = 'white';
-			  ctx.textAlign = 'center';
-			  ctx.fillText('Orientiation changes: '+oc, cwidth/2, cheight/2);
-			  ctx.fillText('Resize events: '+rc, cwidth/2, cheight/2 + 10);
-		  }
+                    // set canvas width and height
+                    $("#canvas").attr('width', cwidth);
+                    $("#canvas").attr('height', cheight);
 
-          // Install resize and orientation change handlers. Note Android may fire both
-          // resize and orientation changes when rotating.
-		  var resizeTimeout;
-		  $(window).resize(function() {
-			  clearTimeout(resizeTimeout);
-			  resizeTimeout = setTimeout(resizeCanvas, 100);
-		  });
-		  resizeCanvas();
+                    // hides the WebKit url bar
+                    if (ios) {
+                        setTimeout(function() {
+                            window.scrollTo(0, 1);
+                        }, 100);
+                    }
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(0, 0, cwidth, cheight);
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(10, 10, cwidth - 20, cheight - 20)
 
-		  var otimeout;
-		  window.onorientationchange = function() {
-			  clearTimeout(otimeout);
-			  otimeout = setTimeout(orientationChange, 50);
-		  }			  
-	  });
-	</script>
+                    // write number of orientation changes and resize events
+                    ctx.fillStyle = 'white';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Orientiation changes: ' + oc, cwidth / 2, cheight / 2);
+                    ctx.fillText('Resize events: ' + rc, cwidth / 2, cheight / 2 + 10);
+                }
+
+                // Install resize and orientation change handlers. Note Android may fire both
+                // resize and orientation changes when rotating.
+                var resizeTimeout;
+                $(window).resize(function() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(resizeCanvas, 100);
+                });
+                resizeCanvas();
+
+                var otimeout;
+                window.onorientationchange = function() {
+                    clearTimeout(otimeout);
+                    otimeout = setTimeout(orientationChange, 50);
+                }
+            });
+            </script>
         </div>
-  </body>
+    </body>
 </html>

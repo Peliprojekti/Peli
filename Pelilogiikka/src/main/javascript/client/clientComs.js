@@ -1,32 +1,4 @@
 
-window.onload = function() { 
-	var startGameCallback = function(gameStarted, sessionToken) {
-		window.alert("Start ok");
-
-		firstButton = document.getElementById("firstButton");
-		firstButton.count = 0;
-		firstButton.onclick = function() {
-			firstButton.count++;
-			clientComs.send("firstButton pressed " + firstButton.count + " times");
-		}
-
-		secondButton = document.getElementById("secondButton");
-		secondButton.count = 0;
-		secondButton.onclick = function() {
-			secondButton.count++;
-			clientComs.send("secondButton pressed " + secondButton.count + " times");
-		}
-	};
-
-	var connectionOkCallback = function(something, isOK) {
-		window.alert("Connection ok");
-		//clientComs.startGame(startGameCallback);
-		startGameCallback(true, 1);
-	};
-
-	clientComs.initConnection('localhost', '1338', null, true, connectionOkCallback);
-	window.alert("onload done");
-};
 
 var clientComs = {
 	sessionToken: null,

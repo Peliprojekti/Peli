@@ -7,7 +7,7 @@ window.onload = function() {
 
 	socket.on('message', function(data) {
 		console.log(data);
-		logWindow.innerHTML = (data + "<br />" + logWindow.innerHTML);
+		logWindow.innerHTML = (data.xCoordinate + "<br />" + logWindow.innerHTML);
 	});
 };
 

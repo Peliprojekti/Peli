@@ -25,7 +25,7 @@
         }
 
      myTexture.image.src = fileName;       
-     this.data = myTexture;
+     this.data           = myTexture;
     }
     
     

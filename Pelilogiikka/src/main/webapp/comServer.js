@@ -28,7 +28,7 @@ module.exports = new function() {
 			//console.log("NEW CLIENT CONNECTED");
 			
 			socket.on('message', function(data) {
-				sendToScreen('message', data);
+				sendToScreen(data);
 			});
 
 			socket.on('firstButton', function(data) {

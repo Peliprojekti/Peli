@@ -20,7 +20,7 @@
        
        
        
-     this.fillColor = [0.0,0.0,0.0,1.0];
+     this.fillColor = [0.0,1.0,0.0,1.0];
      
      // These two belong into a separate CAMERA class!
      // Declare projection matrix
