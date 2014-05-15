@@ -54,6 +54,8 @@
 		<sourceIncludes>
 			<include>jquery-2.1.0.min.js</include>
 			<include>*.js</include>
+			<include>rendering/*.js</include>
+			<include>common/*.js</include>
 		</sourceIncludes>
 	</configuration>
       </plugin>
