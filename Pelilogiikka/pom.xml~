@@ -50,7 +50,6 @@
           </execution>
         </executions>
 	<configuration>
-		<keepServerAlive>true</keepServerAlive>
 		<sourceIncludes>
 			<include>jquery-2.1.0.min.js</include>
 			<include>*.js</include>
