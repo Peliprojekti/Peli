@@ -50,9 +50,13 @@
           </execution>
         </executions>
 	<configuration>
+		<keepServerAlive>true</keepServerAlive>
 		<sourceIncludes>
 			<include>jquery-2.1.0.min.js</include>
 			<include>*.js</include>
+			<include>rendering/*.js</include>
+			<include>common/*.js</include>
+			<include>screen/*.js</include>
 		</sourceIncludes>
 	</configuration>
       </plugin>
