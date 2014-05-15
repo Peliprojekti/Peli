@@ -52,31 +52,30 @@
     var myEntity   = null;
     var renderer   = null;    
     var counter    =    0;
-    var dir        =    1;
-
+    var dir        =    1
     var myCamera   = null;
+    
+    
+    
+    
+    function colorHax()
+    {
+        if( counter > 120 || counter < -120 )   dir *= -1;
+         counter += dir;
+        renderer.fillColor[2] = 0.5 + counter/250.0;
+    }
+    
+    
     
     
     function tick() 
     {
-        requestAnimFrame(tick);
-             
-        myEntity.yaw(0.01);
-        myEntity.roll(0.001);
-        myEntity.pitch(0.025);
-        myEntity.scale( [2,2,2] );
-          
-        if( counter > 120 || counter < -120 )
-        {
-           dir *= -1;
-        } 
+       requestAnimFrame(tick);
+  
+       colorHax();
         
         myCamera.yaw( 0.01 );
-          
-        counter += dir;
-        renderer.fillColor[2] = 0.5 + counter/250.0;
         
-        myEntity.move( [(dir*0.01), (dir*-0.01), 0 ]);
         renderer.draw_Scene(  myEntity, myCamera );
     }
     

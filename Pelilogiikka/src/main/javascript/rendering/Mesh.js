@@ -110,6 +110,5 @@
     {
 	this.scales[0] = axes[0];
         this.scales[1] = axes[1];
-        this.scales[2] = axes[2];
-        
+        this.scales[2] = axes[2];    
     }
