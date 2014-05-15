@@ -24,6 +24,8 @@ module.exports = new function() {
 		});
 
 		clientio.sockets.on('connection', function(socket) {
+			console.log("NEW CLIENT CONNECTED");
+
 			socket.on('firstButton', function(data) {
 				console.log("Sending to screen");
 				console.log(data);
