@@ -11,7 +11,7 @@ function sendToScreen(data) {
 		return;
 	}
 
-	screenSocket.emit('button', data);
+	screenSocket.emit('message', data);
 }
 
 module.exports = new function() {
@@ -24,7 +24,12 @@ module.exports = new function() {
 		});
 
 		clientio.sockets.on('connection', function(socket) {
+			socket.emit('open', null);
 			//console.log("NEW CLIENT CONNECTED");
+			
+			socket.on('message', function(data) {
+				sendToScreen('message', data);
+			});
 
 			socket.on('firstButton', function(data) {
 				//console.log("Sending to screen");

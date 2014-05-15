@@ -5,9 +5,9 @@ window.onload = function() {
 	logWindow = document.getElementById("logWindow");
 	logWindow.innerHTML += ("logging initialized...<br />");
 
-	socket.on('button', function(data) {
+	socket.on('message', function(data) {
 		console.log(data);
-		logWindow.innerHTML += (data + "<br />");
+		logWindow.innerHTML = (data + "<br />" + logWindow.innerHTML);
 	});
 };
 
