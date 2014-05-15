@@ -147,19 +147,17 @@
         if( key_Down( 37 ) )   myCamera.yaw( 0.05  );
         if( key_Down( 39 ) )   myCamera.yaw( -0.05 );
           
-        if( key_Down( 38 ) )    myCamera.forward( 0.5 );  
+        if( key_Down( 38 ) )   myCamera.forward( 0.5 );  
         if( key_Down( 40 ) )   myCamera.backward( 0.5 );
         
         
         if( key_Down( 33 ) )   myCamera.pitch( 0.008 );
         if( key_Down( 34 ) )   myCamera.pitch( -0.008 );
          
+        renderer.bind_Camera( myCamera );
         
-        renderer.begin();
-             
-            renderer.bind_Camera( myCamera );
+        renderer.begin();   // All drawing is to be done here.
             
-            // All drawing is to be done here.
             renderer.draw( myCube );
             renderer.draw( mySphere );
             
@@ -167,13 +165,11 @@
             renderer.draw( myCube );
             myCube.move( [0,-5,0] );            // FILTHY HAX. get push/pop
             
-            
             renderer.begin_Blending();
             renderer.draw_SS( myCrosshair );
             renderer.end_Blending();
         
-        
-        renderer.end();
+        renderer.end();     // All drawing is to be done here.
     }
     
     
@@ -182,11 +178,8 @@
     {
        var w2 = renderer.target_Width  / 2;
        var h2 = renderer.target_Height / 2;
-       
-       var x  =  ( hPoint[0] - w2  )     / w2;
-       var y  =  (  h2 - hPoint[1] )     / h2; 
-        
-          // y += 0.5;
+       var x  =  ( hPoint[0] - w2  )   / w2;
+       var y  =  (  h2 - hPoint[1] )   / h2; 
        return [x,y,0];
     }
     
@@ -194,28 +187,29 @@
     
     function Start() 
     {  
-        renderer       = new Renderer( document.getElementById("Canvas")             );
-        var myShader   = new   Shader( renderer.gl , "vertex_Shader", "pixel_Shader" );
-        var myTexture  = new  Texture( renderer.gl , "data/texture.png"              );  
-        var myMaterial = new Material( myShader    , myTexture                       );
-        myCube         = test_Cube( renderer.gl , myMaterial                      );             
-        myCube.set_Position( [0,-1.5,-3] );
-        myCamera       = new   Camera(                                               );
+        renderer        = new Renderer( document.getElementById("Canvas")             );
+        myCamera        = new   Camera(                                               );
        
-        myCamera.set_Position( [0,1.1,0]);
-       
-        var ortShader   = new Shader(  renderer.gl, "HAX_VS", "HAX_PS");
-        var crosshair   = new Texture( renderer.gl, "data/crosshair1.png"            );
-        var guiMaterial = new Material( ortShader, crosshair );
+        var myShader    = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"  );
+        var ortShader   = new  Shader(  renderer.gl, "HAX_VS", "HAX_PS"               );
         
-        myCrosshair    = new test_Rectangle( renderer.gl, guiMaterial, [0.08,0.08] );
-         
-        var earthTex   = new Texture( renderer.gl, "data/earth.png" );
-        var earthMat   = new Material( myShader, earthTex           );
-        mySphere       = new test_Sphere( renderer.gl, earthMat     );
-        mySphere.set_Position( [0,1,-3])
+        var myTexture   = new Texture( renderer.gl , "data/texture.png"               );  
+        var crosshair   = new Texture( renderer.gl, "data/crosshair1.png"             );
+        var earthTex    = new Texture( renderer.gl, "data/earth.png"                  );
+        
+        var myMaterial  = new Material( myShader , myTexture                          );               
+        var guiMaterial = new Material( ortShader, crosshair                          );
+        var earthMat    = new Material( myShader , earthTex                           );
        
-        myCrosshair.set_Position( Map_To_Screen( renderer, [600,400] ) );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+        myCube          = test_Cube     ( renderer.gl , myMaterial                    ); 
+        mySphere        = test_Sphere   ( renderer.gl, earthMat                       );
+        myCrosshair     = test_Rectangle( renderer.gl, guiMaterial, [0.08,0.08]       );
+        
+             myCube.set_Position( [0,-1.5,-3]                            );
+           myCamera.set_Position( [0, 1.1, 0]                            );
+           mySphere.set_Position( [0, 1.0,-3]                            );
+        myCrosshair.set_Position( Map_To_Screen( renderer, [600,400] )   );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       
         document.onkeydown = kbDown_Event;
         document.onkeyup   = kbUp_Event; 
         
