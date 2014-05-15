@@ -138,7 +138,7 @@
         colorHax();
         requestAnimFrame(tick);
      
-        myCube.yaw( 0.012 );
+     //   myCube.yaw( 0.012 );
       //  myCube.roll ( 0.015 );
         
         mySphere.roll( 0.001   );
@@ -161,8 +161,12 @@
             
             // All drawing is to be done here.
             renderer.draw( myCube );
-            
             renderer.draw( mySphere );
+            
+            myCube.move( [0,5,0] );
+            renderer.draw( myCube );
+            myCube.move( [0,-5,0] );            // FILTHY HAX. get push/pop
+            
             
             renderer.begin_Blending();
             renderer.draw_SS( myCrosshair );
