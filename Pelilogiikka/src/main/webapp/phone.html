@@ -2,8 +2,10 @@
 <html>
     <head>
         <title>Layout Example</title>
-        <script src="http://localhost:1338/socket.io/socket.io.js"> </script>
-        <script>
+       <!--  <script src="http://localhost:1338/socket.io/socket.io.js"> </script>-->
+	<script type="text/javascript" src="swipe.js"> </script>
+	
+      <script>/*  
 
             window.onload = function() {
                 var startGameCallback = function(gameStarted, sessionToken) {
@@ -16,9 +18,9 @@
                 };
 
                 clientComs.initConnection('localhost', '1338', null, true, connectionOkCallback);
-            };
+            };*/
         </script>
-        <script src="/javascript/client/clientComs.js"></script>
+      <!-- <script src="/javascript/client/clientComs.js"></script> -->
         <meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
@@ -56,7 +58,7 @@
             <script type="text/javascript">
             //http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
 
-            function doTouchStart(event) {
+            function doClick(event) {
 
                 var x = event.x;
                 var y = event.y;
@@ -70,7 +72,7 @@
                 alert("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
                         + "\ncanvas height: " + canvas_height);
                 
-                clientComs.send({
+           /*     clientComs.send({
                     xCoordinate: x, 
                     yCoordinate: y,
                     width: canvas_width,
@@ -89,13 +91,74 @@
                  alert("X=" + canvas_x + " Y=" + canvas_y + "\ncanvas width: " + canvas_width
                  + " canvas height: " + canvas_height);*/
             }
+		function getFingerCoords(id) {
+			canvas_x = event.targetTouches[id].pageX;
+ 			canvas_y = event.targetTouches[id].pageY;
+			return [canvas_x, canvas_y];
+		}
+
+		function updateCoordinatesText(x, y){
+			var canvasDimensions = getCanvasDimensions();		
+	
+			drawText("Coordinates: (" + x + ", " + y + ")", 2);
+			drawText("Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1], 3);
+		}
+
+		function updateStartCoordinatesText(x, y){
+			var canvasDimensions = getCanvasDimensions();		
+	
+			drawText("Start coordinates: (" + x + ", " + y + ")", 6);
+		}
+
+		function updateStartTimeText(time) {
+			drawText("Start time: " + time, 4);
+		}
+
+		function updateCurrentTimeText(time) {
+			drawText("Current time: " + time, 5);
+		}
+
+		var texts = new Array();
+		function drawText(text, id){
+			var canvasDimensions = getCanvasDimensions();
+
+			drawBackground();
+
+			ctx.fillStyle = 'white';
+                   	ctx.textAlign = 'center';
+			
+			texts[id] = text;
+
+			var offset = 0;
+
+			texts.forEach(function(entry) {
+    				ctx.fillText(entry, canvasDimensions[0] / 2, canvasDimensions[1] / 2 + offset);
+				offset += 10;
+			});
+			
+		}
+
+		function drawBackground(){
+			ctx.fillStyle = 'green';
+		        ctx.fillRect(0, 0, width, height);
+		        ctx.fillStyle = 'black';
+		        ctx.fillRect(10, 10, width - 20, height - 20);
+		}
+
+		function getCanvasDimensions() {
+			canvas = document.getElementById("canvas");
+			ctx = canvas.getContext("2d");
+			width = canvas.width;
+			height = canvas.height;
+
+			return [width, height];
+		}
+
+
 
             $(function() { // document ready, resize container
-
-                var canvas = document.getElementById("canvas");
-
-                //canvas.addEventListener("touchstart", doTouchStart, false);
-                canvas.addEventListener("click", doTouchStart, false);
+                //canvas.addEventListener("click", doClick, false);
+		var canvas = initCanvas();
 
                 var ctx = canvas.getContext("2d");
 
@@ -119,40 +182,33 @@
                     oc++;
                 }
                 function resizeCanvas() {
-                    // inc resize counter
-                    rc++;
+			// inc resize counter
+			rc++;
 
-                    if (ios) {
-                        // increase height to get rid off ios address bar
-                        $("#container").height($(window).height() + 60)
-                    }
+			if (ios) {
+			// increase height to get rid off ios address bar
+			$("#container").height($(window).height() + 60)
+			}
 
-                    var width = $("#container").width();
-                    var height = $("#container").height();
+			var width = $("#container").width();
+			var height = $("#container").height();
 
-                    cheight = height
-                    cwidth = width;
+			cheight = height
+			cwidth = width;
 
-                    // set canvas width and height
-                    $("#canvas").attr('width', cwidth);
-                    $("#canvas").attr('height', cheight);
+			// set canvas width and height
+			$("#canvas").attr('width', cwidth);
+			$("#canvas").attr('height', cheight);
 
-                    // hides the WebKit url bar
-                    if (ios) {
-                        setTimeout(function() {
-                            window.scrollTo(0, 1);
-                        }, 100);
-                    }
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(0, 0, cwidth, cheight);
-                    ctx.fillStyle = 'black';
-                    ctx.fillRect(10, 10, cwidth - 20, cheight - 20)
-
-                    // write number of orientation changes and resize events
-                    ctx.fillStyle = 'white';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('Orientiation changes: ' + oc, cwidth / 2, cheight / 2);
-                    ctx.fillText('Resize events: ' + rc, cwidth / 2, cheight / 2 + 10);
+			// hides the WebKit url bar
+			if (ios) {
+			setTimeout(function() {
+			    window.scrollTo(0, 1);
+			}, 100);
+			}
+			
+			drawText('Orientiation changes: ' + oc, 0);
+			drawText('Resize events: ' + rc, 1);
                 }
 
                 // Install resize and orientation change handlers. Note Android may fire both
