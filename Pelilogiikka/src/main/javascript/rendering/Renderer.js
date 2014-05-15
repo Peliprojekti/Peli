@@ -53,7 +53,7 @@
     }
 
 
-    Renderer.prototype.draw_Scene = function(  myEntity   )
+    Renderer.prototype.draw_Scene = function(  myEntity , camera   )
     {
         this.begin();
          
@@ -61,10 +61,12 @@
       
         // Pass the matrices to the GPU
         
-        var worldMatrix = myEntity.get_WorldTransformation();
-        
+        var worldMatrix = myEntity.get_WorldTransformation();         
+        var viewMatrix  = camera.get_ViewMatrix(); 
+           
+      
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix);
-        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  mat4.multiply( worldMatrix , this.view_Matrix  )      );
+        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  mat4.multiply( worldMatrix , viewMatrix  )      );
 
         // Render the entity
         myEntity.draw( this.gl , this.view_Matrix );

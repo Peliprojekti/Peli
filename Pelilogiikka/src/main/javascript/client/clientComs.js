@@ -1,5 +1,4 @@
 
-
 var clientComs = {
 	sessionToken: null,
 	socket: null,

@@ -11,6 +11,7 @@
 <script type="text/javascript" src="Material.js"     ></script>
 <script type="text/javascript" src="Texture.js"      ></script>
 <script type="text/javascript" src="Mesh.js"         ></script>
+<script type="text/javascript" src="Camera.js"       ></script>
 <script type="text/javascript" src="testCube.js"     ></script>
 
 
@@ -48,62 +49,63 @@
 
 <script type="text/javascript">
 
-
     var myEntity   = null;
-    var renderer   = null;
-      
-      
-    var counter = 0;
-    var dir     = 1;
+    var renderer   = null;    
+    var counter    =    0;
+    var dir        =    1
+    var myCamera   = null;
+    
+    
+    
+    
+    function colorHax()
+    {
+        if( counter > 120 || counter < -120 )   dir *= -1;
+         counter += dir;
+        renderer.fillColor[2] = 0.5 + counter/250.0;
+    }
+    
+    
+    
     
     function tick() 
     {
-        requestAnimFrame(tick);
+       requestAnimFrame(tick);
+  
+       colorHax();
         
-          myEntity.yaw(0.01);
-          myEntity.roll(0.001);
-          myEntity.pitch(0.025);
-          myEntity.scale( [2,2,2] );
-          
-        if( counter > 120 || counter < -120 )
-        {
-           dir *= -1;
-        } 
+        myCamera.yaw( 0.01 );
         
-        counter += dir;
-        renderer.fillColor[2] = 0.5 + counter/250.0;
-        
-        myEntity.move( [(dir*0.01), (dir*-0.01), 0 ]);
-        renderer.draw_Scene(  myEntity );
+        renderer.draw_Scene(  myEntity, myCamera );
     }
     
     
     function Start() 
-    {
+    {  
         renderer       = new Renderer( document.getElementById("Canvas")             );
         var myShader   = new   Shader( renderer.gl , "vertex_Shader", "pixel_Shader" );
-        var myTexture  = new  Texture( renderer.gl , "/data/texture.png"              );  
+        var myTexture  = new  Texture( renderer.gl , "data/texture.png"              );  
         var myMaterial = new Material( myShader    , myTexture                       );
-        myEntity       =    test_Cube( renderer.gl , myMaterial                      );
-              
-              
-        if(!myMaterial.texture ) alert("Vituixm än");
+        myEntity       =    test_Cube( renderer.gl , myMaterial                      );             
+   
+        
+         myCamera       = new Camera( );
+        
+        
+        
         tick();     
     }
 
-
+    
 </script>
 
-
 </head>
-
 
 <body onload="Start();">
    
     <canvas id="Canvas" style="border: none;" width="1024" height="768"></canvas>
 
-    <br/>
-  
+    <br/>  
 </body>
 
 </html>
