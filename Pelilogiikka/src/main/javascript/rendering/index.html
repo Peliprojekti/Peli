@@ -1,0 +1,107 @@
+<html>
+
+<head>
+<title>Pelumoottori</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<script type="text/javascript" src="glMatrix.js"     ></script>
+<script type="text/javascript" src="webglutils.js"   ></script>
+<script type="text/javascript" src="Renderer.js"     ></script>
+<script type="text/javascript" src="Shaderlib.js"    ></script>
+<script type="text/javascript" src="Material.js"     ></script>
+<script type="text/javascript" src="Texture.js"      ></script>
+<script type="text/javascript" src="Mesh.js"         ></script>
+<script type="text/javascript" src="testCube.js"     ></script>
+
+
+
+<script id="pixel_Shader" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec2 vTextureCoord;
+
+    uniform sampler2D uSampler;
+
+    void main(void) 
+    {
+        gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+    }
+</script>
+
+
+<script id="vertex_Shader" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    attribute vec2 aTextureCoord;
+    
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec2 vTextureCoord;
+    
+    void main(void) 
+    {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vTextureCoord = aTextureCoord;
+    }
+</script>
+
+
+<script type="text/javascript">
+
+
+    var myEntity   = null;
+    var renderer   = null;
+      
+      
+    var counter = 0;
+    var dir     = 1;
+    
+    function tick() 
+    {
+        requestAnimFrame(tick);
+        
+          myEntity.yaw(0.01);
+          myEntity.roll(0.001);
+          myEntity.pitch(0.025);
+          myEntity.scale( [2,2,2] );
+          
+        if( counter > 120 || counter < -120 )
+        {
+           dir *= -1;
+        } 
+        
+        counter += dir;
+        renderer.fillColor[2] = 0.5 + counter/250.0;
+        
+        myEntity.move( [(dir*0.01), (dir*-0.01), 0 ]);
+        renderer.draw_Scene(  myEntity );
+    }
+    
+    
+    function Start() 
+    {
+        renderer       = new Renderer( document.getElementById("Canvas")             );
+        var myShader   = new   Shader( renderer.gl , "vertex_Shader", "pixel_Shader" );
+        var myTexture  = new  Texture( renderer.gl , "data/texture.png"              );  
+        var myMaterial = new Material( myShader    , myTexture                       );
+        myEntity       =    test_Cube( renderer.gl , myMaterial                      );
+              
+        tick();     
+    }
+
+
+</script>
+
+
+</head>
+
+
+<body onload="Start();">
+   
+    <canvas id="Canvas" style="border: none;" width="1024" height="768"></canvas>
+
+    <br/>
+  
+</body>
+
+</html>
