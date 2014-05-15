@@ -53,7 +53,7 @@
     }
 
 
-    Renderer.prototype.draw_Scene = function(  myEntity   )
+    Renderer.prototype.draw_Scene = function(  myEntity , camera   )
     {
         this.begin();
          
