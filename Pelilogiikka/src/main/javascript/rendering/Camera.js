@@ -48,6 +48,9 @@
     }
    
      
+     
+     
+     
     Camera.prototype.pitch = function( radians ) 
     {
        this.angle_Pitch += radians;
@@ -78,7 +81,15 @@
         vec3.add( this.position, dir, this.position );
     };
   
-        
+  
+   
+  
+               
+    Camera.prototype.set_Position = function( point )
+    {
+        this.position = point;
+    }
+	
         
     Camera.prototype.move = function( displacement )
     {

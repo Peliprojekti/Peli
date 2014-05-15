@@ -3,8 +3,10 @@
     
     function Renderer( canvas )
     {
-        this.gl     = null;
-        this.camera = null;
+        this.gl            = null;
+        this.camera        = null;
+        this.target_Width  = canvas.width;
+        this.target_Height = canvas.height;
         
         try 
         {
@@ -131,4 +133,10 @@
          if( !cam ) alert(" Invalid camera bound! ");
          
          this.camera = cam;
+     }
+     
+     
+     Renderer.prototype.set_BgrColor = function( color )
+     {
+        this.fillColor = color;
      }
