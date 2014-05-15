@@ -191,11 +191,11 @@
         myCamera        = new   Camera(                                               );
        
         var myShader    = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"  );
-        var ortShader   = new  Shader(  renderer.gl, "HAX_VS", "HAX_PS"               );
+        var ortShader   = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"               );
         
         var myTexture   = new Texture( renderer.gl , "data/texture.png"               );  
-        var crosshair   = new Texture( renderer.gl, "data/crosshair1.png"             );
-        var earthTex    = new Texture( renderer.gl, "data/earth.png"                  );
+        var crosshair   = new Texture( renderer.gl , "data/crosshair1.png"            );
+        var earthTex    = new Texture( renderer.gl , "data/earth.png"                 );
         
         var myMaterial  = new Material( myShader , myTexture                          );               
         var guiMaterial = new Material( ortShader, crosshair                          );
