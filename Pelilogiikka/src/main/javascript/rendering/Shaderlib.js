@@ -70,4 +70,3 @@
 	this.shaderProgram.samplerUniform          = gl_Context.getUniformLocation(this.shaderProgram, "uSampler");
     }
 
-

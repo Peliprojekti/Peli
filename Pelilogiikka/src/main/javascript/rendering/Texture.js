@@ -7,8 +7,8 @@
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.TRILINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.ANISOTROPIC_MIPMAP);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.BILINEAR        );
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.BILINEAR_MIPMAP );
       
         gl.generateMipmap(gl.TEXTURE_2D);
         

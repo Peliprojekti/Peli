@@ -6,16 +6,19 @@
 
 <script type="text/javascript" src="glMatrix.js"     ></script>
 <script type="text/javascript" src="webglutils.js"   ></script>
+
 <script type="text/javascript" src="Renderer.js"     ></script>
 <script type="text/javascript" src="Shaderlib.js"    ></script>
 <script type="text/javascript" src="Material.js"     ></script>
 <script type="text/javascript" src="Texture.js"      ></script>
+
+<script type="text/javascript" src="Buffer.js"         ></script>
 <script type="text/javascript" src="Mesh.js"         ></script>
+<script type="text/javascript" src="Entity.js"         ></script>
 <script type="text/javascript" src="Camera.js"       ></script>
 <script type="text/javascript" src="testCube.js"     ></script>
 
-
-
+   
 <script id="pixel_Shader" type="x-shader/x-fragment">
     precision mediump float;
 
@@ -51,12 +54,10 @@
 
     var myEntity   = null;
     var renderer   = null;    
-    var counter    =    0;
-    var dir        =    1
     var myCamera   = null;
     
-    
-    
+    var counter    =    0;
+    var dir        =    1
     
     function colorHax()
     {
@@ -66,17 +67,18 @@
     }
     
     
-    
-    
+      
     function tick() 
-    {
-       requestAnimFrame(tick);
-  
-       colorHax();
+    {   
+        colorHax();
+        requestAnimFrame(tick);
+       
+        renderer.begin();
         
-        myCamera.yaw( 0.01 );
+            // All drawing is to be done here.
+            renderer.draw_Scene(  myEntity, myCamera );    
         
-        renderer.draw_Scene(  myEntity, myCamera );
+        renderer.end();
     }
     
     
@@ -84,14 +86,10 @@
     {  
         renderer       = new Renderer( document.getElementById("Canvas")             );
         var myShader   = new   Shader( renderer.gl , "vertex_Shader", "pixel_Shader" );
-        var myTexture  = new  Texture( renderer.gl , "data/texture.png"              );  
+        var myTexture  = new  Texture( renderer.gl , "data/texture.png"             );  
         var myMaterial = new Material( myShader    , myTexture                       );
         myEntity       =    test_Cube( renderer.gl , myMaterial                      );             
-   
-        
-         myCamera       = new Camera( );
-        
-        
+        myCamera       = new   Camera( );
         
         tick();     
     }

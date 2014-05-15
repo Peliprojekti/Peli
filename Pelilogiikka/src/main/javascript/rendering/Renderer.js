@@ -19,7 +19,6 @@
         if( !this.gl ) message("Fatal error creating renderer");
        
        
-       
      this.fillColor = [0.0,1.0,0.0,1.0];
      
      // These two belong into a separate CAMERA class!
@@ -53,16 +52,14 @@
     }
 
 
-    Renderer.prototype.draw_Scene = function(  myEntity , camera   )
+    Renderer.prototype.draw_Scene = function(  myEntity, myCamera   )
     {
-        this.begin();
-         
         var shaderProgram = myEntity.material.shader.shaderProgram;
       
         // Pass the matrices to the GPU
         
         var worldMatrix = myEntity.get_WorldTransformation();         
-        var viewMatrix  = camera.get_ViewMatrix(); 
+        var viewMatrix  = myCamera.get_ViewMatrix(); 
            
       
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix);
