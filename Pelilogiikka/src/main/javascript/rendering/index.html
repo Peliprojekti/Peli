@@ -50,10 +50,12 @@
 <script type="text/javascript">
 
     var myEntity   = null;
-    var myCamera   = null;
     var renderer   = null;    
     var counter    =    0;
     var dir        =    1;
+
+    var myCamera   = null;
+    
     
     function tick() 
     {
@@ -68,25 +70,27 @@
         {
            dir *= -1;
         } 
+        
+        myCamera.yaw( 0.01 );
           
         counter += dir;
         renderer.fillColor[2] = 0.5 + counter/250.0;
         
         myEntity.move( [(dir*0.01), (dir*-0.01), 0 ]);
-        renderer.draw_Scene(  myEntity );
+        renderer.draw_Scene(  myEntity, myCamera );
     }
     
     
     function Start() 
-    {
-    
+    {  
         renderer       = new Renderer( document.getElementById("Canvas")             );
         var myShader   = new   Shader( renderer.gl , "vertex_Shader", "pixel_Shader" );
         var myTexture  = new  Texture( renderer.gl , "data/texture.png"              );  
         var myMaterial = new Material( myShader    , myTexture                       );
-        myEntity       =    test_Cube( renderer.gl , myMaterial                      );
-             
-        myCamera       = new Camera( [0,0,0] );
+        myEntity       =    test_Cube( renderer.gl , myMaterial                      );             
+   
+        
+         myCamera       = new Camera( );
         
         
         
