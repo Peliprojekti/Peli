@@ -3,9 +3,9 @@
     
     function Camera()     
     {
-      this.pitch = 0;
-      this.yaw   = 0;
-      this.roll  = 0;
+      this.angle_Yaw   = 0;
+      this.angle_Pitch = 0;
+      this.angle_Roll  = 0;
         
       this.position     = [0,0,0];
       this.orientation  = mat4.create();
@@ -19,10 +19,11 @@
        //    return ret; 
      
        var viewMatrix = mat4.create();
+                        mat4.identity( viewMatrix );
         
-         mat4.rotate(viewMatrix, -this.pitch, [1, 0, 0]);
-         mat4.rotate(viewMatrix, -this.yaw,  [0, 1, 0]);
-         mat4.rotate(viewMatrix, -this.roll, [0, 0, 1]);
+         mat4.rotate(viewMatrix, -this.angle_Pitch, [1, 0, 0] );
+         mat4.rotate(viewMatrix, -this.angle_Yaw,   [0, 1, 0] );
+         mat4.rotate(viewMatrix, -this.angle_Roll,  [0, 0, 1] );
          
          mat4.translate(viewMatrix, [ -this.position[0], 
                                       -this.position[1], 
@@ -31,23 +32,58 @@
     return viewMatrix;
     }
      
+     
+     
+     
+    Camera.prototype.get_Direction = function()
+    {
+        var matrix = mat4.create();
+                     mat4.identity( matrix );
+        
+         mat4.rotate(matrix, this.angle_Pitch, [1, 0, 0] );
+         mat4.rotate(matrix, this.angle_Yaw,   [0, 1, 0] );
+         mat4.rotate(matrix, this.angle_Roll,  [0, 0, 1] );
+        
+        return [ matrix[8], matrix[9], matrix[10] ];
+    }
+   
+     
     Camera.prototype.pitch = function( radians ) 
     {
-        mat4.rotate( this.orientation, radians, [1,0,0], 0 );
+       this.angle_Pitch += radians;
     }	
 
     Camera.prototype.yaw = function( radians )
     {
-        mat4.rotate( this.orientation, radians, [0,1,0], 0 );
+      this.angle_Yaw += radians;
     }
 
     Camera.prototype.roll = function( radians ) 
     {
-        mat4.rotate( this.orientation, radians, [0,0,1], 0 );
+     this.angle_Roll += radians;
     }
 	
+        
+    Camera.prototype.forward = function( units )
+    {
+        var dir = this.get_Direction();
+        vec3.scale( dir, -units );                          // RIGHT HANDED coordinate system apparently :/  [1,0,0] [0,1,0], [0,0,-1] !
+        vec3.add( this.position, dir, this.position );
+    };
+  
+    Camera.prototype.backward = function( units )
+    {
+        var dir = this.get_Direction();
+        vec3.scale( dir,  units );                         // RIGHT HANDED coordinate system apparently :/  [1,0,0] [0,1,0], [0,0,-1] !
+        vec3.add( this.position, dir, this.position );
+    };
+  
+        
+        
     Camera.prototype.move = function( displacement )
     {
         vec3.add( this.position, displacement, this.position );
     }
-    
+  
+
+
