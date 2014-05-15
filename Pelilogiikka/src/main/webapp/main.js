@@ -1,15 +1,13 @@
-var clientServer = require("./clientServer");
-var screenServer = require("./screenServer");
+var initServer = require("./initServer");
 var coms = require("./comServer");
 
-var CLIENT_PORT = '8080';
-var SCREEN_PORT = '1337';
+var SERVER_PORT = '8080';
 
-var client = clientServer.create();
-client.listen(CLIENT_PORT);
+var initServer = initServer.create();
+initServer.listen(SERVER_PORT);
 
-var screen = screenServer.create();
-screen.listen(SCREEN_PORT);
+//var screen = screenServer.create();
+//screen.listen(SCREEN_PORT);
 
 coms.startComs();
 
