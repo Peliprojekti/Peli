@@ -24,16 +24,16 @@ module.exports = new function() {
 		});
 
 		clientio.sockets.on('connection', function(socket) {
-			console.log("NEW CLIENT CONNECTED");
+			//console.log("NEW CLIENT CONNECTED");
 
 			socket.on('firstButton', function(data) {
-				console.log("Sending to screen");
-				console.log(data);
+				//console.log("Sending to screen");
+				//console.log(data);
 				sendToScreen("first " + data.count);
 			});
 			socket.on('secondButton', function(data) {
-				console.log("Sending to screen");
-				console.log(data);
+				//console.log("Sending to screen");
+				//console.log(data);
 				sendToScreen("second" + data.count);
 			});
 		});

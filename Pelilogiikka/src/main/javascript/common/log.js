@@ -1,5 +1,5 @@
 var log = {
-    enabled: ture,
+    enabled: true,
 
     info: function(msg) {
         if(enabled) {

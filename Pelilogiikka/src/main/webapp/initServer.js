@@ -1,8 +1,9 @@
 var http = require('http');
 var fs = require('fs');
+var socketio = require('socket.io');
 
-var SCREEN_HTML = '/dummy_screen.html';
-var CLIENT_HTML = '/dummy_client.html';
+var SCREEN_HTML = '/screen/dummy_screen.html';
+var CLIENT_HTML = '/client/dummy_client.html';
 
 //var MAIN_HTML = '/dummy_screen.html';
 
@@ -13,22 +14,18 @@ module.exports = new function() {
 				return response.end("Simple File Server, only does GET");
 			}
 
-            console.log("requested: " + url);
-
 			var filename = __dirname + CLIENT_HTML;
             var url = request.url;
 
-            console.log(url.indexOf('/javascript'));
             if (url.indexOf('/javascript') == 0) {
                 filename = __dirname + "/.." + url;
-                console.log(filename);
             }
 
             if (request.url == "/screen/screen.html") {
                 filename = __dirname + SCREEN_HTML;
             }
 
-            console.log("serving:   " + filename);
+            //console.log("requested: " + url + ",serving: " + filename);
 
 			fs.createReadStream(filename).pipe(response);
 		});
