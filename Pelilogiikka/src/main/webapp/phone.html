@@ -39,11 +39,37 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 	<script type="text/javascript"> 
 	//http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
+
+		function doTouchStart(event){
+
+		  var x = event.x;
+		  var y = event.y;
+
+		  var canvas = document.getElementById("canvas");
+		  canvas_width = canvas.width;
+		  canvas_height = canvas.height;
+
+		  x -= canvas.offsetLeft;
+		  y -= canvas.offsetTop;
+		alert("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
+			+ "\ncanvas height: " + canvas_height);
+
+		/*	event.preventDefault();
+			canvas_x = event.targetTouches[0].pageX;
+			canvas_y = event.targetTouches[0].pageY;
+			var canvas = document.getElementById("canvas");
+			canvas_width = canvas.width;
+			canvas_height = canvas.height;
+			alert("X=" + canvas_x + " Y=" + canvas_y + "\ncanvas width: " + canvas_width
+			+ " canvas height: " + canvas_height);*/
+		}
+
 	  $(function() { // document ready, resize container
 
 		  var canvas = document.getElementById("canvas");
 
-		  canvas.addEventListener("touchstart", doTouchStart, false);
+		 //canvas.addEventListener("touchstart", doTouchStart, false);
+		canvas.addEventListener("click", doTouchStart, false);
 
 		  var ctx = canvas.getContext("2d");
 
@@ -51,16 +77,6 @@
 		  var oc = 0;  // orientiation counter
 		  var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
 
-		function doTouchStart(event){
-			event.preventDefault();
-			canvas_x = event.targetTouches[0].pageX;
-			canvas_y = event.targetTouches[0].pageY;
-			var canvas = document.getElementById("canvas");
-			canvas_width = canvas.width;
-			canvas_height = canvas.height;
-			alert("X=" + canvas_x + " Y=" + canvas_y + "\ncanvas width: " + canvas_width
-			+ " canvas height: " + canvas_height);
-		}
 
 		/* function hideAddressBar(){
 		  if(document.documentElement.scrollHeight<window.outerHeight/window.devicePixelRatio)
@@ -93,7 +109,7 @@
 
 			  // set canvas width and height
 			  $("#canvas").attr('width', cwidth);
-			  $("#canvas").attr('height', cheight)
+			  $("#canvas").attr('height', cheight);
 
 			  // hides the WebKit url bar
 			  if (ios) {
