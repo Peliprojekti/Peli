@@ -1,4 +1,4 @@
-    
+    // LOL
     
     
     function Renderer( canvas )
