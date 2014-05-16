@@ -18,7 +18,7 @@ var screenio = null;
 //helper function fo open new socketio
 createSocketIO = function(port) {
     if (DEBUG) { console.log("   info  - socket.io listening on port " + port); }
-    return socketio.listen(CLIENT_PORT, {
+    return socketio.listen(port, {
         'log level': ( DEBUG ? 3 : 0 )
     });
 }
