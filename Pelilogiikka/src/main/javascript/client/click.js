@@ -6,18 +6,19 @@ function initCanvas(){
 
 function doClick(event) {
 	event.preventDefault();
-	//var coords = getRelativeClickCoords(event);
+	var coords = getRelativeClickCoords(event);
+
+	/*
         var x = event.x;
         var y = event.y;
 	var canvasDimensions = getCanvasDimensions();
-	
+	*/
+
 	//Test code
-	updateCoordinatesText(x, y);
+	updateCoordinatesText(coords[0], coords[1]);
+	//clientComs.send(coords);
       clientComs.send({
-            xCoordinate: x, 
-            yCoordinate: y,
-            width: canvasDimensions[0],
-            height: canvasDimensions[1]
+            position: coords
         });
 }
 
