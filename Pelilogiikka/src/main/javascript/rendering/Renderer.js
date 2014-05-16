@@ -56,7 +56,6 @@
 
     Renderer.prototype.draw = function(  myEntity  )
     {
-        
         var shaderProgram   = myEntity.material.shader.shaderProgram;
         var worldMatrix     = myEntity.orientation.get_Matrix();       
         var viewMatrix      = this.camera.get_ViewMatrix(); 
@@ -64,14 +63,14 @@
      
         myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
       
-        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix               );
-        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                      );
+        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix                );
+        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                       );
         
-        myEntity.mesh.vertices.bind ( this.gl, myEntity.material.shader.shaderProgram.vertexPositionAttribute );    
-        myEntity.mesh.texCoords.bind( this.gl, myEntity.material.shader.shaderProgram.textureCoordAttribute   );
+        myEntity.mesh.vertices.bind ( this.gl, myEntity.material.shader.shaderProgram.vertexPositionAttribute  );    
+        myEntity.mesh.texCoords.bind( this.gl, myEntity.material.shader.shaderProgram.textureCoordAttribute    );
                                                   
-        this.gl.bindBuffer  (this.gl.ELEMENT_ARRAY_BUFFER, myEntity.mesh.indices.data );    
-        this.gl.drawElements(this.gl.TRIANGLES, myEntity.mesh.indices.data.numItems, this.gl.UNSIGNED_SHORT, 0);
+        this.gl.bindBuffer  (this.gl.ELEMENT_ARRAY_BUFFER, myEntity.mesh.indices.data                          );    
+        this.gl.drawElements(this.gl.TRIANGLES, myEntity.mesh.indices.data.numItems, this.gl.UNSIGNED_SHORT, 0 );
      }
      
      
@@ -83,15 +82,14 @@
      
         myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
       
-        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix);
-        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix      );
+        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix                );
+        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                       );
         
-        myEntity.mesh.vertices.bind ( this.gl, myEntity.material.shader.shaderProgram.vertexPositionAttribute );    
-        myEntity.mesh.texCoords.bind( this.gl, myEntity.material.shader.shaderProgram.textureCoordAttribute   );
+        myEntity.mesh.vertices.bind ( this.gl, myEntity.material.shader.shaderProgram.vertexPositionAttribute  );    
+        myEntity.mesh.texCoords.bind( this.gl, myEntity.material.shader.shaderProgram.textureCoordAttribute    );
                                                   
-        
-        this.gl.bindBuffer  (this.gl.ELEMENT_ARRAY_BUFFER, myEntity.mesh.indices.data );    
-        this.gl.drawElements(this.gl.TRIANGLES, myEntity.mesh.indices.data.numItems, this.gl.UNSIGNED_SHORT, 0);
+        this.gl.bindBuffer  (this.gl.ELEMENT_ARRAY_BUFFER, myEntity.mesh.indices.data                          );    
+        this.gl.drawElements(this.gl.TRIANGLES, myEntity.mesh.indices.data.numItems, this.gl.UNSIGNED_SHORT, 0 );
          
          
      }
@@ -127,10 +125,8 @@
      Renderer.prototype.bind_Camera = function( cam )
      {
          if( !cam ) alert(" Invalid camera bound! ");
-         
          this.camera = cam;
      }
-     
      
      Renderer.prototype.set_BgrColor = function( color )
      {

@@ -10,13 +10,11 @@
         this.farPlane     = far;
     }
 
-
     Camera.prototype.get_ViewMatrix = function()
     {
         return this.orientation.get_InverseMatrix();
     }
     
-     
     Camera.prototype.pitch = function( radians ) 
     {
        this.orientation.pitch( radians );
@@ -31,7 +29,6 @@
     {
       this.orientation.roll( radians );
     }
-	
         
     Camera.prototype.forward = function( units )
     {
