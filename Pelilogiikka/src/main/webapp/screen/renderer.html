@@ -136,15 +136,7 @@
         
         mySphere.roll( 0.001   );
         mySphere.pitch( 0.002 );
-          
-        if( key_Down( 37 ) )   myCamera.yaw( 0.05  );
-        if( key_Down( 39 ) )   myCamera.yaw( -0.05 );
-          
-        if( key_Down( 38 ) )   myCamera.forward( 0.5 );  
-        if( key_Down( 40 ) )   myCamera.backward( 0.5 );
         
-        if( key_Down( 33 ) )   myCamera.pitch( 0.008 );
-        if( key_Down( 34 ) )   myCamera.pitch( -0.008 );
          
         myScene.render();
     }
