@@ -12,9 +12,9 @@ nconf.defaults({
 	screen_port: 1339,
 	debug: false,
 	client_html: __dirname + '/phone.html',
+	screen_html: __dirname + '/screen/renderer.html',
 	//client_html: __dirname + '/client/dummy_client.html',
 	//screen_html: __dirname + '/screen/dummy_screen.html',
-	screen_html: __dirname + '/screen/renderer.html',
 	dummy: false
 });
 	

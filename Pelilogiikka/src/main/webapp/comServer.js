@@ -1,5 +1,5 @@
-var socketio = require('socket.io')
-
+var socketio = require('socket.io');
+;
 var nconf = null;
 var logger = null;
 
