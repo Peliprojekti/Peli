@@ -5,17 +5,27 @@ var socketio = require('socket.io');
 var SCREEN_HTML = '/screen/renderer.html';
 var CLIENT_HTML = '/phone.html';
 
-//var MAIN_HTML = '/dummy_screen.html';
+var server = null;
+var logger = null;
+var nconf = null;
 
 module.exports = new function() {
-    this.create = function() {
-        var server = http.createServer(function(request, response) {
+	this.start = function() {
+		server.listen(nconf.get('http_port'));
+	}
+
+    this.create = function(nconf_, logger_) {
+		nconf = nconf_;
+		logger = logger_;
+		
+        server = http.createServer(function(request, response) {
             console.log(request.url);
             if (request.method !== ("GET")) {
+				logger.info("Got something else than GET");
                 return response.end("Simple File Server, only does GET");
             }
 
-            var filename = __dirname + CLIENT_HTML;
+            var filename = nconf.get('client_html');
             var url = request.url;
 
             if (url.indexOf('/javascript') == 0) {
@@ -31,13 +41,15 @@ module.exports = new function() {
             }
 
             if (request.url == "/screen/screen.html") {
-                filename = __dirname + SCREEN_HTML;
+                filename = nconf.get('screen_html');
             }
 
             //console.log("requested: " + url + ",serving: " + filename);
 
             fs.createReadStream(filename).pipe(response);
         });
+
         return server;
     }
+
 }

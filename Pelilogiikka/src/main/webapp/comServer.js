@@ -1,5 +1,8 @@
 var socketio = require('socket.io')
 
+var nconf = null;
+var logger = null;
+
 var CLIENT_PORT = 1338;
 var SCREEN_PORT = 1339;
 
@@ -15,31 +18,27 @@ function sendToScreen(data) {
 }
 
 module.exports = new function() {
-	this.startComs = function() {
-		var clientio = socketio.listen(CLIENT_PORT);
-		var screenio = socketio.listen(SCREEN_PORT);
+    this.create = function(nconf_, logger_) {
+		nconf = nconf_;
+		logger = logger_;
+	}
+
+	this.start = function() {
+		var clientio = socketio.listen(nconf.get('client_port'));
+		var screenio = socketio.listen(nconf.get('screen_port'));
 
 		screenio.sockets.on('connection', function(socket) {
+			logger.info("screen connection on");
 			screenSocket = socket;
 		});
 
 		clientio.sockets.on('connection', function(socket) {
+			logger.info("client connection on");
 			socket.emit('open', null);
-			//console.log("NEW CLIENT CONNECTED");
 			
 			socket.on('message', function(data) {
+				logger.debug('sending message to screen');
 				sendToScreen(data);
-			});
-
-			socket.on('firstButton', function(data) {
-				//console.log("Sending to screen");
-				//console.log(data);
-				sendToScreen("first " + data.count);
-			});
-			socket.on('secondButton', function(data) {
-				//console.log("Sending to screen");
-				//console.log(data);
-				sendToScreen("second" + data.count);
 			});
 		});
 	}

@@ -8,8 +8,6 @@
     
 window.onload = function() { 
 	var startGameCallback = function(gameStarted, sessionToken) {
-		window.alert("Start ok");
-
 		firstButton = document.getElementById("firstButton");
 		firstButton.count = 0;
 		firstButton.onclick = function() {
@@ -26,13 +24,10 @@ window.onload = function() {
 	};
 
 	var connectionOkCallback = function(something, isOK) {
-		window.alert("Connection ok");
-		//clientComs.startGame(startGameCallback);
 		startGameCallback(true, 1);
 	};
 
 	clientComs.initConnection('localhost', '1338', null, true, connectionOkCallback);
-	window.alert("onload done");
 };
 </script>
 </head>
