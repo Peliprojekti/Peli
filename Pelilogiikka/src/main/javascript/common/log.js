@@ -1,5 +1,5 @@
 var log = {
-    enabled: true,
+    enabled: false,
 
     info: function(msg) {
         if(enabled) {

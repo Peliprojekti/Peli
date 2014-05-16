@@ -1,250 +1,64 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Layout Example</title>
-        <script src="http://10.42.0.1:1338/socket.io/socket.io.js"> </script>
+	<title>Layout Example</title>
+	<script src="http://10.42.0.1:1338/socket.io/socket.io.js"> </script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"> </script>
+	<script type="text/javascript" src="/javascript/client/phone.js"> </script>
 	<script type="text/javascript" src="/javascript/client/click.js"> </script>
-	
-      <script>  
-            window.onload = function() {
-                var startGameCallback = function(gameStarted, sessionToken) {
+	<script type="text/javascript" src="/javascript/client/clientComs.js"> </script>
 
-                };
+	<script>  
 
-                var connectionOkCallback = function(something, isOK) {
-                    clientComs.startGame(startGameCallback);
-                    startGameCallback(true, 1);
-                };
+var COM_PORT = 1338;
 
-                clientComs.initConnection('10.42.0.1', '1338', null, true, connectionOkCallback);
-            };
-        </script>
-      	<script src="/javascript/client/clientComs.js"></script>
-        <meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
-        <style type="text/css">
-            body,html
-            {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-                color: black;
-            }
+window.onload = function() {
+	var startGameCallback = function(gameStarted, sessionToken) {
 
-            #container
-            {
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background: blue;
-            }
+	};
 
-            #container canvas {
-                vertical-align: top;
-                display: block;
-                overflow: auto;
-            }
+	var connectionOkCallback = function(something, isOK) {
+		clientComs.startGame(startGameCallback);
+		startGameCallback(true, 1);
+	};
 
-        </style>
-    </head>
-    <body>
-        <div id="container">
-            <canvas id="canvas">
-                HTML5 Canvas not supported. 
-            </canvas>
-            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-            <script type="text/javascript">
-            //http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
+	clientComs.initConnection(location.hostname, COM_PORT, null, true, connectionOkCallback);
+};
 
-      /*      function doClick(event) {
+	</script>
+	<meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+	<style type="text/css">
+body,html
+{
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	color: black;
+}
 
-                var x = event.x;
-                var y = event.y;
+#container
+{
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background: blue;
+}
 
-                var canvas = document.getElementById("canvas");
-                canvas_width = canvas.width;
-                canvas_height = canvas.height;
+#container canvas {
+	vertical-align: top;
+	display: block;
+	overflow: auto;
+}
 
-                x -= canvas.offsetLeft;
-                y -= canvas.offsetTop;
-                alert("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
-                        + "\ncanvas height: " + canvas_height);
-                
-           /*     clientComs.send({
-                    xCoordinate: x, 
-                    yCoordinate: y,
-                    width: canvas_width,
-                    height: canvas_height
-                    
-                });
-//                clientComs.send("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
-//                        + "\ncanvas height: " + canvas_height);
-
-                /*	event.preventDefault();
-                 canvas_x = event.targetTouches[0].pageX;
-                 canvas_y = event.targetTouches[0].pageY;
-                 var canvas = document.getElementById("canvas");
-                 canvas_width = canvas.width;
-                 canvas_height = canvas.height;
-                 alert("X=" + canvas_x + " Y=" + canvas_y + "\ncanvas width: " + canvas_width
-                 + " canvas height: " + canvas_height);
-            }*/
-		
-		
-		function getFingerCoords(id) {
-			var canvas_x = event.targetTouches[id].pageX;
- 			var canvas_y = event.targetTouches[id].pageY;
-			return [canvas_x, canvas_y];
-		}
-
-		function getRelativeCoords(id){
-			var coords = getFingerCoords(id);
-			var canvasDimensions = getCanvasDimensions();
-			var relativeX = coords[0] / canvasDimensions[0];
-			var relativeY = coords[1] / canvasDimensions[1];
-			return [relativeX, relativeY];
-		}	
-		
-		//Test code
-		function updateCoordinatesText(x, y){
-			var canvasDimensions = getCanvasDimensions();		
-	
-			drawText("Coordinates: (" + x + ", " + y + ")", 2);
-			drawText("Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1], 3);
-		}
-
-		//Test code
-		function updateStartTimeText(time) {
-			drawText("Start time: " + time, 4);
-		}
-
-		//Test code
-		function updateCurrentTimeText(time) {
-			drawText("Current time: " + time, 5);
-		}
-		
-		//Test code
-		function updateStartCoordinatesText(x, y){
-			var canvasDimensions = getCanvasDimensions();		
-	
-			drawText("Start coordinates: (" + x + ", " + y + ")", 6);
-		}
-		
-		//Test code
-		function updateSendTimeText(time){
-			drawText("Sent time: " + time, 7);
-		}
-
-		//Test code
-		var texts = new Array();
-		function drawText(text, id){
-			var canvasDimensions = getCanvasDimensions();
-
-			drawBackground();
-
-			ctx.fillStyle = 'white';
-                   	ctx.textAlign = 'center';
-			
-			texts[id] = text;
-
-			var offset = 0;
-
-			texts.forEach(function(entry) {
-    				ctx.fillText(entry, canvasDimensions[0] / 2, canvasDimensions[1] / 2 + offset);
-				offset += 10;
-			});
-			
-		}
-
-		function drawBackground(){
-			ctx.fillStyle = 'green';
-		        ctx.fillRect(0, 0, width, height);
-		        ctx.fillStyle = 'black';
-		        ctx.fillRect(10, 10, width - 20, height - 20);
-		}
-
-		function getCanvasDimensions() {
-			canvas = document.getElementById("canvas");
-			ctx = canvas.getContext("2d");
-			width = canvas.width;
-			height = canvas.height;
-
-			return [width, height];
-		}
-
-
-
-            $(function() { // document ready, resize container
-		var canvas = initCanvas();
-
-                var ctx = canvas.getContext("2d");
-
-                var rc = 0;  // resize counter
-                var oc = 0;  // orientiation counter
-                var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
-
-
-                /* function hideAddressBar(){
-                 if(document.documentElement.scrollHeight<window.outerHeight/window.devicePixelRatio)
-                 document.documentElement.style.height=(window.outerHeight/window.devicePixelRatio)+'px';
-                 setTimeout(window.scrollTo(1,1),0);
-                 }
-                 window.addEventListener("load",function(){hideAddressBar();});
-                 window.addEventListener("scroll",function(){hideAddressBar();});
-                 window.addEventListener("orientationchange",function(){hideAddressBar();}); */
-
-
-                function orientationChange() {
-                    // inc orientation counter
-                    oc++;
-                }
-                function resizeCanvas() {
-			// inc resize counter
-			rc++;
-
-			if (ios) {
-			// increase height to get rid off ios address bar
-			$("#container").height($(window).height() + 60)
-			}
-
-			var width = $("#container").width();
-			var height = $("#container").height();
-
-			cheight = height
-			cwidth = width;
-
-			// set canvas width and height
-			$("#canvas").attr('width', cwidth);
-			$("#canvas").attr('height', cheight);
-
-			// hides the WebKit url bar
-			if (ios) {
-			setTimeout(function() {
-			    window.scrollTo(0, 1);
-			}, 100);
-			}
-			
-			drawText('Orientiation changes: ' + oc, 0);
-			drawText('Resize events: ' + rc, 1);
-                }
-
-                // Install resize and orientation change handlers. Note Android may fire both
-                // resize and orientation changes when rotating.
-                var resizeTimeout;
-                $(window).resize(function() {
-                    clearTimeout(resizeTimeout);
-                    resizeTimeout = setTimeout(resizeCanvas, 100);
-                });
-                resizeCanvas();
-
-                var otimeout;
-                window.onorientationchange = function() {
-                    clearTimeout(otimeout);
-                    otimeout = setTimeout(orientationChange, 50);
-                }
-            });
-            </script>
-        </div>
-    </body>
-</html>
+	</style>
+	</head>
+	<body>
+	<div id="container">
+		<canvas id="canvas">
+			HTML5 Canvas not supported. 
+		</canvas>
+	</div>
+	</body>
+	</html>
