@@ -72,32 +72,23 @@
     var mySphere     = null;
     var renderer     = null;    
     var myCamera     = null;
+    var myScene      = null;
       
 
     
     
     function tick() 
     {
+        requestAnimFrame(tick);
+     
+        myCube.yaw( 0.012 );
+        myCube.roll ( 0.015 );
+        
         mySphere.roll( 0.001   );
         mySphere.pitch( 0.002 );
-      
-        renderer.bind_Camera( myCamera );
-        
-        renderer.begin();   // All drawing is to be done here.
-            
-            renderer.draw( myCube );
-            renderer.draw( mySphere );
-            
-            myCube.move( [0,5,0] );
-            renderer.draw( myCube );
-            myCube.move( [0,-5,0] );            // FILTHY HAX. get push/pop
-            
-            renderer.begin_Blending();
-            renderer.draw_SS( myCrosshair );
-            renderer.end_Blending();
-        
-        renderer.end();     // All drawing is to be done here.
-    }
+         
+        myScene.render();
+     }
     
     
     
@@ -116,32 +107,55 @@
     
     function Start() 
     {
-        renderer        = new Renderer( document.getElementById("Canvas")              );
-        myCamera        = new   Camera(                                                );
-        
-        var myShader    = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"   );
-        var ortShader   = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"                );
-        
-        var myTexture   = new Texture( renderer.gl , "/data/texture.png"               );  
-        var crosshair   = new Texture( renderer.gl , "/data/crosshair1.png"            );
-        var earthTex    = new Texture( renderer.gl , "/data/earth.png"                 );
-        
-        var myMaterial  = new Material( myShader , myTexture                          );               
-        var guiMaterial = new Material( ortShader, crosshair                          );
-        var earthMat    = new Material( myShader , earthTex                           );
+        renderer         = new Renderer( document.getElementById("Canvas")             );
+        myCamera         = new   Camera(                                               );
        
-        myCube          = test_Cube     ( renderer.gl , myMaterial                    ); 
-        mySphere        = test_Sphere   ( renderer.gl, earthMat                       );
-        myCrosshair     = test_Rectangle( renderer.gl, guiMaterial, [0.08,0.08]       );
+        var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"  );
+        var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"               );
         
-             myCube.set_Position( [0,-1.5,-3]                            );
-           myCamera.set_Position( [0, 1.1, 0]                            );
-           mySphere.set_Position( [0, 1.0,-3]                            );
-        myCrosshair.set_Position( Map_To_Screen( renderer, [300,300] )   );                   
+        var myTexture    = new Texture( renderer.gl , "data/texture.png"               );  
+        var crosshair    = new Texture( renderer.gl , "data/crosshair1.png"            );
+        var earthTex     = new Texture( renderer.gl , "data/earth.png"                 );
         
-          
+        var myMaterial   = new Material( myShader , myTexture                          );               
+        var guiMaterial  = new Material( ortShader, crosshair                          );
+        var earthMat     = new Material( myShader , earthTex                           );
+       
+            myCube      = test_Cube     ( renderer.gl , myMaterial                     ); 
+            mySphere    = test_Sphere   ( renderer.gl , earthMat                       );
+            heh         = test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08]       );
+           
+        var crosshairs    = [  test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08] ) ,
+                               test_Rectangle( renderer.gl, guiMaterial , [0.04,0.04] ) ,
+                               test_Rectangle( renderer.gl, guiMaterial , [0.16,0.16] )  ];
+      
+             myCube.set_Position( [ 0,-1.5,-3 ]                                        );
+           myCamera.set_Position( [ 0, 1.1, 0 ]                                        );
+           mySphere.set_Position( [ 0, 1.0,-3 ]                                        );
+       
+           
+       crosshairs[0].set_Position( Map_To_Screen( renderer, [300,400] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       crosshairs[1].set_Position( Map_To_Screen( renderer, [100,200] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       crosshairs[2].set_Position( Map_To_Screen( renderer, [400,500] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       
+       
+        document.onkeydown = kbDown_Event;
+        document.onkeyup   = kbUp_Event; 
+        
+        myScene = new Scene( renderer );
+        myScene.insert( myCube, "DYNAMIC"   );
+        myScene.insert( mySphere, "DYNAMIC" );
+      
+        myScene.insert( crosshairs[0], "GUI"  );
+        myScene.insert( crosshairs[1], "GUI"  );
+        myScene.insert( crosshairs[2], "GUI"  );
+        
+        myScene.insert( myCamera    , "CAM"  );
+        
+        renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
+       
         var connection = new Connection( 'http://localhost:1339' );
-                          
+        
         tick();     
     }
 
