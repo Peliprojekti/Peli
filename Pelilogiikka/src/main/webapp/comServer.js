@@ -27,17 +27,22 @@ module.exports = new function() {
 		var clientio = socketio.listen(nconf.get('client_port'));
 		var screenio = socketio.listen(nconf.get('screen_port'));
 
+		if (nconf.get('debug') == false) {
+			clientio.set('log level', 1);
+			screenio.set('log level', 1);
+		}
+
 		screenio.sockets.on('connection', function(socket) {
 			logger.info("screen connection on");
 			screenSocket = socket;
 		});
 
 		clientio.sockets.on('connection', function(socket) {
-			logger.info("client connection on");
+			//logger.info("client connection on");
 			socket.emit('open', null);
 			
 			socket.on('message', function(data) {
-				logger.debug('sending message to screen');
+				//logger.debug('sending message to screen');
 				sendToScreen(data);
 			});
 		});
