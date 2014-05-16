@@ -1,50 +1,94 @@
 var socketio = require('socket.io');
-;
-var nconf = null;
-var logger = null;
+
+var DEBUG = false;
 
 var CLIENT_PORT = 1338;
 var SCREEN_PORT = 1339;
 
-var screenSocket = null;
+var screenSocket = null; // stores the currnetly connected screen, if any
 
-function sendToScreen(data) {
-	if (screenSocket == null) {
-		console.log("NO SCREEN CONNECTED");
-		return;
-	}
+var clientio = null;
+var screenio = null; 
 
-	screenSocket.emit('message', data);
+/*
+ * Functions for server handling
+ */
+
+
+//helper function fo open new socketio
+createSocketIO = function(port) {
+    if (DEBUG) { console.log("   info  - socket.io listening on port " + port); }
+    return socketio.listen(CLIENT_PORT, {
+        'log level': ( DEBUG ? 3 : 0 )
+    });
 }
 
-module.exports = new function() {
-    this.create = function(nconf_, logger_) {
-		nconf = nconf_;
-		logger = logger_;
-	}
+startServer = function() {
+    if (DEBUG) { console.log("   info  - comServer screen port is " + SCREEN_PORT + ", and client port is " + CLIENT_PORT); }
+    clientio = createSocketIO(CLIENT_PORT);
+    screenio = createSocketIO(SCREEN_PORT);
 
-	this.start = function() {
-		var clientio = socketio.listen(nconf.get('client_port'));
-		var screenio = socketio.listen(nconf.get('screen_port'));
+    /*
+     * SCREEN EVENT HANDLERS
+     */
 
-		if (nconf.get('debug') == false) {
-			clientio.set('log level', 1);
-			screenio.set('log level', 1);
-		}
+    //save opened screen connection for future use
+    screenio.sockets.on('connection', function(socket) {
+        if (DEBUG) { console.log("   info  - screen connected"); }
+        screenSocket = socket;
 
-		screenio.sockets.on('connection', function(socket) {
-			logger.info("screen connection on");
-			screenSocket = socket;
-		});
+        // TODO handle disconnections?
+    });
 
-		clientio.sockets.on('connection', function(socket) {
-			//logger.info("client connection on");
-			socket.emit('open', null);
-			
-			socket.on('message', function(data) {
-				//logger.debug('sending message to screen');
-				sendToScreen(data);
-			});
-		});
-	}
-};
+    /*
+     * CLIENT EVENT HANDLERS
+     */
+
+    //start message dispatch on client connect
+    clientio.sockets.on('connection', function(socket) {
+        if (DEBUG) { console.log("   info  - client connected"); }
+
+        socket.emit('open', null);
+
+        socket.on('message', function(data) {
+            if (screenSocket == null) {
+                console.log("   error -NO SCREEN CONNECTED");
+                // maybe do something more usefull at some point?
+                return;
+            }
+
+            screenSocket.emit('message', data);
+        });
+    });
+}
+
+/*
+ * SERVER COMMANDS
+ */
+
+process.on('message', function(msgobj) {
+    if (msgobj.type == 'debug') {
+        DEBUG = msgobj.value;
+    }
+    else if (msgobj.type == 'startServer') {
+        if (DEBUG) { console.log("   info  - firing up comServer"); }
+        startServer();
+    }
+    else if (msgobj.type == 'closeServer') {
+        if (DEBUG) { console.log("   info  - comServer shuting down"); }
+        // TODO
+    }
+    else if (msgobj.type == 'config') {
+        // TODO check values, error handling
+        CLIENT_PORT = msgobj.value.client_port;
+        SCREEN_PORT = msgobj.value.screen_port;
+        DEBUG = msgobj.value.debug;
+
+        if (DEBUG) { console.log("   info  - updated comServer configuration"); }
+    }
+    else {
+        console.log("   error - recieving unrecognized message from parent process");
+        // TODO handle error? send to parent?
+    }
+});
+
