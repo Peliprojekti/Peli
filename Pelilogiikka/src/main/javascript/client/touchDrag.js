@@ -1,9 +1,27 @@
+var previousSendTime = 0;
+var interval = 20;
+var coords;
+var currentTime;
+
 function doTouchMove(event){
 	event.preventDefault();
-	var coords = getRelativeCoords(0);
+	coords = getRelativeCoords(0);
+	
+	currentTime = new Date().getTime();
+
+	if (currentTime - previousSendTime >= interval) {
+		 clientComs.send({
+		            position: coords               
+		});
+
+		previousSendTime = currentTime;
+	}
+	
+
+
 	
 	//Test code
-	updateCoordinatesText(coords[0], coords[1]);	
+	//updateCoordinatesText(coords[0], coords[1]);	
 
 }
 
