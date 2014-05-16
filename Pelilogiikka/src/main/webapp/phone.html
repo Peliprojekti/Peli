@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Layout Example</title>
-        <script src="http://10.40.0.1:1338/socket.io/socket.io.js"> </script>
-	<script type="text/javascript" src="click.js"> </script>
+        <script src="http://10.42.0.1:1338/socket.io/socket.io.js"> </script>
+	<script type="text/javascript" src="/javascript/client/click.js"> </script>
 	
       <script>  
             window.onload = function() {
@@ -16,7 +16,7 @@
                     startGameCallback(true, 1);
                 };
 
-                clientComs.initConnection('localhost', '1338', null, true, connectionOkCallback);
+                clientComs.initConnection('10.42.0.1', '1338', null, true, connectionOkCallback);
             };
         </script>
       	<script src="/javascript/client/clientComs.js"></script>
