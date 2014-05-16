@@ -23,6 +23,9 @@
 
 <script type="text/javascript" src="testCube.js"     ></script>
 
+<script type="text/javascript" src="Inheritance_Testing.js"     ></script>
+
+   
    
 <script id="pixel_Shader" type="x-shader/x-fragment">
     precision mediump float;
@@ -93,39 +96,15 @@
 
 
 
-
 <script type="text/javascript">
 
     var renderer   = null;    
     var myCamera   = null;
     var myScene    = null;
-    
-    
     var counter    =    0;
     var dir        =    1;
     
-   
-    
-    
-    
-    function colorHax()
-    {
-        if( counter > 120 || counter < -120 )   dir *= -1;
-        counter += dir;
-     //   renderer.fillColor[2] = 0.5 + counter/250.0;
 
-        var tmp = 0.5 + Math.abs( (counter / 240));
-       
-   //     myGui.scale( [tmp,tmp,tmp]);
-        
-        var tmp2 = counter/100000;
-        //myGui.move( [tmp2,0,0] );
-    }
-    
-    
-      
-      
- 
     
    var myCube;
    var mySphere;
@@ -133,7 +112,6 @@
       
     function tick() 
     {   
-        colorHax();
         requestAnimFrame(tick);
      
         myCube.yaw( 0.012 );
@@ -169,8 +147,14 @@
     
     function Start() 
     {  
+        test_Inheritance();
+        
+        
         renderer         = new Renderer( document.getElementById("Canvas")             );
-        myCamera         = new   Camera(                                               );
+        myCamera         = new   Camera( renderer, 0.1, 1000, 45                       );
+       
+       
+        
        
         var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"  );
         var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"               );
@@ -195,18 +179,17 @@
            myCamera.set_Position( [ 0, 1.1, 0 ]                                        );
            mySphere.set_Position( [ 0, 1.0,-3 ]                                        );
        
-           
-       crosshairs[0].set_Position( Map_To_Screen( renderer, [300,400] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
-       crosshairs[1].set_Position( Map_To_Screen( renderer, [100,200] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
        crosshairs[2].set_Position( Map_To_Screen( renderer, [400,500] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
-       
+       crosshairs[0].set_Position( Map_To_Screen( renderer, [300,400] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       crosshairs[1].set_Position( Map_To_Screen( renderer, [250,350] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+      
        
         document.onkeydown = kbDown_Event;
         document.onkeyup   = kbUp_Event; 
         
         myScene = new Scene( renderer );
-        myScene.insert( myCube, "DYNAMIC"   );
-        myScene.insert( mySphere, "DYNAMIC" );
+        myScene.insert( myCube, "DYNAMIC"     );
+        myScene.insert( mySphere, "DYNAMIC"   );
       
         myScene.insert( crosshairs[0], "GUI"  );
         myScene.insert( crosshairs[1], "GUI"  );
