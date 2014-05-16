@@ -1,20 +1,20 @@
+
 <html>
 
 <head>
-    <title>Pelumoottori<SIC> </title>
+<title>Pelimoottori</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 <script src="http://localhost:1339/socket.io/socket.io.js">               </script>
 <script src="/javascript/common/log.js">                                  </script>
-<script src="/javascript/screen/screenComs.js">                           </script>
-    
+<script src="/javascript/screen/screenComs.js">                            </script>
+
 <script type="text/javascript" src="/javascript/rendering/glMatrix.js"     ></script>
 <script type="text/javascript" src="/javascript/rendering/webglutils.js"   ></script>
 
 <script type="text/javascript" src="/javascript/rendering/Renderer.js"     ></script>
 <script type="text/javascript" src="/javascript/rendering/Shaderlib.js"    ></script>
 <script type="text/javascript" src="/javascript/rendering/Inputs.js"       ></script>
-<script type="text/javascript" src="/javascript/rendering/Scene.js"        ></script>
 
 <script type="text/javascript" src="/javascript/rendering/Material.js"     ></script>
 <script type="text/javascript" src="/javascript/rendering/Texture.js"      ></script>
@@ -23,11 +23,13 @@
 <script type="text/javascript" src="/javascript/rendering/Mesh.js"         ></script>
 <script type="text/javascript" src="/javascript/rendering/Entity.js"       ></script>
 <script type="text/javascript" src="/javascript/rendering/Camera.js"       ></script>
+<script type="text/javascript" src="/javascript/rendering/testCube.js"     ></script>
 <script type="text/javascript" src="/javascript/rendering/HUD_Item.js"     ></script>
 
-<script type="text/javascript" src="/javascript/rendering/testCube.js"     ></script>
 
-   
+
+
+
 <script id="pixel_Shader" type="x-shader/x-fragment">
     precision mediump float;
 
@@ -60,75 +62,23 @@
 
 
 
-<script id="HAX_VS" type="x-shader/x-vertex">
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
-    
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-
-    varying vec2 vTextureCoord;
-    
-    void main(void) 
-    {
-        gl_Position   = uMVMatrix * vec4(aVertexPosition, 1.0);
-        vTextureCoord = aTextureCoord;
-    }
-</script>
-
-
-   
-<script id="HAX_PS" type="x-shader/x-fragment">
-    
-    precision     mediump float;
-    varying vec2  vTextureCoord;
-    uniform sampler2D  uSampler;
-    
-    void main(void) 
-    {
-        vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-        gl_FragColor = vec4(textureColor.rgb , textureColor.a * 1.0);
-    }
-    
-</script>
-
-
-
-
 
 
 <script type="text/javascript">
 
-    var renderer   = null;    
-    var myCamera   = null;
-    var myScene    = null;
-    
-    var counter    =    0;
-    var dir        =    1;
-    
-    
-    function colorHax()
-    {
-        if( counter > 120 || counter < -120 )   dir *= -1;
-        counter += dir;
-     //   renderer.fillColor[2] = 0.5 + counter/250.0;
+   
+    var myCube       = null;
+    var myCrosshair  = null;
+    var mySphere     = null;
+    var renderer     = null;    
+    var myCamera     = null;
+    var myScene      = null;
+      
 
-        var tmp = 0.5 + Math.abs( (counter / 240));
-       
-   //     myGui.scale( [tmp,tmp,tmp]);
-        
-        var tmp2 = counter/100000;
-        //myGui.move( [tmp2,0,0] );
-    }
     
     
-   var myCube;
-   var mySphere;
-      
-      
     function tick() 
-    {   
-        colorHax();
+    {
         requestAnimFrame(tick);
      
         myCube.yaw( 0.012 );
@@ -136,30 +86,19 @@
         
         mySphere.roll( 0.001   );
         mySphere.pitch( 0.002 );
-        
          
         myScene.render();
-    }
+     }
     
     
     
-    function Map_To_Screen( renderer , hPoint )
-    {
-       var w2 = renderer.target_Width  / 2;
-       var h2 = renderer.target_Height / 2;
-       var x  =  ( hPoint[0] - w2  )   / w2;
-       var y  =  (  h2 - hPoint[1] )   / h2; 
-       return [x,y,0];
-    }
-    
-     function Connection( address )
+    function Connection( address )
     {
         this.socket = io.connect( address );
 
 	this.socket.on('message', function(data) 
         {
-            alert("LOL" + dataxCoordinate );
-           // myEntity.set_Position( [data.xCoordinate/100, data.yCoordinate/100, -15] );             
+            myEntity.set_Position( [data.xCoordinate/100, data.yCoordinate/100, -15] );             
         });   
     };
     
@@ -167,7 +106,7 @@
     
     
     function Start() 
-    {  
+    {
         renderer         = new Renderer( document.getElementById("Canvas")             );
         myCamera         = new   Camera(                                               );
        
@@ -182,53 +121,56 @@
         var guiMaterial  = new Material( ortShader, crosshair                          );
         var earthMat     = new Material( myShader , earthTex                           );
        
-            myCube       = test_Cube   ( renderer.gl , myMaterial                      ); 
-            mySphere     = test_Sphere ( renderer.gl , earthMat                        );
-     
-      var crosshairs     = [ test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08] ) ,
-                             test_Rectangle( renderer.gl, guiMaterial , [0.04,0.04] ) ,
-                             test_Rectangle( renderer.gl, guiMaterial , [0.16,0.16] )  ];
+            myCube      = test_Cube     ( renderer.gl , myMaterial                     ); 
+            mySphere    = test_Sphere   ( renderer.gl , earthMat                       );
+           
+        var crosshairs    = [  test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08] ) ,
+                               test_Rectangle( renderer.gl, guiMaterial , [0.04,0.04] ) ,
+                               test_Rectangle( renderer.gl, guiMaterial , [0.16,0.16] )  ];
       
              myCube.set_Position( [ 0,-1.5,-3 ]                                        );
            myCamera.set_Position( [ 0, 1.1, 0 ]                                        );
            mySphere.set_Position( [ 0, 1.0,-3 ]                                        );
+       
            
-       crosshairs[0].set_Position( Map_To_Screen( renderer, [300,400] )                );  // NOTE! In homogenous screen space! <  -1------+1 >
-       crosshairs[1].set_Position( Map_To_Screen( renderer, [100,200] )                );  // NOTE! In homogenous screen space! <  -1------+1 >
-       crosshairs[2].set_Position( Map_To_Screen( renderer, [400,500] )                );  // NOTE! In homogenous screen space! <  -1------+1 >
+       crosshairs[0].set_Position( Map_To_Screen( renderer, [300,400] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       crosshairs[1].set_Position( Map_To_Screen( renderer, [100,200] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       crosshairs[2].set_Position( Map_To_Screen( renderer, [400,500] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
        
        
         document.onkeydown = kbDown_Event;
         document.onkeyup   = kbUp_Event; 
         
-        myScene = new Scene( renderer            );
-        myScene.insert     ( myCube,  "DYNAMIC"  );
-        myScene.insert     ( mySphere, "DYNAMIC" );
+        myScene = new Scene( renderer );
+        myScene.insert( myCube, "DYNAMIC"   );
+        myScene.insert( mySphere, "DYNAMIC" );
       
         myScene.insert( crosshairs[0], "GUI"  );
         myScene.insert( crosshairs[1], "GUI"  );
         myScene.insert( crosshairs[2], "GUI"  );
-     
         
         myScene.insert( myCamera    , "CAM"  );
         
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
-      
+       
         var connection = new Connection( 'http://localhost:1339' );
         
         tick();     
     }
 
-    
+
 </script>
+
 
 </head>
 
+
 <body onload="Start();">
    
-    <canvas id="Canvas" style="border: none;" width="600" height="600"></canvas>
+    <canvas id="Canvas" style="border: none;" width="1024" height="768"></canvas>
 
-    <br/>  
+    <br/>
+  
 </body>
 
 </html>
