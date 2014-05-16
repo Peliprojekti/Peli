@@ -41,6 +41,8 @@
 </script>
 
 
+
+
 <script id="vertex_Shader" type="x-shader/x-vertex">
     attribute vec3 aVertexPosition;
     attribute vec2 aTextureCoord;
@@ -56,6 +58,12 @@
         vTextureCoord = aTextureCoord;
     }
 </script>
+
+
+
+
+
+
 
 
 
@@ -75,19 +83,24 @@
     }
 </script>
 
+// [255,0,255] -> Chroma key
+// gl_FragColor = vec4(texel_Color.rgb , texel_Color.a * 1.0);
+       
 
-   
+
 <script id="HAX_PS" type="x-shader/x-fragment">
-    precision mediump float;
-
-    varying vec2 vTextureCoord;
-    uniform sampler2D uSampler;
+    precision mediump           float;
+    varying vec2        vTextureCoord;
+    uniform sampler2D        uSampler;
   
     
     void main(void) 
     {
-        vec4 texel_Color = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-        gl_FragColor = vec4(texel_Color.rgb , texel_Color.a * 1.0);
+        vec4 texel = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+      
+        if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 ) discard;       
+        
+        gl_FragColor = texel;
     }
 </script>
 
@@ -156,47 +169,39 @@
        
         
        
-        var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"  );
-        var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"               );
+        var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"       );
+        var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"                    );
         
-        var myTexture    = new Texture( renderer.gl , "data/texture.png"               );  
-        var crosshair    = new Texture( renderer.gl , "data/crosshair1.png"            );
-        var earthTex     = new Texture( renderer.gl , "data/earth.png"                 );
+        var myTexture    = new Texture( renderer.gl , "data/texture.png"   , "FILTER_FANCY" );  
+        var crosshair    = new Texture( renderer.gl , "data/crosshair1.png", "FILTER_PLAIN" );
+        var earthTex     = new Texture( renderer.gl , "data/earth.png"     , "FILTER_FANCY" );
         
-        var myMaterial   = new Material( myShader , myTexture                          );               
-        var guiMaterial  = new Material( ortShader, crosshair                          );
-        var earthMat     = new Material( myShader , earthTex                           );
+        var myMaterial   = new Material( myShader , myTexture                               );               
+        var guiMaterial  = new Material( ortShader, crosshair                               );
+        var earthMat     = new Material( myShader , earthTex                                );
        
-            myCube      = test_Cube     ( renderer.gl , myMaterial                     ); 
-            mySphere    = test_Sphere   ( renderer.gl , earthMat                       );
-            heh         = test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08]       );
+            myCube      = test_Cube     ( renderer.gl , myMaterial                          ); 
+            mySphere    = test_Sphere   ( renderer.gl , earthMat                            );
+            heh         = test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08]            );
            
-      var crosshairs    = [  test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08] ) ,
-                             test_Rectangle( renderer.gl, guiMaterial , [0.04,0.04] ) ,
-                             test_Rectangle( renderer.gl, guiMaterial , [0.16,0.16] )  ];
-      
-             myCube.set_Position( [ 0,-1.5,-3 ]                                        );
-           myCamera.set_Position( [ 0, 1.1, 0 ]                                        );
-           mySphere.set_Position( [ 0, 1.0,-3 ]                                        );
+      var crosshairs    = [  test_Rectangle( renderer.gl, guiMaterial , [0.10,0.10] )  ];
+        
+             myCube.set_Position( [ 0,-1.5,-3 ]                                             );
+           myCamera.set_Position( [ 0, 1.1, 0 ]                                             );
+           mySphere.set_Position( [ 0, 1.0,-3 ]                                             );
        
-       crosshairs[2].set_Position( Map_To_Screen( renderer, [400,500] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
-       crosshairs[0].set_Position( Map_To_Screen( renderer, [300,400] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
-       crosshairs[1].set_Position( Map_To_Screen( renderer, [250,350] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
-      
+        crosshairs[0].set_Position( Map_To_Screen( renderer, [300,300] )                    );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+    
        
         document.onkeydown = kbDown_Event;
         document.onkeyup   = kbUp_Event; 
         
-        myScene = new Scene( renderer );
+        myScene = new Scene( renderer         );
         myScene.insert( myCube, "DYNAMIC"     );
         myScene.insert( mySphere, "DYNAMIC"   );
       
         myScene.insert( crosshairs[0], "GUI"  );
-        myScene.insert( crosshairs[1], "GUI"  );
-        myScene.insert( crosshairs[2], "GUI"  );
-     
-        
-        myScene.insert( myCamera    , "CAM"  );
+        myScene.insert( myCamera     , "CAM"  );
         
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
         

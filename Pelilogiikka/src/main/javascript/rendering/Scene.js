@@ -36,7 +36,7 @@ Scene.prototype.render = function( )
             rnd.draw( entry );   
          });
            
-       rnd.begin_Blending();  
+      // rnd.begin_Blending();  
        
          this.entries_GUI.forEach(function( entry )
          {
@@ -44,7 +44,7 @@ Scene.prototype.render = function( )
             rnd.draw_SS( entry );  
          });
       
-       rnd.end_Blending();
+   //    rnd.end_Blending();
        rnd.end();     // All drawing is to be done here.
 }
 

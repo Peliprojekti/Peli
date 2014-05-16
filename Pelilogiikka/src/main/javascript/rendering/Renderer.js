@@ -33,8 +33,7 @@
      mat4.identity( this.view_Matrix       );
       
       
-     this.gl.enable(this.gl.DEPTH_TEST);                /// ELSEWHERE!
-     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE); //  ANYWHERE ELSE!  
+     this.gl.enable(this.gl.DEPTH_TEST);                   /// ELSEWHERE!    
      }
 
 
@@ -101,6 +100,7 @@
      Renderer.prototype.begin_Blending = function()
      {
          this.disable_ZBuffer();
+         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE ); //  ANYWHERE ELSE!  
          this.gl.enable(this.gl.BLEND);
      }
      
@@ -115,7 +115,6 @@
      {
          this.gl.enable(this.gl.DEPTH_TEST);        /// ELSEWHERE!
      }
-     
      
      Renderer.prototype.disable_ZBuffer = function()
      {
