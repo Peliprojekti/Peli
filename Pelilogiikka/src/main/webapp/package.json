@@ -1,0 +1,15 @@
+{
+	"name": "toimintapeli",
+	"description": "Toimintapeli julkiselle näytölle, tai jotain",
+	"author": "Peliprojekti",
+	"dependencies": {
+		"engine.io": "1.1.1",
+		"socket.io": "0.9.16",
+		"express": "4.2.0",
+		"nconf": "0.6.9"
+		"winston": "0.7.3"
+	},
+	"devDependencies": {
+	},
+	"engine": "node >= 0.10.25"
+}

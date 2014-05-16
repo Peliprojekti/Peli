@@ -1,13 +1,30 @@
 var initServer = require("./initServer");
-var coms = require("./comServer");
+var comServer = require("./comServer");
+var fs = require('fs');
+var nconf = require('nconf');
+var logger = require('winston');
 
-var SERVER_PORT = '8080';
+nconf.argv().env().file({ file: 'peli_config.json'});
 
-var initServer = initServer.create();
-initServer.listen(SERVER_PORT);
+nconf.defaults({
+	http_port: 8080,
+	client_port: 1338,
+	screen_port: 1339,
+	/*
+	client_html: __dirname + '/phone.html',
+	screen_html: __dirname + '/screen/renderer.html',
+	*/
+	client_html: __dirname + '/client/dummy_client.html',
+	screen_html: __dirname + '/screen/dummy_screen.html',
+	dummy: false
+});
+	
 
-//var screen = screenServer.create();
-//screen.listen(SCREEN_PORT);
+logger.info("starting http server");
+initServer.create(nconf, logger);
+initServer.start();
 
-coms.startComs();
+logger.info("starting com server");
+comServer.create(nconf, logger);
+comServer.start();
 

@@ -57,17 +57,23 @@
             alert("Could not load shader!");
 	}
 		
-	gl_Context.useProgram( this.shaderProgram );
-
-	this.shaderProgram.vertexPositionAttribute = gl_Context.getAttribLocation( this.shaderProgram, "aVertexPosition");
-                                                     gl_Context.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
-
-	this.shaderProgram.textureCoordAttribute   = gl_Context.getAttribLocation(this.shaderProgram, "aTextureCoord");
-                                                     gl_Context.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
-		
-	this.shaderProgram.pMatrixUniform          = gl_Context.getUniformLocation(this.shaderProgram, "uPMatrix" );
-	this.shaderProgram.mvMatrixUniform         = gl_Context.getUniformLocation(this.shaderProgram, "uMVMatrix");
-	this.shaderProgram.samplerUniform          = gl_Context.getUniformLocation(this.shaderProgram, "uSampler");
+	this.bind( gl_Context );
     }
 
 
+
+    Shader.prototype.bind = function( gl )
+    {
+        gl.useProgram( this.shaderProgram );
+
+	this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation( this.shaderProgram, "aVertexPosition");
+                                                     gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
+
+	this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram, "aTextureCoord");
+                                                     gl.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
+		
+	this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "uPMatrix" );
+	this.shaderProgram.mvMatrixUniform         = gl.getUniformLocation(this.shaderProgram, "uMVMatrix");
+	this.shaderProgram.samplerUniform          = gl.getUniformLocation(this.shaderProgram, "uSampler");
+        
+    }
