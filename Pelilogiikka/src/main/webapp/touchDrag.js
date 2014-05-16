@@ -1,8 +1,10 @@
 function doTouchMove(event){
 	event.preventDefault();
-	var coords = getFingerCoords(0);
+	var coords = getRelativeCoords(0);
 	
+	//Test code
 	updateCoordinatesText(coords[0], coords[1]);	
+
 }
 
 function initCanvas(){
@@ -10,5 +12,3 @@ function initCanvas(){
 	canvas.addEventListener("touchmove", doTouchMove, false);
 	return canvas;
 }
-
-
