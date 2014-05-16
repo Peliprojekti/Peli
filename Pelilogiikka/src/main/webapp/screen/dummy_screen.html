@@ -1,9 +1,22 @@
 <html>
 <head>
 <title>Dummy screen</title>
-<script src="http://localhost:1339/socket.io/socket.io.js"> </script>
+<script src="http://10.42.0.1:1339/socket.io/socket.io.js"> </script>
 <script src="/javascript/common/log.js"> </script>
 <script src="/javascript/screen/screenComs.js"> </script>
+<script>
+window.onload = function() { 
+	var socket = io.connect('http://10.42.0.1:1339');
+
+	logWindow = document.getElementById("logWindow");
+	logWindow.innerHTML += ("logging initialized...<br />");
+
+	socket.on('message', function(data) {
+		console.log(data);
+		logWindow.innerHTML = (data + "<br />" + logWindow.innerHTML);
+	});
+};
+</script>
 
 </head>
 <body>

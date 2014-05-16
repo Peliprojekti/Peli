@@ -2,25 +2,24 @@
 <html>
     <head>
         <title>Layout Example</title>
-       <!--  <script src="http://localhost:1338/socket.io/socket.io.js"> </script>-->
-	<script type="text/javascript" src="swipe.js"> </script>
+        <script src="http://10.40.0.1:1338/socket.io/socket.io.js"> </script>
+	<script type="text/javascript" src="click.js"> </script>
 	
-      <script>/*  
-
+      <script>  
             window.onload = function() {
                 var startGameCallback = function(gameStarted, sessionToken) {
 
                 };
 
                 var connectionOkCallback = function(something, isOK) {
-                    //clientComs.startGame(startGameCallback);
+                    clientComs.startGame(startGameCallback);
                     startGameCallback(true, 1);
                 };
 
                 clientComs.initConnection('localhost', '1338', null, true, connectionOkCallback);
-            };*/
+            };
         </script>
-      <!-- <script src="/javascript/client/clientComs.js"></script> -->
+      	<script src="/javascript/client/clientComs.js"></script>
         <meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
@@ -58,7 +57,7 @@
             <script type="text/javascript">
             //http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
 
-            function doClick(event) {
+      /*      function doClick(event) {
 
                 var x = event.x;
                 var y = event.y;
@@ -89,14 +88,25 @@
                  canvas_width = canvas.width;
                  canvas_height = canvas.height;
                  alert("X=" + canvas_x + " Y=" + canvas_y + "\ncanvas width: " + canvas_width
-                 + " canvas height: " + canvas_height);*/
-            }
+                 + " canvas height: " + canvas_height);
+            }*/
+		
+		
 		function getFingerCoords(id) {
-			canvas_x = event.targetTouches[id].pageX;
- 			canvas_y = event.targetTouches[id].pageY;
+			var canvas_x = event.targetTouches[id].pageX;
+ 			var canvas_y = event.targetTouches[id].pageY;
 			return [canvas_x, canvas_y];
 		}
 
+		function getRelativeCoords(id){
+			var coords = getFingerCoords(id);
+			var canvasDimensions = getCanvasDimensions();
+			var relativeX = coords[0] / canvasDimensions[0];
+			var relativeY = coords[1] / canvasDimensions[1];
+			return [relativeX, relativeY];
+		}	
+		
+		//Test code
 		function updateCoordinatesText(x, y){
 			var canvasDimensions = getCanvasDimensions();		
 	
@@ -104,20 +114,29 @@
 			drawText("Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1], 3);
 		}
 
+		//Test code
+		function updateStartTimeText(time) {
+			drawText("Start time: " + time, 4);
+		}
+
+		//Test code
+		function updateCurrentTimeText(time) {
+			drawText("Current time: " + time, 5);
+		}
+		
+		//Test code
 		function updateStartCoordinatesText(x, y){
 			var canvasDimensions = getCanvasDimensions();		
 	
 			drawText("Start coordinates: (" + x + ", " + y + ")", 6);
 		}
-
-		function updateStartTimeText(time) {
-			drawText("Start time: " + time, 4);
+		
+		//Test code
+		function updateSendTimeText(time){
+			drawText("Sent time: " + time, 7);
 		}
 
-		function updateCurrentTimeText(time) {
-			drawText("Current time: " + time, 5);
-		}
-
+		//Test code
 		var texts = new Array();
 		function drawText(text, id){
 			var canvasDimensions = getCanvasDimensions();
@@ -157,7 +176,6 @@
 
 
             $(function() { // document ready, resize container
-                //canvas.addEventListener("click", doClick, false);
 		var canvas = initCanvas();
 
                 var ctx = canvas.getContext("2d");

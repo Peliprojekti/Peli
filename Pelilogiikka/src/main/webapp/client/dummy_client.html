@@ -1,15 +1,13 @@
 <html>
 <head>
 <title>Dummy client</title>
-<script src="http://localhost:1338/socket.io/socket.io.js"> </script>
+<script src="http://10.42.0.1:1338/socket.io/socket.io.js"> </script>
 <script src="/javascript/common/log.js"> </script>
 <script src="/javascript/client/clientComs.js"> </script>
 <script>
     
 window.onload = function() { 
 	var startGameCallback = function(gameStarted, sessionToken) {
-		window.alert("Start ok");
-
 		firstButton = document.getElementById("firstButton");
 		firstButton.count = 0;
 		firstButton.onclick = function() {
@@ -26,19 +24,17 @@ window.onload = function() {
 	};
 
 	var connectionOkCallback = function(something, isOK) {
-		window.alert("Connection ok");
-		//clientComs.startGame(startGameCallback);
 		startGameCallback(true, 1);
 	};
 
-	clientComs.initConnection('localhost', '1338', null, true, connectionOkCallback);
-	window.alert("onload done");
+	clientComs.initConnection('10.42.0.1', '1338', null, true, connectionOkCallback);
 };
 </script>
 </head>
 <body>
 <h1>Dummy client</h1>
 <p>This is purely for testing purposes.</p>
+<p>tuleekohan tää sinne?<p>
 
 <p>
 	<button type="button" id="firstButton">firstButton</button>

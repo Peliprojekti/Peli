@@ -8,7 +8,8 @@ var clientComs = {
 	onGameStarted: null,
 
 	initConnection: function(host, port, protocol, persistent_, callback) {
-		this.socket = io.connect('http://localhost:1338');
+		//this.socket = io.connect('http://localhost:1338');
+		this.socket = io.connect('http://' + host + ":" + port);
 		this.onConnection = callback;
 
 		this.socket.on('open', function() {
