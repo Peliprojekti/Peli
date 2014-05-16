@@ -148,14 +148,10 @@
         if( key_Down( 38 ) )   myCamera.forward( 0.5 );  
         if( key_Down( 40 ) )   myCamera.backward( 0.5 );
         
-        
         if( key_Down( 33 ) )   myCamera.pitch( 0.008 );
         if( key_Down( 34 ) )   myCamera.pitch( -0.008 );
          
-         
-      myScene.render();
-    
-     // renderer.draw_SS(  heh );
+        myScene.render();
     }
     
     
@@ -189,22 +185,20 @@
        
             myCube      = test_Cube     ( renderer.gl , myMaterial                     ); 
             mySphere    = test_Sphere   ( renderer.gl , earthMat                       );
-       
-           heh          = test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08]       );
-     
+            heh         = test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08]       );
            
-      var crosshairs  = [  test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08] ) ,
-                            test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08] ) ,
-                            test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08] )   ];
+      var crosshairs    = [  test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08] ) ,
+                             test_Rectangle( renderer.gl, guiMaterial , [0.04,0.04] ) ,
+                             test_Rectangle( renderer.gl, guiMaterial , [0.16,0.16] )  ];
       
              myCube.set_Position( [ 0,-1.5,-3 ]                                        );
            myCamera.set_Position( [ 0, 1.1, 0 ]                                        );
            mySphere.set_Position( [ 0, 1.0,-3 ]                                        );
        
            
-       crosshairs[0].set_Position( Map_To_Screen( renderer, [300,400] )                 );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
-       crosshairs[1].set_Position( Map_To_Screen( renderer, [100,200] )                 );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
-       crosshairs[2].set_Position( Map_To_Screen( renderer, [400,500] )                 );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       crosshairs[0].set_Position( Map_To_Screen( renderer, [300,400] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       crosshairs[1].set_Position( Map_To_Screen( renderer, [100,200] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
+       crosshairs[2].set_Position( Map_To_Screen( renderer, [400,500] )                );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
        
        
         document.onkeydown = kbDown_Event;
