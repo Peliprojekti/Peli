@@ -19,32 +19,29 @@ module.exports = new function() {
 		logger = logger_;
 		
         server = http.createServer(function(request, response) {
-            console.log(request.url);
             if (request.method !== ("GET")) {
-				logger.info("Got something else than GET");
+				logger.warn("Got something else than GET");
                 return response.end("Simple File Server, only does GET");
             }
+            logger.info("recieved request for: " + request.url);
 
             var filename = nconf.get('client_html');
-            var url = request.url;
 
-            if (url.indexOf('/javascript') == 0) {
-                filename = __dirname + "/.." + url;
+            if (request.url.indexOf('/javascript') == 0) {
+                response.setHeader('content-type', 'text/javascript');
+                filename = __dirname + "/.." + request.url;
             }
-//
-//            if (url.indexOf('/screen/javascript') == 0) {
-//                filename = __dirname + "/../" + url;
-//            }
-
-            if (url.indexOf('/data') == 0) {
-                filename = __dirname + "/../javascript/rendering" + url;
+            else if (request.url.indexOf('/data') == 0) {
+                filename = __dirname + "/../javascript/rendering" + request.url;
             }
-
-            if (request.url == "/screen/screen.html") {
+            else if (request.url == "/screen/screen.html") {
                 filename = nconf.get('screen_html');
             }
-
-            //console.log("requested: " + url + ",serving: " + filename);
+            else if (request.url == '/socket.io/socket.io.js') {
+                logger.info("trying to provide socket.io.js");
+                response.setHeader('content-type', 'text/javascript');
+                filename = __dirname + "/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js";
+            }
 
             fs.createReadStream(filename).pipe(response);
         });

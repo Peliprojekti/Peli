@@ -4,9 +4,9 @@
     <title>Pelumoottori<SIC> </title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
-<script src="http://10.42.0.1:1339/socket.io/socket.io.js">               </script>
-<script src="/javascript/common/log.js">                                  </script>
-<script src="/javascript/screen/screenComs.js">                           </script>
+<script type="text/javascript" src="/socket.io/socket.io.js"               ></script>
+<script type="text/javascript" src="/javascript/common/log.js"             ></script>
+<script type="text/javascript" src="/javascript/screen/screenComs.js"      ></script>
     
 <script type="text/javascript" src="/javascript/rendering/glMatrix.js"     ></script>
 <script type="text/javascript" src="/javascript/rendering/webglutils.js"   ></script>
@@ -221,7 +221,7 @@
         
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
       
-        var connection = new Connection( 'http://10.42.0.1:1339' );
+        var connection = new Connection( 'http://' + location.hostname + ':1339' );
         
         tick();     
     }
