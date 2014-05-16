@@ -4,17 +4,29 @@
 <title>Pelimoottori</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
-<script src="http://localhost:1339/socket.io/socket.io.js"> </script>
-<script src="/javascript/common/log.js"> </script>
-<script src="/javascript/screen/screenComs.js"> </script>
+<script src="http://localhost:1339/socket.io/socket.io.js">               </script>
+<script src="/javascript/common/log.js">                                  </script>
+<script src="/javascript/screen/screenComs.js">                            </script>
+
 <script type="text/javascript" src="/javascript/rendering/glMatrix.js"     ></script>
 <script type="text/javascript" src="/javascript/rendering/webglutils.js"   ></script>
+
 <script type="text/javascript" src="/javascript/rendering/Renderer.js"     ></script>
 <script type="text/javascript" src="/javascript/rendering/Shaderlib.js"    ></script>
+<script type="text/javascript" src="/javascript/rendering/Inputs.js"       ></script>
+
+
 <script type="text/javascript" src="/javascript/rendering/Material.js"     ></script>
 <script type="text/javascript" src="/javascript/rendering/Texture.js"      ></script>
+
+<script type="text/javascript" src="/javascript/rendering/Buffer.js"       ></script>
 <script type="text/javascript" src="/javascript/rendering/Mesh.js"         ></script>
+<script type="text/javascript" src="/javascript/rendering/Entity.js"       ></script>
+<script type="text/javascript" src="/javascript/rendering/Camera.js"       ></script>
 <script type="text/javascript" src="/javascript/rendering/testCube.js"     ></script>
+<script type="text/javascript" src="/javascript/rendering/HUD_Item.js"     ></script>
+
+
 
 
 
@@ -49,43 +61,87 @@
 </script>
 
 
+
+
+
 <script type="text/javascript">
 
-
-    var myEntity   = null;
-    var renderer   = null;
+   
+    var myCube       = null;
+    var myCrosshair  = null;
+    var mySphere     = null;
+    var renderer     = null;    
+    var myCamera     = null;
       
 
     
+    
     function tick() 
     {
-        requestAnimFrame(tick);
+        mySphere.roll( 0.001   );
+        mySphere.pitch( 0.002 );
+      
+        renderer.bind_Camera( myCamera );
+        
+        renderer.begin();   // All drawing is to be done here.
             
-     
-        renderer.draw_Scene(  myEntity );
+            renderer.draw( myCube );
+            renderer.draw( mySphere );
+            
+            myCube.move( [0,5,0] );
+            renderer.draw( myCube );
+            myCube.move( [0,-5,0] );            // FILTHY HAX. get push/pop
+            
+            renderer.begin_Blending();
+            renderer.draw_SS( myCrosshair );
+            renderer.end_Blending();
+        
+        renderer.end();     // All drawing is to be done here.
     }
+    
+    
+    
+    function Connection( address )
+    {
+        this.socket = io.connect( address );
+
+	this.socket.on('message', function(data) 
+        {
+            myEntity.set_Position( [data.xCoordinate/100, data.yCoordinate/100, -15] );             
+        });   
+    };
+    
+    
     
     
     function Start() 
     {
-        renderer       = new Renderer( document.getElementById("Canvas")             );
-        var myShader   = new   Shader( renderer.gl , "vertex_Shader", "pixel_Shader" );
-        var myTexture  = new  Texture( renderer.gl , "/data/texture.png"              );  
-        var myMaterial = new Material( myShader    , myTexture                       );
-        myEntity       =    test_Cube( renderer.gl , myMaterial                      );
+        renderer        = new Renderer( document.getElementById("Canvas")              );
+        myCamera        = new   Camera(                                                );
         
-        myEntity.move( [0,0,-30] );
+        var myShader    = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"   );
+        var ortShader   = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"                );
         
-        var socket = io.connect('http://localhost:1339');
-
-	socket.on('message', function(data) 
-        {
-		
-                myEntity.set_Position( [data.xCoordinate/100, data.yCoordinate/100, -15] );             
-        });
-                
- 
-              
+        var myTexture   = new Texture( renderer.gl , "/data/texture.png"               );  
+        var crosshair   = new Texture( renderer.gl , "/data/crosshair1.png"            );
+        var earthTex    = new Texture( renderer.gl , "/data/earth.png"                 );
+        
+        var myMaterial  = new Material( myShader , myTexture                          );               
+        var guiMaterial = new Material( ortShader, crosshair                          );
+        var earthMat    = new Material( myShader , earthTex                           );
+       
+        myCube          = test_Cube     ( renderer.gl , myMaterial                    ); 
+        mySphere        = test_Sphere   ( renderer.gl, earthMat                       );
+        myCrosshair     = test_Rectangle( renderer.gl, guiMaterial, [0.08,0.08]       );
+        
+             myCube.set_Position( [0,-1.5,-3]                            );
+           myCamera.set_Position( [0, 1.1, 0]                            );
+           mySphere.set_Position( [0, 1.0,-3]                            );
+        myCrosshair.set_Position( Map_To_Screen( renderer, [300,300] )   );                   
+        
+          
+        var connection = new Connection( 'http://localhost:1339' );
+                          
         tick();     
     }
 
