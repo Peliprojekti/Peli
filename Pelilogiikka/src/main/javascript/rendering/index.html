@@ -4,25 +4,27 @@
     <title>Pelumoottori<SIC> </title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
-<script type="text/javascript" src="glMatrix.js"        ></script>
-<script type="text/javascript" src="webglutils.js"      ></script>
+<script type="text/javascript" src="glMatrix.js"               ></script>
+<script type="text/javascript" src="webglutils.js"             ></script>
 
-<script type="text/javascript" src="Renderer.js"        ></script>
-<script type="text/javascript" src="Shaderlib.js"       ></script>
-<script type="text/javascript" src="Inputs.js"          ></script>
-<script type="text/javascript" src="Scene.js"           ></script>
+<script type="text/javascript" src="Renderer.js"               ></script>
+<script type="text/javascript" src="Shaderlib.js"              ></script>
+<script type="text/javascript" src="Inputs.js"                 ></script>
+<script type="text/javascript" src="Scene.js"                  ></script>
 
-<script type="text/javascript" src="Material.js"        ></script>
-<script type="text/javascript" src="Texture.js"         ></script>
+<script type="text/javascript" src="Material.js"               ></script>
+<script type="text/javascript" src="Texture.js"                ></script>
 
-<script type="text/javascript" src="Buffer.js"          ></script>
-<script type="text/javascript" src="Mesh.js"            ></script>
-<script type="text/javascript" src="Entity.js"          ></script>
-<script type="text/javascript" src="Camera.js"          ></script>
-<script type="text/javascript" src="HUD_Item.js"        ></script>
-<script type="text/javascript" src="parser/Importer.js" ></script>
+<script type="text/javascript" src="Buffer.js"                 ></script>
+<script type="text/javascript" src="Mesh.js"                   ></script>
+<script type="text/javascript" src="Entity.js"                 ></script>
+<script type="text/javascript" src="Camera.js"                 ></script>
+<script type="text/javascript" src="HUD_Item.js"               ></script>
+<script type="text/javascript" src="parser/Importer.js"        ></script>
+<script type="text/javascript" src="parser/parser_Geometry.js" ></script>
+<script type="text/javascript" src="parser/Filereader.js"      ></script>
 
-<script type="text/javascript" src="testCube.js"        ></script>
+<script type="text/javascript" src="testCube.js"               ></script>
 
    
    
@@ -135,17 +137,20 @@
         if( key_Down( 37 ) )   myCamera.yaw( 0.05  );
         if( key_Down( 39 ) )   myCamera.yaw( -0.05 );
           
-        if( key_Down( 38 ) )   myCamera.forward( 0.5 );  
-        if( key_Down( 40 ) )   myCamera.backward( 0.5 );
+        if( key_Down( 38 ) )   myCamera.forward( 1.0 );  
+        if( key_Down( 40 ) )   myCamera.backward( 1.0 );
         
-        if( key_Down( 33 ) )   myCamera.pitch( 0.008 );
-        if( key_Down( 34 ) )   myCamera.pitch( -0.008 );
+      //  if( key_Down( 33 ) )   myCamera.pitch( 0.008 );
+      //  if( key_Down( 34 ) )   myCamera.pitch( -0.008 );
          
-        myScene.render();
+          if( key_Down( 33 ) )   myCamera.move([0,1,0]);
+          if( key_Down( 34 ) )   myCamera.move([0,-1,0]);
+         
+           
+          myScene.render();
     }
     
-    
-    
+       
     function Map_To_Screen( renderer , hPoint )
     {
        var w2 = renderer.target_Width  / 2;
@@ -155,36 +160,35 @@
        return [x,y,0];
     }
     
-    
-    
+       
+       
     function Start() 
     {  
-        renderer         = new Renderer( document.getElementById("Canvas")                  );
-        myCamera         = new   Camera( renderer, 0.1, 1000, 45                            );
+        renderer         = new Renderer( document.getElementById("Canvas")                   );
+        myCamera         = new   Camera( renderer, 0.1, 1000, 65                             );
        
-        var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"       );
-        var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"                    );
+        var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"        );
+        var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"                     );
         
-        var myTexture    = new Texture( renderer.gl , "data/texture.png"   , "FILTER_FANCY" );  
-        var crosshair    = new Texture( renderer.gl , "data/crosshair1.png", "FILTER_PLAIN" );
-        var earthTex     = new Texture( renderer.gl , "data/earth.png"     , "FILTER_FANCY" );
+        var myTexture    = new Texture( renderer.gl , "data/texture.png"   , "FILTER_FANCY"  );  
+        var crosshair    = new Texture( renderer.gl , "data/crosshair1.png", "FILTER_PLAIN"  );
+        var earthTex     = new Texture( renderer.gl , "data/earth.png"     , "FILTER_FANCY"  );
         
-        var myMaterial   = new Material( myShader , myTexture                               );               
-        var guiMaterial  = new Material( ortShader, crosshair                               );
-        var earthMat     = new Material( myShader , earthTex                                );
+        var myMaterial   = new Material( myShader , myTexture                                );               
+        var guiMaterial  = new Material( ortShader, crosshair                                );
+        var earthMat     = new Material( myShader , earthTex                                 );
        
-            myCube      = test_Cube     ( renderer.gl , myMaterial                          ); 
-            mySphere    = test_Sphere   ( renderer.gl , earthMat                            );
-            heh         = test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08]            );
+            myCube       = test_Cube     ( renderer.gl , myMaterial                          ); 
+            mySphere     = test_Sphere   ( renderer.gl , earthMat                            );
+            heh          = test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08]            );
            
-      var crosshairs    = [  test_Rectangle( renderer.gl, guiMaterial , [0.10,0.10] )  ];
+        var crosshairs   = [  test_Rectangle( renderer.gl, guiMaterial , [0.10,0.10] )  ];
         
-             myCube.set_Position( [ 0,-1.5,-3 ]                                             );
-           myCamera.set_Position( [ 0, 1.1, 0 ]                                             );
-           mySphere.set_Position( [ 0, 1.0,-3 ]                                             );
+             myCube.set_Position( [ 0,-1.5,-3 ]                                              );
+           myCamera.set_Position( [ 0, 1.1, 0 ]                                              );
+           mySphere.set_Position( [ 0, 1.0,-3 ]                                              );
        
-        crosshairs[0].set_Position( Map_To_Screen( renderer, [300,300] )                    );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
-    
+        crosshairs[0].set_Position( Map_To_Screen( renderer, [300,300] )                     );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
        
         document.onkeydown = kbDown_Event;
         document.onkeyup   = kbUp_Event; 
@@ -197,31 +201,10 @@
         myScene.insert( myCamera     , "CAM"  );
         
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
+    
+        import_Scene( renderer.gl, "data/TestLevel/Test.irr"  );
         
-      //  var worldMesh   = import_Mesh( renderer.gl , "data/object.obj");
-     //   var worldEntity = new Entity( worldMesh, myMaterial );
-
-    //    myScene.insert( worldEntity, "DYNAMIC" );
-        
-        
-        
-     //  var worldMesh   = import_Irmesh( renderer.gl, "data/XD.txt");
-     //  var worldEntity = new Entity( worldMesh, myMaterial );
-        
-       //myScene.insert( worldEntity , "DYNAMIC" );
-       
-        var meshSet  = import_Irmesh( renderer.gl, "data/XD.txt");
-        
-        
-        var e1 = new Entity( renderer.gl meshSet[0], myMaterial );
-        var e2 = new Entity( rendere.gl, meshSet(1], myMaterial );
-        
-        
-        myScene.insert( e1 , "DYNAMIC" );
-        myScene.insert( e2 , "DYNAMIC" );
-        
-        
-       tick();     
+        tick();     
     }
 
     
@@ -231,7 +214,7 @@
 
 <body onload="Start();">
    
-    <canvas id="Canvas" style="border: none;" width="600" height="600"></canvas>
+    <canvas id="Canvas" style="border: none;" width="1200" height="800"></canvas>
 
     <br/>  
 </body>
