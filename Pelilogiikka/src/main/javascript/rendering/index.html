@@ -167,6 +167,9 @@
         renderer         = new Renderer( document.getElementById("Canvas")                   );
         myCamera         = new   Camera( renderer, 0.1, 1000, 65                             );
        
+         myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
+       
+       
        
         var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"        );
         var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"                     );
@@ -186,7 +189,7 @@
         var crosshairs   = [  test_Rectangle( renderer.gl, guiMaterial , [0.10,0.10] )  ];
         
              myCube.set_Position( [ 0,-1.5,-3 ]                                              );
-           myCamera.set_Position( [ 0, 1.1, 0 ]                                              );
+       //    myCamera.set_Position( [ 0, 1.1, 0 ]                                              );
            mySphere.set_Position( [ 0, 1.0,-3 ]                                              );
        
         crosshairs[0].set_Position( Map_To_Screen( renderer, [300,300] )                     );                                                 // NOTE! In homogenous screen space! <  -1------+1 >

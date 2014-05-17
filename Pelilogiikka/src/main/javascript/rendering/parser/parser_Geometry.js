@@ -54,6 +54,9 @@
         for( var i = 1; i <= vertex_Header[0]; i++ )               
         {
             var vertex = parse_Vertex( lines[i]);
+            
+        //    alert("New vertex("+i+"/"+vertex_Header[0]+") " + vertex );
+            
             vertices.push( vertex );
         }
       
@@ -68,11 +71,11 @@
         // [0] is the header, skip it.
         var indices = [];
      
-        for( var i = 1; i < lines.length-1; i++ )     // For each line, extract indices. -1 to remove the last dead line
+        for( var i = 1; i < lines.length-1; i++ )         // For each line, extract indices. -1 to remove the last dead line
         {     
-             var numerals = lines[i].split(" ");    // Split each index line into tokens
+             var numerals = lines[i].split(" ");          // Split each index line into tokens
        
-             for( var j = 0; j < numerals.length-1; j++ )   // Last is NAN?
+             for( var j = 0; j < numerals.length; j++ )   // Last is NAN?  THE FUCK? Its not? Is it? -> Potential future issue here!
              {
                  var index = parseInt( numerals[j] );
                  indices.push( index );
@@ -148,14 +151,16 @@
        
        for( var b = 0; b < batches.length; b++ )
        {
-       var batch       = parse_Batch( batches[b] );   
+            var batch       = parse_Batch( batches[b] );   
+        
+            var vertex_List = [];
+            var  index_List = [];
+            var     uv_List = [];
+            var        vCnt = batch[0].length;
+            var        iCnt = batch[1].length;
         
         
-       var vertex_List = [];
-       var  index_List = [];
-       var     uv_List = [];
-       var        vCnt = batch[0].length;
-       var        iCnt = batch[1].length;
+      //  alert( "Filling mesh with " +  batch[0] );
         
        for( var i = 0; i < vCnt; i++ )
        {
@@ -177,8 +182,7 @@
        }
        
        
-       
-    alert("Vertices: " + vertex_List.length + " \n Indices" +index_List.length );
+   // alert("Vertices: " + vertex_List.length/3 + " \n Indices" +index_List.length );
    
     return meshList;
     }

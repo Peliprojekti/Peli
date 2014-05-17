@@ -12,6 +12,20 @@
     {
         this.position = position;
     }
+   
+    Orientation.prototype.set_Rotation = function( rotation )
+    {
+        this.angles = rotation;
+    }
+    
+    Orientation.prototype.set_Scale = function( scales )
+    {
+        this.scales[0] = scales[0];
+        this.scales[1] = scales[1];
+        this.scales[2] = scales[2]; 
+    }
+    
+    
     
     Orientation.prototype.displace = function( displacement ) 
     {
@@ -33,7 +47,7 @@
         this.angles[2]   += radians;
     }
     
-    Orientation.prototype.scale = function( axes)
+    Orientation.prototype.scale = function( axes )
     {
      	this.scales[0] = axes[0];
         this.scales[1] = axes[1];
@@ -131,6 +145,17 @@
     {
         this.orientation.set_Position( point );
     };
+    
+    Entity.prototype.set_Rotation = function( rotation )
+    {
+        this.orientation.set_Rotation( rotation );
+    }
+        
+    Entity.prototype.set_Scale  = function( scales )
+    {
+        this.orientation.set_Scale( scales );
+    }
+    
 	
     Entity.prototype.move = function( displacement )
     { 
