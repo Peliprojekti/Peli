@@ -38,10 +38,10 @@
            normal[ i ] =  parseFloat( components[3+i] ); // Normals
        }
        
-       for( var i = 0; i < 2; i++ )
-       {
-              uv[ i  ] =  parseFloat( components[7+i] ); // Texcoords
-       }
+      
+       uv[ 0 ] =  parseFloat( components[7+0] ); // Texcoords
+       uv[ 1 ] =  parseFloat( components[7+1] ); // Texcoords
+       
     
     return [ point, normal, uv ];
     }
@@ -54,9 +54,6 @@
         for( var i = 1; i <= vertex_Header[0]; i++ )               
         {
             var vertex = parse_Vertex( lines[i]);
-            
-        //    alert("New vertex("+i+"/"+vertex_Header[0]+") " + vertex );
-            
             vertices.push( vertex );
         }
       
@@ -159,23 +156,29 @@
             var        vCnt = batch[0].length;
             var        iCnt = batch[1].length;
         
-        
-      //  alert( "Filling mesh with " +  batch[0] );
-        
+       
        for( var i = 0; i < vCnt; i++ )
        {
-         vertex_List.push( batch[0][i][0][0] );
+         /// HAX HAX HAX
+         batch[0][i][0][0] *= -1.0;
+         /// HAX HAX HAX 
+         
+         
+         vertex_List.push( batch[0][i][0][0] );        // MIRROR X-axis? WTF? Why does the world mirror otherwise?
+         
          vertex_List.push( batch[0][i][0][1] );
          vertex_List.push( batch[0][i][0][2] );
-         
+             
              uv_List.push( batch[0][i][2][0] );
-             uv_List.push( batch[0][i][2][1] );
+             uv_List.push( -batch[0][i][2][1] );     // ATTENTION! Some confusion with UV-coords... FLIPPED V?!?! WHAT THE HELL?
         }
-       
+      
        for( var j = 0; j < iCnt; j++ )
        {
-           index_List.push( batch[1][j]);
+           index_List.push( batch[1][j] );
        }
+      
+      
             
        var mesh = new Mesh  ( gl, vertex_List, index_List, uv_List );   
        meshList.push( mesh ); 

@@ -164,6 +164,15 @@
             var material = new Material( shader, texture                          );
 
             var entity = new Entity( item, material );
+                
+                /// HAX HAX HAX
+                position[0] *= -1.0;
+                rotation[2] *= -1.0;
+            
+                /// HAX HAX HAX
+                
+                
+                  
                 entity.set_Position( position  );
                 entity.set_Rotation( rotation  );
                 entity.set_Scale   ( scale     );
@@ -188,7 +197,6 @@
             
             if( descriptor[0] == null) 
             {  
-                alert("Broke after " + i + " objects");
                 return scene;
             }
             
