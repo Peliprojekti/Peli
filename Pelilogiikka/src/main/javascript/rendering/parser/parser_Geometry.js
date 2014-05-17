@@ -175,6 +175,10 @@
        var mesh = new Mesh  ( gl, vertex_List, index_List, uv_List );   
        meshList.push( mesh ); 
        }
+       
+       
+       
+    alert("Vertices: " + vertex_List.length + " \n Indices" +index_List.length );
    
     return meshList;
     }

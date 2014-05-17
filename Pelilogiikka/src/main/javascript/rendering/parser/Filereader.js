@@ -13,5 +13,5 @@ function FileHelper( pathOfFileToReadFrom )
         request.send(null);
         var returnValue = request.responseText;
         return returnValue;
-    }
+    };
 }

@@ -167,6 +167,7 @@
         renderer         = new Renderer( document.getElementById("Canvas")                   );
         myCamera         = new   Camera( renderer, 0.1, 1000, 65                             );
        
+       
         var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"        );
         var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"                     );
         
@@ -202,7 +203,14 @@
         
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
     
-        import_Scene( renderer.gl, "data/TestLevel/Test.irr"  );
+        
+        var scene2 = import_Scene( renderer, "data/TestLevel/Test.irr"  );
+            scene2.insert( myCube, "DYNAMIC"     );
+            scene2.insert( mySphere, "DYNAMIC"   );
+            scene2.insert( crosshairs[0], "GUI"  );
+            scene2.insert( myCamera     , "CAM"  );
+                
+        myScene = scene2;
         
         tick();     
     }

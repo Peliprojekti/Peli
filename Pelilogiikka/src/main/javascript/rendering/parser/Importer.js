@@ -110,31 +110,55 @@
     
     
     
-    
-    
-    function build_Node( node_Descriptor )
+    function fix_ResourcePath( full_Path )
     {
+        var clip = full_Path.indexOf( "data" );
+        return  full_Path.substring( clip, full_Path.length );
+    }
+    
+   
+    
+    function build_Node( gl, node_Descriptor )
+    {
+        var texture  = new Texture( gl , "data/texture.png" , "FILTER_FANCY"  );  
+        var shader   = new  Shader( gl , "vertex_Shader", "pixel_Shader"      );
+        var material = new Material( shader, texture );
         
-       // data[0];
-       // cursor = data[1];
+        var meshName = node_Descriptor[0];
+        var position = node_Descriptor[1];
+        var rotation = node_Descriptor[2];
         
+        var mesh     = import_Irmesh( gl, fix_ResourcePath( meshName ) );
+           
+        var entityList = [];
+        
+        mesh.forEach( function( item )
+        {
+            var entity = new Entity( item, material );
+            entityList.push( entity );
+        });
+        
+    return entityList;
     }
     
     
-    function import_Scene( gl, fileName )
+    function import_Scene( renderer, fileName )
     {
+        var scene = new Scene( renderer );
+        var    gl = renderer.gl;
+        
         var rawData = FileHelper.readStringFromFileAtPath ( fileName );
+        var cursor  = 0;
         
-        var cursor = 0;
+        var descriptor = next_Node( rawData, cursor    );
+        var       node = build_Node( gl, descriptor[0] );
         
-        var descriptor = next_Node( rawData, cursor );
-        var       node = build_Node( descriptor );
+        node.forEach( function( item )
+        {
+            scene.insert( item , "DYNAMIC" );
+        });
         
+       
         
-         
-        alert("Manifest position " + node[1][0] + " : " + node[1][1] + " : " + node[1][2] );
-        alert("Manifest rotation " + node[2][0] + " : " + node[2][1] + " : " + node[2][2] );
-        alert("Manifest mesh     " + node[0]);    
-        
-        
+    return scene;
     }
