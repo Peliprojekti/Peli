@@ -204,9 +204,24 @@
     //    myScene.insert( worldEntity, "DYNAMIC" );
         
         
-       import_Irmesh( renderer.gl, "data/XD.txt")
         
-        tick();     
+     //  var worldMesh   = import_Irmesh( renderer.gl, "data/XD.txt");
+     //  var worldEntity = new Entity( worldMesh, myMaterial );
+        
+       //myScene.insert( worldEntity , "DYNAMIC" );
+       
+        var meshSet  = import_Irmesh( renderer.gl, "data/XD.txt");
+        
+        
+        var e1 = new Entity( renderer.gl meshSet[0], myMaterial );
+        var e2 = new Entity( rendere.gl, meshSet(1], myMaterial );
+        
+        
+        myScene.insert( e1 , "DYNAMIC" );
+        myScene.insert( e2 , "DYNAMIC" );
+        
+        
+       tick();     
     }
 
     

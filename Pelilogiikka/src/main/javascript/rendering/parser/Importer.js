@@ -19,12 +19,31 @@ function FileHelper( pathOfFileToReadFrom )
 
 
 
-
-
- // Expected format,  X,Y,Z, I,J,K, ?,U,V
-    
-    function parse_Vertex( string )
+    function parse_Vertex_Header( header )
     {
+        var begin_Vcnt = header.indexOf('vertexCount', 0 );
+        var end_Vcnt   = header.indexOf('">', begin_Vcnt )
+        begin_Vcnt    += 13;                                            // HAX -> sizeof( vertexCount=" );
+        var vCnt       = header.substring( begin_Vcnt,end_Vcnt);        // WTF? Miksi saatanassa se ottaa verteksikuvauksen mukaan?
+        
+    return [ vCnt, "unused", "unused" ];
+    }
+
+    function parse_Index_Header( header )
+    {
+        var begin_Icnt  = header.indexOf('indexCount', 0 );
+            begin_Icnt += 12;                                        // HAX -> sizeof( indexCount=" );
+        var end_Icnt    = header.indexOf('">', begin_Icnt )
+        var iCnt        = header.substring( begin_Icnt,end_Icnt);        // WTF? Miksi saatanassa se ottaa verteksikuvauksen mukaan?
+        
+    return [ iCnt, "unused", "unused" ];
+    }
+    
+    
+    
+
+    function parse_Vertex( string )     // Expected format,  X,Y,Z, I,J,K, ?,U,V
+    {   
        var components = string.split(" ");
        var point      = [];
        var normal     = [];
@@ -45,14 +64,13 @@ function FileHelper( pathOfFileToReadFrom )
     }
 
 
-
-
     function parse_Vertexlist( vertex_Header, lines )
     {
+        alert("Vertices in list: " + vertex_Header[0]);
+        
         var vertices = [];
-     
-        // Grab vertices
-        for( var i = 1; i < vertex_Header[0]; i++ )               
+ 
+        for( var i = 1; i <= vertex_Header[0]; i++ )               
         {
             var vertex = parse_Vertex( lines[i]);
             vertices.push( vertex );
@@ -61,71 +79,43 @@ function FileHelper( pathOfFileToReadFrom )
     return vertices;
     }
     
-    
+
+   
     
     function parse_Indexlist( index_Header, lines  )
     {
-        //alert( "INDEX LINES: " + index_Header );
-        
-        var start = index_Header[0];
-        var  end  = index_Header[1];
-        alert("Index starts: " + start + " as : " + lines[start]);
-           
-        
-    }
-
-
-
-
-
-    function parse_Vertex_Header( header )
-    {
-        var begin_Vcnt = header.indexOf('vertexCount', 0 );
-        var end_Vcnt   = header.indexOf('">', begin_Vcnt )
-        begin_Vcnt    += 13;                                            // HAX -> sizeof( vertexCount=" );
-        var vCnt       = header.substring( begin_Vcnt,end_Vcnt);        // WTF? Miksi saatanassa se ottaa verteksikuvauksen mukaan?
-        
-    return [ vCnt, "unused", "unused" ];
-    }
-
-    function parse_Index_Header( header, starts_At, ends_At )
-    {
-       // alert( header );
+        // [0] is the header, skip it.
+        var indices = [];
+     
+        for( var i = 1; i < lines.length-1; i++ )     // For each line, extract indices. -1 to remove the last dead line
+        {     
+             var numerals = lines[i].split(" ");    // Split each index line into tokens
        
-        var begin_Icnt = header.indexOf('indexCount', 0 );
-        var end_Icnt   = header.indexOf('">', begin_Icnt )
-          begin_Icnt  += 12;                                            // HAX -> sizeof( indexCount=" );
-        var iCnt       = header.substring( begin_Icnt,end_Icnt);        // WTF? Miksi saatanassa se ottaa verteksikuvauksen mukaan?
-        
-    return [ iCnt, starts_At, ends_At ];
+             for( var j = 0; j < numerals.length-1; j++ )   // Last is NAN?
+             {
+                 var index = parseInt( numerals[j] );
+                 indices.push( index );
+             }
+        }
+           
+    return indices;
     }
-   
-
-
-
+    
+    
 
     function parse_Batch( batch )
     {
+      // Split the vertex string into lines
+      var vertex_Lines  = batch[0].toString().split("\n");
+      var vertex_Header = parse_Vertex_Header( vertex_Lines[0] );
+      var vertices      = parse_Vertexlist( vertex_Header, vertex_Lines );
       
-        /*
-      var lines          = batch.toString().split("\n");
-   
-      var vertex_Header  = parse_Vertex_Header( lines[0]  );                              // Any point in having this?
-      var index_Starts   = (1 + parseInt(vertex_Header[0]));
-      var index_Header   = parse_Index_Header (  lines[ index_Starts ], index_Starts  );  // 0 is the vertex header. 1 line per vertex definition. -> 1 + vertex_Header[0] lines?
-      
-      var vertices       = parse_Vertexlist( vertex_Header, lines );
-      var indices        = parse_Indexlist (  index_Header, lines );
-      
+      var index_Lines   = batch[1].toString().split("\n");
+      var index_Header  = parse_Index_Header( index_Lines[0] );
+      var indices       = parse_Indexlist( index_Header, index_Lines );
+    
     return [ vertices, indices ];
-    */
-   return null;
     }
-
-
-
-
-
 
 
 
@@ -137,13 +127,12 @@ function FileHelper( pathOfFileToReadFrom )
        if( begin_Verts == -1 )   return [ null, 0, null, 0 ];       // No verts - game over.
    
        var  end_Verts  = rawData.indexOf("</vertices>", begin_Verts );
-       var      vData  =  rawData.substring(begin_Verts, end_Verts); 
-  
-       var begin_Inds  = rawData.indexOf("<indices"  , end_Verts  );              
-       var   end_Inds  = rawData.indexOf("</indices>", begin_Inds );
-       var      iData  = rawData.substring( begin_Inds, end_Inds  ); 
+       var      vData  = rawData.substring(begin_Verts, end_Verts   ); 
+       var begin_Inds  = rawData.indexOf("<indices"  , end_Verts    );              
+       var   end_Inds  = rawData.indexOf("</indices>", begin_Inds   );
+       var      iData  = rawData.substring( begin_Inds, end_Inds    ); 
     
-    return [ vData, iData ];
+    return [ vData, iData, end_Inds ];      // Third index is a hax. No long term use for it!
     }
 
 
@@ -155,7 +144,7 @@ function FileHelper( pathOfFileToReadFrom )
        while( true )
        {
            var batch = read_Batch( index, rawData );
-               index = batch[3];
+               index = batch[2];                        // Keep advancing along the source string
                
            if( batch[0] != null )
                 batches.push( batch );
@@ -169,15 +158,42 @@ function FileHelper( pathOfFileToReadFrom )
 
 
 
-
     function import_Irmesh( gl, fileName )
     {
-        var rawData  = FileHelper.readStringFromFileAtPath ( fileName );
-        var batches  = get_Batches( rawData );
+       var meshList    = [];
         
-  //      alert( batches[0][0]);
-    //    alert( batches[0][2]);
+       var rawData     = FileHelper.readStringFromFileAtPath ( fileName );
+       var batches     = get_Batches( rawData );
+       
+       for( var k = 0; k < batches.length; k++ ) 
+       {
+            var batch       = parse_Batch( batches[k] );   
+            var vertex_List = [];
+            var  index_List = [];
+            var     uv_List = [];
+            var        vCnt = batch[0].length;
+            var        iCnt = batch[1].length;
         
-        var batch    = parse_Batch( batches[0] );   
+            for( var i = 0; i < vCnt; i++ )
+            {
+                vertex_List.push( batch[0][i][0][0] );
+                vertex_List.push( batch[0][i][0][1] );
+                vertex_List.push( batch[0][i][0][2] );
+         
+                uv_List.push( batch[0][i][2][0] );
+                uv_List.push( batch[0][i][2][1] );
+            }
+       
+            for( var j = 0; j < iCnt; j++ )
+            {
+                index_List.push( batch[1][j]);
+            }
+            
+            var mesh = new Mesh  ( gl, vertex_List, index_List, uv_List );   
+            meshList.push( mesh );
+        }
         
+    alert("Created a list of " + meshList.length + " meshes ");
+        
+    return meshList;
     }
