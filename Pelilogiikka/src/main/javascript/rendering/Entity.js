@@ -59,8 +59,7 @@
     {
       var matrix = mat4.create();
                    mat4.identity( matrix                       );
-                   mat4.scale   (  matrix, this.scales, matrix );
-        
+                   
          mat4.translate( matrix, [  this.position[0], 
                                     this.position[1], 
                                     this.position[2]  ]);
@@ -68,6 +67,8 @@
          mat4.rotate(matrix,  this.angles[0], [1, 0, 0] );
          mat4.rotate(matrix,  this.angles[1], [0, 1, 0] );
          mat4.rotate(matrix,  this.angles[2], [0, 0, 1] );
+        
+         mat4.scale (  matrix, this.scales, matrix );
         
     return matrix;
     }
@@ -84,7 +85,6 @@
          mat4.translate(matrix, [ -this.position[0], 
                                   -this.position[1], 
                                   -this.position[2]  ]);
-              
     return matrix;
     }
     
@@ -93,7 +93,6 @@
     // 4,5,6,7
     // 8,9,A,B
     // C,D,E,F
-    
     
     Orientation.prototype.get_Vector = function( label )
     {

@@ -123,7 +123,7 @@
         
         if( descriptor == null )
         {
-            alert("Null descriptor at " + cursor );
+          //  alert("Null descriptor at " + cursor );
            return [null,null];
         }
         
@@ -158,16 +158,11 @@
         
         mesh.forEach( function( item )
         {
-            var texName = fix_ResourcePath( textures[ index++ ]);
-            
-            alert( texName );
-            
+            var texName  = fix_ResourcePath( textures[ index++ ]);
             var texture  = new  Texture( gl    , texName        , "FILTER_FANCY"  );  
             var shader   = new   Shader( gl    , "vertex_Shader", "pixel_Shader"  );
             var material = new Material( shader, texture                          );
-            
-          //  alert( texName );
-          //  alert( position );
+
             var entity = new Entity( item, material );
                 entity.set_Position( position  );
                 entity.set_Rotation( rotation  );

@@ -128,17 +128,12 @@
     {   
         requestAnimFrame(tick);
      
-        myCube.yaw( 0.012 );
-        myCube.roll ( 0.015 );
-        
-        mySphere.roll( 0.001   );
-        mySphere.pitch( 0.002 );
           
-        if( key_Down( 37 ) )   myCamera.yaw( 0.05  );
-        if( key_Down( 39 ) )   myCamera.yaw( -0.05 );
+          if( key_Down( 37 ) )   myCamera.yaw( 0.05  );
+          if( key_Down( 39 ) )   myCamera.yaw( -0.05 );
           
-        if( key_Down( 38 ) )   myCamera.forward( 1.0 );  
-        if( key_Down( 40 ) )   myCamera.backward( 1.0 );
+          if( key_Down( 38 ) )   myCamera.forward( 1.0 );  
+          if( key_Down( 40 ) )   myCamera.backward( 1.0 );
         
       //  if( key_Down( 33 ) )   myCamera.pitch( 0.008 );
       //  if( key_Down( 34 ) )   myCamera.pitch( -0.008 );
@@ -161,61 +156,38 @@
     }
     
        
+    function register_Inputs()
+    {
+        document.onkeydown = kbDown_Event;
+        document.onkeyup   = kbUp_Event; 
+    }
+       
+       
+       
        
     function Start() 
     {  
         renderer         = new Renderer( document.getElementById("Canvas")                   );
-        myCamera         = new   Camera( renderer, 0.1, 1000, 65                             );
-       
-         myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
-       
-       
-       
-        var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"        );
-        var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"                     );
-        
-        var myTexture    = new Texture( renderer.gl , "data/texture.png"   , "FILTER_FANCY"  );  
-        var crosshair    = new Texture( renderer.gl , "data/crosshair1.png", "FILTER_PLAIN"  );
-        var earthTex     = new Texture( renderer.gl , "data/earth.png"     , "FILTER_FANCY"  );
-        
-        var myMaterial   = new Material( myShader , myTexture                                );               
-        var guiMaterial  = new Material( ortShader, crosshair                                );
-        var earthMat     = new Material( myShader , earthTex                                 );
-       
-            myCube       = test_Cube     ( renderer.gl , myMaterial                          ); 
-            mySphere     = test_Sphere   ( renderer.gl , earthMat                            );
-            heh          = test_Rectangle( renderer.gl, guiMaterial , [0.08,0.08]            );
-           
-        var crosshairs   = [  test_Rectangle( renderer.gl, guiMaterial , [0.10,0.10] )  ];
-        
-             myCube.set_Position( [ 0,-1.5,-3 ]                                              );
-       //    myCamera.set_Position( [ 0, 1.1, 0 ]                                              );
-           mySphere.set_Position( [ 0, 1.0,-3 ]                                              );
-       
-        crosshairs[0].set_Position( Map_To_Screen( renderer, [300,300] )                     );                                                 // NOTE! In homogenous screen space! <  -1------+1 >
-       
-        document.onkeydown = kbDown_Event;
-        document.onkeyup   = kbUp_Event; 
-        
-        myScene = new Scene( renderer         );
-        myScene.insert( myCube, "DYNAMIC"     );
-        myScene.insert( mySphere, "DYNAMIC"   );
-      
-        myScene.insert( crosshairs[0], "GUI"  );
-        myScene.insert( myCamera     , "CAM"  );
-        
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
-    
         
-        var scene2 = import_Scene( renderer, "data/TestLevel/Test.irr"  );
-            scene2.insert( myCube, "DYNAMIC"     );
-            scene2.insert( mySphere, "DYNAMIC"   );
-            scene2.insert( crosshairs[0], "GUI"  );
-            scene2.insert( myCamera     , "CAM"  );
-                
-        myScene = scene2;
+        myCamera         = new   Camera( renderer, 0.1, 1000, 65                             );
+        myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
         
-        tick();     
+        register_Inputs();      // Erillinen luokka tälle!
+       
+        
+       var crosshair    = new  Texture( renderer.gl , "data/crosshair1.png", "FILTER_PLAIN"  );
+       var ortShader    = new   Shader( renderer.gl , "HAX_VS", "HAX_PS"                     );
+       var guiMaterial  = new Material( ortShader, crosshair                                 );
+       var crosshairs   = [  test_Rectangle( renderer.gl, guiMaterial , [0.10,0.10] )  ];
+        
+       myScene = import_Scene( renderer, "data/TestLevel/Test.irr"  );
+       myScene.insert( myCube, "DYNAMIC"     );
+       myScene.insert( mySphere, "DYNAMIC"   );
+       myScene.insert( crosshairs[0], "GUI"  );
+       myScene.insert( myCamera     , "CAM"  );
+        
+       tick();     
     }
 
     
