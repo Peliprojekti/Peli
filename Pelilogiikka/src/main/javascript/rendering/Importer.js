@@ -23,18 +23,13 @@ function FileHelper( pathOfFileToReadFrom )
 
 function import_Mesh( fileName )
 {
-    var text = FileHelper.readStringFromFileAtPath ( fileName );
+    var rawData  = FileHelper.readStringFromFileAtPath ( fileName );
+    var tokens   = rawData.split(" ");
     
-    
-    var tokens = text.split(" ");
-    
-    
-    tokens.forEach(function( entry )
+    tokens.forEach( function( entry )
     {
          console.log( entry );  
     });
-    
- 
     
     
 }
