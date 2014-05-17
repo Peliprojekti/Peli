@@ -17,8 +17,21 @@
                 this.normals = null;
            }
         
-        this.indices    = new Buffer( gl, "INT"  , indice_List ,  1  );
+    this.indices  = new Buffer( gl, "INT"  , indice_List ,  1  );
     }
 
 
+     Mesh.prototype.render_Indexed = function( gl, material  )
+     {
+        this.vertices.bind ( gl, material.shader.shaderProgram.vertexPositionAttribute           );    
+        this.texCoords.bind( gl, material.shader.shaderProgram.textureCoordAttribute             );
+                                                  
+        gl.bindBuffer  (gl.ELEMENT_ARRAY_BUFFER, this.indices.data                               );    
+        gl.drawElements(gl.TRIANGLES, this.indices.data.numItems, gl.UNSIGNED_SHORT, 0           );
+         
+     }
      
+     Mesh.prototype.render_Explicit = function( gl, material  )
+     {
+       // Not yet implemented
+     }

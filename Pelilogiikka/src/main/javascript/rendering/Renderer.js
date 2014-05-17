@@ -65,12 +65,10 @@
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix                );
         this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                       );
         
-        myEntity.mesh.vertices.bind ( this.gl, myEntity.material.shader.shaderProgram.vertexPositionAttribute  );    
-        myEntity.mesh.texCoords.bind( this.gl, myEntity.material.shader.shaderProgram.textureCoordAttribute    );
-                                                  
-        this.gl.bindBuffer  (this.gl.ELEMENT_ARRAY_BUFFER, myEntity.mesh.indices.data                          );    
-        this.gl.drawElements(this.gl.TRIANGLES, myEntity.mesh.indices.data.numItems, this.gl.UNSIGNED_SHORT, 0 );
+        
+        myEntity.mesh.render_Indexed( this.gl, myEntity.material );
      }
+     
      
      
      
@@ -84,13 +82,7 @@
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix                );
         this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                       );
         
-        myEntity.mesh.vertices.bind ( this.gl, myEntity.material.shader.shaderProgram.vertexPositionAttribute  );    
-        myEntity.mesh.texCoords.bind( this.gl, myEntity.material.shader.shaderProgram.textureCoordAttribute    );
-                                                  
-        this.gl.bindBuffer  (this.gl.ELEMENT_ARRAY_BUFFER, myEntity.mesh.indices.data                          );    
-        this.gl.drawElements(this.gl.TRIANGLES, myEntity.mesh.indices.data.numItems, this.gl.UNSIGNED_SHORT, 0 );
-         
-         
+        myEntity.mesh.render_Indexed( this.gl, myEntity.material );      
      }
      
      

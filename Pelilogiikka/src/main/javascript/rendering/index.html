@@ -22,11 +22,7 @@
 <script type="text/javascript" src="HUD_Item.js"     ></script>
 <script type="text/javascript" src="Importer.js"     ></script>
 
-
-
 <script type="text/javascript" src="testCube.js"     ></script>
-
-<script type="text/javascript" src="Inheritance_Testing.js"     ></script>
 
    
    
@@ -163,14 +159,8 @@
     
     function Start() 
     {  
-        test_Inheritance();
-        
-        
-        renderer         = new Renderer( document.getElementById("Canvas")             );
-        myCamera         = new   Camera( renderer, 0.1, 1000, 45                       );
-       
-       
-        
+        renderer         = new Renderer( document.getElementById("Canvas")                  );
+        myCamera         = new   Camera( renderer, 0.1, 1000, 45                            );
        
         var myShader     = new  Shader( renderer.gl , "vertex_Shader", "pixel_Shader"       );
         var ortShader    = new  Shader( renderer.gl , "HAX_VS", "HAX_PS"                    );
@@ -208,8 +198,13 @@
         
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
         
-        import_Mesh( "data/object.obj");
+      //  var worldMesh   = import_Mesh( renderer.gl , "data/object.obj");
+     //   var worldEntity = new Entity( worldMesh, myMaterial );
+
+    //    myScene.insert( worldEntity, "DYNAMIC" );
         
+        
+        import_Mesh( renderer.gl, "data/hax.irrmesh")
         
         tick();     
     }

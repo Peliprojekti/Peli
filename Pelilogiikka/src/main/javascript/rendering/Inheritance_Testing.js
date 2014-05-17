@@ -1,8 +1,0 @@
-
-
-
-
-
-function test_Inheritance()
-{
-}
