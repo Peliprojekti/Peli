@@ -65,7 +65,6 @@
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix                );
         this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                       );
         
-        
         myEntity.mesh.render_Indexed( this.gl, myEntity.material );
      }
      

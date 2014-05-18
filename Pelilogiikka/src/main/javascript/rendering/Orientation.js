@@ -53,33 +53,35 @@
 
     Orientation.prototype.get_Matrix = function() 
     {
-        
         var matrix = mat4.create();
                      mat4.identity( matrix  );
-              
+                
          mat4.translate( matrix, [  this.position[0], 
                                     this.position[1], 
                                     this.position[2] ] );
      
-        mat4.rotate(matrix,  this.angles[0], [1, 0, 0], matrix );
-        
+        mat4.rotate(matrix, this.angles[0], [1, 0, 0], matrix );
+       
         var jX = matrix[1]; // 0,1,2,3
         var jY = matrix[5]; // 4,5,6,7
         var jZ = matrix[9]; // 8,9,a,b
+       
+        mat4.rotate(matrix, this.angles[1], [jX, jY, jZ], matrix );
         
-        mat4.rotate(matrix,  this.angles[1], [jX, jY, jZ], matrix );
-        
-        var kX = matrix[2]; // 0,1,2,3
-        var kY = matrix[6]; // 4,5,6,7
+        var kX = matrix[2];  // 0,1,2,3
+        var kY = matrix[6];  // 4,5,6,7
         var kZ = matrix[10]; // 8,9,a,b
         
-        mat4.rotate(matrix,  this.angles[2], [kX, kY, kZ], matrix );    
+        
+        mat4.rotate(matrix, this.angles[2], [kX, kY, kZ], matrix );    
   
+        mat4.scale( matrix, this.scales, matrix );
+        
     return matrix;
     }
     
  
-    
+    // KUSEE
     Orientation.prototype.get_InverseMatrix = function()
     {
        var matrix = mat4.create();
@@ -89,22 +91,21 @@
         var iY = matrix[4]; // 4,5,6,7
         var iZ = matrix[8]; // 8,9,a,b
         
-        mat4.rotate(matrix,  -this.angles[0], [iX, iY, iZ], matrix );
+        mat4.rotate( matrix, -this.angles[0], [iX, iY, iZ], matrix );
         
-        var jX = matrix[1]; // 0,1,2,3
-        var jY = matrix[5]; // 4,5,6,7
-        var jZ = matrix[9]; // 8,9,a,b
+        var jX = matrix[1 ]; // 0,1,2,3
+        var jY = matrix[5 ]; // 4,5,6,7
+        var jZ = matrix[9 ]; // 8,9,a,b
         
         mat4.rotate(matrix, - this.angles[1], [jX, jY, jZ], matrix );
         
-        var kX = matrix[2]; // 0,1,2,3
-        var kY = matrix[6]; // 4,5,6,7
+        var kX = matrix[2 ]; // 0,1,2,3
+        var kY = matrix[6 ]; // 4,5,6,7
         var kZ = matrix[10]; // 8,9,a,b
         
         mat4.rotate(matrix,  -this.angles[2], [kX, kY, kZ], matrix );   
         
-        
-       //  mat4.rotate(matrix, -this.angles[0],  [1, 0, 0] );
+        // mat4.rotate(matrix, -this.angles[0],  [1, 0, 0] );
         // mat4.rotate(matrix, -this.angles[1],  [0, 1, 0] );
         // mat4.rotate(matrix, -this.angles[2],  [0, 0, 1] );
          

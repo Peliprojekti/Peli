@@ -156,15 +156,16 @@
        for( var i = 0; i < vCnt; i++ )
        {
          /// HAX HAX HAX    
-          batch[0][i][0][0] *= -1.0;                // MIRROR X-axis? WTF? Why does the world mirror otherwise?
-         /// HAX HAX HAX 
+          batch[0][i][2][0] *= -1.0;  // Mirror object U-coordinate
+          batch[0][i][2][1] *= -1.0;  // Mirror object V-coordinate
+        /// HAX HAX HAX 
          
          vertex_List.push( batch[0][i][0][0] );        
          vertex_List.push( batch[0][i][0][1] );
          vertex_List.push( batch[0][i][0][2] );
              
              uv_List.push( batch[0][i][2][0] );
-             uv_List.push( -batch[0][i][2][1] );     // ATTENTION! Some confusion with UV-coords... FLIPPED V?!?! WHAT THE HELL?
+             uv_List.push( batch[0][i][2][1] );     // ATTENTION! Some confusion with UV-coords... FLIPPED V?!?! WHAT THE HELL?
         }
       
        for( var j = 0; j < iCnt; j++ )
