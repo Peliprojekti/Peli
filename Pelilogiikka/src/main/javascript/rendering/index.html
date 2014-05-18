@@ -33,6 +33,9 @@
 
 
 
+
+
+
 <script type="text/javascript" src="testCube.js"               ></script>
 
    
@@ -130,6 +133,9 @@
       
     function tick() 
     {   
+    
+        
+        
         requestAnimFrame(tick);
      
           
@@ -180,7 +186,12 @@
        
     function Start() 
     {  
-        renderer         = new Renderer( document.getElementById("Canvas")                   );
+        var canvas       = document.getElementById("Canvas");
+            
+        canvas.style.width  = window.innerWidth;
+        canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
+         
+        renderer         = new Renderer( canvas                                              );
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
         
         myCamera         = new   Camera( renderer, 0.1, 1000, 65                             );
@@ -210,7 +221,12 @@
     
 </script>
 
+
+
+
 </head>
+
+
 
 <body onload="Start();">
    
