@@ -10,7 +10,7 @@ Matrix44.prototype.identity = function ()
 
 function Matrix44( args )
 {
-   if( args == 'ID') this.identity();
+   if( args == 'ID'){ this.identity(); return;}
 }
 
 

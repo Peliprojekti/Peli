@@ -35,12 +35,12 @@ Vector3.prototype.mul = function( scalar )
                          this.z*scalar );
 }
 
-Vector3.protoype.dot = function( vec3 )
+Vector3.prototype.dot = function( vec3 )
 {
     return ( this.x *vec3.x + this.y * vec3.y + this.z * vec3.z);
 }
 
-Vector3.protoype.cross = function( vec3 )
+Vector3.prototype.cross = function( vec3 )
 {
     return new Vector3( (this.y * vec3.z - this.z * vec3.y) ,
                         (this.z * vec3.x - this.x * vec3.z) ,
@@ -63,4 +63,9 @@ Vector3.prototype.normalized = function()
                         this.z / length );
 }
 
+
+Vector3.prototype.report = function()
+{
+    alert("< "+this.x +" , "+ this.y + " , " +this.z+" >");
+}
 
