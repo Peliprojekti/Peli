@@ -142,6 +142,13 @@
     
    
     
+    function deg2Rad( degs )
+    {
+        return 3.14159*degs / 180.0;
+    }
+    
+    
+    
     function build_Node( gl, node_Descriptor )
     {
         var meshName = node_Descriptor[0];
@@ -166,13 +173,16 @@
             var entity = new Entity( item, material );
                 
                 /// HAX HAX HAX
-                position[0] *= -1.0;
-                rotation[2] *= -1.0;
+                position[0] *= -1.0;             // MIRROR X-axis? WTF? Why does the world mirror otherwise?
             
+               // Try enforcing a positive angle convention
+             
+                // Convert _DEGREE_ euler angles into RADIANS. WHY THE HELL ARE THEY DEGS in the first place?!?!?!?!
+                rotation[0] = deg2Rad( rotation[0] );
+                rotation[1] = deg2Rad( rotation[1] );
+                rotation[2] = -deg2Rad( rotation[2] );      // FLIP axis Z rotation HAX
+               
                 /// HAX HAX HAX
-                
-                
-                  
                 entity.set_Position( position  );
                 entity.set_Rotation( rotation  );
                 entity.set_Scale   ( scale     );

@@ -20,9 +20,7 @@
     
     Orientation.prototype.set_Scale = function( scales )
     {
-        this.scales[0] = scales[0];
-        this.scales[1] = scales[1];
-        this.scales[2] = scales[2]; 
+        this.scales = scales;
     }
     
     
@@ -57,6 +55,7 @@
 
     Orientation.prototype.get_Matrix = function() 
     {
+        
       var matrix = mat4.create();
                    mat4.identity( matrix                       );
                    
@@ -64,14 +63,41 @@
                                     this.position[1], 
                                     this.position[2]  ]);
         
-         mat4.rotate(matrix,  this.angles[0], [1, 0, 0], matrix );
-         mat4.rotate(matrix,  this.angles[1], [0, 1, 0], matrix );
-         mat4.rotate(matrix,  this.angles[2], [0, 0, 1], matrix );      
+      //   mat4.rotate(matrix,  this.angles[0], [1, 0, 0], matrix );
+      //   mat4.rotate(matrix,  this.angles[1], [0, 1, 0], matrix );
+      //   mat4.rotate(matrix,  this.angles[2], [0, 0, 1], matrix );      
+        
+        var r1 = mat4.create();
+        var r2 = mat4.create();
+        var r3 = mat4.create();
+        
+        mat4.identity( r1 );
+        mat4.identity( r2 );
+        mat4.identity( r3 );
+             
+         var id = mat4.create();
+                  mat4.identity( id );
+                  
+         mat4.rotate(id,  this.angles[0], [1, 0, 0], r1 );
+         mat4.rotate(id,  this.angles[1], [0, 1, 0], r2 );
+         mat4.rotate(id,  this.angles[2], [0, 0, 1], r3 );      
+        
+        
+        var rotMat = mat4.create();
+                     mat4.identity( rotMat );
+            rotMat = mat4.multiply( r1,r2 );
+            rotMat = mat4.multiply( rotMat, r3 );
+        
+        
+        matrix = mat4.multiply(  matrix, rotMat );
         
          mat4.scale (  matrix, this.scales, matrix );
         
     return matrix;
     }
+    
+    
+    
     
     Orientation.prototype.get_InverseMatrix = function()
     {

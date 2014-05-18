@@ -1,7 +1,6 @@
 
 
 
-
     function parse_Vertex_Header( header )
     {
         var begin_Vcnt = header.indexOf('vertexCount', 0 );
@@ -23,7 +22,6 @@
     }
     
     
-    
 
     function parse_Vertex( string )     // Expected format,  X,Y,Z, I,J,K, ?,U,V
     {   
@@ -38,10 +36,8 @@
            normal[ i ] =  parseFloat( components[3+i] ); // Normals
        }
        
-      
        uv[ 0 ] =  parseFloat( components[7+0] ); // Texcoords
        uv[ 1 ] =  parseFloat( components[7+1] ); // Texcoords
-       
     
     return [ point, normal, uv ];
     }
@@ -159,13 +155,11 @@
        
        for( var i = 0; i < vCnt; i++ )
        {
-         /// HAX HAX HAX
-         batch[0][i][0][0] *= -1.0;
+         /// HAX HAX HAX    
+          batch[0][i][0][0] *= -1.0;                // MIRROR X-axis? WTF? Why does the world mirror otherwise?
          /// HAX HAX HAX 
          
-         
-         vertex_List.push( batch[0][i][0][0] );        // MIRROR X-axis? WTF? Why does the world mirror otherwise?
-         
+         vertex_List.push( batch[0][i][0][0] );        
          vertex_List.push( batch[0][i][0][1] );
          vertex_List.push( batch[0][i][0][2] );
              
@@ -178,14 +172,10 @@
            index_List.push( batch[1][j] );
        }
       
-      
             
        var mesh = new Mesh  ( gl, vertex_List, index_List, uv_List );   
        meshList.push( mesh ); 
        }
        
-       
-   // alert("Vertices: " + vertex_List.length/3 + " \n Indices" +index_List.length );
-   
     return meshList;
     }
