@@ -44,6 +44,9 @@
         this.gl.clear     ( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT                     );
         
         mat4.perspective( this.camera.verticalFov, this.camera.aspectRatio, this.camera.nearPlane, this.camera.farPlane, this.projection_Matrix );
+    
+        // POTENTIAL HAX. How it will affect future operations, remains to be seen.
+        mat4.scale( this.projection_Matrix, [-1,1,1], this.projection_Matrix ); // Mirror the projection matrix across X
     }
 
 

@@ -134,7 +134,6 @@
 
 
 
-
     function import_Irmesh( gl, fileName )
     {
        var meshList    = [];
@@ -152,27 +151,34 @@
             var        vCnt = batch[0].length;
             var        iCnt = batch[1].length;
         
+        
        
        for( var i = 0; i < vCnt; i++ )
        {
-         /// HAX HAX HAX    
-          batch[0][i][2][0] *= -1.0;  // Mirror object U-coordinate
-          batch[0][i][2][1] *= -1.0;  // Mirror object V-coordinate
-        /// HAX HAX HAX 
+        var x = batch[0][i][0][0];
+        var y = batch[0][i][0][1];
+        var z = batch[0][i][0][2];
+        var u = batch[0][i][2][0];
+        var v = batch[0][i][2][1];
+        
+        // This is probably a HAX, but until a formal solution is found, it would seem correct.
+       // x *= -1;   // Flip the x-axis of the vertices local space
+        v *= -1;   // Flip the v-axis of the uv space.
          
-         vertex_List.push( batch[0][i][0][0] );        
-         vertex_List.push( batch[0][i][0][1] );
-         vertex_List.push( batch[0][i][0][2] );
+         
+        vertex_List.push( x );    
+        vertex_List.push( y );  
+        vertex_List.push( z );  
              
-             uv_List.push( batch[0][i][2][0] );
-             uv_List.push( batch[0][i][2][1] );     // ATTENTION! Some confusion with UV-coords... FLIPPED V?!?! WHAT THE HELL?
+        uv_List.push( u );
+        uv_List.push( v );     // ATTENTION! Some confusion with UV-coords... FLIPPED V?!?! WHAT THE HELL?
         }
       
        for( var j = 0; j < iCnt; j++ )
        {
            index_List.push( batch[1][j] );
        }
-      
+            
             
        var mesh = new Mesh  ( gl, vertex_List, index_List, uv_List );   
        meshList.push( mesh ); 

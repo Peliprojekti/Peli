@@ -133,8 +133,8 @@
         requestAnimFrame(tick);
      
           
-          if( key_Down( 37 ) )   myCamera.yaw( 0.05  );
-          if( key_Down( 39 ) )   myCamera.yaw( -0.05 );
+          if( key_Down( 37 ) )   myCamera.yaw( -0.05  );
+          if( key_Down( 39 ) )   myCamera.yaw(  0.05 );
           
           if( key_Down( 38 ) )   myCamera.forward( 1.0 );  
           if( key_Down( 40 ) )   myCamera.backward( 1.0 );
@@ -214,7 +214,7 @@
 
 <body onload="Start();">
    
-    <canvas id="Canvas" style="border: none;" width="900" height="900"></canvas>
+    <canvas id="Canvas" style="border: none;" width="1200" height="800"></canvas>
 
     <br/>  
 </body>
