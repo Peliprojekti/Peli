@@ -16,10 +16,7 @@
      keyMap[event.keyCode] = false;
   };
   
-
-  
-  
-function key_Down( keyCode )
-{
+  function key_Down( keyCode )
+  {
     return keyMap[ keyCode ];
-}
+  }

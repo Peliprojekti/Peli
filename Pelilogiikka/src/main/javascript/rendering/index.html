@@ -17,6 +17,7 @@
 
 <script type="text/javascript" src="Buffer.js"                 ></script>
 <script type="text/javascript" src="Mesh.js"                   ></script>
+<script type="text/javascript" src="Orientation.js"            ></script>
 <script type="text/javascript" src="Entity.js"                 ></script>
 <script type="text/javascript" src="Camera.js"                 ></script>
 <script type="text/javascript" src="HUD_Item.js"               ></script>
@@ -156,22 +157,7 @@
          if(  key_Down( 81 ) )   myCamera.roll( 0.008 );       // Q to roll left
          if(  key_Down( 69 ) )   myCamera.roll( -0.008 );      // E to roll right
          
-         
-           
-           /*
-          var delta = pop_Mousedelta();
-          
-          if( delta[0] != 0 || delta[1] != 0)
-          {
-              
-              myCamera.pitch( delta[1] / 100 );     // HAX. Proper mapping to angle required
-              myCamera.yaw(   delta[0] / 100 );     // HAX. Proper mapping to angle required
-              
-              //alert( delta );
-          }
-          */
-           
-          
+   
            
            
           myScene.render();
@@ -192,8 +178,6 @@
     {
         document.onkeydown = kbDown_Event;
         document.onkeyup   = kbUp_Event; 
-        document.onmousemove = mouse_Move;
-        
     }
        
 
