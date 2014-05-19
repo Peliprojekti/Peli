@@ -69,15 +69,11 @@
     }
     
     
-    
-    
-    
-    
-    
  
     // KUSEE
     Orientation.prototype.get_InverseMatrix = function()
     {
+        
        var matrix = mat4.create();
                     mat4.identity( matrix );
         
@@ -112,30 +108,47 @@
     // C,D,E,F
     Orientation.prototype.get_Vector = function( label )
     {
+        var      matrix = new Matrix44( ["ID"] );           // Declare a fresh matrix and apply translation
+       
+        var           I = new Vector3( 1, 0, 0 );
+        var matrix_rotI = new Matrix44( ["ROT_A", I , this.angles_V.x ]);
+                  matrix = matrix.multiply( matrix_rotI );                        // Rotate around the models I-axis
+        var           J = new Vector3( matrix.m12, matrix.m22,  matrix.m32 );
+        var matrix_rotJ = new Matrix44( ["ROT_A", J , this.angles_V.y  ]);
+                  matrix = matrix.multiply( matrix_rotJ );                        // Rotate around the models new J-axis
+        var           K = new Vector3( matrix.m13, matrix.m23, matrix.m33 );
+        var matrix_rotK = new Matrix44( ["ROT_A", K , this.angles_V.z  ]);
+                  matrix = matrix.multiply( matrix_rotK );                        // Rotate around the models new K-axis         // Rotate around the models new K-axis
+        
+        
+        // KUSEE. Tarkista!
+        
+       /*
       var matrix = mat4.create();
                    mat4.identity( matrix );
                    mat4.rotate(matrix, this.angles_V.x, [1, 0, 0] );
                    mat4.rotate(matrix, this.angles_V.y, [0, 1, 0] );
                    mat4.rotate(matrix, this.angles_V.z, [0, 0, 1] );
         
+        */
         if( label === "LOOK")
         {
-            return new Vector3(  matrix[8], matrix[9], matrix[10] );
+            return new Vector3(  -matrix.m13, matrix.m23, matrix.m33 );
         }
         else
             if( label == "UP")
             {
-                return new Vector3( matrix[4], matrix[5], matrix[6] );
+                return new Vector3( matrix.m12, matrix.m22, matrix.m32 );
             }
             else
                 if( label == "RIGHT")
                 {
-                    return new Vector3( matrix[0], matrix[1], matrix[3] );
+                    return new Vector3( matrix.m11, matrix.m21, matrix.m31 );
                 }
                 else
                     alert(" Bad vector label: ("+label+")");
         
-        
+      
     }
     
     
