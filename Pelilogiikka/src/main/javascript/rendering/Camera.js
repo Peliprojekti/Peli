@@ -33,15 +33,15 @@
     Camera.prototype.forward = function( units )
     {
         var dir = this.orientation.get_Vector( "LOOK" );
-        vec3.scale( dir, -units );                           // RIGHT HANDED coordinate system apparently :/  [1,0,0] [0,1,0], [0,0,-1] !
-        this.orientation.displace( dir );
+            dir = dir.mul( -units );                            // Right handed -> negative Z is look                   
+        this.orientation.displace( [dir.x,dir.y,dir.z] );
     };
   
     Camera.prototype.backward = function( units )
     {
         var dir = this.orientation.get_Vector( "LOOK" );
-        vec3.scale( dir,  units );                           // RIGHT HANDED coordinate system apparently :/  [1,0,0] [0,1,0], [0,0,-1] !
-        this.orientation.displace( dir );
+            dir = dir.mul( units );
+        this.orientation.displace( [dir.x,dir.y,dir.z] );
     }
   
     Camera.prototype.set_Position = function( point )

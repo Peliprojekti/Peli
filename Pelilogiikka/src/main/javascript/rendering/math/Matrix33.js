@@ -9,14 +9,14 @@ Matrix33.prototype.identity = function ()
 
 function Matrix33( args )
 {
+    
    if( args[0] == 'ID')
    {
        this.identity(); 
        return;
    }
 
-  
-
+   
    if( args[0] == "ROT_Z" )
    {
         var r    = args[1];
@@ -47,8 +47,10 @@ function Matrix33( args )
   
    return;
    }
-
-
+   
+   
+   
+  
 }
 
 

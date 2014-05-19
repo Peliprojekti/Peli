@@ -2,9 +2,6 @@
 
   
     
-    
-    
-
     function Entity( mesh , material )
     {
         this.mesh         = mesh;
