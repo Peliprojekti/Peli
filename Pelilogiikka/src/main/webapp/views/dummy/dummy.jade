@@ -1,0 +1,25 @@
+doctype html
+html(lang='en')  
+  head  
+  title= title  
+
+  style
+    include dummy.css
+
+  body
+    #container
+      canvas#canvas HTML5 Canvas not supported.
+
+    script(type="text/javascript")
+      include ../onload.js
+    script(type="text/javascript").
+      var SCREEN_PORT = 1339;
+
+
+    script(src="/socket.io/socket.io.js")
+
+    script(src="/javascript/common/log.js")
+    script(src="/javascript/common/screenComs.js")
+
+    script(src="/javascript/game/dummy/crosshair.js")
+    script(src="/javascript/game/dummy/dummy.js")
