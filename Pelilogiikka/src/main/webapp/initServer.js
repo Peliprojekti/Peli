@@ -12,7 +12,7 @@ var comServer = null;
 
 module.exports = new function() {
     this.shutdown = function() {
-        server.close();
+        //server.close(); // doesn't work?
     }
 
     this.start = function(nconf_, logger_, comServer_) {
@@ -52,7 +52,7 @@ module.exports = new function() {
         });
 
         server.get('/screen', function(request, response) {
-            response.render(nconf.get('game_jade'));
+            response.render(nconf.get('screen_jade'));
         });
 
         server.listen(nconf.get('http_port'));

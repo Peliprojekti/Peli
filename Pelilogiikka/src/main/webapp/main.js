@@ -11,10 +11,10 @@ var fork = require('child_process').fork;
 nconf.argv().env().file({ file: 'peli_config.json'});
 nconf.defaults({
     game_name: 'Peliprojektin Peli',
-    http_port: 8080,
-    client_port: 1338,
+    http_port: 8080, // this is the port where the clients need to connect initially
+    client_port: 1338, // client and screen port is for coms, and not directly exposed to users
     screen_port: 1339,
-    log_level: 'error', // debug overrides this...
+    log_level: 'error', // debug switch overrides this to debug
     debug: false,
     client_html: __dirname + '/phone.html',
     screen_html: __dirname + '/screen/renderer.html',
@@ -23,11 +23,11 @@ nconf.defaults({
     static_data: __dirname + "/../javascript/renderind/data",
 
     jade_views: __dirname + '/views',
-    client_jade: 'phone.jade',
-    screen_jade: 'game.jade',
-    //client_html: __dirname + '/client/dummy_client.html',
-    //screen_html: __dirname + '/screen/dummy_screen.html',
-    dummy: false
+    //client_jade: 'phone.jade',
+    //screen_jade: 'game.jade',
+    client_jade: 'phone_static.jade',
+    screen_jade: 'renderer_static.jade',
+    dummy: false // does nothing, remove?
 });
 
 var logger = new (winston.Logger)({
