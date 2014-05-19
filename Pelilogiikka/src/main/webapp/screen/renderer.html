@@ -221,7 +221,9 @@
         
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
       
-        var connection = new Connection( 'http://10.42.0.1:1339' );
+		var socketioURL = 'http://' + location.hostname + ":" + 1339;
+		console.log("connecting socketio to: " + socketioURL);
+        var connection = new Connection(socketioURL);
         
         tick();     
     }

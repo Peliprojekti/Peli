@@ -6,11 +6,13 @@ var logger = null;
 var CLIENT_PORT = 1338;
 var SCREEN_PORT = 1339;
 
+var DEBUG = true;
+
 var screenSocket = null;
 
 function sendToScreen(data) {
 	if (screenSocket == null) {
-		console.log("NO SCREEN CONNECTED");
+		if (DEUBG) console.log("NO SCREEN CONNECTED");
 		return;
 	}
 
@@ -33,7 +35,7 @@ module.exports = new function() {
 		}
 
 		screenio.sockets.on('connection', function(socket) {
-			logger.info("screen connection on");
+			if (DEBUG) logger.info("screen connection on!!!!");
 			screenSocket = socket;
 		});
 
@@ -43,7 +45,7 @@ module.exports = new function() {
 			
 			socket.on('message', function(data) {
 				//logger.debug('sending message to screen: );
-				logger.debug(data);
+				if (DEBUG) logger.debug(data);
 				sendToScreen(data);
 			});
 		});
