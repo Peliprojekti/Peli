@@ -73,6 +73,17 @@ startServer = function() {
 			if (DEBUG) { console.log("   debug - screen connected"); }
             screenSocket.emit('message', data);
         });
+
+        socket.on('position', function(data) {
+            if (screenSocket == null) {
+                console.log("   error -NO SCREEN CONNECTED");
+                // maybe do something more usefull at some point?
+                return;
+            }
+
+			if (DEBUG) { console.log("   debug - updating position"); }
+            screenSocket.emit('position', data);
+        });
     });
 }
 

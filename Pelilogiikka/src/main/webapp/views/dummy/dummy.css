@@ -1,0 +1,19 @@
+body,html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	color: white;
+}
+
+#container {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background: gray;
+}
+
+#container canvas {
+	vertical-align: top;
+	display: block;
+	overflow: auto;
+}

@@ -16,18 +16,13 @@ nconf.defaults({
     screen_port: 1339,
     log_level: 'error', // debug switch overrides this to debug
     debug: false,
-    //client_html: __dirname + '/phone.html',
-    //screen_html: __dirname + '/screen/renderer.html',
 
     static_javascript: __dirname + '/../javascript',
     static_data: __dirname + "/../javascript/renderind/data",
 
     jade_views: __dirname + '/views',
-    //client_jade: 'phone.jade',
-    //screen_jade: 'game.jade',
-    client_jade: 'phone_static.jade',
-    screen_jade: 'renderer_static.jade',
-    dummy: false // does nothing, remove?
+    client_jade: 'controller.jade',
+    screen_jade: 'dummy/dummy.jade'
 });
 
 var logger = new (winston.Logger)({

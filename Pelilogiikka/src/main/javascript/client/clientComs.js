@@ -1,25 +1,19 @@
 
 var clientComs = {
-	sessionToken: null,
 	socket: null,
 	persistent: true,
-	onMessage: function(message) { log.error("recieving messages not implemented"); },
-	onConnection: null,
-	onGameStarted: null,
 
-	initConnection: function(host, port, protocol, persistent_, callback) {
-		//this.socket = io.connect('http://localhost:1338');
-		this.socket = io.connect('http://' + host + ":" + port);
-		this.onConnection = callback;
+	onMessage: function() {},
 
-		this.socket.on('open', function() {
-			console.log("Connection opened");
-			clientComs.onConnection(null, true);
-		});
+	initConnection: function(callback) {
+		clientComs.socket = io.connect('http://' + location.hostname + ":" + CLIENT_PORT);
 
-		this.socket.on('close', function() {
-			console.log('Closing connection');
+		clientComs.socket.on('open', callback);
 
+		clientComs.socket.on('close', function() {
+            log.info('Closing connection');
+
+            /*
 			if (typeof closeEventCallback == 'function') {
 				closeEventCallback(true);
 				closeEventCallback(null);
@@ -27,32 +21,32 @@ var clientComs = {
 
 			callbacks = new Object();
 			rpcMethods = new Object();
+            */
 		});
 
-		this.socket.on('error', function() {
-			self.close();
+		clientComs.socket.on('error', function() {
+            clientComs.socket.close();
 
 			if (typeof callback == 'function') {
 				callback({"code": E_NO_CONNECTION_CODE, "message": E_NO_CONNECTION + host + ":" + port + ", protocol: " +  protocol}, null);
 			}
 		});
 
-		this.socket.on('message', function(message) {
+		clientComs.socket.on('message', function(message) {
 			clientComs.onMessage(message);
 		});
 
-		this.socket.on('gameStarted', function(data) {
+		clientComs.socket.on('gameStarted', function(data) {
 
 		});
 	},
 
-	startGame: function(sessionToken) {
-		this.sessionToken = sessionToken;
-		// do some checks with server to make sure a game slot is available?
+	message: function(data) {
+		clientComs.socket.emit('message', data);
 	},
 
-	send: function(data) {
-		this.socket.emit('message', data);
-	}
+    position: function(x, y) {
+        clientComs.socket.emit('position', [x,y]);
+    }
 };
 
