@@ -49,6 +49,11 @@ module.exports = new function() {
 				filename = __dirname + '/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js';
 			}
 
+            if (request.url == "/jquery.js") {
+				console.log("serving jquery");
+				filename = __dirname + '/lib/jquery/jquery-1.11.1.js';
+			}
+
             //console.log("requested: " + url + ",serving: " + filename);
 
             fs.createReadStream(filename).pipe(response);
