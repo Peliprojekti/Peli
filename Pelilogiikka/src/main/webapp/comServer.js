@@ -70,6 +70,7 @@ startServer = function() {
                 return;
             }
 
+			if (DEBUG) { console.log("   debug - screen connected"); }
             screenSocket.emit('message', data);
         });
     });

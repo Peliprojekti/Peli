@@ -1,0 +1,15 @@
+doctype html
+html(lang='en')  
+  head  
+  title= title  
+
+  script(type="/text/javascript" src="/socket.io/socket.io.js")
+  script(type="/text/javascript" src="/javascript/common/log.js")
+  script(type="/text/javascript" src="/javascript/screen/screenComs.js")
+
+  script(type="text/javascript")
+    include dummy/onload.js
+
+  body
+    h1 testing screen
+    p#logWindow

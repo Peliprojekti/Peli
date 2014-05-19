@@ -44,6 +44,11 @@ module.exports = new function() {
             response.sendfile(__dirname + "/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js");
         });
 
+        server.get('/jquery/jquery.min.js', function(request, response) {
+            response.setHeader('content-type', 'text/javascript');
+            response.sendfile(__dirname + "/lib/jquery.min.js");
+        });
+
         // send client stuff to 
         server.get('/', function(request, response) {
             response.render(nconf.get('client_jade'), {

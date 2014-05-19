@@ -16,8 +16,8 @@ nconf.defaults({
     screen_port: 1339,
     log_level: 'error', // debug switch overrides this to debug
     debug: false,
-    client_html: __dirname + '/phone.html',
-    screen_html: __dirname + '/screen/renderer.html',
+    //client_html: __dirname + '/phone.html',
+    //screen_html: __dirname + '/screen/renderer.html',
 
     static_javascript: __dirname + '/../javascript',
     static_data: __dirname + "/../javascript/renderind/data",
