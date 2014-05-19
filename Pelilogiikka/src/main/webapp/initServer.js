@@ -44,6 +44,11 @@ module.exports = new function() {
                 filename = nconf.get('screen_html');
             }
 
+            if (request.url == "/socket.io/socket.io.js") {
+				console.log("serving socket.io");
+				filename = __dirname + '/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js';
+			}
+
             //console.log("requested: " + url + ",serving: " + filename);
 
             fs.createReadStream(filename).pipe(response);
