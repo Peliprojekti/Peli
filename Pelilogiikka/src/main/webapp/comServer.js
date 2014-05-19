@@ -38,11 +38,12 @@ module.exports = new function() {
 		});
 
 		clientio.sockets.on('connection', function(socket) {
-			//logger.info("client connection on");
+			logger.info("client connection on");
 			socket.emit('open', null);
 			
 			socket.on('message', function(data) {
-				//logger.debug('sending message to screen');
+				//logger.debug('sending message to screen: );
+				logger.debug(data);
 				sendToScreen(data);
 			});
 		});
