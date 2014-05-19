@@ -1,6 +1,7 @@
 
 var COM_PORT = 1339;
 var logWindow = null;
+//var screenComs = null;
 
 window.onload = function() { 
 	console.log('starting loading');

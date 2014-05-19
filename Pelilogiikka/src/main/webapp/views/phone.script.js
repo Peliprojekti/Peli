@@ -1,6 +1,6 @@
 
 var COM_PORT = 1338;
-var clientComs = null;
+//var clientComs = null;
 
 function addOnload(func) {
     window.onload = func;
