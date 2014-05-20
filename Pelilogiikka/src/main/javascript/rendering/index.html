@@ -32,6 +32,7 @@
 <script type="text/javascript" src="math/MatrixGL.js"          ></script>
 <script type="text/javascript" src="math/Orientation.js"       ></script>
 
+<script type="text/javascript" src="misc/Proc.js"              ></script>
 
 <script type="text/javascript" src="testCube.js"               ></script>
 
@@ -173,8 +174,10 @@
         document.onkeyup   = kbUp_Event; 
     }
        
-
        
+       
+   
+        
     function Start() 
     {  
         var canvas       = document.getElementById("Canvas");
@@ -202,7 +205,7 @@
        myScene.insert( crosshairs[0], "GUI"  );
        myScene.insert( myCamera     , "CAM"  );
         
-        
+       
         
         
         
