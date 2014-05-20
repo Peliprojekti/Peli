@@ -136,7 +136,6 @@ startServer = function() {
                     return;
                 }
 
-                if (DEBUG) { console.log("   debug - updating position"); }
                 screenSocket.emit('position', data);
             });
         }

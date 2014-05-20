@@ -52,12 +52,18 @@ module.exports = new function() {
         // send client stuff to 
         server.get('/', function(request, response) {
             response.render(nconf.get('client_jade'), {
-                "title": nconf.get("game_name")
+                "title": nconf.get("game_name"),
+                "debug": nconf.get("debug"),
+                "controller": nconf.get("controller"),
+                "client_port": nconf.get("client_port")
             });
         });
 
         server.get('/screen', function(request, response) {
-            response.render(nconf.get('screen_jade'));
+            response.render(nconf.get('screen_jade'), {
+                "debug": nconf.get("debug"),
+                "screen_port": nconf.get('screen_port')
+            });
         });
 
         server.listen(nconf.get('http_port'));
