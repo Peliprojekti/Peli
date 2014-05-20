@@ -144,8 +144,9 @@ function loadController(canvas, type) {
             currentController = mouseMove;
             break;
         case 'touchDrag':
-            touchDrag.enable(coms, canvas);
-            currentController = touchDrag;
+            var touchDragx = new TouchDrag();
+            touchDragx.enable(coms, canvas);
+            currentController = touchDragx;
             break;
     }
 }
@@ -163,6 +164,7 @@ $(function() { // document ready, resize container
     var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
 
 	// LOAD COMS
+        /*
 	coms = new ControllerComs();
 	coms.open(function() {
         log.info("Connection ok");
@@ -170,6 +172,10 @@ $(function() { // document ready, resize container
 			loadController(canvas);
 		});
 	});
+    */
+   
+   coms = new ControllerComs();
+   loadController(canvas, 'touchDrag');
 
     function orientationChange() {
         // inc orientation counter

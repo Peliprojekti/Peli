@@ -1,32 +1,40 @@
-var touchDrag = {
-    previousSendTime: 0,
-    interval: 20,
-    coords: null,
-    currentTime: null,
+function TouchDrag() {
+    this.previousSendTime = 0;
+    this.interval = 20;
+    this.coords = null;
+    this.currentTime = null;
+    this.moveCounter = 0;
+}
 
-    doTouchMove: function(event) {
-        event.preventDefault();
-        touchDrag.coords = getRelativeCoords(0);
+TouchDrag.prototype.doTouchMove = function(event) {
+    event.preventDefault();
+    
+    this.moveCounter++;
 
-        touchDrag.currentTime = new Date().getTime();
+    this.coords = getRelativeCoords(0);    
 
-        if (currentTime - previousSendTime >= interval) {
-            clientComs.send({
-                position: coords               
-            });
+    this.currentTime = new Date().getTime();
 
-            previousSendTime = currentTime;
+    if (this.currentTime - this.previousSendTime >= this.interval) {
+        coms.position(this.coords[0], this.coords[1]);
+
+        this.previousSendTime = this.currentTime;
+
+        if (DEBUG) { 
+            log.info("touchmove events: " + this.moveCounter + ", interval: " + this.interval + "ms"); 
+            this.moveCounter = 0;
         }
-
-        if (DEBUG) { updateCoordinatesText(coords[0], coords[1]) };	
-    },
-
-    enable: function(canvas) {
-        canvas.addEventListener("touchmove", touchDrag.doTouchMove, false);
-        return canvas;
-    },
-
-    disable: function(canvas) {
-        canvas.removeEventListener("touchmove", touchDrag.doTouchMove);
     }
+
+    if (DEBUG) { updateCoordinatesText(this.coords[0], this.coords[1]) };	
+}
+
+TouchDrag.prototype.enable = function(coms, canvas) {
+    var thisObject = this;
+    canvas.addEventListener("touchmove", function(event){ thisObject.doTouchMove(event); }, false);
+    return canvas;
+}
+
+TouchDrag.prototype.disable = function(canvas) {
+    canvas.removeEventListener("touchmove", this.doTouchMove);
 }

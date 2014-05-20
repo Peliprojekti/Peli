@@ -1,28 +1,35 @@
 var log = {
-    enabled: true,
+    enabled: DEBUG,
     level: 3,
+    rows: new Array(),
+    
+    logMessage: function(type, msg) {
+        var message = type + msg;
+            console.log(message);
+            log.rows.push(message);
+    },
 
     error: function(msg) {
         if(log.enabled) {
-            console.log("ERROR: " + msg);
+            log.logMessage("Error: ", msg)
         }
     },
 
     warn: function(msg) {
         if(log.enabled && log.level > 0) {
-            console.log("WARN:  " + msg);
+            log.logMessage("WARN: ", msg);
         }
     },
 
     info: function(msg) {
         if(log.enabled && log.level > 1) {
-            console.log("INFO:  " + msg);
+            log.logMessage("INFO: ", msg)
         }
     },
 
     debug: function(msg) {
         if(log.enabled && log.level > 2) {
-            console.log("DEBUG: " + msg);
+            log.logMessage("DEBUG: ", msg)
         }
     },
 
@@ -30,3 +37,5 @@ var log = {
         log.level = level;
     }
 };
+
+

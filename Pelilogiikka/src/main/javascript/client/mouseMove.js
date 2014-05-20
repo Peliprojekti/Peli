@@ -10,13 +10,13 @@ var mouseMove = {
         mouseMove.x = event.clientX;
         mouseMove.y = event.clientY;
 
-        mouseMove.coms(mouseMove.x, mouseMove.y);
+        coms.position(mouseMove.x, mouseMove.y);
         if (DEBUG) { updateCoordinatesText(mouseMove.x, mouseMove.y) };	
     },
 
     enable: function(coms,canvas) {
 		mouseMove.coms = coms;
-        canvas.addEventLIlstener("mousemove", mouseMove.update, false);
+        canvas.addEventListener("mousemove", mouseMove.update, false);
     },
 
     disable: function(canvas) {
