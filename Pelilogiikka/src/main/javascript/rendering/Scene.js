@@ -42,7 +42,8 @@ Scene.prototype.render = function( )
        
          this.entries_GUI.forEach(function( entry )
          {
-            rnd.draw_SS( entry );  
+          //  entry.prepare();
+            rnd.draw_SS( entry.entity );  
          });
       
    //    rnd.end_Blending();

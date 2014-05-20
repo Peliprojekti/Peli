@@ -65,7 +65,14 @@
         var      scalez = new Matrix44( ["SCALE", this.scales_V] );             // Apply scale
                   final = final.multiply( scalez );
         
-    return new MatrixGL( final );
+        var m4          = mat4.create();
+         
+        m4[0]  = final.m11; m4[1]  = final.m12;  m4[2]  = final.m13;  m4[3]  = final.m14; 
+        m4[4]  = final.m21; m4[5]  = final.m22;  m4[6]  = final.m23;  m4[7]  = final.m24;    
+        m4[8]  = final.m31; m4[9]  = final.m32;  m4[10] = final.m33;  m4[11] = final.m34;   
+        m4[12] = final.m41; m4[13] = final.m42;  m4[14] = final.m43;  m4[15] = final.m44;   
+          
+        return m4;//new MatrixGL( final );
     }
     
     

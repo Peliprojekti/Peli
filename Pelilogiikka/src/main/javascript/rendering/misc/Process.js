@@ -16,9 +16,10 @@
   {
       if( this.state == 1 ) 
       {
-           if( this.phase[ this.state ] ) fIteration( timeStamp ); 
-            else
-                this.state = 2;
+           if( this.phase[ this.state ] ) return this.phase[ this.state ]; 
+           else
+               this.state = 2;
+           
       return;
       }
       else
@@ -29,15 +30,12 @@
   
   
   
-  
   function Executor()
   {
-     this.processes = 0;    
-     this.procList  = [ ];
+    this.processes = 0;    
+    this.procList  = [ ];
   }
-  
  
-  
   
   Executor.prototype.execute = function( timeStamp )
   {

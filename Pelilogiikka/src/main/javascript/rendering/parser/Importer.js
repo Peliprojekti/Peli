@@ -149,7 +149,7 @@
     
     
     
-    function build_Node( gl, node_Descriptor )
+    function build_Node( gl, assMan, node_Descriptor )
     {
         var meshName = node_Descriptor[0];
         var textures = node_Descriptor[1];
@@ -166,11 +166,22 @@
         mesh.forEach( function( item )
         {
             var texName  = fix_ResourcePath( textures[ index++ ]);
-            var texture  = new  Texture( gl    , texName        , "FILTER_FANCY"  );  
-            var shader   = new   Shader( gl    , "vertex_Shader", "pixel_Shader"  );
-            var material = new Material( shader, texture                          );
-
-            var entity = new Entity( item, material );
+            //var texture  = new  Texture( gl    , texName        , "FILTER_FANCY"  );  
+            
+            var texture  =  new  Texture( renderer.gl , texName, "FILTER_PLAIN"  )
+                    
+                    
+            assMan.get( texName, function( renderer, path )
+            {
+                return new  Texture( renderer.gl , texName, "FILTER_PLAIN"  );    
+            }); 
+             
+            
+             //new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  ); 
+             
+            var shader   = new   Shader( gl     , "vertex_Shader", "pixel_Shader"  );
+            var material = new Material( shader , texture                          );
+            var   entity = new   Entity( item   , material                         );
                 
                 // Convert _DEGREE_ euler angles into RADIANS. WHY THE HELL ARE THEY DEGS in the first place?!?!?!?!
                 rotation[0] = deg2Rad( rotation[0] );
@@ -189,7 +200,7 @@
     }
     
     
-    function import_Scene( renderer, fileName )
+    function import_Scene( renderer, fileName, assMan )
     {
         var   scene = new Scene( renderer );
         var      gl = renderer.gl;
@@ -205,7 +216,7 @@
                 return scene;
             }
             
-            var       node = build_Node( gl, descriptor[0] );
+            var       node = build_Node( gl, assMan, descriptor[0] );
                     cursor = descriptor[1];
               
             node.forEach( function( subnode )

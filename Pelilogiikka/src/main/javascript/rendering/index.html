@@ -20,7 +20,8 @@
 
 <script type="text/javascript" src="Entity.js"                 ></script>
 <script type="text/javascript" src="Camera.js"                 ></script>
-<script type="text/javascript" src="HUD_Item.js"               ></script>
+<script type="text/javascript" src="Guiobject.js"              ></script>
+<script type="text/javascript" src="Color.js"                  ></script>
 <script type="text/javascript" src="parser/Importer.js"        ></script>
 <script type="text/javascript" src="parser/parser_Geometry.js" ></script>
 <script type="text/javascript" src="parser/Filereader.js"      ></script>
@@ -32,8 +33,10 @@
 <script type="text/javascript" src="math/MatrixGL.js"          ></script>
 <script type="text/javascript" src="math/Orientation.js"       ></script>
 
-<script type="text/javascript" src="misc/Proc.js"              ></script>
 
+
+<script type="text/javascript" src="Assetmanager.js"           ></script>
+<script type="text/javascript" src="misc/Process.js"           ></script>
 <script type="text/javascript" src="testCube.js"               ></script>
 
    
@@ -49,8 +52,6 @@
         gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
     }
 </script>
-
-
 
 
 <script id="vertex_Shader" type="x-shader/x-vertex">
@@ -71,8 +72,6 @@
 
 
 
-
-
 <script id="HAX_VS" type="x-shader/x-vertex">
     attribute vec3 aVertexPosition;
     attribute vec2 aTextureCoord;
@@ -90,6 +89,7 @@
 </script>
 
 
+
 <script id="HAX_PS" type="x-shader/x-fragment">
     precision mediump           float;
     varying vec2        vTextureCoord;
@@ -102,9 +102,39 @@
       
         if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 ) discard;       
         
-        gl_FragColor = texel;
+        gl_FragColor =  texel;
     }
 </script>
+
+
+
+
+<script id="COLOR_PS" type="x-shader/x-fragment">
+    
+    precision mediump           float;
+    varying vec2        vTextureCoord;
+    uniform sampler2D        uSampler;
+    
+    uniform  vec4              vColor;
+
+    
+    void main(void) 
+    {
+        vec4 texel = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+      
+        if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 )
+        {
+            discard;
+        }       
+        
+    
+        gl_FragColor = vec4( (vColor.r+texel.r)/ 2.0 ,
+                             (vColor.g+texel.g)/ 2.0 , 
+                             (vColor.b+texel.b)/ 2.0 ,
+                                                 1.0 ) ;//vColor;
+    }
+</script>
+
 
 
 
@@ -116,20 +146,10 @@
     var renderer   = null;    
     var myCamera   = null;
     var myScene    = null;
-    var counter    =    0;
-    var dir        =    1;
     
-
-    
-   var myCube;
-   var mySphere;
-      
       
     function tick() 
     {   
-    
-        
-        
         requestAnimFrame(tick);
      
           
@@ -151,9 +171,6 @@
          if(  key_Down( 81 ) )   myCamera.roll( 0.008 );       // Q to roll left
          if(  key_Down( 69 ) )   myCamera.roll( -0.008 );      // E to roll right
          
-   
-           
-           
           myScene.render();
     }
     
@@ -175,48 +192,41 @@
     }
        
        
-       
-   
         
     function Start() 
     {  
-       var canvas       = document.getElementById("Canvas");
-            
-       canvas.style.width  = window.innerWidth;
-       canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
+      
+       
+        var canvas          = document.getElementById("Canvas");
+   
+        
+        canvas.style.width  = window.innerWidth;
+        canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
          
-       renderer         = new Renderer( canvas                                              );
-       renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
+        renderer            = new Renderer( canvas                         );
+        renderer.set_BgrColor( [0.0,0.0,0.0,1.0]                           );
         
-       myCamera         = new   Camera( renderer, 0.1, 1000, 65                             );
-       myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
+        myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
+        myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
         
-       register_Inputs();      // Erillinen luokka tälle!
+        register_Inputs();      // Erillinen luokka tälle!
        
-       var crosshair    = new  Texture( renderer.gl , "data/crosshair1.png", "FILTER_PLAIN"  );
-       var ortShader    = new   Shader( renderer.gl , "HAX_VS", "HAX_PS"                     );
-       var guiMaterial  = new Material( ortShader, crosshair                                 );
-       var crosshairs   = [  test_Rectangle( renderer.gl, guiMaterial , [0.10,0.10] )  ];
+        var assman          = new Assetmanager( renderer);
         
-       myScene = import_Scene( renderer, "data/TestLevel/Test.irr"  );
-       myScene.insert( crosshairs[0], "GUI"     );
-       myScene.insert( myCamera     , "CAM"     );
-        
-       var exec = new Executor();
-        
-       var f1   = function( ts ){ alert("B"); };
-       var f2   = function( ts) { return true };
-       var f3   = function( ts ){ alert("R"); };
-       var f4   = function( ts ){ alert("E"); };
+        myScene             = import_Scene( renderer, "data/TestLevel/Test.irr", assman );
        
-       var proc = new Process( exec, f1,f2,f3 );
+                           //   ( renderer, material, dimensions, tint  )
+        var X1 = new Guiobject( renderer , assman, "data/crosshair1.png", ["HAX_VS","COLOR_PS"] , [ 0.1 , 0.1 ], new Color(1,1,1) );
+        // t( renderer, assman, texRef, shaderRef, dimensions, tint  )
+         
         
+       
+        myScene = new Scene( renderer             );
+      //  myScene.insert(X1, "GUI" );
+        myScene.insert( myCamera      , "CAM"       );
         
-        proc.execute( 0 );
-        proc.execute( 0 );
-        
-        
-       tick();     
+   
+    tick();     
     }
 
     
@@ -237,3 +247,35 @@
 </body>
 
 </html>
+
+
+/*
+function Start() 
+    {  
+        var canvas          = document.getElementById("Canvas");
+        
+        canvas.style.width  = window.innerWidth;
+        canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
+         
+        renderer            = new Renderer( canvas                         );
+        renderer.set_BgrColor( [0.0,0.0,0.0,1.0]                           );
+        
+        myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
+        myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
+        
+        register_Inputs();      // Erillinen luokka tälle!
+       
+        var assman          = new Assetmanager( renderer );
+        myScene             =     import_Scene( renderer , "data/TestLevel/Test.irr", assman );
+        var X1              = new    Guiobject( renderer , assman, "data/crosshair1.png", ["HAX_VS","COLOR_PS"] , [ 0.10 , 0.10 ], new Color(1,1,0)  );
+     
+        myScene.insert(X1, "GUI" );
+       
+   //     myScene = new Scene( renderer             );
+    //  myScene.insert( cx            , "GUI"       );
+        myScene.insert( myCamera      , "CAM"       );
+        
+   
+    tick();     
+    }
+    */
