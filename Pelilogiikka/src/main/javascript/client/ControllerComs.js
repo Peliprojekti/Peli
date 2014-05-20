@@ -54,7 +54,7 @@ ControllerComs.prototype.joinGame = function(callback) {
 }
 
 ControllerComs.prototype.position = function(position) {
-	if (this.socket == null) {
+	if (this.socket != null) {
 		this.socket.emit('position', userID, position);
 	}
 }
