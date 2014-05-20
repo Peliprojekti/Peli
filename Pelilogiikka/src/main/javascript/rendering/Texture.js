@@ -24,19 +24,27 @@
     gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
-    function Texture( gl, fileName, flags )
-    {         
-        var myTexture   = gl.createTexture();
-        myTexture.image = new Image();
-        myTexture.image.onload = function () 
-        {
-           onLoad( gl, myTexture, flags );
-        };
 
-     myTexture.image.src = fileName;       
-     this.data           = myTexture;
+
+    function Texture( gl, fileName, flags )
+    {
+        try
+        {
+            var myTexture          = gl.createTexture();
+            myTexture.image        = new Image();
+            
+            myTexture.image.onload = function () 
+            {
+                onLoad( gl, myTexture, flags );
+            };
+
+            myTexture.image.src = fileName;       
+            this.data           = myTexture;
+        }
+        catch( exception )
+        {
+            alert( exception );
+        }
     }
-    
-    
     
      
