@@ -27,6 +27,9 @@
 <script type="text/javascript" src="parser/Filereader.js"      ></script>
 
 
+<script type="text/javascript" src="parser/GeneralPurposeParser.js"      ></script>
+
+
 <script type="text/javascript" src="math/Vector3.js"           ></script>
 <script type="text/javascript" src="math/Matrix33.js"          ></script>
 <script type="text/javascript" src="math/Matrix44.js"          ></script>
@@ -197,6 +200,23 @@
         
     function Start() 
     {  
+      
+        // Test it here!
+        
+        var gpp = new GeneralPurposeParser( "data/TestLevel/Test.irr.meshes/1.irrmesh" );
+        
+             gpp.fetch_Element( "vertices", 9 , function( batch ) 
+                                               {
+                                                 // alert( "func: " + batch.length );
+                                                  
+                                                  return [ batch[0], batch[1], batch[2], 
+                                                           batch[3], batch[4], batch[5],
+                                                           batch[6], batch[7], batch[8] ];
+                                                  
+                                               });
+     
+       
+      
       
        
         var canvas          = document.getElementById("Canvas");
