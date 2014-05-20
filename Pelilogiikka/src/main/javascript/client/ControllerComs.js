@@ -11,6 +11,10 @@ function ControllerComs() {
 	this.onGameStarted = function() {}
 }
 
+ControllerComs.prototype.setDummyMode = function(dummyMode) {
+	this.dummyMode = dummyMode;
+}
+
 ControllerComs.prototype.open = function(callback) {
 	this.socket = io.connect('http://' + this.hostname + ":" + this.port);
 
@@ -55,6 +59,11 @@ ControllerComs.prototype.joinGame = function(callback) {
 
 ControllerComs.prototype.position = function(position) {
 	if (this.socket != null) {
+		if (dummyMode != true) {
+			log.error("trying to use unopened socket");
+		}
+	}
+	else {
 		this.socket.emit('position', userID, position);
 	}
 }
