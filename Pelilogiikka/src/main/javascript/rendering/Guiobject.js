@@ -1,44 +1,18 @@
 
 
 
-function Guiobject( renderer, assman, texRef, shaderRef, dimensions, tint  )
+function Guiobject( entity, coloring, alpha  )
 {
-    var crosshair       = assman.get( texRef, function( renderer, path )
-                        {
-                            return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  );           
-                        });
-                        
-    var shader          = new  Shader  ( renderer.gl , shaderRef[0]  , shaderRef[1]  );
-    var material        = new  Material(    shader   , crosshair                     );
-    
-    this.coloring       = tint;
-    this.width          = dimensions.x;
-    this.height         = dimensions.y;
-    
-    var vertices        = [ -this.width,  this.height, 0,   // Top left
-                             this.width,  this.height, 0,   // Top Right
-                             this.width, -this.height, 0,   // Bottom Right
-                            -this.width, -this.height, 0 ]; // Bottom left
-       
-    var indices         = [ 0, 1, 2, 
-                            2, 3, 0          ];
-    
-    var texCoords       = [ 0.0, 0.0, 
-                            1.0, 0.0, 
-                            1.0, 1.0, 
-                            0.0, 1.0         ];   
-                 
-    var mesh            = new Mesh  ( renderer.gl, vertices, indices, texCoords );     
-    this.entity         = new Entity( mesh, material                            );
+    this.entity = entity;
+    this.tint   = coloring;
+    this.alpha  = alpha;
 };
 
 
 
-Guiobject.prototype.prepare = function( gl)
+Guiobject.prototype.prepare = function( renderer )
 {
-    this.material.shader.shaderProgram.vColor = gl.getUniformLocation(this.material.shader.shaderProgram, "vColor");
-
-    gl.uniform4f( this.material.shader.shaderProgram.vColor, 1.0,1.0,1.0,1.0 );
+    this.entity.material.shader.shaderProgram.vColor = renderer.gl.getUniformLocation(this.entity.material.shader.shaderProgram, "vColor");
+    renderer.gl.uniform4f( this.entity.material.shader.shaderProgram.vColor, this.tint[0], this.tint[1], this.tint[2], 1.0 );
     
-    alert( "rendared " );
 }

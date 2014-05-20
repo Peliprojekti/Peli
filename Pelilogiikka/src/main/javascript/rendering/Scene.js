@@ -42,7 +42,7 @@ Scene.prototype.render = function( )
        
          this.entries_GUI.forEach(function( entry )
          {
-          //  entry.prepare();
+            entry.prepare( this.renderer );
             rnd.draw_SS( entry.entity );  
          });
       
