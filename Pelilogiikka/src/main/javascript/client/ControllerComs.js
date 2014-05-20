@@ -16,21 +16,25 @@ ControllerComs.prototype.setDummyMode = function(dummyMode) {
 }
 
 ControllerComs.prototype.open = function(callback) {
-	this.socket = io.connect('http://' + this.hostname + ":" + this.port);
+	this.onUserID = callback;
 
-	this.socket.on('open', function() {
-		log.info("Connection opened");
-		this.onUserID = callback;
+	var url = 'http://' + this.hostname + ":" + this.port;
+	log.debug('connecting client to ' + url);
+	this.socket = io.connect(url);
+
+	this.socket.on('connection', function() {
+		log.info("socket.on('connection')");
 	});
 
 	this.socket.on('close', function() {
 		log.info("Connection closed");
 	});
 
+	var client = this;
 	this.socket.on('userID', function(data) {
 		log.info("Got userID: " + data);
-		this.userID = data;
-		this.onUserID();
+		client.userID = data;
+		client.onUserID();
 	});
 
 	this.socket.on('message', this.onMessage);
@@ -64,6 +68,7 @@ ControllerComs.prototype.position = function(position) {
 		}
 	}
 	else {
+		log.debug("sending position");
 		this.socket.emit('position', userID, position);
 	}
 }

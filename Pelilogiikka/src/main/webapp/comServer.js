@@ -52,6 +52,16 @@ startServer = function() {
         if (DEBUG) { console.log("   info  - screen connected"); }
         screenSocket = socket;
 
+		socket.on('userID', function(userID) {
+			if (DEBUG) { console.log("   info  - forwarding userID to player"); }
+			players[userID].emit('joinGame', useRID);
+		});
+
+		socket.on('close', function() {
+			screenScoket = null;
+			if (DEBUG) { console.log("   info  - screen disconnected"); }
+		});
+
         // TODO handle disconnections?
     });
 
@@ -65,8 +75,11 @@ startServer = function() {
 
 		var userID = Math.floor(Math.random() * 10000000000);
 		players[userID] = socket;
-		socket.emit('joinGame', userID);
+
+		//socket.emit('joinGame', userID);
 		screenSocket.emit('joinGame', userID);
+
+        if (DEBUG) { console.log("   info  - client connected, forwarded to screen as userID" + userID); }
 
         //socket.emit('open', null);
 
@@ -91,12 +104,6 @@ startServer = function() {
 			if (DEBUG) { console.log("   debug - updating position"); }
             screenSocket.emit('position', data);
         });
-
-		/*
-		socket.on('userID', function(data) {
-			screenScoket.emit('userID', data);
-		});
-		*/
 	});
 }
 

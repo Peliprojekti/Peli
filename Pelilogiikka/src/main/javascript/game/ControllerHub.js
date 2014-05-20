@@ -20,9 +20,11 @@ ControllerHub.prototype.open = function(callback) {
 	this.socket.on('connection', function() {
 	});
 
+	/*
 	this.socket.on('addPlayer', function(userID) {
 		socket.emit('userID', userID);
 	});
+	*/
 
 	var hub = this;
 	var socket = this.socket;
@@ -30,15 +32,19 @@ ControllerHub.prototype.open = function(callback) {
 		log.info("registering player " + userID);
 		players[userID] = new Player(userID);
 		hub.onJoinPlayer(players[userID]);
-		socket.emit('joinGame', true);
+
+		socket.emit('joinGame', userID);
+		log.debug("User ID confirmed to player " + userID);
 	});
 
 	this.socket.on('message', this.onMessage);
 	this.socket.on('position', this.movePlayer);
 
+	/*
 	this.socket.on('joinGame', function(data) {
 		socket.emit('joinGame', true);
 	});
+	*/
 }
 
 
