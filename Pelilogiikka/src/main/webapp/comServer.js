@@ -10,12 +10,26 @@ var screenSocket = null; // stores the currnetly connected screen, if any
 var clientio = null;
 var screenio = null; 
 
+var connected = false;
+
 var players = {};
 
-/*
- * Functions for server handling
- */
+getUserID = function(socket, data) {
+    /*
+    for (var method in socket) {
+        if (typeof socket[method] == 'function') {
+            console.log("METHOD" + method);
+        }
+        else {
+            console.log(typeof socket[method] + " -- " + method);
+        }
+    }
+    */
 
+    console.log(data);
+    
+    return data.userID;
+}
 
 //helper function fo open new socketio
 createSocketIO = function(port) {
@@ -23,7 +37,10 @@ createSocketIO = function(port) {
 
     // TODO tweak for spead!
     return socketio.listen(port, {
-        'log level': ( DEBUG ? 3 : 0 )
+        'log level': ( DEBUG ? 1 : 0 ),
+           'log colors': false,
+           'close timeout': 20,
+           'browser client': false
     });
 }
 
@@ -50,19 +67,24 @@ startServer = function() {
     //save opened screen connection for future use
     screenio.sockets.on('connection', function(socket) {
         if (DEBUG) { console.log("   info  - screen connected"); }
+        connected = true;
         screenSocket = socket;
 
-		socket.on('userID', function(userID) {
-			if (DEBUG) { console.log("   info  - forwarding userID to player"); }
-			players[userID].emit('joinGame', useRID);
-		});
+        socket.on('connectionOK', function(userID) {
+            if (DEBUG) { console.log("   info  - screen connected to userID " + userID); }
+            players[userID].emit('connectionOK', userID);
+        });
 
-		socket.on('close', function() {
-			screenScoket = null;
-			if (DEBUG) { console.log("   info  - screen disconnected"); }
-		});
+        socket.on('gameJoined', function(userID) {
+            if (DEBUG) { console.log("   info  - player entering game with userID " + userID); }
+            players[userID].emit('gameJoined', userID);
+        });
 
-        // TODO handle disconnections?
+        socket.on('disconnect', function() {
+            //screenScoket = null;
+            if (DEBUG) { console.log("   info  - screen disconnected"); }
+            connected = false;
+        });
     });
 
     /*
@@ -71,74 +93,88 @@ startServer = function() {
 
     //start message dispatch on client connect
     clientio.sockets.on('connection', function(socket) {
-        if (DEBUG) { console.log("   info  - client connected"); }
 
-		var userID = Math.floor(Math.random() * 10000000000);
-		players[userID] = socket;
+        if (! connected) {
+            if (DEBUG) { console.log("   info  - unable to connect, no screen yet!"); }
+            socket.disconnect();
+        }
+        else {
+            if (DEBUG) { console.log("   info  - negoatiating client connection"); }
 
-		//socket.emit('joinGame', userID);
-		screenSocket.emit('joinGame', userID);
+            socket.emit('getConnectionInfo', null);
+            socket.on('returnConnectionInfo', function(data) {
+                var userID = getUserID(socket, data);
+                players[userID] = socket;
+                screenSocket.emit('connectPlayer', userID);
+                if (DEBUG) { console.log("   info  - client connected with userID " + userID); }
+            });
 
-        if (DEBUG) { console.log("   info  - client connected, forwarded to screen as userID" + userID); }
+            socket.on('disconnect', function() {
+                if (DEBUG) { console.log("   info  - lost connection user"); }
+            });
 
-        //socket.emit('open', null);
+            socket.on('joinGame', function(userID) {
+                if (DEBUG) { console.log("   info  - screenSocket joinGame " + userID); }
+                screenSocket.emit('joinGame', userID);
+            });
 
-        socket.on('message', function(data) {
-            if (screenSocket == null) {
-                console.log("   error -NO SCREEN CONNECTED");
-                // maybe do something more usefull at some point?
-                return;
-            }
+            socket.on('message', function(data) {
+                if (!connected) {
+                    console.log("   error -NO SCREEN CONNECTED");
+                    // maybe do something more usefull at some point?
+                    return;
+                }
 
-			if (DEBUG) { console.log("   debug - screen connected"); }
-            screenSocket.emit('message', data);
-        });
+                if (DEBUG) { console.log("   debug - transmittin message to screen: " + data); }
+                screenSocket.emit('message', data);
+            });
 
-        socket.on('position', function(data) {
-            if (screenSocket == null) {
-                console.log("   error -NO SCREEN CONNECTED");
-                // maybe do something more usefull at some point?
-                return;
-            }
+            socket.on('position', function(data) {
+                if (!connected) {
+                    console.log("   error -NO SCREEN CONNECTED");
+                    // maybe do something more usefull at some point?
+                    return;
+                }
 
-			if (DEBUG) { console.log("   debug - updating position"); }
-            screenSocket.emit('position', data);
-        });
-	});
+                screenSocket.emit('position', data);
+            });
+        }
+    });
 }
+
 
 /*
  * SERVER COMMANDS
  */
 
 process.on('message', function(msgobj) {
-	if (msgobj.type == 'debug') {
-		DEBUG = msgobj.value;
-	}
-	else if (msgobj.type == 'startServer') {
-		if (DEBUG) { console.log("   info  - firing up comServer"); }
-		startServer();
-	}
-	else if (msgobj.type == 'shutdown') {
-		if (DEBUG) { console.log("   info  - shutting down"); }
-		closeServer();
-		process.exit(0);
-	}
-	else if (msgobj.type == 'closeServer') {
-		if (DEBUG) { console.log("   info  - comServer shuting down"); }
-		// TODO
-	}
-	else if (msgobj.type == 'config') {
-		// TODO check values, error handling
-		CLIENT_PORT = msgobj.value.client_port;
-		SCREEN_PORT = msgobj.value.screen_port;
-		DEBUG = msgobj.value.debug;
+    if (msgobj.type == 'debug') {
+        DEBUG = msgobj.value;
+    }
+    else if (msgobj.type == 'startServer') {
+        if (DEBUG) { console.log("   info  - firing up comServer"); }
+        startServer();
+    }
+    else if (msgobj.type == 'shutdown') {
+        if (DEBUG) { console.log("   info  - shutting down"); }
+        closeServer();
+        process.exit(0);
+    }
+    else if (msgobj.type == 'closeServer') {
+        if (DEBUG) { console.log("   info  - comServer shuting down"); }
+        // TODO
+    }
+    else if (msgobj.type == 'config') {
+        // TODO check values, error handling
+        CLIENT_PORT = msgobj.value.client_port;
+        SCREEN_PORT = msgobj.value.screen_port;
+        DEBUG = msgobj.value.debug;
 
-		if (DEBUG) { console.log("   info  - updated comServer configuration"); }
-	}
-	else {
-		console.log("   error - recieving unrecognized message from parent process");
-		// TODO handle error? send to parent?
-	}
+        if (DEBUG) { console.log("   info  - updated comServer configuration"); }
+    }
+    else {
+        console.log("   error - recieving unrecognized message from parent process");
+        // TODO handle error? send to parent?
+    }
 });
 

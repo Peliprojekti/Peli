@@ -22,7 +22,9 @@ nconf.defaults({
 
     jade_views: __dirname + '/views',
     client_jade: 'controller.jade',
-    screen_jade: 'dummy/dummy.jade'
+    screen_jade: 'dummy/dummy.jade',
+
+    controller: 'touchDrag'
 });
 
 var logger = new (winston.Logger)({

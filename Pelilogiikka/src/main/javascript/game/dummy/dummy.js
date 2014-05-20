@@ -53,12 +53,10 @@ function connectToServer() {
 	
 	var players = this.players;
 	controllers.setOnJoinPlayer(function(player) {
-		player.setCrosshair(new Crosshair(0,0,20,"#0000FF"));
-
+        var crosshair = new Crosshair(0,0,20,"#0000FF");
+		player.setCrosshair(crosshair);
 		players.push(player);
-		player.setOnChangeListener(function() {
 
-		});
 		return true;
 	});
 

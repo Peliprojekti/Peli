@@ -10,7 +10,9 @@ function ControllerHub() {
 	this.players = {};
 }
 
+
 ControllerHub.prototype.open = function(callback) {
+    var that = this;
 	var url = 'http://' + this.hostname + ":" + this.port;
 	log.info("connecting to " + url);
 	this.socket = io.connect(url);
@@ -26,19 +28,27 @@ ControllerHub.prototype.open = function(callback) {
 	});
 	*/
 
-	var hub = this;
 	var socket = this.socket;
-	this.socket.on('joinGame', function(userID) {
-		log.info("registering player " + userID);
-		players[userID] = new Player(userID);
-		hub.onJoinPlayer(players[userID]);
+	this.socket.on('connectPlayer', function(userID) {
+		//log.info("registering player " + userID);
+		//that.players[userID] = new Player(userID);
 
-		socket.emit('joinGame', userID);
-		log.debug("User ID confirmed to player " + userID);
+        that.addNewPlayer(userID);
+		//that.onJoinPlayer(players[userID]);
+
+		socket.emit('connectionOK', userID);
+		log.debug("Connected player with userID " + userID);
 	});
 
-	this.socket.on('message', this.onMessage);
-	this.socket.on('position', this.movePlayer);
+    this.socket.on('joinGame', function(userID) {
+        that.players[userID].setGameOn(true);
+        socket.emit('gameJoined', userID);
+    });
+
+	this.socket.on('message', function(data) { that.onMessage(data); });
+	this.socket.on('position', function(data) { 
+        that.movePlayer(data); 
+    });
 
 	/*
 	this.socket.on('joinGame', function(data) {
@@ -47,15 +57,26 @@ ControllerHub.prototype.open = function(callback) {
 	*/
 }
 
+ControllerHub.prototype.addNewPlayer = function(userID) {
+    log.info("registering player " + userID);
+    this.players[userID] = new Player(userID);
+    this.onJoinPlayer(this.players[userID]);
+    return true;
+}
 
-ControllerHub.prototype.movePlayer = function(userID, position) {
-	this.players[userID].setPosition(position);
+ControllerHub.prototype.movePlayer = function(data) {
+    var userID = data[0];
+    var position = data[1];
+
+    //log.debug(userID + " setPosition " + position[0] + "x" + position[1]);
+
+    this.players[userID].setPosition(position);
 }
 
 ControllerHub.prototype.setOnMessage = function(callback) {
-	this.onMessage = callback;
+    this.onMessage = callback;
 }
 
 ControllerHub.prototype.setOnJoinPlayer = function(callback) {
-	this.onJoinPlayer = callback;
+    this.onJoinPlayer = callback;
 }

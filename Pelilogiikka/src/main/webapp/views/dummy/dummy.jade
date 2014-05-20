@@ -12,9 +12,10 @@ html(lang='en')
 
     script(type="text/javascript")
       include ../onload.js
+
     script(type="text/javascript").
-      var SCREEN_PORT = 1339;
-      var DEBUG = true;
+      var SCREEN_PORT = #{screen_port};
+      var DEBUG = #{debug};
 
 
     script(src="/socket.io/socket.io.js")
