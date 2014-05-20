@@ -5,7 +5,7 @@ function ControllerHub() {
 	this.socket = null;
 	this.onMessage = function() {};
 	this.onPosition = function() {};
-	this.onNewPlayer = function() {};
+	this.onJoinPlayer = function() {};
 
 	this.players = {};
 }
@@ -13,20 +13,23 @@ function ControllerHub() {
 ControllerHub.prototype.open = function(callback) {
 	var url = 'http://' + this.hostname + ":" + this.port;
 	log.info("connecting to " + url);
-	this.socket = io.connect('http://' + this.hostname + ":" + "this.port");
+	this.socket = io.connect(url);
 
 	var players = this.players;
 
 	this.socket.on('connection', function() {
-		var userID = Math.floor(Math.random() * (max - min + 1)) + min;
-		log.info("creating player with userID " + userID);
-		players[userID] = new Player(userID);
+	});
 
+	this.socket.on('addPlayer', function(userID) {
 		socket.emit('userID', userID);
 	});
 
-	this.socket.on('joinGame', function(data) {
-		this.onJoinPlayer(players[userID]);
+	var hub = this;
+	var socket = this.socket;
+	this.socket.on('joinGame', function(userID) {
+		log.info("registering player " + userID);
+		players[userID] = new Player(userID);
+		hub.onJoinPlayer(players[userID]);
 		socket.emit('joinGame', true);
 	});
 

@@ -10,6 +10,8 @@ var screenSocket = null; // stores the currnetly connected screen, if any
 var clientio = null;
 var screenio = null; 
 
+var players = {};
+
 /*
  * Functions for server handling
  */
@@ -61,7 +63,12 @@ startServer = function() {
     clientio.sockets.on('connection', function(socket) {
         if (DEBUG) { console.log("   info  - client connected"); }
 
-        socket.emit('open', null);
+		var userID = Math.floor(Math.random() * 10000000000);
+		players[userID] = socket;
+		socket.emit('joinGame', userID);
+		screenSocket.emit('joinGame', userID);
+
+        //socket.emit('open', null);
 
         socket.on('message', function(data) {
             if (screenSocket == null) {
@@ -84,7 +91,13 @@ startServer = function() {
 			if (DEBUG) { console.log("   debug - updating position"); }
             screenSocket.emit('position', data);
         });
-    });
+
+		/*
+		socket.on('userID', function(data) {
+			screenScoket.emit('userID', data);
+		});
+		*/
+	});
 }
 
 /*
@@ -92,33 +105,33 @@ startServer = function() {
  */
 
 process.on('message', function(msgobj) {
-    if (msgobj.type == 'debug') {
-        DEBUG = msgobj.value;
-    }
-    else if (msgobj.type == 'startServer') {
-        if (DEBUG) { console.log("   info  - firing up comServer"); }
-        startServer();
-    }
-    else if (msgobj.type == 'shutdown') {
-        if (DEBUG) { console.log("   info  - shutting down"); }
-        closeServer();
-        process.exit(0);
-    }
-    else if (msgobj.type == 'closeServer') {
-        if (DEBUG) { console.log("   info  - comServer shuting down"); }
-        // TODO
-    }
-    else if (msgobj.type == 'config') {
-        // TODO check values, error handling
-        CLIENT_PORT = msgobj.value.client_port;
-        SCREEN_PORT = msgobj.value.screen_port;
-        DEBUG = msgobj.value.debug;
+	if (msgobj.type == 'debug') {
+		DEBUG = msgobj.value;
+	}
+	else if (msgobj.type == 'startServer') {
+		if (DEBUG) { console.log("   info  - firing up comServer"); }
+		startServer();
+	}
+	else if (msgobj.type == 'shutdown') {
+		if (DEBUG) { console.log("   info  - shutting down"); }
+		closeServer();
+		process.exit(0);
+	}
+	else if (msgobj.type == 'closeServer') {
+		if (DEBUG) { console.log("   info  - comServer shuting down"); }
+		// TODO
+	}
+	else if (msgobj.type == 'config') {
+		// TODO check values, error handling
+		CLIENT_PORT = msgobj.value.client_port;
+		SCREEN_PORT = msgobj.value.screen_port;
+		DEBUG = msgobj.value.debug;
 
-        if (DEBUG) { console.log("   info  - updated comServer configuration"); }
-    }
-    else {
-        console.log("   error - recieving unrecognized message from parent process");
-        // TODO handle error? send to parent?
-    }
+		if (DEBUG) { console.log("   info  - updated comServer configuration"); }
+	}
+	else {
+		console.log("   error - recieving unrecognized message from parent process");
+		// TODO handle error? send to parent?
+	}
 });
 

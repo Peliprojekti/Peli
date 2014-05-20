@@ -22,6 +22,6 @@ Player.prototype.setCrosshair = function(crosshair) {
 	this.crosshair = crosshair;
 }
 
-Player.prototype.draw = funnction(ctx) {
-	this.crosshair.draw();
+Player.prototype.draw = function(ctx) {
+	this.crosshair.draw(ctx);
 }

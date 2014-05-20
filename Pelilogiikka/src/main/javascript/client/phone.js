@@ -164,18 +164,17 @@ $(function() { // document ready, resize container
     var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
 
 	// LOAD COMS
-        /*
 	coms = new ControllerComs();
+	log.info("trying to open connection");
 	coms.open(function() {
         log.info("Connection ok");
 		coms.joinGame(function() {
 			loadController(canvas);
 		});
 	});
-    */
    
-   coms = new ControllerComs();
-   loadController(canvas, 'touchDrag');
+   //coms = new ControllerComs();
+   //loadController(canvas, 'touchDrag');
 
     function orientationChange() {
         // inc orientation counter

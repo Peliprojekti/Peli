@@ -50,17 +50,19 @@ function setupCanvas() {
 
 function connectToServer() {
 	controllers = new ControllerHub();
-	controllers.open();
 	
+	var players = this.players;
 	controllers.setOnJoinPlayer(function(player) {
 		player.setCrosshair(new Crosshair(0,0,20,"#0000FF"));
 
-		this.players.push(player);
+		players.push(player);
 		player.setOnChangeListener(function() {
 
 		});
 		return true;
 	});
+
+	controllers.open();
 }
 
 function animate(time) {
