@@ -1,4 +1,6 @@
 var coms = null;
+var currentController = null;
+var controllerType = CONTROLLER;
 
 
 //http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
@@ -123,22 +125,20 @@ function getCanvasDimensions() {
 }
 
 
-var currentController = null;
 function loadController(canvas, type) {
 	if (typeof canvas == 'undefined') {
 		log.error("trying to loadController on undefined canvas");
 	}
-    if (typeof type == "undefined") {
-        type = CONTROLLER;
+    if (typeof type != "undefined") {
+        controllerType = type;
     }
-	/*
+
     if (currentController != null) {
         currentController.disable(canvas);
     }
-	*/
 
-	log.info("changing controller type to" + type);
-    switch(type) {
+	log.info("changing controller type to " + controllerType);
+    switch(controllerType) {
         case 'mouseMove':
             mouseMove.enable(coms, canvas);
             currentController = mouseMove;
@@ -163,19 +163,23 @@ $(function() { // document ready, resize container
     var oc = 0;  // orientiation counter
     var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
 
-	// LOAD COMS
-	coms = new ControllerComs();
-	log.info("trying to open connection");
-	coms.open(function() {
-        log.info("Connection establised, trying to join game");
-		coms.joinGame(function() {
-            log.info("Game On!!");
-			loadController(canvas, 'mouseMove');
-		});
-	});
-   
-   //coms = new ControllerComs();
-   //loadController(canvas, 'touchDrag');
+    if (coms == null) { // Load coms only once!
+        coms = new ControllerComs();
+        log.info("trying to open connection");
+        coms.open(function() {
+            log.info("Connection establised, trying to join game");
+            coms.joinGame(function() {
+                log.info("Game On!!");
+                loadController(canvas);
+            });
+        });
+    }
+    else{
+        loadController(canvas);
+    }
+
+    //coms = new ControllerComs();
+    //loadController(canvas, 'touchDrag');
 
     function orientationChange() {
         // inc orientation counter
@@ -230,14 +234,14 @@ $(function() { // document ready, resize container
 
 
     /*
-    function hideAddressBar(){
-        if(document.documentElement.scrollHeight<window.outerHeight/window.devicePixelRatio)
-            document.documentElement.style.height=(window.outerHeight/window.devicePixelRatio)+'px';
-        setTimeout(window.scrollTo(1,1),0);
-    }
-    window.addEventListener("load",function(){hideAddressBar();});
-    window.addEventListener("scroll",function(){hideAddressBar();});
-    window.addEventListener("orientationchange",function(){hideAddressBar();}); 
-    */
+       function hideAddressBar(){
+       if(document.documentElement.scrollHeight<window.outerHeight/window.devicePixelRatio)
+       document.documentElement.style.height=(window.outerHeight/window.devicePixelRatio)+'px';
+       setTimeout(window.scrollTo(1,1),0);
+       }
+       window.addEventListener("load",function(){hideAddressBar();});
+       window.addEventListener("scroll",function(){hideAddressBar();});
+       window.addEventListener("orientationchange",function(){hideAddressBar();}); 
+       */
 
 });

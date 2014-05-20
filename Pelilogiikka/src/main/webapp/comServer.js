@@ -14,49 +14,22 @@ var connected = false;
 
 var players = {};
 
-/*
- * Functions for server handling
- */
-
-/*
-function Screen() {
-    this.connected = false;
-    this.port = SCREEN_PORT;
-    this.players = {};
-}
-
-Screen.prototype.connect = function() {
-    var that = this; 
-
-    screenio.sockets.on('connection', function(socket) {
-        if (DEBUG) { console.log("   info  - screen connected"); }
-        that.connected = false;
-        //that.soscreenSocket = socket;
-
-		socket.on('connectionOK', function(userID) {
-			if (DEBUG) { console.log("   info  - forwarding userID to player"); }
-            that.players[userID].emit('joinGame');
-		});
-
-		socket.on('diconnect', function() {
-            this.connected = false;
-			if (DEBUG) { console.log("   info  - screen disconnected"); }
-		});
-
-        // TODO handle disconnections?
-    });
-}
-
-Screen.prototype.send = function(data) {
-    if (this.connected) {
-
+getUserID = function(socket, data) {
+    /*
+    for (var method in socket) {
+        if (typeof socket[method] == 'function') {
+            console.log("METHOD" + method);
+        }
+        else {
+            console.log(typeof socket[method] + " -- " + method);
+        }
     }
-    else {
-        if (DEBUG) { console.log("   error  - screen disconnected"); }
-    }
-}
-*/
+    */
 
+    console.log(data);
+    
+    return data.userID;
+}
 
 //helper function fo open new socketio
 createSocketIO = function(port) {
@@ -64,7 +37,10 @@ createSocketIO = function(port) {
 
     // TODO tweak for spead!
     return socketio.listen(port, {
-        'log level': ( DEBUG ? 3 : 0 )
+        'log level': ( DEBUG ? 1 : 0 ),
+           'log colors': false,
+           'close timeout': 20,
+           'browser client': false
     });
 }
 
@@ -94,23 +70,21 @@ startServer = function() {
         connected = true;
         screenSocket = socket;
 
-		socket.on('connectionOK', function(userID) {
-			if (DEBUG) { console.log("   info  - player connected to userID " + userID); }
-			players[userID].emit('connectionOK', userID);
-		});
+        socket.on('connectionOK', function(userID) {
+            if (DEBUG) { console.log("   info  - screen connected to userID " + userID); }
+            players[userID].emit('connectionOK', userID);
+        });
 
         socket.on('gameJoined', function(userID) {
-			if (DEBUG) { console.log("   info  - player entering game with userID " + userID); }
+            if (DEBUG) { console.log("   info  - player entering game with userID " + userID); }
             players[userID].emit('gameJoined', userID);
         });
 
-		socket.on('disconnect', function() {
-			//screenScoket = null;
-			if (DEBUG) { console.log("   info  - screen disconnected"); }
+        socket.on('disconnect', function() {
+            //screenScoket = null;
+            if (DEBUG) { console.log("   info  - screen disconnected"); }
             connected = false;
-		});
-
-        // TODO handle disconnections?
+        });
     });
 
     /*
@@ -119,16 +93,25 @@ startServer = function() {
 
     //start message dispatch on client connect
     clientio.sockets.on('connection', function(socket) {
-        var userID = Math.floor(Math.random() * 10000000000);
 
         if (! connected) {
             if (DEBUG) { console.log("   info  - unable to connect, no screen yet!"); }
             socket.disconnect();
         }
         else {
-            if (DEBUG) { console.log("   info  - client connected, setting userID to " + userID); }
-            players[userID] = socket;
-            screenSocket.emit('connectPlayer', userID);
+            if (DEBUG) { console.log("   info  - negoatiating client connection"); }
+
+            socket.emit('getConnectionInfo', null);
+            socket.on('returnConnectionInfo', function(data) {
+                var userID = getUserID(socket, data);
+                players[userID] = socket;
+                screenSocket.emit('connectPlayer', userID);
+                if (DEBUG) { console.log("   info  - client connected with userID " + userID); }
+            });
+
+            socket.on('disconnect', function() {
+                if (DEBUG) { console.log("   info  - lost connection user"); }
+            });
 
             socket.on('joinGame', function(userID) {
                 if (DEBUG) { console.log("   info  - screenSocket joinGame " + userID); }
@@ -154,11 +137,12 @@ startServer = function() {
                 }
 
                 if (DEBUG) { console.log("   debug - updating position"); }
-                screenSocket.emit('position', [userID, data]);
+                screenSocket.emit('position', data);
             });
         }
     });
 }
+
 
 /*
  * SERVER COMMANDS
