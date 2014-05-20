@@ -8,7 +8,7 @@
 <script type="text/javascript" src="webglutils.js"             ></script>
 
 <script type="text/javascript" src="Renderer.js"               ></script>
-<script type="text/javascript" src="Shaderlib.js"              ></script>
+<script type="text/javascript" src="Shader.js"              ></script>
 <script type="text/javascript" src="Inputs.js"                 ></script>
 <script type="text/javascript" src="Scene.js"                  ></script>
 
@@ -41,97 +41,95 @@
 <script type="text/javascript" src="testCube.js"               ></script>
 
    
-   
-<script id="pixel_Shader" type="x-shader/x-fragment">
-    precision mediump float;
 
-    varying vec2 vTextureCoord;
-    uniform sampler2D uSampler;
 
-    void main(void) 
-    {
-        gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-    }
-</script>
+
+
+
+
+
+
+
 
 
 <script id="vertex_Shader" type="x-shader/x-vertex">
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
     
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-
-    varying vec2 vTextureCoord;
+    uniform mat4 worldViewMatrix;         
+    uniform mat4 projMatrix;
+    
+    attribute vec3 vertexPos;
+    attribute vec2  vertexUV;
+    varying vec2  fragmentUV;
     
     void main(void) 
     {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vTextureCoord = aTextureCoord;
+        fragmentUV    = vertexUV;
+        gl_Position   = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
+        
     }
+    
 </script>
+
+
+
+
+
+
+
+
+
+
 
 
 
 <script id="HAX_VS" type="x-shader/x-vertex">
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
-    
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-
-    varying vec2 vTextureCoord;
-    
-    void main(void) 
-    {
-        gl_Position   = uMVMatrix * vec4(aVertexPosition, 1.0);
-        vTextureCoord = aTextureCoord;
-    }
-</script>
-
-
-
-<script id="HAX_PS" type="x-shader/x-fragment">
-    precision mediump           float;
-    varying vec2        vTextureCoord;
-    uniform sampler2D        uSampler;
-  
-    
-    void main(void) 
-    {
-        vec4 texel = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
       
-        if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 ) discard;       
-        
-        gl_FragColor =  texel;
+    uniform mat4 worldViewMatrix;
+    uniform mat4 projMatrix;
+    
+    attribute vec3  vertexPos;
+    attribute vec2   vertexUV;
+    varying vec2   fragmentUV;
+    
+    void main(void) 
+    {
+        fragmentUV    = vertexUV;
+        gl_Position   = worldViewMatrix * vec4(vertexPos, 1.0);
+       
     }
 </script>
 
 
+   
+<script id="pixel_Shader" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec2          fragmentUV;
+    uniform sampler2D     texSampler;
+
+    void main(void) 
+    {
+        gl_FragColor = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
+    }
+</script>
 
 
 
 <script id="COLOR_PS" type="x-shader/x-fragment">
     
     precision mediump           float;
-    varying vec2        vTextureCoord;
-    uniform sampler2D        uSampler;
-    
+    varying vec2           fragmentUV;
+    uniform sampler2D      texSampler;
+       
     uniform  vec4              vColor;
-
     
     void main(void) 
     {
-        vec4 texel = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        vec4 texel = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
       
-        if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 )
-        {
-            discard;
-        }       
-        
-        vec4 cOut  = vec4( (vColor.x+texel.r)*0.5 , (vColor.y+texel.g)*0.5, (vColor.z+texel.b)*0.5, 1.0 );
-        
-        gl_FragColor = cOut; // vec4(1.0,1.0,1.0,1.0);
+        if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 ) discard;
+     
+        gl_FragColor =  vec4(1.0,0.0,0.0,1.0);
     }
 </script>
 

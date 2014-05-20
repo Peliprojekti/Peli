@@ -1,9 +1,23 @@
 
+// Reminder to self:
+/*
+Uniforms are sent to both vertex shaders and fragment shaders and contain values that stay the same across the entire frame being rendered.
 
- function getShader(gl, id) 
+Attributes are values that are applied to individual vertices. Attributes are only available to the vertex shader. 1:1 mapping to vertice list
+
+Varyings are variables declared in the vertex shader that we want to share with the fragment shader. 
+To do this we make sure we declare a varying variable of the same type and name in both the vertex shader and the fragment shader.
+*/
+
+
+
+
+ Shader.prototype.getShader = function (gl, id) 
  {
         var shaderScript = document.getElementById(id);
-        if (!shaderScript) {
+       
+        if (!shaderScript) 
+        {
             return null;
         }
 
@@ -50,53 +64,63 @@
       
 
 
-    function Shader( gl_Context, vs_Program, ps_Program )
+    function Shader( gl, vs_Program, ps_Program )
     {
-	var fragmentShader  = getShader( gl_Context, ps_Program);	
-	var vertexShader    = getShader( gl_Context, vs_Program);
-		
-        this.shaderProgram = gl_Context.createProgram();
+	var fragmentShader  = this.getShader( gl, ps_Program);	
+	var vertexShader    = this.getShader( gl, vs_Program);
+        this.shaderProgram  = gl.createProgram();
 	
-	gl_Context.attachShader( this.shaderProgram, vertexShader      );
-	gl_Context.attachShader( this.shaderProgram, fragmentShader    );	
-	gl_Context.linkProgram ( this.shaderProgram			);
+	gl.attachShader( this.shaderProgram, vertexShader      );
+	gl.attachShader( this.shaderProgram, fragmentShader    );	
+	gl.linkProgram ( this.shaderProgram                    );
 
-	if (!gl_Context.getProgramParameter(this.shaderProgram, gl_Context.LINK_STATUS)) 
+	if (!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)) 
 	{
             alert("Could not load shader!");
 	}
-		
-	this.bind( gl_Context );
+        
+        
+        //gl.useProgram( this.shaderProgram );
+
+	this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation( this.shaderProgram, "vertexPos");
+                                                     gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
+
+	this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram,  "vertexUV");
+                                                     gl.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
+	
+        this.shaderProgram.samplerUniform          = gl.getUniformLocation(this.shaderProgram, "textureSampler");
+        
+        
+        
+        
+	this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "projMatrix" );
+	this.shaderProgram.mvMatrixUniform         = gl.getUniformLocation(this.shaderProgram, "worldViewMatrix");
+        
+
+        
+        
+        this.shaderProgram.vColor                  = gl.getUniformLocation(this.shaderProgram, "vColor");
+        
+    //	this.bind( gl );
     }
+    
+   
+    
+    
+    
+    
+    
+    
+    
 
 
     Shader.prototype.bind = function( gl )
     {
-        gl.useProgram( this.shaderProgram );
-
-	this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation( this.shaderProgram, "aVertexPosition");
-                                                     gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
-
-	this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram, "aTextureCoord");
-                                                     gl.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
-	
-	this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "uPMatrix" );
-	this.shaderProgram.mvMatrixUniform         = gl.getUniformLocation(this.shaderProgram, "uMVMatrix");
-	this.shaderProgram.samplerUniform          = gl.getUniformLocation(this.shaderProgram, "uSampler");
         
-        
-        // Testing
-        this.shaderProgram.vColor                  = gl.getUniformLocation(this.shaderProgram, "vColor");
-        gl.uniform4f( this.shaderProgram.vColor, 1.0,1.0,1.0,1.0 );
-        // Declare the attribute
-   //     this.shaderProgram.vColor                  = gl.getUniformLocation(shaderProgram, "vColor");
-         
+        gl.uniform4f( this.shaderProgram.vColor, 1.0,1.0,1.0,1.0 ); // Upload various values to the shader
+
        
-       // gl.uniform4f( this.shaderProgram.vColor, [1,1,1,1,1] );
-        
-        // Make this thing dynamic!
-        
-        
+    gl.useProgram( this.shaderProgram );        // Make the shader active.
     }
     
     

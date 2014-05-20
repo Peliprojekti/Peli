@@ -61,6 +61,7 @@
         var shaderProgram   = myEntity.material.shader.shaderProgram;
         var worldMatrix     = myEntity.orientation.get_Matrix();       
         var viewMatrix      = this.camera.get_ViewMatrix(); 
+        
         var worldViewMatrix = mat4.multiply( viewMatrix , worldMatrix  );
      
         myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
