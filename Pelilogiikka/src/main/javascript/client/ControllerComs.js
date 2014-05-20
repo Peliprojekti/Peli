@@ -2,6 +2,7 @@ function ControllerComs() {
 	this.hostname = location.hostname;
 	this.port = CLIENT_PORT;
 	this.userID = 0;
+	this.socket = null;
 
 	this.onMessage = function(msg) {
 		log.info("got message: " + msg);
@@ -53,7 +54,9 @@ ControllerComs.prototype.joinGame = function(callback) {
 }
 
 ControllerComs.prototype.position = function(position) {
-	this.socket.emit('position', userID, position);
+	if (this.socket == null) {
+		this.socket.emit('position', userID, position);
+	}
 }
 
 
