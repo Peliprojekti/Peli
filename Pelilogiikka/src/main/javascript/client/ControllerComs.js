@@ -3,12 +3,15 @@ function ControllerComs() {
 	this.port = CLIENT_PORT;
 	this.userID = 0;
 	this.socket = null;
+    this.dummyMode = false;
+    this.userID = 0;
 
+    //this.onConnection = function() { };
 	this.onMessage = function(msg) {
 		log.info("got message: " + msg);
 	};
 
-	this.onGameStarted = function() {}
+	this.onJoinGame = null;
 }
 
 ControllerComs.prototype.setDummyMode = function(dummyMode) {
@@ -16,28 +19,30 @@ ControllerComs.prototype.setDummyMode = function(dummyMode) {
 }
 
 ControllerComs.prototype.open = function(callback) {
-	this.onUserID = callback;
+    var that = this;
+	this.onConnection = callback;
 
 	var url = 'http://' + this.hostname + ":" + this.port;
 	log.debug('connecting client to ' + url);
 	this.socket = io.connect(url);
 
-	this.socket.on('connection', function() {
-		log.info("socket.on('connection')");
-	});
-
-	this.socket.on('close', function() {
+	this.socket.on('disconnect', function() {
 		log.info("Connection closed");
 	});
 
-	var client = this;
-	this.socket.on('userID', function(data) {
-		log.info("Got userID: " + data);
-		client.userID = data;
-		client.onUserID();
+	this.socket.on('connectionOK', function(userID) {
+		log.info("Got userID: " + userID);
+		that.userID = userID;
+        callback(userID);
+		//that.onConnection(userID);
 	});
 
-	this.socket.on('message', this.onMessage);
+    this.socket.on('gameJoined', function() {
+        log.info("Starting game!");
+        that.onJoinGame();
+    });
+
+	//this.socket.on('message', this.onMessage);
 
 	this.socket.on('error', function(data) {
 		log.error("Connection error");
@@ -48,6 +53,7 @@ ControllerComs.prototype.close = function(callback) {
 	log.warn("ControllreComs.close not implemented");
 }
 
+/*
 ControllerComs.prototype.setOnMessage = function(func) {
 	this.onMessage = func;
 }
@@ -55,21 +61,25 @@ ControllerComs.prototype.setOnMessage = function(func) {
 ControllerComs.prototype.setOnGameStarted = function(func) {
 	this.onGameStarted = func;
 }
+*/
 
 ControllerComs.prototype.joinGame = function(callback) {
 	this.onJoinGame = callback;
-	this.socket.emit('joinGame', userID);
+	this.socket.emit('joinGame', this.userID);
 }
 
-ControllerComs.prototype.position = function(position) {
-	if (this.socket != null) {
-		if (dummyMode != true) {
+ControllerComs.prototype.position = function(x, y) {
+	if (this.socket == null) {
+		if (this.dummyMode != true) {
 			log.error("trying to use unopened socket");
 		}
+        else {
+            log.debug("socket not open, but dummyMode is enable");
+        }
 	}
 	else {
 		log.debug("sending position");
-		this.socket.emit('position', userID, position);
+		this.socket.emit('position', [x, y]);
 	}
 }
 

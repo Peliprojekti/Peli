@@ -1,15 +1,13 @@
 function Crosshair(x,y,radius,color) {
-    this.x = 0;
-    this.y = 0;
     this.r= radius;
     this.color = color;
 }
 
-Crosshair.prototype.draw = function(ctx) {
+Crosshair.prototype.draw = function(ctx, x, y) {
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI, false);
+    ctx.arc(x, y, this.r, 0, 2*Math.PI, false);
     ctx.stroke();
 
     ctx.restore();

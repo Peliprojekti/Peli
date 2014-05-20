@@ -3,6 +3,7 @@ function Player(userID) {
 	this.onChangeListener = function() {};
 	this.x = 0;
 	this.y = 0;
+    this.gameOn = false;
 }
 
 Player.prototype.getID = function() {
@@ -23,5 +24,9 @@ Player.prototype.setCrosshair = function(crosshair) {
 }
 
 Player.prototype.draw = function(ctx) {
-	this.crosshair.draw(ctx);
+	this.crosshair.draw(ctx, this.x, this.y);
+}
+
+Player.prototype.setGameOn = function(gameOn) {
+    this.gameOn = gameOn;
 }

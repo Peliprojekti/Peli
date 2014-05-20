@@ -167,9 +167,10 @@ $(function() { // document ready, resize container
 	coms = new ControllerComs();
 	log.info("trying to open connection");
 	coms.open(function() {
-        log.info("Connection ok");
+        log.info("Connection establised, trying to join game");
 		coms.joinGame(function() {
-			loadController(canvas);
+            log.info("Game On!!");
+			loadController(canvas, 'mouseMove');
 		});
 	});
    
