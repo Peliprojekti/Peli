@@ -5,21 +5,33 @@ var screenComs = {
 	socket: null,
 	onMessage: function() {},
     onPosition: function() {},
+	onNewPlayer: function() {},
+	playerCount: 0,
+	maxPlayers: 3,
 
 	initConnection: function(callback) {
 		socket = io.connect('http://' + location.hostname + ":" + SCREEN_PORT);
 
-        socket.on('connection', callback);
+        socket.on('connection', function() {
+			var userID = Math.floor(Math.random() * (max - min + 1)) + min;
+			socket.emit('userID', userID);
+		});
 
-		socket.on('message', onMessage);
+		socket.on('message', screenComs.onMessage);
 
         socket.on('position', function(data) {
+			log.debug("recieved new position");
+			// position
             screenComs.onPosition([data[0], data[1]]);
         });
+
+		socket.on('joinGame', function(data) {
+			socket.emit('joinGame', true);
+		});
 	},
 
     setOnMessage: function(func) {
-        onMessage = func;
+        screenComs.onMessage = func;
     },
 
     setOnPosition: function(func) {
@@ -27,7 +39,7 @@ var screenComs = {
     },
 
     setOnNewPlayer: function(func) {
-
+		screenComs.onNewPlayer = func;
     }
 };
 

@@ -122,15 +122,15 @@ function getCanvasDimensions() {
 
 var currentController = null;
 function loadController(canvase, type) {
-    if (undefined(new_type)) {
-        new_type = CONTROLLER;
+    if (typeof type == "undefined") {
+        type = CONTROLLER;
     }
     if (currentController != null) {
         currentController.disable(canvas);
     }
 
 
-    switch(CONTROLLER) {
+    switch(type) {
         case 'mouseMove':
             mouseMove.enable(canvas);
             currentController = mouseMove;
@@ -206,7 +206,7 @@ $(function() { // document ready, resize container
 
     clientComs.initConnection(function() {
         log.info("Connection ok");
-        touchDrag.enable(canvas);
+		loadController(canvas);
     });
 
     /*
