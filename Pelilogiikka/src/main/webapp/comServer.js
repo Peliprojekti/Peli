@@ -18,9 +18,22 @@ var screenio = null;
 //helper function fo open new socketio
 createSocketIO = function(port) {
     if (DEBUG) { console.log("   info  - socket.io listening on port " + port); }
+
+    // TODO tweak for spead!
     return socketio.listen(port, {
         'log level': ( DEBUG ? 3 : 0 )
     });
+}
+
+closeSocketIO = function(socket) {
+    if (socket != null) {
+        socket.server.close();
+    }
+}
+
+closeServer = function() {
+    closeSocketIO(clientio);
+    closeSocketIO(screenio);
 }
 
 startServer = function() {
@@ -57,7 +70,19 @@ startServer = function() {
                 return;
             }
 
+			if (DEBUG) { console.log("   debug - screen connected"); }
             screenSocket.emit('message', data);
+        });
+
+        socket.on('position', function(data) {
+            if (screenSocket == null) {
+                console.log("   error -NO SCREEN CONNECTED");
+                // maybe do something more usefull at some point?
+                return;
+            }
+
+			if (DEBUG) { console.log("   debug - updating position"); }
+            screenSocket.emit('position', data);
         });
     });
 }
@@ -73,6 +98,11 @@ process.on('message', function(msgobj) {
     else if (msgobj.type == 'startServer') {
         if (DEBUG) { console.log("   info  - firing up comServer"); }
         startServer();
+    }
+    else if (msgobj.type == 'shutdown') {
+        if (DEBUG) { console.log("   info  - shutting down"); }
+        closeServer();
+        process.exit(0);
     }
     else if (msgobj.type == 'closeServer') {
         if (DEBUG) { console.log("   info  - comServer shuting down"); }

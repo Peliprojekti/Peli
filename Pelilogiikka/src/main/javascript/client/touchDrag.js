@@ -1,32 +1,32 @@
-var previousSendTime = 0;
-var interval = 20;
-var coords;
-var currentTime;
+var touchDrag = {
+    previousSendTime: 0,
+    interval: 20,
+    coords: null,
+    currentTime: null,
 
-function doTouchMove(event){
-	event.preventDefault();
-	coords = getRelativeCoords(0);
-	
-	currentTime = new Date().getTime();
+    doTouchMove: function(event) {
+        event.preventDefault();
+        touchDrag.coords = getRelativeCoords(0);
 
-	if (currentTime - previousSendTime >= interval) {
-		 clientComs.send({
-		            position: coords               
-		});
+        touchDrag.currentTime = new Date().getTime();
 
-		previousSendTime = currentTime;
-	}
-	
+        if (currentTime - previousSendTime >= interval) {
+            clientComs.send({
+                position: coords               
+            });
 
+            previousSendTime = currentTime;
+        }
 
-	
-	//Test code
-	//updateCoordinatesText(coords[0], coords[1]);	
+        if (DEBUG) { updateCoordinatesText(coords[0], coords[1]) };	
+    },
 
-}
+    enable: function(canvas) {
+        canvas.addEventListener("touchmove", touchDrag.doTouchMove, false);
+        return canvas;
+    },
 
-function initCanvas(){
-	var canvas = document.getElementById("canvas");
-	canvas.addEventListener("touchmove", doTouchMove, false);
-	return canvas;
+    disable: function(canvas) {
+        canvas.removeEventListener("touchmove", touchDrag.doTouchMove);
+    }
 }
