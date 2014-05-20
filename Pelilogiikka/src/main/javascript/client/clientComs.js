@@ -1,11 +1,15 @@
+/*
+ * Joo tää meni ihan liian kamalaksi...
+ */
 var clientComs = {
 	socket: null,
-	persistent: true,
+	//persistent: true,
 	userID: 0,
 
 	onMessage: function() {},
 
 	initConnection: function(callback) {
+		log.warn("clientComs is DEPRECATED");
 		clientComs.socket = io.connect('http://' + location.hostname + ":" + CLIENT_PORT);
 
 		clientComs.socket.on('open', function(data) {

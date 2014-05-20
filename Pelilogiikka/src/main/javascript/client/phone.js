@@ -1,3 +1,5 @@
+var coms = null;
+
 
 //http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
 
@@ -82,6 +84,7 @@ function updateSendTimeText(time){
     drawText("Sent time: " + time, 7);
 }
 
+
 //Test code
 var texts = new Array();
 function drawText(text, id){
@@ -121,22 +124,27 @@ function getCanvasDimensions() {
 
 
 var currentController = null;
-function loadController(canvase, type) {
+function loadController(canvas, type) {
+	if (typeof canvas == 'undefined') {
+		log.error("trying to loadController on undefined canvas");
+	}
     if (typeof type == "undefined") {
         type = CONTROLLER;
     }
+	/*
     if (currentController != null) {
         currentController.disable(canvas);
     }
+	*/
 
-
+	log.info("changing controller type to" + type);
     switch(type) {
         case 'mouseMove':
-            mouseMove.enable(canvas);
+            mouseMove.enable(coms, canvas);
             currentController = mouseMove;
             break;
         case 'touchDrag':
-            touchDrag.enable(canvas);
+            touchDrag.enable(coms, canvas);
             currentController = touchDrag;
             break;
     }
@@ -146,13 +154,22 @@ $(function() { // document ready, resize container
     //var canvas = document$("#canvas");
 	var canvas = document.getElementById("canvas");
     //touchDrag.enable(canvas);
-    mouseMove.enable(canvas);
+    //mouseMove.enable(canvas);
 
     var ctx = canvas.getContext("2d");
 
     var rc = 0;  // resize counter
     var oc = 0;  // orientiation counter
     var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
+
+	// LOAD COMS
+	coms = new ControllerComs();
+	coms.open(function() {
+        log.info("Connection ok");
+		coms.joinGame(function() {
+			loadController(canvas);
+		});
+	});
 
     function orientationChange() {
         // inc orientation counter
@@ -204,10 +221,7 @@ $(function() { // document ready, resize container
         otimeout = setTimeout(orientationChange, 50);
     }
 
-    clientComs.initConnection(function() {
-        log.info("Connection ok");
-		loadController(canvas);
-    });
+
 
     /*
     function hideAddressBar(){
