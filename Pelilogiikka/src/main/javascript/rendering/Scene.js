@@ -1,5 +1,7 @@
 
 
+
+
 function Scene( renderer )
 {
     this.renderer          = renderer;
@@ -40,7 +42,6 @@ Scene.prototype.render = function( )
        
          this.entries_GUI.forEach(function( entry )
          {
-            
             rnd.draw_SS( entry );  
          });
       

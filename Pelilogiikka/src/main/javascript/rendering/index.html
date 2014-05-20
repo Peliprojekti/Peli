@@ -32,6 +32,7 @@
 <script type="text/javascript" src="math/MatrixGL.js"          ></script>
 <script type="text/javascript" src="math/Orientation.js"       ></script>
 
+<script type="text/javascript" src="misc/Proc.js"              ></script>
 
 <script type="text/javascript" src="testCube.js"               ></script>
 
@@ -173,37 +174,46 @@
         document.onkeyup   = kbUp_Event; 
     }
        
-
        
+       
+   
+        
     function Start() 
     {  
-        var canvas       = document.getElementById("Canvas");
+       var canvas       = document.getElementById("Canvas");
             
-        canvas.style.width  = window.innerWidth;
-        canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
+       canvas.style.width  = window.innerWidth;
+       canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
          
-        renderer         = new Renderer( canvas                                              );
-        renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
+       renderer         = new Renderer( canvas                                              );
+       renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
         
-        myCamera         = new   Camera( renderer, 0.1, 1000, 65                             );
-        myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
+       myCamera         = new   Camera( renderer, 0.1, 1000, 65                             );
+       myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
         
-        register_Inputs();      // Erillinen luokka tälle!
+       register_Inputs();      // Erillinen luokka tälle!
        
-        
        var crosshair    = new  Texture( renderer.gl , "data/crosshair1.png", "FILTER_PLAIN"  );
        var ortShader    = new   Shader( renderer.gl , "HAX_VS", "HAX_PS"                     );
        var guiMaterial  = new Material( ortShader, crosshair                                 );
        var crosshairs   = [  test_Rectangle( renderer.gl, guiMaterial , [0.10,0.10] )  ];
         
        myScene = import_Scene( renderer, "data/TestLevel/Test.irr"  );
-   //    myScene.insert( myCube, "DYNAMIC"     );
-     //  myScene.insert( mySphere, "DYNAMIC"   );
-       myScene.insert( crosshairs[0], "GUI"  );
-       myScene.insert( myCamera     , "CAM"  );
+       myScene.insert( crosshairs[0], "GUI"     );
+       myScene.insert( myCamera     , "CAM"     );
+        
+       var exec = new Executor();
+        
+       var f1   = function( ts ){ alert("B"); };
+       var f2   = function( ts) { return true };
+       var f3   = function( ts ){ alert("R"); };
+       var f4   = function( ts ){ alert("E"); };
+       
+       var proc = new Process( exec, f1,f2,f3 );
         
         
-        
+        proc.execute( 0 );
+        proc.execute( 0 );
         
         
        tick();     
