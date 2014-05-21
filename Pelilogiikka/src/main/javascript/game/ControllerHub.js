@@ -59,7 +59,7 @@ ControllerHub.prototype.open = function(callback) {
 
 ControllerHub.prototype.addNewPlayer = function(userID) {
     log.info("registering player " + userID);
-    this.players[userID] = new Player(userID);
+    this.players[userID] = playerFactory.getPlayer(userID);
     this.onJoinPlayer(this.players[userID]);
     return true;
 }

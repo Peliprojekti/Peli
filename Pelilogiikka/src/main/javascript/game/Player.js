@@ -1,3 +1,19 @@
+var playerFactory = {
+    players: {},
+
+    getPlayer: function(userID) {
+        //if (typeof this.players[userID] == undefined ||
+                //this.players[userID] == null) {
+                    this.players[userID] = new Player(userID);
+                //}
+        return this.players[userID];
+    },
+
+    removePlayer: function(userID) {
+        // TODO
+    }
+};
+
 function Player(userID) {
 	this.userID = userID;
 	this.onChangeListener = function() {};
