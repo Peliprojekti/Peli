@@ -42,7 +42,7 @@ Player.prototype.setPosition = function(position) {
 
 Player.prototype.pushSwipe = function(position, sincePrevious) {
         this.lastSwipe = [position, sincePrevious];
-        log.info("Pushed swipe: (" + position[0] + ", " + position[1] + ")" + ", " + sincePrevious);
+        //log.info("Pushed swipe: (" + position[0] + ", " + position[1] + ")" + ", " + sincePrevious);
 }
 
 Player.prototype.setCrosshair = function(crosshair) {
@@ -66,13 +66,9 @@ Player.prototype.update = function() {
                 this.previousDirection = null;
                 this.calcNewPosition();
             }
-            else {       
-                if (this.startCoords != null) {
-                    this.calcNewDirection(this.startCoords, coords);
-                }
-                else {
-                    this.calcNewDirection([this.x, this.y], coords);
-                }
+            else {    
+                this.calcNewDirection(this.startCoords, coords);
+                this.startCoords = coords;
             }
         }
         else {
@@ -87,12 +83,12 @@ Player.prototype.calcNewPosition = function () {
 }
 
 Player.prototype.calcNewDirection = function(beginning, end) {
+        log.debug("BEGINNING: " + beginning[0] + ", " + beginning[1] + " END: " + end[0] + ", " + end[1]);
         var startPos = new Vector2(beginning[0], beginning[1]);
         var endPos = new Vector2(end[0], end[1]);
-        var sub = endPos.sub(startPos);
-        var newVec = sub.add(startPos);
+        var newVec = endPos.sub(startPos);
         
-        newVec = this.changeOriginToCrosshair(newVec);
+        //newVec = this.changeOriginToCrosshair(newVec);
         
         if (this.previousDirection == null) {
             this.previousDirection = newVec;
@@ -101,7 +97,11 @@ Player.prototype.calcNewDirection = function(beginning, end) {
         else {
             this.previousDirection = newVec;
             this.currentDirection = newVec;
-            this.setPosition([this.x + newVec.x * this.posChangeMul, this.y + newVec.x * this.posChangeMul]);
+            
+            var newX = this.x + newVec.x * this.posChangeMul;
+            var newY = this.y + newVec.x * this.posChangeMul;
+            
+            this.setPosition([newX, newY]);
             log.info("Vector: (" + newVec.x + ", " + newVec.y + ")");
         }
     
