@@ -80,8 +80,9 @@ ControllerHub.prototype.movePlayer = function(data) {
 
 ControllerHub.prototype.moveSwipe = function(data) {
     var userID = data[0];
-    var position = data[1];
-    var sincePrevious = data[2];
+    var swipeData = data[1];
+    var position = [swipeData[0], swipeData[1]];
+    var sincePrevious = swipeData[2];
     
     log.debug(userID + "swipe position: (" + position[0] + ", " + position[1] + "), Time since previous: " + sincePrevious + "ms");
     

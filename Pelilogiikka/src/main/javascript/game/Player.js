@@ -23,6 +23,8 @@ function Player(userID) {
         this.lastSwipe = null;
         this.startCoords = null;
         this.previousDirection = null;
+        this.posChangeMul = 0.01;
+        this.currentDirection = null;
 }
 
 Player.prototype.getID = function() {
@@ -62,6 +64,7 @@ Player.prototype.update = function() {
             if (this.lastSwipe[1] == 0) {
                 this.startCoords = coords;
                 this.previousDirection = null;
+                this.calcNewPosition();
             }
             else {       
                 if (this.startCoords != null) {
@@ -78,7 +81,9 @@ Player.prototype.update = function() {
 }
 
 Player.prototype.calcNewPosition = function () {
-        
+        if (this.currentDirection != null) {
+            this.setPosition([this.x + this.currentDirection.x*this.posChangeMul, this.y + this.currentDirection.y*this.posChangeMul]);       
+        }
 }
 
 Player.prototype.calcNewDirection = function(beginning, end) {
@@ -87,13 +92,23 @@ Player.prototype.calcNewDirection = function(beginning, end) {
         var sub = endPos.sub(startPos);
         var newVec = sub.add(startPos);
         
+        newVec = this.changeOriginToCrosshair(newVec);
+        
         if (this.previousDirection == null) {
             this.previousDirection = newVec;
+            this.currentDirection = newVec;
         }
         else {
-            this.setPosition(end);
+            this.previousDirection = newVec;
+            this.currentDirection = newVec;
+            this.setPosition([this.x + newVec.x * this.posChangeMul, this.y + newVec.x * this.posChangeMul]);
+            log.info("Vector: (" + newVec.x + ", " + newVec.y + ")");
         }
     
         this.lastSwipe = null;
 }
 
+Player.prototype.changeOriginToCrosshair = function(vector) {
+        return new Vector2(vector.x - this.x, vector.y - this.y);
+        
+}
