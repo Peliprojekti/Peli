@@ -76,8 +76,9 @@
     varying   vec4  fragmentPos;
     varying   vec2  fragmentUV;
     varying   vec4  fragmentNormal;
-    varying   vec4  vLight1;
     
+    varying   vec4  vLight1;
+    varying   vec4  vLight2;
     //[-64.297035, -34.088657, -127.10157];
     
     
@@ -87,13 +88,10 @@
         fragmentNormal = normalize( worldMatrix * vec4( vertexNormal , 0.0 ) );
         fragmentPos    = worldMatrix * vec4(    vertexPos , 1.0 );                   // Needs to be taken from model space to world space.
         
-        vec4 haxLight  = vec4( -64.297035, -34.088657, -127.10157, 1.0 );             // ALREADY in worldpos!
-             vLight1   = haxLight;                                   
-        
+             vLight1   = vec4( -64.297035, -34.088657, -127.10157, 1.0 );                                    
+             vLight2   = vec4( -64.297035,   0.088657,  130.10157, 1.0 );                                    
         
         gl_Position    = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
-        
-   //     fragmentPos    = vec3( gl_Position.x, gl_Position.y, gl_Position.z );
     }
     
 </script>
@@ -109,23 +107,42 @@
     varying vec2          fragmentUV;
     varying vec4      fragmentNormal;
     varying vec4             vLight1;
-   
+    varying vec4             vLight2;
+    
+    
+    
     void main(void) 
     {
-        vec3 pixelToLight      = vec3(vLight1) - vec3(fragmentPos);    // Vector from pixel to light source
-        vec3 lightVector       = normalize( pixelToLight );
-        float dist2Light       = length( pixelToLight );
-         
-        float cosAngle         = dot( lightVector , vec3( fragmentNormal ) ); 
-              cosAngle         = clamp( cosAngle, 0.0, 1.0 );
         
-        float constant_Term    = 0.5;
-        float linear_Term      = 0.010;
-        float quadratic_Term   = 0.00005;
         
-        float attenuation      = 1.0 / (constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term); //100.0 / dist2Light;
-        float final_Multiplier = cosAngle * attenuation;
+        // Compute light 1
+        vec3 pixelToLight        = vec3(vLight1) - vec3(fragmentPos);    // Vector from pixel to light source
+        vec3 lightVector         = normalize( pixelToLight );
+        float dist2Light         = length( pixelToLight );
          
+        float cosAngle           = dot( lightVector , vec3( fragmentNormal ) ); 
+              cosAngle           = clamp( cosAngle, 0.0, 1.0 );
+        
+        float constant_Term      = 0.5;
+        float linear_Term        = 0.010;
+        float quadratic_Term     = 0.00005;
+        
+        float attenuation        = 1.0 / (constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term); //100.0 / dist2Light;
+        float final_Multiplier_1 = cosAngle * attenuation;
+        
+        
+        // Compute light 2
+             pixelToLight        = vec3(vLight2) - vec3(fragmentPos);    // Vector from pixel to light source
+             lightVector         = normalize( pixelToLight );
+             dist2Light          = length( pixelToLight );
+             cosAngle            = dot( lightVector , vec3( fragmentNormal ) ); 
+             cosAngle            = clamp( cosAngle, 0.0, 1.0 );
+             attenuation         = 1.0 / (constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term); //100.0 / dist2Light;
+        float final_Multiplier_2 = cosAngle * attenuation;
+        
+        
+        float final_Multiplier = max( final_Multiplier_1 , final_Multiplier_2 );
+        
         vec4 color             = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));   // Diffuse
         
         color.r = clamp( ( color.r * final_Multiplier), 0.01, 1.0 ); ;
@@ -282,7 +299,7 @@
        var guiShader        = new   Shader  ( renderer.gl , "HAX_VS"          , "COLOR_PS"                );
        var guiMaterial      = new Material  ( guiShader   , guiTex                                        );
        
-       var c1               = test_Rectangle( renderer.gl , guiMaterial       , [0.10,0.10]  , [1,1,1,1]  );
+       var c1               = test_Rectangle( renderer.gl , guiMaterial       , [0.05,0.05]  , [1,1,1,1]  );
        var gob1             = new Guiobject (          c1 , [0.0,1.0,0.0,1.0] , 1.0                       );
         
        myScene.insert( gob1          , "GUI"       );
