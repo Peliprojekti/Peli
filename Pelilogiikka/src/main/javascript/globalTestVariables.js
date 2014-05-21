@@ -1,0 +1,2 @@
+DEBUG = true;
+CONTROLLER = "touchDrag";
