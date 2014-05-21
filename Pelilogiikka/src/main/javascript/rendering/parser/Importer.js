@@ -8,14 +8,12 @@
     function parse_Node( descriptor )
     {
          //console.debug( string );
-        var lines = descriptor.toString().split("\n");
-       
+        var lines      = descriptor.toString().split("\n");
         var meshName;
         var textures   = [];
         var position   = [];
         var rotation   = [];
         var scale      = [];
-        
         
        
         lines.forEach( function( line )

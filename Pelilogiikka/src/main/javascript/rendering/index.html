@@ -73,16 +73,29 @@
     
     
     // Parameters for pixel shader
+    varying   vec4  fragmentPos;
     varying   vec2  fragmentUV;
     varying   vec4  fragmentNormal;
-    varying   vec4   vLight1;
+    varying   vec4  vLight1;
+    
+    //[-64.297035, -34.088657, -127.10157];
+    
     
     void main(void) 
     {
         fragmentUV     = vertexUV;
-        fragmentNormal =  worldMatrix * vec4( vertexNormal , 0.0 );
-        vLight1        =  light1;
+        
+        fragmentNormal = normalize( worldMatrix * vec4( vertexNormal , 0.0 ) );
+        fragmentPos    = worldMatrix * vec4(    vertexPos , 1.0 );    
+        
+        vec4 haxLight = vec4( -64.297035, -34.088657, -127.10157, 1.0 );
+        
+        vLight1        = haxLight;                                   
+        
+        
         gl_Position    = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
+        
+   //     fragmentPos    = vec3( gl_Position.x, gl_Position.y, gl_Position.z );
     }
     
 </script>
@@ -92,6 +105,8 @@
     precision mediump float;
 
    uniform sampler2D     texSampler;
+  
+    varying vec4         fragmentPos;       // Contains the fragment world position in VIEW_SPACE
     
     varying vec2          fragmentUV;
     varying vec4      fragmentNormal;
@@ -99,13 +114,29 @@
    
     void main(void) 
     {
-     
-        vec3 normal = vec3( fragmentNormal.x, fragmentNormal.y, fragmentNormal.z );//normalize(texture2D(normal_texture, gl_TexCoord[0].st).rgb * 2.0 - 1.0);  
-             normal = normalize( normal );
-       
-                 // vec4( normal, 1.0 );//
-        gl_FragColor = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
+        vec3 pixelToLight      = vec3(vLight1) - vec3(fragmentPos);    // Vector from pixel to light source
+        vec3 lightVector       = normalize( pixelToLight );
+        float dist2Light       = length( pixelToLight );
+         
+        float cosAngle         = dot( lightVector , vec3( fragmentNormal ) ); 
+              cosAngle         = clamp( cosAngle, 0.0, 1.0 );
         
+        float constant_Term    = 0.5;
+        float linear_Term      = 0.010;
+        float quadratic_Term   = 0.00005;
+        
+        float attenuation      = 1.0 / (constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term); //100.0 / dist2Light;
+        float final_Multiplier = cosAngle * attenuation;
+         
+        vec4 color             = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));   // Diffuse
+        
+        color.r = clamp( ( color.r * final_Multiplier), 0.01, 1.0 ); ;
+        color.g = clamp( ( color.g * final_Multiplier), 0.02, 1.0 ); ;
+        color.b = clamp( ( color.b * final_Multiplier), 0.04, 1.0 ); ;
+       
+        
+        gl_FragColor = color;
+        // gl_FragColor = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
     }
 </script>
 
@@ -233,19 +264,19 @@
        
         var canvas          = document.getElementById("Canvas");
         
-        canvas.style.width  = window.innerWidth;
-        canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
+    //    canvas.style.width  = window.innerWidth;
+     //   canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
          
         renderer            = new Renderer( canvas                         );
-        renderer.set_BgrColor( [0.0,1.0,0.0,1.0]                           );
+        renderer.set_BgrColor( [0.0,0.0,0.0,1.0]                           );
         
         myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
         myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
         
         var assman          = new Assetmanager( renderer );
        
-        myScene             = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
-        
+        myScene             = import_Scene( renderer, "data/TestLevel/Test.irr", assman  );
+     //   myScene             = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
         register_Inputs();      // Erillinen luokka tälle!
       
         var guiTex          = assman.get( "data/crosshair1.png", function( renderer, path ) { return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  ); }); 
@@ -274,7 +305,7 @@
 
 <body onload="Start();">
    
-    <canvas id="Canvas" style="border: none;" width="1200" height="800"></canvas>
+    <canvas id="Canvas" style="border: none;" width="1000" height="1000"></canvas>
 
     <br/>  
 </body>
