@@ -60,10 +60,11 @@
 			<include>jquery-2.1.0.min.js</include>
                         <include>client/touchDrag.js</include>
                         <include>client/mouseMove.js</include>
-                        
+                        <include>game/*.js</include>
                         <include>client/ControllerComs.js</include>
                         <include>client/test.js</include>
 <!--                        <include>client/phone.js</include>-->
+                        <include>client/touch.js</include>                   
 			<include>*.js</include>
 			<include>rendering/*.js</include>
 			<include>common/*.js</include>
