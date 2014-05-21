@@ -18,27 +18,6 @@ var connected = false;
 var players = {};
 
 getUserID = function(socket, data) {
-    /*
-    for (var method in socket) {
-        if (typeof socket[method] == 'function') {
-            console.log("METHOD" + method);
-        }
-        else {
-            console.log(typeof socket[method] + " -- " + method);
-        }
-    }
-    */
-
-    //console.log(data);
-
-    /*
-     * TODO maybe change to engine.io, since socket.io hides this?
-    var purl = url.parse(socket.request.headers.host, true);
-    var remoteAddress = socket.request.connection.remoteAddress;
-    var remotePort = socket.request.connection.remotePort;
-    var origin = purl.hostname;
-    */
-
     var origin = data.hostname;
 
     if (origin = 'localhost') {
@@ -47,21 +26,6 @@ getUserID = function(socket, data) {
     }
     else {
         return data.userID;
-        /* TODO 
-         * You can check your DHCP lease file (in the case of dhcp isc server /var/lib/dhcp/dhcpd.leases ), the DHCP log, or the Network Manager log (depending the distribution could be /var/log/syslog, /var/log/NetworkManager*, etc.).
-         *
-         * The format of these leases could be in the form of:
-         *
-         * lease 192.168.42.1 {
-         * starts 0 2000/01/30 08:02:54;
-         * ends 5 2000/02/04 08:02:54;
-         * hardware ethernet
-         *    00:50:04:53:D5:57;
-         *    uid 01:00:50:04:53:D5:57;
-         *    client-hostname "PC0097";
-         *    }
-         *
-         */
     }
 }
 
@@ -93,16 +57,6 @@ requestBenchmarks = function() {
 	for (var userID in players) {
 		var socket = players[userID];
 		socket.emit('requestBenchmark');
-
-		/*
-		if (socket.connected) {
-			console.log("sending request to one client");
-			socket.emit('requestBenchmark');
-		}
-		else {
-			console.log("found one unconnected");
-		}
-		*/
 	}
 }
 

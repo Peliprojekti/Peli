@@ -2,7 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var express = require('express');
 var morgan = require('morgan');
-//var socketio = require('socket.io');
+var userID = require('./userIdentification.js');
 
 var server = null;
 
@@ -61,7 +61,8 @@ module.exports = new function() {
                 "debug": nconf.get("debug"),
                 "controller": nconf.get("controller"),
                 "client_port": nconf.get("client_port"),
-				"com_benchmark": nconf.get("com_benchmark")
+				"com_benchmark": nconf.get("com_benchmark"),
+                "user_info": userID.get(request)
             });
         });
 
