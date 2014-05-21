@@ -6,6 +6,8 @@ function ControllerComs() {
 	this.socket = null;
     this.dummyMode = false;
     this.userID = Math.floor(Math.random() * 10000000000);
+	this.sequence = 0;
+	this.seqCalls = [];
 
     //this.onConnection = function() { };
 	this.onMessage = function(msg) {
@@ -62,6 +64,14 @@ ControllerComs.prototype.open = function(callback) {
     this.socket.on('error', function(data) {
         log.error("Connection error");
     });
+
+	this.socket.on('positionReturn', function(sequence) {
+		if (DEBUG) {
+			log.debug( "R - position - " + sequence + " - " + Date.now(), false, true);
+
+			log.debug("positionDonw in " + (Date.now() - that.seqCalls[sequence]) + "ms");
+		}
+	});
 }
 
 ControllerComs.prototype.close = function(callback) {
@@ -93,9 +103,15 @@ ControllerComs.prototype.position = function(x, y) {
         }
     }
     else {
-        log.debug("sending position");
-        this.socket.emit('position', [this.userID, [x, y]]);
-    }
+		if (DEBUG) {
+			log.debug( "C - position - " + this.sequence + " - " + Date.now(), false, true);
+
+			this.seqCalls[this.sequence] = Date.now();
+			this.sequence++;
+		}
+
+		this.socket.emit('position', [this.userID, this.sequence, [x, y]]);
+	}
 }
 
 

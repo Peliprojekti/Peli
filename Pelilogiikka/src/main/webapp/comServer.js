@@ -112,6 +112,14 @@ startServer = function() {
             players[userID].emit('gameJoined', userID);
         });
 
+		socket.on('positionReturn', function(data) {
+			var userID = data[0];
+			var sequence = data[1];
+            if (DEBUG) { console.log("   info  - positionReturn " + sequence + " for " + userID); }
+			players[userID].emit('positionReturn', data[1]);
+		});
+
+
         socket.on('disconnect', function() {
             //screenScoket = null;
             if (DEBUG) { console.log("   info  - screen disconnected"); }

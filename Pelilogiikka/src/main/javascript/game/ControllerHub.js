@@ -66,10 +66,12 @@ ControllerHub.prototype.addNewPlayer = function(userID) {
 
 ControllerHub.prototype.movePlayer = function(data) {
     var userID = data[0];
-    var position = data[1];
+	var sequence = data[1];
+    var position = data[2];
 
-    //log.debug(userID + " setPosition " + position[0] + "x" + position[1]);
+    log.debug(userID + " setPosition " + position[0] + "x" + position[1]);
 
+	this.socket.emit('positionReturn', [userID, sequence]);
     this.players[userID].setPosition(position);
 }
 
