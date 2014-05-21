@@ -14,6 +14,7 @@ Crosshair.prototype.draw = function(ctx, x, y) {
 
     ctx.beginPath();
     ctx.arc(trueX, trueY, this.r, 0, 2*Math.PI, false);
+    //log.info("Drew crosshair to: (" + trueX + ", " + trueY + ")");
     ctx.stroke();
 
     ctx.restore();

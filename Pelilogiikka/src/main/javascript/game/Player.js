@@ -20,7 +20,9 @@ function Player(userID) {
 	this.x = 0;
 	this.y = 0;
 	this.gameOn = false;
-        this.swipes = new Array();
+        this.lastSwipe = null;
+        this.startCoords = null;
+        this.previousDirection = null;
 }
 
 Player.prototype.getID = function() {
@@ -37,7 +39,7 @@ Player.prototype.setPosition = function(position) {
 }
 
 Player.prototype.pushSwipe = function(position, sincePrevious) {
-        this.swipes.push([position, sincePrevious]);
+        this.lastSwipe = [position, sincePrevious];
         log.info("Pushed swipe: (" + position[0] + ", " + position[1] + ")" + ", " + sincePrevious);
 }
 
@@ -54,5 +56,44 @@ Player.prototype.setGameOn = function(gameOn) {
 }
 
 Player.prototype.update = function() {
+        if (this.lastSwipe != null) {
+            var coords = this.lastSwipe[0];
+            //Swipe start
+            if (this.lastSwipe[1] == 0) {
+                this.startCoords = coords;
+                this.previousDirection = null;
+            }
+            else {       
+                if (this.startCoords != null) {
+                    this.calcNewDirection(this.startCoords, coords);
+                }
+                else {
+                    this.calcNewDirection([this.x, this.y], coords);
+                }
+            }
+        }
+        else {
+            this.calcNewPosition();
+        }
+}
+
+Player.prototype.calcNewPosition = function () {
         
 }
+
+Player.prototype.calcNewDirection = function(beginning, end) {
+        var startPos = new Vector2(beginning[0], beginning[1]);
+        var endPos = new Vector2(end[0], end[1]);
+        var sub = endPos.sub(startPos);
+        var newVec = sub.add(startPos);
+        
+        if (this.previousDirection == null) {
+            this.previousDirection = newVec;
+        }
+        else {
+            this.setPosition(end);
+        }
+    
+        this.lastSwipe = null;
+}
+

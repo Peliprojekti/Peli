@@ -1,5 +1,5 @@
 function Swipe() {
-    this.updatePeriod = 100; //time in ms
+    this.updatePeriod = 20; //time in ms
     this.sincePrevious;
     this.startTime;
     this.coms = null;
