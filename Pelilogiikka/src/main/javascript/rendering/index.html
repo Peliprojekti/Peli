@@ -84,13 +84,11 @@
     void main(void) 
     {
         fragmentUV     = vertexUV;
-        
         fragmentNormal = normalize( worldMatrix * vec4( vertexNormal , 0.0 ) );
-        fragmentPos    = worldMatrix * vec4(    vertexPos , 1.0 );    
+        fragmentPos    = worldMatrix * vec4(    vertexPos , 1.0 );                   // Needs to be taken from model space to world space.
         
-        vec4 haxLight = vec4( -64.297035, -34.088657, -127.10157, 1.0 );
-        
-        vLight1        = haxLight;                                   
+        vec4 haxLight  = vec4( -64.297035, -34.088657, -127.10157, 1.0 );             // ALREADY in worldpos!
+             vLight1   = haxLight;                                   
         
         
         gl_Position    = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
