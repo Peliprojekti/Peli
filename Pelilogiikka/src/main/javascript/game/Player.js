@@ -25,6 +25,8 @@ function Player(userID) {
         this.previousDirection = null;
         this.posChangeMul = 0.01;
         this.currentDirection = null;
+        this.interpolator = null;
+        this.time = 0;
 }
 
 Player.prototype.getID = function() {
@@ -36,8 +38,8 @@ Player.prototype.setOnChangeListener = function(func) {
 }
 
 Player.prototype.setPosition = function(position) {
-	this.x = position[0];
-	this.y = position[1];
+        if (position[0] <= 1 && position[0] >= 0) { this.x = position[0]; }
+        if (position[1] <= 1 && position[1] >= 0) { this.y = position[1]; }
 }
 
 Player.prototype.pushSwipe = function(position, sincePrevious) {
@@ -78,7 +80,12 @@ Player.prototype.update = function() {
 
 Player.prototype.calcNewPosition = function () {
         if (this.currentDirection != null) {
-            this.setPosition([this.x + this.currentDirection.x*this.posChangeMul, this.y + this.currentDirection.y*this.posChangeMul]);       
+            if (this.time <= 1) {
+                this.time += 0.01;
+                var speedMultiplier = this.interpolator.interpolate(this.time);
+                //log.debug(this.time + " " + speedMultiplier);
+                this.setPosition([this.x + this.currentDirection.x * speedMultiplier, this.y + this.currentDirection.y * speedMultiplier]);     
+            }
         }
 }
 
@@ -93,10 +100,14 @@ Player.prototype.calcNewDirection = function(beginning, end) {
         if (this.previousDirection == null) {
             this.previousDirection = newVec;
             this.currentDirection = newVec;
+            this.interpolator = new Interpolator(this.posChangeMul, 0);
+            this.time = 0;
         }
         else {
             this.previousDirection = newVec;
             this.currentDirection = newVec;
+            this.interpolator = new Interpolator(this.posChangeMul, 0);
+            this.time = 0;
             
             var newX = this.x + newVec.x * this.posChangeMul;
             var newY = this.y + newVec.x * this.posChangeMul;
@@ -106,9 +117,4 @@ Player.prototype.calcNewDirection = function(beginning, end) {
         }
     
         this.lastSwipe = null;
-}
-
-Player.prototype.changeOriginToCrosshair = function(vector) {
-        return new Vector2(vector.x - this.x, vector.y - this.y);
-        
 }
