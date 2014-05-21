@@ -1,10 +1,13 @@
-function initCanvas(){
+function Touch() {}
+
+Touch.prototype.initCanvas = function(){
 	var canvas = document.getElementById("canvas");
-	canvas.addEventListener("touchstart", doTouch, false);
+        var thisObject = this;
+	canvas.addEventListener("touchstart", function(event){ thisObject.doTouch(event); }, false);
 	return canvas;
 }
 
-function doTouch(event) {
+Touch.prototype.doTouch = function(event) {
 	event.preventDefault();
 	var coords = getRelativeCoords(0);
 
