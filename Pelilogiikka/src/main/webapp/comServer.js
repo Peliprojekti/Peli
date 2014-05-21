@@ -184,6 +184,16 @@ startServer = function() {
 
                 screenSocket.emit('position', data);
             });
+            
+            socket.on('swipe', function(data) {
+                if (!connected) {
+                    console.log("   error -NO SCREEN CONNECTED");
+                    // maybe do something more usefull at some point?
+                    return;
+                }
+
+                screenSocket.emit('swipe', data);
+            });
         }
     });
 }
