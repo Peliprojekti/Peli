@@ -49,12 +49,10 @@
         mat4.scale( this.projection_Matrix, [-1,1,1], this.projection_Matrix ); // Mirror the projection matrix across X
     }
 
-
     Renderer.prototype.end = function()
     {
         // Postprocessing here
     }
-
 
     Renderer.prototype.draw = function(  myEntity  )
     {
@@ -66,11 +64,12 @@
      
         myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
       
-        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix                );
-        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                       );
+        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix           );
+        this.gl.uniformMatrix4fv( shaderProgram.mMatrixUniform , false,  worldMatrix                      );
+        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                  );
         
         myEntity.mesh.render_Indexed( this.gl, myEntity.material );
-     }
+    }
      
      
      
@@ -82,8 +81,9 @@
      
         myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
       
-        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix                );
-        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                       );
+        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix           );
+        this.gl.uniformMatrix4fv( shaderProgram.mMatrixUniform , false,  worldViewMatrix                  );    // HAX. 
+        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                  );
         
         myEntity.mesh.render_Indexed( this.gl, myEntity.material );      
      }

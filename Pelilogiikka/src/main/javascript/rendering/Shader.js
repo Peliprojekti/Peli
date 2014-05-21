@@ -85,6 +85,11 @@ To do this we make sure we declare a varying variable of the same type and name 
 	this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation( this.shaderProgram, "vertexPos");
                                                      gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
 
+
+        this.shaderProgram.vertexNormalAttribute   = gl.getAttribLocation( this.shaderProgram, "vertexNormal");
+                                                     gl.enableVertexAttribArray(this.shaderProgram.vertexNormalAttribute);                                                
+                                                     
+
 	this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram,  "vertexUV");
                                                      gl.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
 	
@@ -92,12 +97,11 @@ To do this we make sure we declare a varying variable of the same type and name 
         
         
         
-        
-	this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "projMatrix" );
+	this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "projMatrix"     );
 	this.shaderProgram.mvMatrixUniform         = gl.getUniformLocation(this.shaderProgram, "worldViewMatrix");
+        this.shaderProgram.mMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "worldMatrix"    );
         
 
-        
         
         this.shaderProgram.vColor                  = gl.getUniformLocation(this.shaderProgram, "vColor");
         
@@ -118,7 +122,6 @@ To do this we make sure we declare a varying variable of the same type and name 
     {
         
         gl.uniform4f( this.shaderProgram.vColor, 1.0,1.0,1.0,1.0 ); // Upload various values to the shader
-
        
     gl.useProgram( this.shaderProgram );        // Make the shader active.
     }
