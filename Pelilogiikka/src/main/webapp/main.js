@@ -15,7 +15,9 @@ nconf.defaults({
     client_port: 1338, // client and screen port is for coms, and not directly exposed to users
     screen_port: 1339,
     log_level: 'error', // debug switch overrides this to debug
+
     debug: false,
+	com_benchmark: false,
 
     static_javascript: __dirname + '/../javascript',
     static_data: __dirname + "/../javascript/renderind/data",

@@ -66,11 +66,18 @@ ControllerComs.prototype.open = function(callback) {
     });
 
 	this.socket.on('positionReturn', function(sequence) {
-		if (DEBUG) {
-			//log.debug( "R - position - " + sequence + " - " + Date.now(), false, true);
-
-			log.debug("positionDonw in " + (Date.now() - that.seqCalls[sequence]) + "ms");
+		if (COM_BENCHMARK || DEBUG) {
+			var curTime = Date.now();
+			var retTime = curTime - that.seqCalls[sequence];
+			if (DEBUG) {
+				log.debug("positionReturn in " + retTime + "ms");
+			}
+			that.seqCalls[sequence] = [that.userID, curTime, retTime];
 		}
+	});
+
+	this.socket.on('requestBenchmarkLog', function() {
+		that.socket.emit('benchmarkLog', that.seqCalls);
 	});
 }
 
@@ -97,9 +104,7 @@ ControllerComs.prototype.position = function(x, y) {
     if (this.checkSocket()) {
         //log.debug("sending position");
 
-		if (DEBUG) {
-			//log.debug( "C - position - " + this.sequence + " - " + Date.now(), false, true);
-
+		if (DEBUG || COM_BENCHMARK) {
 			this.seqCalls[this.sequence] = Date.now();
 		}
 
