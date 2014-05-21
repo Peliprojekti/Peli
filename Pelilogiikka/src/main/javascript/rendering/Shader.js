@@ -79,7 +79,6 @@ To do this we make sure we declare a varying variable of the same type and name 
             alert("Could not load shader!");
 	}
         
-        
         //gl.useProgram( this.shaderProgram );
 
 	this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation( this.shaderProgram, "vertexPos");
@@ -100,25 +99,16 @@ To do this we make sure we declare a varying variable of the same type and name 
 	this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "projMatrix"     );
 	this.shaderProgram.mvMatrixUniform         = gl.getUniformLocation(this.shaderProgram, "worldViewMatrix");
         this.shaderProgram.mMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "worldMatrix"    );
-        
 
         
         this.shaderProgram.vColor                  = gl.getUniformLocation(this.shaderProgram, "vColor");
          
-        this.shaderProgram.light1                  = gl.getUniformLocation(this.shaderProgram, "light1");
-        
-        
+    //    this.shaderProgram.light1                  = gl.getUniformLocation(this.shaderProgram, "light1");
         
         
     }
     
    
-    
-    
-    
-    
-    
-    
     
 
 
@@ -127,10 +117,10 @@ To do this we make sure we declare a varying variable of the same type and name 
         
         gl.uniform4f( this.shaderProgram.vColor, 1.0,1.0,1.0,1.0 ); // Upload various values to the shader
        
-     //   var testPos = [-2.750824,0.444516,-24.011581];
-       // gl.uniform3v( this.shaderProgram.light1, testPos );
+        // var testPos = [-2.750824,0.444516,-24.011581, 1.0 ];
+         
+      //  gl.uniform4f( this.shaderProgram.light1, testPos[0], testPos[1], testPos[3], 1.0 );
         
-      
        
     gl.useProgram( this.shaderProgram );        // Make the shader active.
     }
@@ -141,21 +131,3 @@ To do this we make sure we declare a varying variable of the same type and name 
     
     
     
-    //Reference
-    /*
-    Shader.prototype.bind = function( gl )
-    {
-        gl.useProgram( this.shaderProgram );
-
-	this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation( this.shaderProgram, "aVertexPosition");
-                                                     gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
-
-	this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram, "aTextureCoord");
-                                                     gl.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
-	
-        
-	this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "uPMatrix" );
-	this.shaderProgram.mvMatrixUniform         = gl.getUniformLocation(this.shaderProgram, "uMVMatrix");
-	this.shaderProgram.samplerUniform          = gl.getUniformLocation(this.shaderProgram, "uSampler");
-    }
-    */
