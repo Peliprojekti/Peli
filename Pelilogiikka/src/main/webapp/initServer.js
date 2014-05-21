@@ -62,14 +62,16 @@ module.exports = new function() {
                 "controller": nconf.get("controller"),
                 "client_port": nconf.get("client_port"),
 				"com_benchmark": nconf.get("com_benchmark"),
-                "user_info": userID.get(request)
+                "user_info": userID.get(request),
+                "jsonrpc_protocol": nconf.get("jsonrpc_protocol")
             });
         });
 
         server.get('/screen', function(request, response) {
             response.render(nconf.get('screen_jade'), {
                 "debug": nconf.get("debug"),
-                "screen_port": nconf.get('screen_port')
+                "screen_port": nconf.get('screen_port'),
+                "jsonrpc_protocol": nconf.get("jsonrpc_protocol")
             });
         });
 

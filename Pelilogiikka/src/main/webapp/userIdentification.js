@@ -1,5 +1,6 @@
 
-module.exports = {
+module.exports = new function() {
+
     this.getUserInfo = function(request) {
         /*
          * TODO 
@@ -13,7 +14,7 @@ module.exports = {
             userID: Math.floor(Math.random() * 1000000)
         };
     };
-}
+};
 
 
 /* 

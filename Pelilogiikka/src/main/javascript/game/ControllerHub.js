@@ -1,97 +1,61 @@
-function ControllerHub() {
-	this.hostname = location.hostname;
-	this.port = SCREEN_PORT;
-
-	this.socket = null;
-	this.onMessage = function() {};
-	this.onPosition = function() {};
-	this.onJoinPlayer = function() {};
-
-	this.players = {};
-}
-
-
-ControllerHub.prototype.open = function(callback) {
+function ControllerHub(onJoinPlayer, maxPlayers) {
     var that = this;
-	var url = 'http://' + this.hostname + ":" + this.port;
-	log.info("connecting to " + url);
-	this.socket = io.connect(url);
+    this.maxPlayers = (typeof maxPlayers == 'undefined' ? 100 : maxPlayers);
+    this.playersConnected = 0;
 
-	var players = this.players;
+    this.onJoinPlayer = onJoinPlyear;
 
-	this.socket.on('connection', function() {
-	});
+    this.players = null;
+    this.hostname = location.hostname;
+    this.port = SCREEN_PORT;
+    this.protocol = JSONRPC_PROTOCOL;
 
-	/*
-	this.socket.on('addPlayer', function(userID) {
-		socket.emit('userID', userID);
-	});
-	*/
+    this.players = {};
 
-	var socket = this.socket;
-	this.socket.on('connectPlayer', function(userID) {
-		//log.info("registering player " + userID);
-		//that.players[userID] = new Player(userID);
+    this.rpc = new PeliRPC(this.hotname, this.port, this.protocol, true);
 
-        that.addNewPlayer(userID);
-		//that.onJoinPlayer(players[userID]);
+    this.rpc.exposeRpcMethod('joinGame', that, function(userID) {
+            // could we possibly use self, I think so?
+            if (that.playersConnected <= that.maxPlayers) {
+                log.info("joining player : " + userID);
+                that.players[userID] = playerFactory.getPlayer(userID);
+                that.onJoinPlayer(that.players[userID]);
+                return true;
+            }
+                return false;
+            });
 
-		socket.emit('connectionOK', userID);
-		log.debug("Connected player with userID " + userID);
-	});
+    this.rpc.exposeRpcMethod('position', that, function(userID, x, y) {
+            that.players[userID].setPosition(x, y);
+            });
 
-    this.socket.on('joinGame', function(userID) {
-        that.players[userID].setGameOn(true);
-        socket.emit('gameJoined', userID);
-    });
-
-    this.socket.on('message', function(data) { that.onMessage(data); });
-    this.socket.on('position', function(data) { 
-        that.movePlayer(data); 
-    });
-    this.socket.on('swipe', function(data) { 
-        that.moveSwipe(data); 
-    });
-
-	/*
-	this.socket.on('joinGame', function(data) {
-		socket.emit('joinGame', true);
-	});
-	*/
+    this.rpc.exposeRpcMethod('swipe', that, function(userID, x, y, sincePrevious) {
+            that.players[userID].pushSwipe(position, sincePrevious);
+            });
 }
 
-ControllerHub.prototype.addNewPlayer = function(userID) {
-    log.info("registering player " + userID);
-    this.players[userID] = playerFactory.getPlayer(userID);
-    this.onJoinPlayer(this.players[userID]);
-    return true;
+
+/**
+ * Used to initially open the connection
+ * @param {function} callback - will be called when connection opened
+ */
+ControllerHub.prototype.open = function(callback) {
+    this.rpc.connect(callback);
 }
 
-ControllerHub.prototype.movePlayer = function(data) {
-    var userID = data[0];
-    var sequence = data[1];
-    var position = data[2];
-
-    log.debug(userID + " setPosition " + position[0] + "x" + position[1]);
-
-    this.socket.emit('positionReturn', [userID, sequence]);
-    this.players[userID].setPosition(position);
+/**
+ * close connection
+ */
+ControllerComs.prototype.close = function() {
+    this.rpc.close();
 }
 
-ControllerHub.prototype.moveSwipe = function(data) {
-    var userID = data[0];
-    var position = data[1];
-    var sincePrevious = data[2];
-    
-    log.debug(userID + "swipe position: (" + position[0] + ", " + position[1] + "), Time since previous: " + sincePrevious + "ms");
-    
-    this.players[userID].pushSwipe(position, sincePrevious);
-}
-
-ControllerHub.prototype.setOnMessage = function(callback) {
-    this.onMessage = callback;
-}
-
-ControllerHub.prototype.setOnJoinPlayer = function(callback) {
-    this.onJoinPlayer = callback;
+/**
+ * This will send messages directly to the server
+ * @param {function} msg 
+ */
+ControllerHub.prototype.serverMsg = function(msg) {
+    log.error("this is currently kinda depracated");
+    // TODO ????
+    //this.socket.emit('serverMsg', [(typeof userID === 'undefined' ? 'new user' : userID), msg]);
 }

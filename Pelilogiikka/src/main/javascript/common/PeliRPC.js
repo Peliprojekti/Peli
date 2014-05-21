@@ -1,3 +1,11 @@
+/*
+ * var rpc = new PeliRPC(host, port, protocol)
+ *
+ * rpc.connect(callback);
+ *
+ *
+ */
+
 function PeliRPC(host, port, protocol, persistent) {
 	this.host = host;
 	this.port = port;
@@ -9,7 +17,15 @@ function PeliRPC(host, port, protocol, persistent) {
 	this.rpcMethods;
 	this.callSequence = 0;
 
-	this.onMessage;
+    this.benchmarking = false;
+    this.benchmarkLog = (COM_BENCHMARK ? []: null);
+}
+
+PeliRPC.prototype.resetBenchmarking(isOn) {
+    if (isOn) {
+        this.benchmarLog = [];
+    }   
+    this.benchmarking = isOn;
 }
 
 PeliRPC.prototype.connect = function(callback) {
@@ -61,12 +77,28 @@ PeliRPC.prototype.callRpc = function(method, params, object, listener) {
 	if(this.socket.readyState == "open") {
 		var callObject;
 
+        /*
+            not like this...
+            Instead use this.callSequence to keep track of these.... 
+        j
+        if (this.benchmarking) {
+            var sendTime = Date.now();
+            var origListener = listener;
+            var bm = this.benchmarkLog;
+
+            listener = function() {
+                bm.push([sendTime, params[0], method, Date.now() - sendTime]);
+                typeof origListener == "function" && origListener;
+            }
+        }
+        */
+
 		if(typeof listener == "function") {
 			callObject = {
 				"jsonrpc": "2.0", 
 				"method": method, 
 				"params": params, 
-				"id": this.CallSequence
+				"id": this.callSequence
 			};
 
 			callbacks[this.callSequence] = {
@@ -90,7 +122,7 @@ PeliRPC.prototype.callRpc = function(method, params, object, listener) {
 	}
 }
 
-PeliRPC.prototype.exposedRpcMethod = function(name, object_, method_) {
+PeliRPC.prototype.exposeRpcMethod = function(name, object_, method_) {
 	rpcMethods[name] = {
 		object: object_, 
 		method: method_
