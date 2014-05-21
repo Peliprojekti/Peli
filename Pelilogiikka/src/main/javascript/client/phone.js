@@ -148,6 +148,11 @@ function loadController(canvas, type) {
             touchDragx.enable(coms, canvas);
             currentController = touchDragx;
             break;
+        case 'swipe':
+            var swipe = new Swipe();
+            swipe.enable(coms, canvas);
+            currentController = swipe;
+            break;
     }
 }
 

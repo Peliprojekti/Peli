@@ -18,6 +18,8 @@ nconf.defaults({
 
     debug: false,
 	com_benchmark: false,
+	com_benchmark_timeout: 5000,
+	com_benchmark_file: __dirname + '/log/benchmark.log',
 
     static_javascript: __dirname + '/../javascript',
     static_data: __dirname + "/../javascript/renderind/data",
@@ -48,8 +50,12 @@ comServer.send({ // disable/enable debugging mode on comServer
     value: {
         debug:  nconf.get('debug'),
         client_port: nconf.get('client_port'),
-        screen_port: nconf.get('screen_port')
-    }
+	    screen_port: nconf.get('screen_port'),
+	    benchmark: nconf.get('com_benchmark'),
+        benchmark_timeout: nconf.get('com_benchmark_timeout'),
+		benchmark_filename: nconf.get('com_benchmark_filename')
+
+	}
 });
 
 comServer.send({ type: 'startServer' });
@@ -61,8 +67,8 @@ initServer.start(nconf, logger, comServer);
  * Properly handle shutdown to ensure nothing remains listening on restarts
  */
 process.on( 'SIGINT', function() {
-      console.log("shutting down from SIGINT (Ctrl-C)");
-      comServer.send({ type: 'shutdown' });
-      initServer.shutdown();
-      setTimeout(process.exit(0), 100);
+	console.log("shutting down from SIGINT (Ctrl-C)");
+	comServer.send({ type: 'shutdown' });
+	initServer.shutdown();
+	setTimeout(process.exit(0), 100);
 });
