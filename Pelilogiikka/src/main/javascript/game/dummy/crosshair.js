@@ -6,8 +6,14 @@ function Crosshair(x,y,radius,color) {
 Crosshair.prototype.draw = function(ctx, x, y) {
     ctx.save();
 
+    var width = ctx.canvas.width;
+    var height = ctx.canvas.height;
+    
+    var trueX = width * x;
+    var trueY = height * y;
+
     ctx.beginPath();
-    ctx.arc(x, y, this.r, 0, 2*Math.PI, false);
+    ctx.arc(trueX, trueY, this.r, 0, 2*Math.PI, false);
     ctx.stroke();
 
     ctx.restore();

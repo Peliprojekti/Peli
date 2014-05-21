@@ -94,15 +94,9 @@ ControllerComs.prototype.joinGame = function(callback) {
 }
 
 ControllerComs.prototype.position = function(x, y) {
-    if (this.socket == null) {
-        if (this.dummyMode != true) {
-            log.error("trying to use unopened socket");
-        }
-        else {
-            log.debug("socket not open, but dummyMode is enable");
-        }
-    }
-    else {
+    if (this.checkSocket()) {
+        log.debug("sending position");
+
 		if (DEBUG) {
 			log.debug( "C - position - " + this.sequence + " - " + Date.now(), false, true);
 
@@ -110,8 +104,30 @@ ControllerComs.prototype.position = function(x, y) {
 			this.sequence++;
 		}
 
-		this.socket.emit('position', [this.userID, this.sequence, [x, y]]);
-	}
+        this.socket.emit('position', [this.userID, [x, y]]);
+    }
+}
+
+ControllerComs.prototype.swipe = function(x, y, sincePreviousTime) {
+    if (this.checkSocket()) {
+        log.debug("sending swipe details");
+        this.socket.emit('swipe', [this.userID, [x, y, sincePreviousTime]]);
+    }
+}
+
+ControllerComs.prototype.checkSocket = function() {
+        if (this.socket == null) {
+            if (this.dummyMode != true) {
+                log.error("trying to use unopened socket");
+                return false;
+            }
+            else {
+                log.debug("socket not open, but dummyMode is enable");
+                return false;
+            }
+            return false;
+        }
+        return true;
 }
 
 
