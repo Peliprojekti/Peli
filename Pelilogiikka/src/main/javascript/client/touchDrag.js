@@ -30,9 +30,9 @@ TouchDrag.prototype.doTouchMove = function(event) {
     if (DEBUG) { updateCoordinatesText(this.coords[0], this.coords[1]) };	
 }
 
-TouchDrag.prototype.enable = function(comsObject, canvas) {
+TouchDrag.prototype.enable = function(coms, canvas) {
     var thisObject = this;
-    thisObject.coms = comsObject;
+    log.coms = coms;
     canvas.addEventListener("touchmove", function(event){ thisObject.doTouchMove(event); }, false);
     return canvas;
 }

@@ -55,7 +55,8 @@ module.exports = new function() {
                 "title": nconf.get("game_name"),
                 "debug": nconf.get("debug"),
                 "controller": nconf.get("controller"),
-                "client_port": nconf.get("client_port")
+                "client_port": nconf.get("client_port"),
+				"com_benchmark": nconf.get("com_benchmark")
             });
         });
 

@@ -45,9 +45,12 @@ ControllerHub.prototype.open = function(callback) {
         socket.emit('gameJoined', userID);
     });
 
-	this.socket.on('message', function(data) { that.onMessage(data); });
-	this.socket.on('position', function(data) { 
+    this.socket.on('message', function(data) { that.onMessage(data); });
+    this.socket.on('position', function(data) { 
         that.movePlayer(data); 
+    });
+    this.socket.on('swipe', function(data) { 
+        that.moveSwipe(data); 
     });
 
 	/*
@@ -66,11 +69,23 @@ ControllerHub.prototype.addNewPlayer = function(userID) {
 
 ControllerHub.prototype.movePlayer = function(data) {
     var userID = data[0];
-    var position = data[1];
+    var sequence = data[1];
+    var position = data[2];
 
-    //log.debug(userID + " setPosition " + position[0] + "x" + position[1]);
+    log.debug(userID + " setPosition " + position[0] + "x" + position[1]);
 
+    this.socket.emit('positionReturn', [userID, sequence]);
     this.players[userID].setPosition(position);
+}
+
+ControllerHub.prototype.moveSwipe = function(data) {
+    var userID = data[0];
+    var position = data[1];
+    var sincePrevious = data[2];
+    
+    log.debug(userID + "swipe position: (" + position[0] + ", " + position[1] + "), Time since previous: " + sincePrevious + "ms");
+    
+    this.players[userID].pushSwipe(position, sincePrevious);
 }
 
 ControllerHub.prototype.setOnMessage = function(callback) {

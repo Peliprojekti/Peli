@@ -66,6 +66,9 @@ function connectToServer() {
 function animate(time) {
 	draw(time);
 	requestAnimationFrame(animate);
+        players.forEach(function(player) {
+           player.update(); 
+        });
 }
 
 function draw(time) {

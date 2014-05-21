@@ -1,12 +1,15 @@
-function initCanvas(){
+function Click() {}
+
+Click.prototype.initCanvas = function(){
 	var canvas = document.getElementById("canvas");
-	canvas.addEventListener("click", doClick, false);
+        var thisObject = this;
+	canvas.addEventListener("click", function(event){ thisObject.doClick(event); }, false);
 	return canvas;
 }
 
-function doClick(event) {
+Click.prototype.doClick = function(event) {
 	event.preventDefault();
-	var coords = getRelativeClickCoords(event);
+	var coords = this.getRelativeClickCoords(event);
 
 	/*
         var x = event.x;
@@ -22,7 +25,7 @@ function doClick(event) {
         });
 }
 
-function getRelativeClickCoords(event) {
+Click.prototype.getRelativeClickCoords = function(event) {
         var x = event.x;
         var y = event.y;
 

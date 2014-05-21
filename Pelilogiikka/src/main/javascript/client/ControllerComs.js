@@ -6,6 +6,9 @@ function ControllerComs() {
 	this.socket = null;
     this.dummyMode = false;
     this.userID = Math.floor(Math.random() * 10000000000);
+	this.sequence = 0;
+	this.seqCalls = [];
+	this.benchmarkLog = [];
 
     //this.onConnection = function() { };
 	this.onMessage = function(msg) {
@@ -33,7 +36,18 @@ ControllerComs.prototype.open = function(callback) {
 
 	this.socket.on('disconnect', function() {
 		log.info("Connection closed for " + that.userID);
+		if (COM_BENCHMARK) {
+			that.benchmarkLog.push([Date.now(), that.userID, 'DICONNECT', 0]);
+		}
 	});
+
+	this.socket.on('connect', function() {
+		log.info("Connection opened");
+		if (COM_BENCHMARK) {
+			that.benchmarkLog.push([Date.now(), that.userID, 'CONNECT', 0]);
+		}
+	});
+
 
     var suggestUserID = this.userID;
     this.socket.on('getConnectionInfo', function() {
@@ -62,6 +76,23 @@ ControllerComs.prototype.open = function(callback) {
     this.socket.on('error', function(data) {
         log.error("Connection error");
     });
+
+	this.socket.on('positionReturn', function(sequence) {
+		if (COM_BENCHMARK || DEBUG) {
+			var curTime = Date.now();
+			var retTime = curTime - that.seqCalls[sequence];
+			if (DEBUG) {
+				log.debug("positionReturn in " + retTime + "ms");
+			}
+			that.benchmarkLog.push([curTime, that.userID, 'position', retTime]);
+		}
+	});
+
+	this.socket.on('requestBenchmark', function() {
+		//window.alert("got request");
+		that.socket.emit('benchmarkLog', that.benchmarkLog);
+		that.benchmarkLog = [];
+	});
 }
 
 ControllerComs.prototype.close = function(callback) {
@@ -84,18 +115,37 @@ ControllerComs.prototype.joinGame = function(callback) {
 }
 
 ControllerComs.prototype.position = function(x, y) {
-    if (this.socket == null) {
-        if (this.dummyMode != true) {
-            log.error("trying to use unopened socket");
-        }
-        else {
-            log.debug("socket not open, but dummyMode is enable");
-        }
+    if (this.checkSocket()) {
+        //log.debug("sending position");
+
+		if (DEBUG || COM_BENCHMARK) {
+			this.seqCalls[this.sequence] = Date.now();
+		}
+
+        this.socket.emit('position', [this.userID, this.sequence++,  [x, y]]);
     }
-    else {
-        log.debug("sending position");
-        this.socket.emit('position', [this.userID, [x, y]]);
+}
+
+ControllerComs.prototype.swipe = function(x, y, sincePreviousTime) {
+    if (this.checkSocket()) {
+        log.debug("sending swipe details");
+        this.socket.emit('swipe', [this.userID, [x, y, sincePreviousTime]]);
     }
+}
+
+ControllerComs.prototype.checkSocket = function() {
+        if (this.socket == null) {
+            if (this.dummyMode != true) {
+                log.error("trying to use unopened socket");
+                return false;
+            }
+            else {
+                log.debug("socket not open, but dummyMode is enable");
+                return false;
+            }
+            return false;
+        }
+        return true;
 }
 
 

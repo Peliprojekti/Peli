@@ -20,6 +20,7 @@ function Player(userID) {
 	this.x = 0;
 	this.y = 0;
 	this.gameOn = false;
+        this.swipes = new Array();
 }
 
 Player.prototype.getID = function() {
@@ -35,6 +36,11 @@ Player.prototype.setPosition = function(position) {
 	this.y = position[1];
 }
 
+Player.prototype.pushSwipe = function(position, sincePrevious) {
+        this.swipes.push([position, sincePrevious]);
+        log.info("Pushed swipe: (" + position[0] + ", " + position[1] + ")" + ", " + sincePrevious);
+}
+
 Player.prototype.setCrosshair = function(crosshair) {
 	this.crosshair = crosshair;
 }
@@ -45,4 +51,8 @@ Player.prototype.draw = function(ctx) {
 
 Player.prototype.setGameOn = function(gameOn) {
 	this.gameOn = gameOn;
+}
+
+Player.prototype.update = function() {
+        
 }
