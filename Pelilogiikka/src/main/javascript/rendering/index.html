@@ -8,7 +8,7 @@
 <script type="text/javascript" src="webglutils.js"             ></script>
 
 <script type="text/javascript" src="Renderer.js"               ></script>
-<script type="text/javascript" src="Shader.js"              ></script>
+<script type="text/javascript" src="Shader.js"                 ></script>
 <script type="text/javascript" src="Inputs.js"                 ></script>
 <script type="text/javascript" src="Scene.js"                  ></script>
 
@@ -17,6 +17,7 @@
 
 <script type="text/javascript" src="Buffer.js"                 ></script>
 <script type="text/javascript" src="Mesh.js"                   ></script>
+<script type="text/javascript" src="Light.js"                  ></script>
 
 
 <script type="text/javascript" src="Guiobject.js"              ></script>
@@ -35,7 +36,7 @@
 <script type="text/javascript" src="math/Matrix44.js"          ></script>
 <script type="text/javascript" src="math/MatrixGL.js"          ></script>
 <script type="text/javascript" src="math/Orientation.js"       ></script>
-
+<script type="text/javascript" src="math/Interpolator.js"       ></script>
 
 <script type="text/javascript" src="Assetmanager.js"      ></script>
 
@@ -53,25 +54,56 @@
 
 
 
-
-
 <script id="vertex_Shader" type="x-shader/x-vertex">
     
     uniform mat4 worldViewMatrix;         
     uniform mat4 projMatrix;
+    uniform mat4 worldMatrix;
     
     attribute vec3 vertexPos;
+    attribute vec3 vertexNormal;
+    
     attribute vec2  vertexUV;
-    varying vec2  fragmentUV;
+    
+    
+    varying   vec2  fragmentUV;
+    varying   vec4  fragmentNormal;
+    
+   
     
     void main(void) 
     {
-        fragmentUV    = vertexUV;
-        gl_Position   = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
+        fragmentUV     = vertexUV;
         
+        fragmentNormal =  worldMatrix * vec4( vertexNormal , 0.0 );
+      
+        gl_Position    = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
     }
     
+    
+    
 </script>
+
+   
+<script id="pixel_Shader" type="x-shader/x-fragment">
+    precision mediump float;
+
+    
+    uniform sampler2D     texSampler;
+    
+    varying vec2          fragmentUV;
+    varying vec4      fragmentNormal;
+   
+    void main(void) 
+    {
+     
+        vec3 normal = vec3( fragmentNormal.x, fragmentNormal.y, fragmentNormal.z );//normalize(texture2D(normal_texture, gl_TexCoord[0].st).rgb * 2.0 - 1.0);  
+  
+        gl_FragColor = vec4( normal, 1.0 );//texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
+        
+    }
+</script>
+
 
 
 
@@ -89,31 +121,22 @@
       
     uniform mat4 worldViewMatrix;
     uniform mat4 projMatrix;
-    
+    uniform mat4 worldMatrix;
+        
     attribute vec3  vertexPos;
+    attribute vec3  vertexNormal;
     attribute vec2   vertexUV;
-    varying vec2   fragmentUV;
     
+    varying vec2      fragmentUV;
+    varying vec3  fragmentNormal;
+     
     void main(void) 
     {
         fragmentUV    = vertexUV;
         gl_Position   = worldViewMatrix * vec4(vertexPos, 1.0);
        
     }
-</script>
-
-
    
-<script id="pixel_Shader" type="x-shader/x-fragment">
-    precision mediump float;
-
-    varying vec2          fragmentUV;
-    uniform sampler2D     texSampler;
-
-    void main(void) 
-    {
-        gl_FragColor = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
-    }
 </script>
 
 
@@ -121,10 +144,14 @@
 <script id="COLOR_PS" type="x-shader/x-fragment">
     
     precision mediump           float;
+    
     varying vec2           fragmentUV;
+    varying vec3       fragmentNormal;
+
     uniform sampler2D      texSampler;
-       
     uniform  vec4              vColor;
+    
+    
     
     void main(void) 
     {
@@ -132,11 +159,9 @@
       
         if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 ) discard;
      
-        gl_FragColor =  vec4(1.0,0.0,0.0,1.0);
+        gl_FragColor = vColor;//vec4( 1.0,0.0,0.0,1.0);
     }
 </script>
-
-
 
 
 
@@ -150,33 +175,32 @@
     var renderer   = null;    
     var myCamera   = null;
     var myScene    = null;
-    
 
+
+ 
+    
+    
       
     function tick() 
     {   
         requestAnimFrame(tick);
-     
           
-          if( key_Down( 37 ) )   myCamera.yaw( -0.05  );
-          if( key_Down( 39 ) )   myCamera.yaw(  0.05 );
+        if( key_Down( 37 ) )   myCamera.yaw( -0.05  );
+        if( key_Down( 39 ) )   myCamera.yaw(  0.05 );
           
-          if( key_Down( 38 ) )   myCamera.forward(  1.0 );  
-          if( key_Down( 40 ) )   myCamera.backward( 1.0 );
-        
+        if( key_Down( 38 ) )   myCamera.forward(  1.0 );  
+        if( key_Down( 40 ) )   myCamera.backward( 1.0 );
 
-          if( key_Down( 33 ) )   myCamera.move([0,1,0]);
-          if( key_Down( 34 ) )   myCamera.move([0,-1,0]);
+        if( key_Down( 33 ) )   myCamera.move([0,1,0]);
+        if( key_Down( 34 ) )   myCamera.move([0,-1,0]);
          
+        if(  key_Down( 87 ) )   myCamera.pitch( 0.008 );        // W to pitch up
+        if(  key_Down( 83 ) )   myCamera.pitch( -0.008 );      // S to pitch down
          
+        if(  key_Down( 81 ) )   myCamera.roll( 0.008 );       // Q to roll left
+        if(  key_Down( 69 ) )   myCamera.roll( -0.008 );      // E to roll right
          
-         if(  key_Down( 87 ) )   myCamera.pitch( 0.008 );        // W to pitch up
-         if(  key_Down( 83 ) )   myCamera.pitch( -0.008 );      // S to pitch down
-         
-         if(  key_Down( 81 ) )   myCamera.roll( 0.008 );       // Q to roll left
-         if(  key_Down( 69 ) )   myCamera.roll( -0.008 );      // E to roll right
-         
-          myScene.render();
+        myScene.render();
     }
     
        
@@ -197,30 +221,17 @@
     }
        
        
-        
     function Start() 
-    {  
-      
-        // Test it here!
-        
-        var gpp = new GeneralPurposeParser( "data/TestLevel/Test.irr.meshes/1.irrmesh" );
-        
-             gpp.fetch_Element( "vertices", 9 , function( batch ) 
-                                               {
-                                                 // alert( "func: " + batch.length );
-                                                  
-                                                  return [ batch[0], batch[1], batch[2], 
-                                                           batch[3], batch[4], batch[5],
-                                                           batch[6], batch[7], batch[8] ];
-                                                  
-                                               });
-     
+    {     
+        var  lol = new Interpolator( 500,1500 );
+        var ukuk =  lol.interpolate( 0.5 );
        
-      
-      
+        
+        alert( ukuk );
+        
+        // alert( lol.interpolate( 0.5 ) );
        
         var canvas          = document.getElementById("Canvas");
-   
         
         canvas.style.width  = window.innerWidth;
         canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
@@ -233,10 +244,9 @@
         
         var assman          = new Assetmanager( renderer);
        
-        myScene             = import_Scene( renderer, "data/TestLevel/Test.irr", assman  );
+        myScene             = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
         
         register_Inputs();      // Erillinen luokka tälle!
-       
       
         var guiTex          = assman.get( "data/crosshair1.png", function( renderer, path )
                                                                  {
@@ -246,37 +256,13 @@
          
        var guiShader       = new   Shader  ( renderer.gl , "HAX_VS"          , "COLOR_PS"                );
        var guiMaterial     = new Material  ( guiShader   , guiTex                                        );
-       var cx              = test_Rectangle( renderer.gl , guiMaterial       , [0.10,0.10]  , [1,1,1,1]  );
-      
-        var gob            = new Guiobject (          cx , [1.0,1.0,1.0,1.0] , 1.0                       );
-        
-        
-        var gubs = [];
-      
-        var pos = [0,50];
-        var rgb = [0,1,0,1];
-        
-        for( var i = 0; i < 15; i++)
-        {
-            var en = test_Rectangle( renderer.gl , guiMaterial       , [0.05,0.05]  );
-            var ob = new Guiobject (  en , rgb , 1.0 );
-                
-             pos[0] += 75;
-            // pos[1] += 20;
-             
-            ob.entity.set_Position( Map_To_Screen( renderer , pos ) );
-          
-            rgb[1] -= 0.01;
-            
-            gubs.push( ob );
-            myScene.insert( ob, "GUI" );
-        }
-        
+       
+        var c1             = test_Rectangle( renderer.gl , guiMaterial       , [0.10,0.10]  , [1,1,1,1]  );
+        var gob1           = new Guiobject (          c1 , [0.0,1.0,0.0,1.0] , 1.0                       );
         
       
        
-   //     myScene = new Scene( renderer             );
-        myScene.insert( gob           , "GUI"       );
+        myScene.insert( gob1          , "GUI"       );
         myScene.insert( myCamera      , "CAM"       );
     
     tick();     

@@ -101,6 +101,8 @@
     }
     
       
+      
+      
     function next_NodeString( rawData, cursor )
     {
        var begin_Node = rawData.indexOf( '<node type="mesh">' , cursor );
@@ -200,6 +202,9 @@
     }
     
     
+    
+    
+    
     function import_Scene( renderer, fileName, assMan )
     {
         var   scene = new Scene( renderer );
@@ -213,19 +218,21 @@
             
             if( descriptor[0] == null) 
             {  
-                return scene;
+               break;
             }
             
-            var       node = build_Node( gl, assMan, descriptor[0] );
-                    cursor = descriptor[1];
+            
+            var node   = build_Node( gl, assMan, descriptor[0] );
+                cursor = descriptor[1];
               
             node.forEach( function( subnode )
             {
                 scene.insert( subnode , "DYNAMIC" );
             });
-        
-      //  alert("Inserted node " + i );
         }
+        
+        
+     // Load lights too somewhere here! And additional textures as asset maps.
     
     
     return scene;

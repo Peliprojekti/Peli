@@ -18,8 +18,15 @@
                           1.0, 0.0, 
                           1.0, 1.0, 
                           0.0, 1.0 ];   
+                      
+                      
+    var normals      = [0,0,1,
+                        0,0,1,
+                        0,0,1,
+                        0,0,1 ];                  
+                      
                  
-    var rectMesh = new Mesh  ( gl, vertices, indices, texCoords );     
+    var rectMesh = new Mesh  ( gl, vertices, indices, texCoords, normals );     
     var rect     = new Entity( rectMesh, material );
       
     return rect; 
@@ -47,8 +54,18 @@
                           1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0,
                           0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0  ];   
                  
+       // 24
+    var normals      = [ 0,0,1,0,0,1,0,0,1,0,0,1,
+                         0,0,1,0,0,1,0,0,1,0,0,1,
+                         0,0,1,0,0,1,0,0,1,0,0,0,
+                         0,0,1,0,0,1,0,0,1,0,0,1,
+                         0,0,1,0,0,1,0,0,1,0,0,1,
+                         0,0,1,0,0,1,0,0,1,0,0,1 ];      
         
-    var cubeMesh = new Mesh  ( gl, vertices, indices, texCoords );     
+        
+        
+        
+    var cubeMesh = new Mesh  ( gl, vertices, indices, texCoords, normals );     
     var cube     = new Entity( cubeMesh, material );
       
     return cube; 

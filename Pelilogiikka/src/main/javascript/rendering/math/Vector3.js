@@ -1,5 +1,4 @@
 
-
 function Vector3( x,y,z )
 {   
     this.x = x;
@@ -49,13 +48,13 @@ Vector3.prototype.cross = function( vec3 )
 
 Vector3.prototype.length = function() 
 {
-    var length_Squared = this.x*this.x + this.y*this.y + this.z*thisz;
+    var length_Squared = this.x*this.x + this.y*this.y + this.z*this.z;
     return Math.sqrt( length_Squared );
 }
 
 Vector3.prototype.normalized = function()
 {
-    var length_Squared = this.x*this.x + this.y*this.y + this.z*thisz;
+    var length_Squared = this.x*this.x + this.y*this.y + this.z*this.z;
     var length         = Math.sqrt( length_Squared );
     
     return new Vector3( this.x / length,
@@ -63,6 +62,11 @@ Vector3.prototype.normalized = function()
                         this.z / length );
 }
 
+Vector3.prototype.projected = function( vec3 )
+{
+    var t = this.dot( vec3 ) / vec3.dot(vec3);
+    return vec3.mul( t );
+}
 
 Vector3.prototype.report = function()
 {

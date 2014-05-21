@@ -37,7 +37,8 @@ Player.prototype.setPosition = function(position) {
 }
 
 Player.prototype.pushSwipe = function(position, sincePrevious) {
-        swipes.push([position, sincePrevious]);
+        this.swipes.push([position, sincePrevious]);
+        log.info("Pushed swipe: (" + position[0] + ", " + position[1] + ")" + ", " + sincePrevious);
 }
 
 Player.prototype.setCrosshair = function(crosshair) {
@@ -53,5 +54,5 @@ Player.prototype.setGameOn = function(gameOn) {
 }
 
 Player.prototype.update = function() {
-    
+        
 }
