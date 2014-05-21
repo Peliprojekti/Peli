@@ -8,6 +8,7 @@ function ControllerComs() {
     this.userID = Math.floor(Math.random() * 10000000000);
 	this.sequence = 0;
 	this.seqCalls = [];
+	this.benchmarkLog = [];
 
     //this.onConnection = function() { };
 	this.onMessage = function(msg) {
@@ -35,7 +36,18 @@ ControllerComs.prototype.open = function(callback) {
 
 	this.socket.on('disconnect', function() {
 		log.info("Connection closed for " + that.userID);
+		if (COM_BENCHMARK) {
+			that.benchmarkLog.push([Date.now(), that.userID, 'DICONNECT', 0]);
+		}
 	});
+
+	this.socket.on('connect', function() {
+		log.info("Connection opened");
+		if (COM_BENCHMARK) {
+			that.benchmarkLog.push([Date.now(), that.userID, 'CONNECT', 0]);
+		}
+	});
+
 
     var suggestUserID = this.userID;
     this.socket.on('getConnectionInfo', function() {
@@ -72,12 +84,14 @@ ControllerComs.prototype.open = function(callback) {
 			if (DEBUG) {
 				log.debug("positionReturn in " + retTime + "ms");
 			}
-			that.seqCalls[sequence] = [that.userID, curTime, retTime];
+			that.benchmarkLog.push([curTime, that.userID, 'position', retTime]);
 		}
 	});
 
-	this.socket.on('requestBenchmarkLog', function() {
-		that.socket.emit('benchmarkLog', that.seqCalls);
+	this.socket.on('requestBenchmark', function() {
+		//window.alert("got request");
+		that.socket.emit('benchmarkLog', that.benchmarkLog);
+		that.benchmarkLog = [];
 	});
 }
 
