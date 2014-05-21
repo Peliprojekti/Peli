@@ -67,7 +67,7 @@ ControllerComs.prototype.open = function(callback) {
 
 	this.socket.on('positionReturn', function(sequence) {
 		if (DEBUG) {
-			log.debug( "R - position - " + sequence + " - " + Date.now(), false, true);
+			//log.debug( "R - position - " + sequence + " - " + Date.now(), false, true);
 
 			log.debug("positionDonw in " + (Date.now() - that.seqCalls[sequence]) + "ms");
 		}
@@ -95,16 +95,15 @@ ControllerComs.prototype.joinGame = function(callback) {
 
 ControllerComs.prototype.position = function(x, y) {
     if (this.checkSocket()) {
-        log.debug("sending position");
+        //log.debug("sending position");
 
 		if (DEBUG) {
-			log.debug( "C - position - " + this.sequence + " - " + Date.now(), false, true);
+			//log.debug( "C - position - " + this.sequence + " - " + Date.now(), false, true);
 
 			this.seqCalls[this.sequence] = Date.now();
-			this.sequence++;
 		}
 
-        this.socket.emit('position', [this.userID, [x, y]]);
+        this.socket.emit('position', [this.userID, this.sequence++,  [x, y]]);
     }
 }
 
