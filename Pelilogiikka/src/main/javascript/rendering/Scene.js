@@ -9,6 +9,9 @@
         this.entries_Static    = [];
         this.entries_GUI       = [];
         this.entries_Cameras   = [];
+        this.entries_Lights    = [];
+        
+        
     };
 
 
@@ -20,9 +23,11 @@
             else
                 if( type === "GUI"  ) this.entries_GUI.push( entity );  
                 else
-                    if( type == "CAM") this.entries_Cameras.push( entity );
+                    if( type === "CAM") this.entries_Cameras.push( entity );
                     else
-                        alert("Undefined entity type: " + type);  
+                        if( type === "LIGHT" ) this.entries_Lights.push( entity );
+                        else
+                            alert("Undefined entity type: " + type);  
                  
     }
 
@@ -43,7 +48,7 @@
             this.entries_GUI.forEach(function( entry )
             {
                 entry.prepare( this.renderer );
-                rnd.draw_SS( entry.entity );  
+                  rnd.draw_SS( entry.entity );  
             });
       
         //    rnd.end_Blending();

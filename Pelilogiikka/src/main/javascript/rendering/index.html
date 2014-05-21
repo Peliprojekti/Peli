@@ -8,7 +8,7 @@
 <script type="text/javascript" src="webglutils.js"             ></script>
 
 <script type="text/javascript" src="Renderer.js"               ></script>
-<script type="text/javascript" src="Shader.js"              ></script>
+<script type="text/javascript" src="Shader.js"                 ></script>
 <script type="text/javascript" src="Inputs.js"                 ></script>
 <script type="text/javascript" src="Scene.js"                  ></script>
 
@@ -17,6 +17,7 @@
 
 <script type="text/javascript" src="Buffer.js"                 ></script>
 <script type="text/javascript" src="Mesh.js"                   ></script>
+<script type="text/javascript" src="Light.js"                  ></script>
 
 
 <script type="text/javascript" src="Guiobject.js"              ></script>
@@ -35,7 +36,7 @@
 <script type="text/javascript" src="math/Matrix44.js"          ></script>
 <script type="text/javascript" src="math/MatrixGL.js"          ></script>
 <script type="text/javascript" src="math/Orientation.js"       ></script>
-
+<script type="text/javascript" src="math/Interpolator.js"       ></script>
 
 <script type="text/javascript" src="Assetmanager.js"      ></script>
 
@@ -87,7 +88,9 @@
 <script id="pixel_Shader" type="x-shader/x-fragment">
     precision mediump float;
 
+    
     uniform sampler2D     texSampler;
+    
     varying vec2          fragmentUV;
     varying vec4      fragmentNormal;
    
@@ -173,6 +176,10 @@
     var myCamera   = null;
     var myScene    = null;
 
+
+ 
+    
+    
       
     function tick() 
     {   
@@ -214,12 +221,17 @@
     }
        
        
-        
     function Start() 
-    {  
+    {     
+        var  lol = new Interpolator( 500,1500 );
+        var ukuk =  lol.interpolate( 0.5 );
+       
+        
+        alert( ukuk );
+        
+        // alert( lol.interpolate( 0.5 ) );
        
         var canvas          = document.getElementById("Canvas");
-   
         
         canvas.style.width  = window.innerWidth;
         canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
