@@ -4,6 +4,7 @@ function TouchDrag() {
     this.coords = null;
     this.currentTime = null;
     this.moveCounter = 0;
+    this.coms = null;
 }
 
 TouchDrag.prototype.doTouchMove = function(event) {
@@ -17,6 +18,7 @@ TouchDrag.prototype.doTouchMove = function(event) {
 
     if (this.currentTime - this.previousSendTime >= this.interval) {
         coms.position(this.coords[0], this.coords[1]);
+        log.info("coords: (" + this.coords[0] + ", " + this.coords[1] + ")" );
 
         this.previousSendTime = this.currentTime;
 
@@ -29,8 +31,9 @@ TouchDrag.prototype.doTouchMove = function(event) {
     if (DEBUG) { updateCoordinatesText(this.coords[0], this.coords[1]) };	
 }
 
-TouchDrag.prototype.enable = function(coms, canvas) {
+TouchDrag.prototype.enable = function(comsObject, canvas) {
     var thisObject = this;
+    thisObject.coms = comsObject;
     canvas.addEventListener("touchmove", function(event){ thisObject.doTouchMove(event); }, false);
     return canvas;
 }

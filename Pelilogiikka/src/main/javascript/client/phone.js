@@ -168,6 +168,7 @@ $(function() { // document ready, resize container
         log.info("trying to open connection");
         coms.open(function() {
             log.info("Connection establised, trying to join game");
+            log.setComs(coms);
             coms.joinGame(function() {
                 log.info("Game On!!");
                 loadController(canvas);
