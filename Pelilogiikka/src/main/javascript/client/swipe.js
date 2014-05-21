@@ -1,26 +1,28 @@
-var startTime;
-var startCoords;
-var updatePeriod = 100; //time in ms
-var previousSendTime;
+function Swipe() {
+    this.startTime;
+    this.startCoords;
+    this.updatePeriod = 100; //time in ms
+    this.previousSendTime;
+}
 
-function doTouchStart(event){
+Swipe.prototype.doTouchStart = function(event){
 	event.preventDefault();
-	startTime = new Date().getTime();
-	startCoords = getRelativeCoords(0);
+	this.startTime = new Date().getTime();
+	this.startCoords = getRelativeCoords(0);
 
-	updateStartTimeText(startTime);
+	updateStartTimeText(this.startTime);
          /*     clientComs.send({
                     startCoordinates: startCoords, 
                     startTime: startTime                
                 });*/
 
-	previousSendTime = startTime;
+	this.previousSendTime = this.startTime;
 
 	//Test code
-	updateStartCoordinatesText(startCoords[0], startCoords[1]);
+	updateStartCoordinatesText(this.startCoords[0], this.startCoords[1]);
 }
 
-function sendCoords(){
+Swipe.prototype.sendCoords = function(){
 	event.preventDefault();
 	var coords = getRelativeCoords(0);
 	var currentTime = new Date().getTime();
@@ -35,11 +37,11 @@ function sendCoords(){
 }
 
 
-function doTouchMove(event){
+Swipe.prototype.doTouchMove = function(event){
 	var currentTime = new Date().getTime();
-	if (currentTime - previousSendTime >= updatePeriod) {
-		sendCoords();
-		previousSendTime = currentTime;
+	if (currentTime - this.previousSendTime >= this.updatePeriod) {
+		this.sendCoords();
+		this.previousSendTime = currentTime;
 	}
 	
 	//Test code
@@ -49,9 +51,10 @@ function doTouchMove(event){
 	updateCurrentTimeText(currentTime);
 }
 
-function initCanvas(){
+Swipe.prototype.initCanvas = function(){
 	var canvas = document.getElementById("canvas");
-	canvas.addEventListener("touchstart", doTouchStart, false);
-	canvas.addEventListener("touchmove", doTouchMove, false);
+        var thisObject = this;
+	canvas.addEventListener("touchstart", function(event){ thisObject.doToucStart(event); }, false);
+	canvas.addEventListener("touchmove", function(event){ thisObject.doTouchMove(event); }, false);
 	return canvas;
 }
