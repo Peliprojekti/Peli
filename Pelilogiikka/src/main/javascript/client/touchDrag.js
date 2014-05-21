@@ -18,12 +18,11 @@ TouchDrag.prototype.doTouchMove = function(event) {
 
     if (this.currentTime - this.previousSendTime >= this.interval) {
         coms.position(this.coords[0], this.coords[1]);
-        log.info("coords: (" + this.coords[0] + ", " + this.coords[1] + ")" );
 
         this.previousSendTime = this.currentTime;
 
         if (DEBUG) { 
-            log.info("touchmove events: " + this.moveCounter + ", interval: " + this.interval + "ms"); 
+            log.info("touchmove events: " + this.moveCounter + ", interval: " + this.interval + "ms", true); 
             this.moveCounter = 0;
         }
     }
