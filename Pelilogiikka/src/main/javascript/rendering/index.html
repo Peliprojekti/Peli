@@ -57,33 +57,33 @@
 
 <script id="vertex_Shader" type="x-shader/x-vertex">
     
-    //uniform vec4 light1;
-    
+    // Transformation marices
     uniform mat4 worldViewMatrix;         
     uniform mat4 projMatrix;
     uniform mat4 worldMatrix;
+   
+   // Haxlight
+    uniform vec4 light1;
     
-    attribute vec3 vertexPos;
+    
+    // Vertex attributes
+    attribute vec3    vertexPos;
     attribute vec3 vertexNormal;
+    attribute vec2     vertexUV;
     
-    attribute vec2  vertexUV;
     
-    
+    // Parameters for pixel shader
     varying   vec2  fragmentUV;
     varying   vec4  fragmentNormal;
-    
-   
+    varying   vec4   vLight1;
     
     void main(void) 
     {
         fragmentUV     = vertexUV;
-        
         fragmentNormal =  worldMatrix * vec4( vertexNormal , 0.0 );
-      
+        vLight1        =  light1;
         gl_Position    = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
     }
-    
-    
     
 </script>
 
@@ -91,18 +91,20 @@
 <script id="pixel_Shader" type="x-shader/x-fragment">
     precision mediump float;
 
-   // uniform vec4              light1;
-    uniform sampler2D     texSampler;
+   uniform sampler2D     texSampler;
     
     varying vec2          fragmentUV;
     varying vec4      fragmentNormal;
+    varying vec4             vLight1;
    
     void main(void) 
     {
      
         vec3 normal = vec3( fragmentNormal.x, fragmentNormal.y, fragmentNormal.z );//normalize(texture2D(normal_texture, gl_TexCoord[0].st).rgb * 2.0 - 1.0);  
-  
-        gl_FragColor = vec4( normal, 1.0 );//texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
+             normal = normalize( normal );
+       
+                 // vec4( normal, 1.0 );//
+        gl_FragColor = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
         
     }
 </script>
@@ -235,7 +237,7 @@
         canvas.style.height = window.innerHeight -5;  // HÄKSÄN HÄÄ!         
          
         renderer            = new Renderer( canvas                         );
-        renderer.set_BgrColor( [0.0,0.0,0.0,1.0]                           );
+        renderer.set_BgrColor( [0.0,1.0,0.0,1.0]                           );
         
         myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
         myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
