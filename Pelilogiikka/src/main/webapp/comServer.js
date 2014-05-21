@@ -145,7 +145,7 @@ startServer = function() {
 
         socket.on('disconnect', function() {
             //screenScoket = null;
-            if (DEBUG) { console.log("   info  - screen disconnected"); }
+            if (DEBUG || BENCHMARK) { console.log(Date.now() + " SCREEN DISCONNECTED"); }
             connected = false;
         });
     });
@@ -173,7 +173,7 @@ startServer = function() {
             });
 
             socket.on('disconnect', function() {
-                if (DEBUG) { console.log("   info  - lost connection user"); }
+				if (DEBUG || BENCHMARK) { console.log(Date.now() + " CLIENT DISCONNECTED"); }
             });
 
             socket.on('joinGame', function(userID) {
@@ -188,9 +188,11 @@ startServer = function() {
 			});
 
 			socket.on('benchmarkLog', function(data) {
-				data.forEach(function(line) {
-					console.log(line);
-				});
+				if (BENCHMARK || DEBUG) {
+					data.forEach(function(line) {
+						console.log(line[0] + " userID(" + line[1] + "), method(" + line[2] + "), " + line[3]);
+					});
+				}
 			});
 
 			socket.on('message', function(data) {
