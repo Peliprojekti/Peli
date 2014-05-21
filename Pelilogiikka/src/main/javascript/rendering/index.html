@@ -30,7 +30,8 @@
 
 <script type="text/javascript" src="parser/GeneralPurposeParser.js"      ></script>
 
-
+<script type="text/javascript" src="math/Angles.js"            ></script>
+<script type="text/javascript" src="math/Vector2.js"           ></script>
 <script type="text/javascript" src="math/Vector3.js"           ></script>
 <script type="text/javascript" src="math/Matrix33.js"          ></script>
 <script type="text/javascript" src="math/Matrix44.js"          ></script>
@@ -55,6 +56,8 @@
 
 
 <script id="vertex_Shader" type="x-shader/x-vertex">
+    
+    //uniform vec4 light1;
     
     uniform mat4 worldViewMatrix;         
     uniform mat4 projMatrix;
@@ -88,7 +91,7 @@
 <script id="pixel_Shader" type="x-shader/x-fragment">
     precision mediump float;
 
-    
+   // uniform vec4              light1;
     uniform sampler2D     texSampler;
     
     varying vec2          fragmentUV;
@@ -222,14 +225,9 @@
        
        
     function Start() 
-    {     
-        var  lol = new Interpolator( 500,1500 );
-        var ukuk =  lol.interpolate( 0.5 );
-       
-        
-        alert( ukuk );
-        
-        // alert( lol.interpolate( 0.5 ) );
+    {
+      // alert(  A.angleWith( B ) );
+      // alert( lol.interpolate( 0.5 ) );
        
         var canvas          = document.getElementById("Canvas");
         
@@ -242,28 +240,22 @@
         myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
         myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
         
-        var assman          = new Assetmanager( renderer);
+        var assman          = new Assetmanager( renderer );
        
         myScene             = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
         
         register_Inputs();      // Erillinen luokka tälle!
       
-        var guiTex          = assman.get( "data/crosshair1.png", function( renderer, path )
-                                                                 {
-                                                                    return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  );    
-                                                                 }); 
+        var guiTex          = assman.get( "data/crosshair1.png", function( renderer, path ) { return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  ); }); 
          
-         
-       var guiShader       = new   Shader  ( renderer.gl , "HAX_VS"          , "COLOR_PS"                );
-       var guiMaterial     = new Material  ( guiShader   , guiTex                                        );
+       var guiShader        = new   Shader  ( renderer.gl , "HAX_VS"          , "COLOR_PS"                );
+       var guiMaterial      = new Material  ( guiShader   , guiTex                                        );
        
-        var c1             = test_Rectangle( renderer.gl , guiMaterial       , [0.10,0.10]  , [1,1,1,1]  );
-        var gob1           = new Guiobject (          c1 , [0.0,1.0,0.0,1.0] , 1.0                       );
+       var c1               = test_Rectangle( renderer.gl , guiMaterial       , [0.10,0.10]  , [1,1,1,1]  );
+       var gob1             = new Guiobject (          c1 , [0.0,1.0,0.0,1.0] , 1.0                       );
         
-      
-       
-        myScene.insert( gob1          , "GUI"       );
-        myScene.insert( myCamera      , "CAM"       );
+       myScene.insert( gob1          , "GUI"       );
+       myScene.insert( myCamera      , "CAM"       );
     
     tick();     
     }
