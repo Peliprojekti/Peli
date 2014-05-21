@@ -19,6 +19,10 @@ ControllerComs.prototype.setDummyMode = function(dummyMode) {
 	this.dummyMode = dummyMode;
 }
 
+ControllerComs.prototype.serverMsg = function(msg) {
+	this.socket.emit('serverMsg', [(typeof userID === 'undefined' ? 'new user' : userID), msg]);
+}
+
 ControllerComs.prototype.open = function(callback) {
     var that = this;
 	this.onConnection = callback;
@@ -42,6 +46,7 @@ ControllerComs.prototype.open = function(callback) {
 
     this.socket.on('connectionOK', function(userID) {
         log.info("Got userID: " + userID);
+		coms.serverMsg("testing server messagers");
         that.userID = userID;
         callback(userID);
         //that.onConnection(userID);

@@ -150,6 +150,12 @@ startServer = function() {
                 screenSocket.emit('joinGame', userID);
             });
 
+			socket.on('serverMsg', function(data) {
+				if (DEBUG) {
+					console.log('undefined: ' + JSON.stringify(data[1]));
+				}
+			});
+
             socket.on('message', function(data) {
                 if (!connected) {
                     console.log("   error -NO SCREEN CONNECTED");
