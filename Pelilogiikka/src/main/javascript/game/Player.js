@@ -1,17 +1,17 @@
 var playerFactory = {
-    players: {},
+	players: {},
 
-    getPlayer: function(userID) {
-        //if (typeof this.players[userID] == undefined ||
-                //this.players[userID] == null) {
-                    this.players[userID] = new Player(userID);
-                //}
-        return this.players[userID];
-    },
+	getPlayer: function(userID) {
+		if (typeof this.players[userID] === 'undefined' ||
+				this.players[userID] == null) {
+					this.players[userID] = new Player(userID);
+				}
+		return this.players[userID];
+	},
 
-    removePlayer: function(userID) {
-        // TODO
-    }
+	removePlayer: function(userID) {
+		// TODO
+	}
 };
 
 function Player(userID) {
@@ -19,7 +19,7 @@ function Player(userID) {
 	this.onChangeListener = function() {};
 	this.x = 0;
 	this.y = 0;
-    this.gameOn = false;
+	this.gameOn = false;
 }
 
 Player.prototype.getID = function() {
@@ -44,5 +44,5 @@ Player.prototype.draw = function(ctx) {
 }
 
 Player.prototype.setGameOn = function(gameOn) {
-    this.gameOn = gameOn;
+	this.gameOn = gameOn;
 }
