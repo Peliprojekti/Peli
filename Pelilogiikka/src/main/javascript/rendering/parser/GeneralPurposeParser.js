@@ -32,17 +32,6 @@
         alert( this.label + " = "+ this.value );
     }
     
-
-
-
-
-    function Record()
-    {
-        this.name   = null;
-        this.values = [];
-    }
-    
-    
   
     
     function Parser( fileName )
@@ -84,7 +73,7 @@
         
     }
 
-
+    // These are peculiar... Need to figure out whether to parse them as special variables. Stupid syntax.
     Parser.prototype.get_Attributes = function( tag, field )
     {
         var retArray    = [];
@@ -166,26 +155,21 @@
         var mesh_Buffer_vertices = this.get_Attributes( "vertices"    , mesh_Buffers[0] );
         var mesh_Buffer_indices  = this.get_Attributes( "indices"     , mesh_Buffers[0] );
 
-        var materials            = this.parse_Materials( mesh_Materials[0] );
+        var materials            = this.parse_Materials( mesh_Materials );
      
     alert(" OVER & OUT ");
     }
     
     
-    Parser.prototype.parse_Materials = function( field )
+    Parser.prototype.parse_Materials = function( fields )
     {
-       //var colorData = this.get_Attributes( "color", field );
-      
-      // var v1 = this.get_Variable( colorData[0] );
-        //   v1.report();
+        var retArray = [];
         
-        var variables = this.get_Variables( field );
-        
-        
-        variables.forEach( function( variable )
+        for( var i = 0; i < fields.length; i++ )
         {
-           variable.report(); 
-        });
+            retArray.push( this.get_Variables( fields[i] ) );
+        }
          
+    return retArray;
     }
     
