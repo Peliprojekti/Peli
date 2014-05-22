@@ -97,7 +97,9 @@ function drawText(text, id){
     ctx.fillStyle = 'white';
     ctx.textAlign = 'center';
 
-    texts[id] = text;
+    if (typeof id !== 'undefined') {
+        texts[id] = text;
+    }
 
     var offset = 0;
 
@@ -124,6 +126,20 @@ function getCanvasDimensions() {
     return [width, height];
 }
 
+function drawCircle(x, y, r) {
+    //drawText();
+    
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    
+    context.strokeStyle = "#FF0000";
+    context.fillStyle = "#FFFF00";
+    context.beginPath();
+    context.arc(x,y,r,0,Math.PI*2,true);
+    context.closePath();
+    context.stroke();
+    context.fill();
+}
 
 function loadController(canvas, type) {
 	if (typeof canvas == 'undefined') {
@@ -152,6 +168,11 @@ function loadController(canvas, type) {
             var swipe = new Swipe();
             swipe.enable(coms, canvas);
             currentController = swipe;
+            break;
+        case 'ThumbStick':
+            var thumbStick = new ThumbStick();
+            thumbStick.enable(coms, canvas);
+            currentController = thumbStick;
             break;
     }
 }
