@@ -11,10 +11,10 @@ module.exports = new function() {
 			'port': port
 		});
 
-		console.log("starting websocket server on " + port);
+		console.log("websocket/game - listening " + port);
 
 		server.on('connection', function(ws) {
-			console.log("connectione opened");
+			console.log("websocket/game - connection");
 			free_sockets.push(ws);
 
 			ws.on('close', function() {
@@ -31,7 +31,7 @@ module.exports = new function() {
 		});
 
 		server.on('close', function() {
-			console.log("Ei näin...");
+			console.log("websocket/game - disconnected");
 			process.exit(0);
 		});
 	}

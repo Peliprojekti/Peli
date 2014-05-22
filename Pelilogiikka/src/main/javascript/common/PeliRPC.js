@@ -65,7 +65,7 @@ PeliRPC.prototype.callRpc = function(method, params, object, listener) {
 				"id": this.callSequence
 			};
 
-			callbacks[this.callSequence] = {
+			this.callbacks[this.callSequence] = {
 				"object": object, 
 				"listener": listener
 			};
@@ -113,7 +113,7 @@ PeliRPC.prototype.onMessage = function(message) {
 			// Unknown function
 			log.error("RPC::onMessage() " + hoststr + ". Received a call to an unknown JSON-RPC method: " + rpc.method);
 			if(rpc.id != null) {
-				sendMessage({"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method " + rpc.method + " not found."}, "id": rpc.id});
+				this.sendMessage({"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method " + rpc.method + " not found."}, "id": rpc.id});
 			}
 			return;
 		}
@@ -122,7 +122,7 @@ PeliRPC.prototype.onMessage = function(message) {
 			var rpcMethod = this.rpcMethods[rpc.method];
 			var result = this.rpcMethod.method.apply(rpcMethod.object, rpc.params);
 			if(rpc.id != null) {
-				sendMessage({"jsonrpc": "2.0", "result": result, "id": rpc.id});
+				this.sendMessage({"jsonrpc": "2.0", "result": result, "id": rpc.id});
 			}
 		}
 		catch(err)

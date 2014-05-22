@@ -5,9 +5,12 @@ var server;
 
 module.exports = new function() {
 	this.start  = function(client_port, gameComs) {
+		game = gameComs;
 		server = eio.listen(client_port);
+		console.log("engine.io/controller - listening on " + client_port);
 
 		server.on('connection', function(socket) {
+			console.log("engine.io/controller - connection opened");
 			var gameSocket = game.getGameSocket();
 
 			if (gameSocket != null) {
@@ -28,6 +31,7 @@ module.exports = new function() {
 				});
 			}
 			else {
+				console.log("engine.io/controller - no free slots, disconnecting");
 				socket.close();
 			}
 		});
