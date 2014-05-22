@@ -25,8 +25,10 @@ function closeServer() {
 
 function startServer() {
 	this.connected = true;
-	game.start(SCREEN_PORT);
+	game.setDebug(DEBUG);
+	cont.setDebug(DEBUG);
 
+	game.start(SCREEN_PORT);
 	cont.start(CLIENT_PORT, game);
 }
 

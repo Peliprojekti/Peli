@@ -18,13 +18,13 @@ function ConnectionWebsocket(host, port, protocol, persistent) {
 	this.connected = false;
 	this.connection = null;
 	this.closeCallback = null;
-	this.onMessage = null;
+	//this.onMessage = null;
 }
 
 ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback, onMessage) {
 	var that = this;
 	this.closeCallback = closeCallback;
-	this.onMessage = onMessage;
+	//this.onMessage = onMessage;
 
 	var hoststr = "ws://" + this.host + ":" + this.port; // + "/" + this.protocol;
 
@@ -59,7 +59,8 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
 	};
 
 	this.connection.onmessage = function(e) {
-		that.onMessage(e.data);
+		log.debug("recieved msg on websocket");
+		onMessage(e.data);
 
 		if(!that.persistent) {
 			that.socket.close();

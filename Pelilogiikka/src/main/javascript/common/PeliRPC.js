@@ -27,8 +27,69 @@ PeliRPC.prototype.connect = function(callback) {
 		that.rpcMethods = new Object();
 	};
 
-	var onMessage = null;
+	var onMessage = function(message) {
+		log.info("RPC::onMessage() . Received message: " + message);
+		var rpc = JSON.parse(message);
 
+		if(rpc.method)  {
+			if (!rpc.jsonrpc || rpc.jsonrpc != "2.0" || !rpc.method) {
+				// Invalid JSON-RPC
+				log.error("RPC::onMessage() . Received invalid JSON-RPC message: " + message);
+				that.sendMessage({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid JSON-RPC."}, "id": null});
+				return;
+			}
+
+			if(!that.rpcMethods.hasOwnProperty(rpc.method)) {
+				// Unknown function
+				log.error("RPC::onMessage() . Received a call to an unknown JSON-RPC method: " + rpc.method);
+				if(rpc.id != null) {
+					that.connection.sendMessage({"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method " + rpc.method + " not found."}, "id": rpc.id});
+				}
+				return;
+			}
+
+			try	{
+				var rpcMethod = that.rpcMethods[rpc.method];
+				var result = rpcMethod.method.apply(rpcMethod.object, rpc.params);
+				if(rpc.id != null) {
+					that.connection.sendMessage({"jsonrpc": "2.0", "result": result, "id": rpc.id});
+				}
+			}
+			catch(err)
+			{
+				var code = (err.code ? err.code : "");
+				var message = (err.message ? err.message : "");
+				log.error("An exeption got raised when executing a RPC method . Code: " + code + ", message: " + message);
+				if(rpc.id != null) {
+					that.connection.sendMessage({"jsonrpc": "2.0", "error": {"code": code, "message": message}, "id": rpc.id});
+				}
+			}
+		}
+		else  {
+			if(rpc.id && typeof that.callbacks[rpc.id] != "undefined") {
+				if (!that.callbacks[rpc.id]) {
+					return;
+				}
+
+				if(typeof rpc.result != "undefined") {
+					that.callbacks[rpc.id].listener.apply(
+							that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
+				}
+				else if (typeof rpc.error != "undefined") {
+					that.callbacks[rpc.id].listener.apply(
+							that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
+				}
+				else {
+					that.callbacks[rpc.id].listener.apply(
+							that.callbacks[rpc.id].object, [rpc.id, null, null]);
+				}
+
+				delete that.callbacks[rpc.id];
+			}
+		}
+	}
+
+	//this.onMessage = onMessage;
 	this.connection.connect(callback, closeCallback, onMessage);
 }
 
@@ -41,21 +102,21 @@ PeliRPC.prototype.callRpc = function(method, params, object, listener) {
 	if(this.connection.isOpen()) {
 		var callObject;
 
-        /*
-            not like this...
-            Instead use this.callSequence to keep track of these.... 
-        j
-        if (this.benchmarking) {
-            var sendTime = Date.now();
-            var origListener = listener;
-            var bm = this.benchmarkLog;
+		/*
+		   not like this...
+		   Instead use this.callSequence to keep track of these.... 
+		   j
+		   if (this.benchmarking) {
+		   var sendTime = Date.now();
+		   var origListener = listener;
+		   var bm = this.benchmarkLog;
 
-            listener = function() {
-                bm.push([sendTime, params[0], method, Date.now() - sendTime]);
-                typeof origListener == "function" && origListener;
-            }
-        }
-        */
+		   listener = function() {
+		   bm.push([sendTime, params[0], method, Date.now() - sendTime]);
+		   typeof origListener == "function" && origListener;
+		   }
+		   }
+		   */
 
 		if(typeof listener == "function") {
 			callObject = {
@@ -98,20 +159,20 @@ PeliRPC.prototype.setCloseEventListener = function(callback) {
 }
 
 PeliRPC.prototype.onMessage = function(message) {
-	log.info("RPC::onMessage() " + this.hoststr + ". Received message: " + message);
+	log.info("RPC::onMessage() . Received message: " + message);
 	var rpc = JSON.parse(message);
 
 	if(rpc.method)  {
-	   	if (!rpc.jsonrpc || rpc.jsonrpc != "2.0" || !rpc.method) {
+		if (!rpc.jsonrpc || rpc.jsonrpc != "2.0" || !rpc.method) {
 			// Invalid JSON-RPC
-			log.error("RPC::onMessage() " + hoststr + ". Received invalid JSON-RPC message: " + message);
+			log.error("RPC::onMessage() . Received invalid JSON-RPC message: " + message);
 			this.sendMessage({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid JSON-RPC."}, "id": null});
 			return;
 		}
 
-		if(!rpcMethods.hasOwnProperty(rpc.method)) {
+		if(!this.rpcMethods.hasOwnProperty(rpc.method)) {
 			// Unknown function
-			log.error("RPC::onMessage() " + hoststr + ". Received a call to an unknown JSON-RPC method: " + rpc.method);
+			log.error("RPC::onMessage() . Received a call to an unknown JSON-RPC method: " + rpc.method);
 			if(rpc.id != null) {
 				this.sendMessage({"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method " + rpc.method + " not found."}, "id": rpc.id});
 			}
@@ -129,7 +190,7 @@ PeliRPC.prototype.onMessage = function(message) {
 		{
 			var code = (err.code ? err.code : "");
 			var message = (err.message ? err.message : "");
-			log.error("An exeption got raised when executing a RPC method " + hoststr + ". Code: " + code + ", message: " + message);
+			log.error("An exeption got raised when executing a RPC method . Code: " + code + ", message: " + message);
 			if(rpc.id != null) {
 				this.sendMessage({"jsonrpc": "2.0", "error": {"code": code, "message": message}, "id": rpc.id});
 			}

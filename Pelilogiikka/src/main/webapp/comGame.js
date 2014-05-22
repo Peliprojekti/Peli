@@ -6,15 +6,19 @@ var server;
 var free_sockets = [];
 
 module.exports = new function() {
+	this.setDebug = function(debugMode) {
+		DEBUG = debugMode;
+	}
+
 	this.start  = function(port) {
 		server = new WebSocket.Server({
 			'port': port
 		});
 
-		console.log("websocket/game - listening " + port);
+		if (DEBUG) console.log("websocket/game - listening " + port);
 
 		server.on('connection', function(ws) {
-			console.log("websocket/game - connection");
+			if (DEBUG) console.log("websocket/game - connection");
 			free_sockets.push(ws);
 
 			ws.on('close', function() {
@@ -31,7 +35,7 @@ module.exports = new function() {
 		});
 
 		server.on('close', function() {
-			console.log("websocket/game - disconnected");
+			if (DEBUG) console.log("websocket/game - disconnected");
 			process.exit(0);
 		});
 	}
