@@ -1,7 +1,7 @@
 
 module.exports = new function() {
 
-    this.getUserInfo = function(request) {
+    this.getUserID = function(request) {
         /*
          * TODO 
          * The request could be used to determine hostname, and then
@@ -10,9 +10,7 @@ module.exports = new function() {
          * simple guide at EOF
          */
 
-        return {
-            userID: Math.floor(Math.random() * 1000000)
-        };
+        return Math.floor(Math.random() * 1000000);
     };
 };
 

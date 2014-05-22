@@ -7,13 +7,13 @@
 * @param {boolean} persistent - connection stays open if set to true
 */
 function ConnectionWebsocket(host, port, protocol, persistent) {
-	if (!('WebSocket' in Window)) {
-		log.error("Browser doesn't support WebSockets");
-		window.alert("no WebSockets :(");
-	}
+	/*
+	 * TODO check websocket support
+	*/
 
+	this.host = host;
 	this.port = port;
-	this portocol = protocol;
+	this.protocol = protocol;
 	this.persistent = persistent;
 	this.connected = false;
 	this.connection = null;
@@ -26,14 +26,15 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
 	this.closeCallback = closeCallback;
 	this.onMessage = onMessage;
 
-	var hoststr = "ws://" + host + ":" + port + "/" + protocol;
+	var hoststr = "ws://" + this.host + ":" + this.port; // + "/" + this.protocol;
 
 	log.info("Connecting to " + hoststr);
 
-	this.connection = new WebSocket('ws://' + hoststr');
+	this.connection = new WebSocket(hoststr);
 
 	this.connection.onopen = function() {
 		this.connected = true;
+		log.info("connection ok to " + hoststr);
 		connectCallback(null, true);
 	};
 
@@ -48,6 +49,7 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
 
 	this.connection.onerror = function(error) {
 		this.connected = false;
+		log.error("websocket connection error");
 		that.close();
 
 		if(typeof connectionCallback == "function") {
@@ -65,7 +67,7 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
 	};
 }
 
-ConnectionWebsocket.prototype.isOpen() {
+ConnectionWebsocket.prototype.isOpen = function() {
 	return this.connected;
 }
 

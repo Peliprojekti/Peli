@@ -62,7 +62,7 @@ module.exports = new function() {
                 "controller": nconf.get("controller"),
                 "client_port": nconf.get("client_port"),
 				"com_benchmark": nconf.get("com_benchmark"),
-                "user_info": userID.get(request),
+                "userID": userID.getUserID(request),
                 "jsonrpc_protocol": nconf.get("jsonrpc_protocol")
             });
         });

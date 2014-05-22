@@ -1,8 +1,8 @@
 var eio = require('engine.io');
 var WebSocket = require('ws');
 var url = require('url');
-var game = require('comGame.js');
-var cont = require('comController.js');
+var game = require('./comGame.js');
+var cont = require('./comController.js');
 
 var DEBUG = false;
 

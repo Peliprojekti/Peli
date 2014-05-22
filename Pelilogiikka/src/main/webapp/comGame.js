@@ -3,18 +3,23 @@ var url = require('url');
 
 var server;
 
+var free_sockets = [];
+
 module.exports = new function() {
 	this.start  = function(port) {
-		server = new WebSocketServer({
-			'port': port;
+		server = new WebSocket.Server({
+			'port': port
 		});
 
+		console.log("starting websocket server on " + port);
+
 		server.on('connection', function(ws) {
+			console.log("connectione opened");
 			free_sockets.push(ws);
 
-			ws.on('close', function()) {
+			ws.on('close', function() {
 
-			}
+			});
 
 			/*
 			ws.on('message', function(data, flags) {
@@ -25,7 +30,7 @@ module.exports = new function() {
 			*/
 		});
 
-		wss.on('close', function()) {
+		server.on('close', function() {
 			console.log("Ei näin...");
 			process.exit(0);
 		});

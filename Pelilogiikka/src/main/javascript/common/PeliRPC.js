@@ -5,15 +5,15 @@
 */
 function PeliRPC(connection) {
 	this.connection = connection;
-	this.callbacks;
-	this.rpcMethods;
+	this.callbacks = new Object();;
+	this.rpcMethods = new Object();
 	this.callSequence = 0;
 
     this.benchmarking = false;
-    this.benchmarkLog = (COM_BENCHMARK ? []: null);
+    this.benchmarkLog = [];
 }
 
-PeliRPC.prototype.resetBenchmarking(isOn) {
+PeliRPC.prototype.resetBenchmarking = function(isOn) {
     if (isOn) {
         this.benchmarLog = [];
     }   
@@ -87,7 +87,7 @@ PeliRPC.prototype.callRpc = function(method, params, object, listener) {
 }
 
 PeliRPC.prototype.exposeRpcMethod = function(name, object_, method_) {
-	rpcMethods[name] = {
+	this.rpcMethods[name] = {
 		object: object_, 
 		method: method_
 	};

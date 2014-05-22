@@ -7,7 +7,7 @@ function ControllerComs() {
 	this.port = CLIENT_PORT;
     this.protocol = JSONRPC_PROTOCOL;
 
-	this.userID = USER[userID];
+	this.userID = USERID;
 
 	this.connection = new ConnectionEngineIO(this.hotname, this.port, this.protocol, true);
     this.rpc = new PeliRPC(this.connection);

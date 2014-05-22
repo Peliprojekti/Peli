@@ -9,7 +9,7 @@ function ControllerHub(onJoinPlayer, maxPlayers) {
     this.maxPlayers = (typeof maxPlayers == 'undefined' ? 100 : maxPlayers);
     this.playersConnected = 0;
 
-    this.onJoinPlayer = onJoinPlyear;
+    this.onJoinPlayer = onJoinPlayer;
 
     this.players = null;
     this.hostname = location.hostname;
@@ -18,7 +18,7 @@ function ControllerHub(onJoinPlayer, maxPlayers) {
 
     this.players = {};
 
-	this.connection = new ConnectionWebsocket(this.hotname, this.port, this.protocol, true);
+	this.connection = new ConnectionWebsocket(this.hostname, this.port, this.protocol, true);
     this.rpc = new PeliRPC(this.connection);
 
     this.rpc.exposeRpcMethod('joinGame', that, function(userID) {
@@ -41,19 +41,26 @@ function ControllerHub(onJoinPlayer, maxPlayers) {
             });
 }
 
+ControllerHub.prototype.setOnJoinPlayer = function(callback) {
+	this.onJoinPalyer = callback;
+}
+
 
 /**
  * Used to initially open the connection
  * @param {function} callback - will be called when connection opened
  */
 ControllerHub.prototype.open = function(callback) {
-    this.rpc.connect(callback);
+	this.rpc.connect(function() {
+		window.alert("connection established");
+	});
+    //this.rpc.connect(callback);
 }
 
 /**
  * close connection
  */
-ControllerComs.prototype.close = function() {
+ControllerHub.prototype.close = function() {
     this.rpc.close();
 }
 

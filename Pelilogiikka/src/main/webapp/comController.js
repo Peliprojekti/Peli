@@ -25,7 +25,7 @@ module.exports = new function() {
 
 				socket.on('error', function() {
 					// TODO tee nyt vaikka jotian...
-				}
+				});
 			}
 			else {
 				socket.close();

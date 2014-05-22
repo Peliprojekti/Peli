@@ -19,12 +19,15 @@ html(lang='en')
       var DEBUG = #{debug};
       var CONTROLLER = '#{controller}';
       var COM_BENCHMARK = '#{com_benchmark}';
-      var USERINFO = #{userinfo}
+      var USERID = '#{userID}'
       var JSONRPC_PROTOCOL = "#{jsonrpc_protocol}"
 
     script(type="text/javascript" src="/jquery/jquery.min.js")
     script(type="text/javascript" src="/socket.io/socket.io.js")
     script(type="text/javascript" src="/javascript/common/log.js")
+    script(type="text/javascript" src="/javascript/common/ConnectionEngineIO.js")
+    script(type="text/javascript" src="/javascript/common/PeliRPC.js")
+
     script(type="text/javascript" src="/javascript/client/ControllerComs.js")
     script(type="text/javascript" src="/javascript/client/phone.js")
     script(type="text/javascript" src="/javascript/client/touchDrag.js")
