@@ -103,23 +103,28 @@ To do this we make sure we declare a varying variable of the same type and name 
         
         this.shaderProgram.vColor                  = gl.getUniformLocation(this.shaderProgram, "vColor");
          
-    //    this.shaderProgram.light1                  = gl.getUniformLocation(this.shaderProgram, "light1");
+        this.shaderProgram.light1                  = gl.getUniformLocation(this.shaderProgram, "light1");
         
         
     }
     
    
-    
-
+   
 
     Shader.prototype.bind = function( gl )
     {
         
         gl.uniform4f( this.shaderProgram.vColor, 1.0,1.0,1.0,1.0 ); // Upload various values to the shader
        
-        // var testPos = [-2.750824,0.444516,-24.011581, 1.0 ];
+        
+        var testPos = [-50.226761, -31.182508, -106.169586];
+            
+          // For Normal
+         // [-2.750824,0.444516,-24.011581, 1.0 ];
+         // For Test
+         // [-50.226761, -31.182508, -106.169586]
          
-      //  gl.uniform4f( this.shaderProgram.light1, testPos[0], testPos[1], testPos[3], 1.0 );
+        gl.uniform4f( this.shaderProgram.light1, testPos[0], testPos[1], testPos[2], 1.0 );
         
        
     gl.useProgram( this.shaderProgram );        // Make the shader active.
