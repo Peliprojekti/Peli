@@ -28,7 +28,9 @@
 <script type="text/javascript" src="parser/Filereader.js"      ></script>
 
 
-<script type="text/javascript" src="parser/GeneralPurposeParser.js"      ></script>
+
+<script type="text/javascript" src="parser/Parserobjects.js"         ></script>
+<script type="text/javascript" src="parser/GeneralPurposeParser.js"  ></script>
 
 <script type="text/javascript" src="math/Angles.js"            ></script>
 <script type="text/javascript" src="math/Vector2.js"           ></script>
@@ -277,7 +279,6 @@
         
         
         var p = new Parser( "data/Normal/Normal.irr.meshes/1.irrmesh" );
-        return;
         
         var canvas          = document.getElementById("Canvas");
           
@@ -291,7 +292,7 @@
         var assman          = new Assetmanager( renderer );
        
         myScene             = import_Scene( renderer, "data/TestLevel/Test.irr", assman  );
-     //   myScene             = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
+     //   myScene           = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
         register_Inputs();      // Erillinen luokka tälle!
       
         var guiTex          = assman.get( "data/crosshair1.png", function( renderer, path ) { return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  ); }); 

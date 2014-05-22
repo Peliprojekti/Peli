@@ -1,48 +1,11 @@
 
-    function Field( data, label )
-    {
-        this.rawData = data;
-        this.label   = label;
-    }
-    
-    Field.prototype.report =  function()
-    {
-        alert( this.rawData );
-    }
-    
-    function Attribute( data )
-    {
-        this.rawData = data;
-    }
-    
-    Attribute.prototype.report =  function()
-    {
-        alert( this.rawData );
-    }
-    
-       
-    function Variable( label, value )
-    {
-        this.label = label;
-        this.value = value;
-    }
-    
-    Variable.prototype.report =  function()
-    {
-        alert( this.label + " = "+ this.value );
-    }
-    
-  
-    
     function Parser( fileName )
     {
         // Grab the file contents.
         var request = new XMLHttpRequest();
         request.open("GET", fileName, false);
         request.send(null);
-        var rawData = request.responseText;
-       
-        this.parse_Mesh( new Field( rawData ) );
+        this.parse_Mesh( new Field( request.responseText ) );
     };
        
 
@@ -115,7 +78,7 @@
         var repeats = field.rawData.split("\n").length;
             repeats -= 2; // Skip the <tag> line at the start as well as </tag> line at the end
         
-        var stringIndex  = '<'+field.label+'>'.length;  //field.rawData.indexOf( '<'+field.label+'>'  , stringIndex   );
+        var stringIndex  = '<'+field.label+'>'.length;  
            
         
         for( var i = 0; i < repeats; i++ )
@@ -146,16 +109,29 @@
      // Extract high level blocks
     Parser.prototype.parse_Mesh = function(  the_Document  ) 
     { 
-        var mesh                 = this.get_Fields     ( "mesh"        , the_Document   ); 
-      
-        var mesh_Box             = this.get_Attributes ( "boundingBox" , mesh[0]        );
-        var mesh_Materials       = this.get_Fields     ( "material"    , mesh[0]        );
-        var mesh_Buffers         = this.get_Fields     ( "buffer"      , mesh[0]        );
-      
-        var mesh_Buffer_vertices = this.get_Attributes( "vertices"    , mesh_Buffers[0] );
-        var mesh_Buffer_indices  = this.get_Attributes( "indices"     , mesh_Buffers[0] );
-
-        var materials            = this.parse_Materials( mesh_Materials );
+        var mesh                 = the_Document.get_Subfields( "mesh" );
+        var mesh_Box             = mesh[0].get_Attributes( "boundingBox");
+        var mesh_Materials       = mesh[0].get_Subfields("material");
+        var mesh_Buffers         = mesh[0].get_Subfields("buffer");        
+        var mesh_Buffer_vertices = mesh_Buffers[0].get_Attributes( "vertices" );
+        var mesh_Buffer_indices  = mesh_Buffers[0].get_Attributes( "indices"  );
+        
+        
+        var material_Variables   = [];
+        
+        /*
+        
+        mesh_Materials.forEach( function( field )
+        {
+            material_Variables.push( field.get_Variables() );
+        });
+        */
+    
+        
+        
+        
+       var materials            = this.parse_Materials( mesh_Materials );
+     
      
     alert(" OVER & OUT ");
     }
@@ -164,11 +140,13 @@
     Parser.prototype.parse_Materials = function( fields )
     {
         var retArray = [];
-        
+     
         for( var i = 0; i < fields.length; i++ )
         {
+            fields[i].report();
             retArray.push( this.get_Variables( fields[i] ) );
         }
+      
          
     return retArray;
     }
