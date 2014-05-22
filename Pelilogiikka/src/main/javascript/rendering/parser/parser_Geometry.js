@@ -1,4 +1,6 @@
-
+    
+    // THIS FILE IS A _MESS_!
+    // Proper parser under construction.
 
 
     function parse_Vertex_Header( header )
