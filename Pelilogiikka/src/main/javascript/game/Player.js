@@ -24,9 +24,10 @@ function Player(userID) {
         this.startCoords = null;
         this.previousDirection = null;
         this.posChangeMul = 0.01;
-        this.currentDirection = null;
-        this.interpolator = null;
+        this.currentDirection = new Vector2(0, 0);
+        this.interpolator = new Interpolator(1, 0);
         this.time = 0;
+        this.previousTime = 0;
 }
 
 Player.prototype.getID = function() {
@@ -59,14 +60,15 @@ Player.prototype.setGameOn = function(gameOn) {
 	this.gameOn = gameOn;
 }
 
-Player.prototype.update = function() {
+Player.prototype.update = function(time) {
         if (this.lastSwipe != null) {
             var coords = this.lastSwipe[0];
             //Swipe start
             if (this.lastSwipe[1] == 0) {
                 this.startCoords = coords;
-                this.previousDirection = null;
-                this.calcNewPosition();
+                //this.previousDirection = null;
+                this.previousTime = 0;
+                this.calcNewPosition(time);
             }
             else {    
                 this.calcNewDirection(this.startCoords, coords);
@@ -74,17 +76,26 @@ Player.prototype.update = function() {
             }
         }
         else {
-            this.calcNewPosition();
+            this.calcNewPosition(time);
         }
 }
 
-Player.prototype.calcNewPosition = function () {
-        if (this.currentDirection != null) {
+Player.prototype.calcNewPosition = function (timestamp) {
+        if (this.currentDirection.length() > 0.001) {
             if (this.time <= 1) {
-                this.time += 0.01;
+                var addition = 0;
+                if (this.previousTime == 0) {
+                    addition = 0.01;
+                }
+                else {
+                    addition = (timestamp - this.previousTime) * 0.0001;
+                }
+                this.time += addition;
+                this.previousTime = timestamp;
                 var speedMultiplier = this.interpolator.interpolate(this.time);
                 log.debug(this.time + " " + speedMultiplier);
-                this.setPosition([this.x + this.currentDirection.x * speedMultiplier, this.y + this.currentDirection.y * speedMultiplier]);     
+                this.currentDirection = this.currentDirection.mul(speedMultiplier);
+                this.setPosition([this.x + this.currentDirection.x * this.posChangeMul, this.y + this.currentDirection.y * this.posChangeMul]);     
             }
         }
 }
@@ -98,20 +109,21 @@ Player.prototype.calcNewDirection = function(beginning, end) {
         if (this.previousDirection == null) {
             this.previousDirection = newVec;
             this.currentDirection = newVec;
-            this.interpolator = new Interpolator(this.posChangeMul, 0);
             this.time = 0;
         }
         else {
-            this.previousDirection = newVec;
-            this.currentDirection = newVec;
-            this.interpolator = new Interpolator(this.posChangeMul, 0);
+            var newDirection = this.currentDirection.add(newVec);
+            //log.debug("Current direction: (" + this.currentDirection.x + ", " + this.currentDirection.y + ")");
+            //log.debug("newVec: (" + newVec.x + ", " + newVec.y + "), newDirection: (" + newDirection.x + ", " + newDirection.y + ")");
+            this.previousDirection = newDirection;
+            this.currentDirection = newDirection;
             this.time = 0;
             
             var newX = this.x + newVec.x * this.posChangeMul;
             var newY = this.y + newVec.x * this.posChangeMul;
             
             this.setPosition([newX, newY]);
-            log.info("Vector: (" + newVec.x + ", " + newVec.y + ")");
+            //log.info("Vector: (" + newVec.x + ", " + newVec.y + ")");
         }
     
         this.lastSwipe = null;

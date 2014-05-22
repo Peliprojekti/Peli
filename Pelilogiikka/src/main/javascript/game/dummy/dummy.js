@@ -67,7 +67,7 @@ function animate(time) {
 	draw(time);
 	requestAnimationFrame(animate);
         players.forEach(function(player) {
-           player.update(); 
+           player.update(time); 
         });
 }
 
