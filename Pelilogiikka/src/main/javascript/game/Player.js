@@ -83,19 +83,17 @@ Player.prototype.calcNewPosition = function () {
             if (this.time <= 1) {
                 this.time += 0.01;
                 var speedMultiplier = this.interpolator.interpolate(this.time);
-                //log.debug(this.time + " " + speedMultiplier);
+                log.debug(this.time + " " + speedMultiplier);
                 this.setPosition([this.x + this.currentDirection.x * speedMultiplier, this.y + this.currentDirection.y * speedMultiplier]);     
             }
         }
 }
 
 Player.prototype.calcNewDirection = function(beginning, end) {
-        log.debug("BEGINNING: " + beginning[0] + ", " + beginning[1] + " END: " + end[0] + ", " + end[1]);
+        //log.debug("BEGINNING: " + beginning[0] + ", " + beginning[1] + " END: " + end[0] + ", " + end[1]);
         var startPos = new Vector2(beginning[0], beginning[1]);
         var endPos = new Vector2(end[0], end[1]);
         var newVec = endPos.sub(startPos);
-        
-        //newVec = this.changeOriginToCrosshair(newVec);
         
         if (this.previousDirection == null) {
             this.previousDirection = newVec;
