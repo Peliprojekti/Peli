@@ -9,7 +9,8 @@ function ControllerComs() {
 
 	this.userID = USER[userID];
 
-    this.rpc = new PeliRPC(this.hotname, this.port, this.protocol, true);
+	this.connection = new ConnectionEngineIO(this.hotname, this.port, this.protocol, true);
+    this.rpc = new PeliRPC(this.connection);
 }
 
 /**

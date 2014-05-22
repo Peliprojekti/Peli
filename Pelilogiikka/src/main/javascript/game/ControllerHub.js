@@ -1,3 +1,9 @@
+/**
+ * ControllerHub
+ * @constructor
+ * @param {function} onJoinPlyaer
+ * @param {number} maxPlayers
+ */
 function ControllerHub(onJoinPlayer, maxPlayers) {
     var that = this;
     this.maxPlayers = (typeof maxPlayers == 'undefined' ? 100 : maxPlayers);
@@ -12,7 +18,8 @@ function ControllerHub(onJoinPlayer, maxPlayers) {
 
     this.players = {};
 
-    this.rpc = new PeliRPC(this.hotname, this.port, this.protocol, true);
+	this.connection = new ConnectionWebsocket(this.hotname, this.port, this.protocol, true);
+    this.rpc = new PeliRPC(this.connection);
 
     this.rpc.exposeRpcMethod('joinGame', that, function(userID) {
             // could we possibly use self, I think so?
