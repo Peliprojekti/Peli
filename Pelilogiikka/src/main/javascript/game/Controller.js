@@ -29,6 +29,10 @@ function Controller(onConnect, onDisconnect, onJoinGame) {
     this.rpc.exposeRpcMethod('moveSwipe', this, function(userID, x, y, sincePrevious) {
         this.player.pushSwipe([x, y], sincePrevious);
     });
+    
+    this.rpc.exposeRpcMethod('orientation', this, function(userID, tiltLR, tiltFB, dir)){
+        
+    });
 
     this.rpc.connect(onConnect);
 }

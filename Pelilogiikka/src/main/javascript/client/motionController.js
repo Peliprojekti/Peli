@@ -14,8 +14,8 @@ MotionController.prototype.deviceOrientationHandler = function(eventData) {
     // alpha is the compass direction the device is facing in degrees
     var dir = eventData.alpha;
 
-  //  send data to server
-
+    //  send data to server
+    coms.orientation(tiltLR, tiltFB, dir);
 
     if (DEBUG) {
         log.info("Orientation changed, new orientation:\n" +

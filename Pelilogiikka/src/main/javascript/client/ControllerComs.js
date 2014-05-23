@@ -65,3 +65,8 @@ ControllerComs.prototype.position = function(x, y) {
 ControllerComs.prototype.swipe = function(x, y, sincePreviousTime) {
     this.rpc.callRpc('swipe', [this.userID, x, y, sincePreviousTime], this, null);
 };
+
+
+ControllerComs.prototype.orientation = function(tiltLR, tiltFB, dir){
+    this.rpc.callRpc('orientation', [this.userID, tiltLR, tiltFB, dir], this, null);
+}
