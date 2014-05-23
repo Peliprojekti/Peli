@@ -202,7 +202,6 @@
     
     
     
-    
     function import_Scene( renderer, fileName, assMan )
     {
         var   scene = new Scene( renderer );

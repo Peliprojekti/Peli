@@ -284,17 +284,20 @@
         renderer            = new Renderer( canvas                         );
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0]                           );
         
-      
-         var importer  = new Importer( renderer, "data/TestLevel/Test.irr" );
-     /*  
+        var assman          = new Assetmanager( renderer );
+       
         
         myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
         myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
         
-        var assman          = new Assetmanager( renderer );
        
-        myScene             = import_Scene( renderer, "data/TestLevel/Test.irr", assman  );
+       
+      //  myScene             = import_Scene( renderer, "data/TestLevel/Test.irr", assman  );
        // myScene             = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
+       
+        var sceneParser     = new Parser( "data/TestLevel/Test.irr"  );
+        myScene             = sceneParser.parse_Scene( renderer, assman );
+        
         register_Inputs();      // Erillinen luokka tälle!
       
         var guiTex          = assman.get( "data/crosshair1.png", function( renderer, path ) { return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  ); }); 
@@ -310,7 +313,7 @@
        myScene.insert( myCamera      , "CAM"       );
     
     tick();   
-    // */
+    
     }
 
     
