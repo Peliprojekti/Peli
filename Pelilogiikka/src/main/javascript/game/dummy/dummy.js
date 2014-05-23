@@ -1,4 +1,3 @@
-
 var MESSAGE_TIME = 10000;
 
 var canvas = null;
@@ -13,110 +12,115 @@ var message_timer = [];
 var context = null;
 
 function showMessage(msg) {
-	log.info("displaying message: " + msg);
-	messages.push(msg);
-	message_timer.push(MESSAGE_TIME);
+    log.info("displaying message: " + msg);
+    messages.push(msg);
+    message_timer.push(MESSAGE_TIME);
 }
 
 function initializeUI() {
-	canvas = setupCanvas();
+    canvas = setupCanvas();
 
-	context = canvas.getContext('2d');
+    context = canvas.getContext('2d');
 
-	c_width = canvas.width;
-	c_height = canvas.height;
+    c_width = canvas.width;
+    c_height = canvas.height;
 
-	requestAnimationFrame(animate); 
+    requestAnimationFrame(animate);
 
-	showMessage("starting anmiations");
+    showMessage("starting anmiations");
 }
 
 function setupCanvas() {
-	var container = document.getElementById("container");
-	canvas = document.getElementById("canvas");
+    var container = document.getElementById("container");
+    canvas = document.getElementById("canvas");
 
-	var width = container.clientWidth;
-	var height = container.clientHeight;
+    var width = container.clientWidth;
+    var height = container.clientHeight;
 
-	c_height = height;
-	c_width = width;
+    c_height = height;
+    c_width = width;
 
-	log.info("setting canvas dimensions to " + c_width + "x" + c_height);
-	canvas.width = c_width;
-	canvas.height = c_height;
+    log.info("setting canvas dimensions to " + c_width + "x" + c_height);
+    canvas.width = c_width;
+    canvas.height = c_height;
 
-	return canvas;
+    return canvas;
 }
 
 function connectToServer() {
-	controllers = new ControllerHub();
-	
-	var players = this.players;
-	controllers.setOnJoinPlayer(function(player) {
-        var crosshair = new Crosshair(0,0,20,"#0000FF");
-		player.setCrosshair(crosshair);
-		players.push(player);
+    var players = this.players;
 
-		return true;
-	});
+    controllers = new ControllerHub(function(player) {
+        //onConnect
+        log.info("New player joined dummy game");
+        var crosshair = new Crosshair(0, 0, 20, "#0000FF");
+        player.setCrosshair(crosshair);
+        players.push(player);
+    }, 10);
 
-	controllers.open();
+    //controllers.open();
 }
 
 function animate(time) {
-	draw(time);
-	requestAnimationFrame(animate);
-        players.forEach(function(player) {
-           player.update(time); 
-        });
+    draw(time);
+    requestAnimationFrame(animate);
+    players.forEach(function(player) {
+        player.update();
+    });
 }
 
 function draw(time) {
-	ctx = canvas.getContext('2d');
-	ctx.clearRect(0,0,c_width,c_height);
+    ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, c_width, c_height);
 
-	drawRectangle(ctx);
-	players.forEach(function(player) {
-		player.draw(ctx);
-	});
+    drawRectangle(ctx);
+    players.forEach(function(player) {
+        player.draw(ctx);
+    });
 
-	/*
-	   for (var i = 0; i < messages.length; i++) {
+    /*
+   for (var i = 0; i < messages.length; i++) {
 //ctx.font = "bold 20 sans-serif";
 ctx.fillText(messages[i], c_width/2, c_height/2 * 30);
 }
 */
 
-/*
+    /*
 
    dummy.msgTimers[0]--;
    if (dummy.msgTimers[0] == 0) {
 
    }
    */
-ctx.restore();
+    ctx.restore();
 }
 
 var testRect = {
-	x: 0,
-	y: 0,
-	width: 100,
-	height: 100,
-	xm: 1,
-	ym: 1
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    xm: 1,
+    ym: 1
 };
 
 function drawRectangle(ctx) {
-	ctx.save();
-	ctx.fillStyle = "rgb(200,0,0)";
-	testRect.x += testRect.xm;
-	testRect.y += testRect.ym;
-	ctx.fillRect (testRect.x, testRect.y, 100, 100);
-	if (testRect.x <= 0) { testRect.xm = 1; }
-	else if (testRect.x >= (c_width - testRect.width)) { testRect.xm = -1; }
-	if (testRect.y <= 0) { testRect.ym = 1; }
-	else if (testRect.y >= (c_height - testRect.height)) { testRect.ym = -1; }
-	ctx.restore();
+    ctx.save();
+    ctx.fillStyle = "rgb(200,0,0)";
+    testRect.x += testRect.xm;
+    testRect.y += testRect.ym;
+    ctx.fillRect(testRect.x, testRect.y, 100, 100);
+    if (testRect.x <= 0) {
+        testRect.xm = 1;
+    } else if (testRect.x >= (c_width - testRect.width)) {
+        testRect.xm = -1;
+    }
+    if (testRect.y <= 0) {
+        testRect.ym = 1;
+    } else if (testRect.y >= (c_height - testRect.height)) {
+        testRect.ym = -1;
+    }
+    ctx.restore();
 }
 
 /*
@@ -141,8 +145,8 @@ function drawRectangle(ctx) {
    */
 
 addWindowOnload(function() {
-	log.debug("entering dummy onload");
+    log.debug("entering dummy onload");
 
-	initializeUI();
-	connectToServer();
+    initializeUI();
+    connectToServer();
 });

@@ -1,8 +1,9 @@
 var log = {
     enabled: DEBUG,
     level: 3,
-    rows: new Array(),
-    coms: null,
+    rows: [],
+    //coms: null,
+    serverMsgr: null,
     
     logMessage: function(type, msg, send, benchmark) {
         var message = type + msg;
@@ -12,14 +13,17 @@ var log = {
             log.rows.push(message);
         }
         
-        if (send && coms != null) {
-            coms.serverMsg(message);
+        if (send) {
+            if (serverMsgr !== null) {
+                this.serverMsgr = new ServerDebugMessenger();
+            }
+            this.serverMsgr.send(message);
         }
     },
 
     error: function(msg, send, benchmark) {
         if(log.enabled) {
-            log.logMessage("Error: ", msg, send, benchmark)
+            log.logMessage("Error: ", msg, send, benchmark);
         }
     },
 
@@ -31,18 +35,19 @@ var log = {
 
     info: function(msg, send, benchmark) {
         if(log.enabled && log.level > 1) {
-            log.logMessage("INFO: ", msg, send, benchmark)
+            log.logMessage("INFO: ", msg, send, benchmark);
         }
     },
 
     debug: function(msg, send, benchmark) {
         if(log.enabled && log.level > 2) {
-            log.logMessage("DEBUG: ", msg, send, benchmark)
+            log.logMessage("DEBUG: ", msg, send, benchmark);
         }
     },
     
     setComs: function(comsObject) {
-        log.coms = comsObject;
+        log.warn("log.setComs is depracated, not needed anymore");
+        //log.coms = comsObject;
     },
 
     set_level: function(level) {

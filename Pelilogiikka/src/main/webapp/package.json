@@ -4,7 +4,8 @@
 	"author": "Peliprojekti",
 	"dependencies": {
 		"engine.io": "1.1.1",
-		"socket.io": "0.9.16",
+		"engine.io-client": "1.2.0",
+		"ws": "0.4.31",
 		"express": "4.2.0",
 		"nconf": "0.6.9",
         "winston": "0.7.3",

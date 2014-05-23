@@ -16,14 +16,19 @@ html(lang='en')
     script(type="text/javascript").
       var SCREEN_PORT = #{screen_port};
       var DEBUG = #{debug};
+      var JSONRPC_PROTOCOL = "#{jsonrpc_protocol}"
 
 
     script(src="/socket.io/socket.io.js")
 
     script(src="/javascript/common/log.js")
 
-    script(src="/javascript/game/ControllerHub.js")
     script(src="/javascript/game/Player.js")
+    script(src="/javascript/game/Controller.js")
+    script(src="/javascript/game/ControllerHub.js")
+
+    script(type="text/javascript" src="/javascript/common/ConnectionWebsocket.js")
+    script(type="text/javascript" src="/javascript/common/PeliRPC.js")
 
     script(src="/javascript/game/dummy/crosshair.js")
     script(src="/javascript/game/dummy/dummy.js")
