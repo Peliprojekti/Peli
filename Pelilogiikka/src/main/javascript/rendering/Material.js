@@ -11,11 +11,10 @@
     }
     
     
-    Material.prototype.bind = function( gl, slot ) 
+    Material.prototype.bind = function( gl, slot, lights ) 
     {
-        this.shader.bind( gl );
+        this.shader.bind( gl , this.texture, this.texture2, this.texture3, this.texture4 );
+       
         
-        gl.activeTexture(slot);
-        gl.bindTexture(gl.TEXTURE_2D, this.texture.data);
         gl.uniform1i(this.shader.shaderProgram.samplerUniform, 0); 
     }

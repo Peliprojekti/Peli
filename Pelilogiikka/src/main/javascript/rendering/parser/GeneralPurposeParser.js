@@ -159,14 +159,23 @@
                 else
                     textureList.push( assetManager.get( texturePaths[t] , function( renderer ,path )
                     {
-                        return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from prior flags!
+                        return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
                     }));
             }
                      
-            var shaderPath = "DEFAULT_SHADER"; // This is a dummy path for now
+            var shaderPath = "DEFAULT_SHADER";                                                      // This is a dummy "path" for now
             var shader     = assetManager.get( shaderPath , function( renderer , shaderPath )
             {
-                return new Shader( renderer.gl  , "vertex_Shader", "pixel_Shader"  );           // Dummy shaders as well
+                
+                var basic     =  ( typeof textureList[1] != 'undefined'                    )  ? "NORMAL"   : "NULL";
+                var advanced  =  ( typeof textureList[2] != 'undefined' && basic != "NULL" )  ? "PARALLAX" : "NULL";
+                
+                var features = new ShaderFeatures( [basic,advanced] );
+                
+                
+                return new Shader( renderer.gl  , "vertex_Shader", "pixel_Shader" , features  );                // Dummy shaders as well
+            
+            
             });
                     
          // Now we have... A set of meshes, a set of textures and in the future, a set of shaders. For now one will have to do.
@@ -182,11 +191,8 @@
          // Here we download a list of meshes, ignoring the infile material definitions.
         var meshList  = assetManager.get( meshPath , function( renderer , meshPath )
         {
-            console.log( "Accessing: " + meshPath );
-                  
             var meshParser  = new Parser( meshPath );
-            var meshString  = meshParser.the_Document.rawData;
-            var meshTexts   = import_MeshData( meshString );
+            var meshTexts   = import_MeshData( meshParser.the_Document.rawData );
             var meshes      = [];
                     
             meshTexts.forEach( function( meshData )
@@ -203,7 +209,8 @@
         return meshes;
         });
         
-    return  meshList; 
+        
+    return meshList; 
     }
 
 

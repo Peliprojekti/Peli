@@ -65,6 +65,12 @@
     uniform mat4 projMatrix;
     uniform mat4 worldMatrix;
    
+    // Declare the light rack
+    uniform vec3   lights[12];   // X,Y,Z @ world space  
+    uniform vec3  lColors[12];   // Red, Green, Blue
+    uniform vec3   lAtten[12];   // Constant term, Linear term, Quadratic term
+    
+   
    // Haxlight
     uniform vec4 light1;
     
@@ -81,8 +87,7 @@
     varying   vec4  fragmentNormal;
     
     varying   vec4  vLight1;
-    varying   vec4  vLight2;
-    //[-64.297035, -34.088657, -127.10157];
+    varying   vec4  vLight2;            // Obsolete very soon
     
     
     void main(void) 
@@ -103,14 +108,15 @@
 <script id="pixel_Shader" type="x-shader/x-fragment">
     precision mediump float;
 
-   uniform sampler2D     texSampler;
+    uniform sampler2D     texSampler;
   
     varying vec4         fragmentPos;       // Contains the fragment world position in VIEW_SPACE
     
     varying vec2          fragmentUV;
     varying vec4      fragmentNormal;
+    
     varying vec4             vLight1;
-    varying vec4             vLight2;
+    varying vec4             vLight2;       // Obsolete very soon
     
     
     
@@ -176,6 +182,8 @@
     uniform mat4 worldViewMatrix;
     uniform mat4 projMatrix;
     uniform mat4 worldMatrix;
+        
+    uniform vec3 lights[12];     
         
     attribute vec3  vertexPos;
     attribute vec3  vertexNormal;
@@ -274,44 +282,33 @@
         document.onkeyup   = kbUp_Event; 
     }
        
-       
-       
+
+    
  
     function Start() 
     {
-        var canvas          = document.getElementById("Canvas");
-          
-        renderer            = new Renderer( canvas                         );
-        renderer.set_BgrColor( [0.0,0.0,0.0,1.0]                           );
+       var canvas          = document.getElementById("Canvas");
+       renderer            = new Renderer( canvas );
+       var assman          = new Assetmanager( renderer );
+       myScene             = new Scene( renderer, assman, "data/TestLevel/Test.irr" ); 
         
-        var assman          = new Assetmanager( renderer );
-       
-        
-        myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
-        myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
-        
-       
-       
-      //  myScene             = import_Scene( renderer, "data/TestLevel/Test.irr", assman  );
-       // myScene             = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
-       
-        var sceneParser     = new Parser( "data/TestLevel/Test.irr"  );
-        myScene             = sceneParser.parse_Scene( renderer, assman );
-        
-        register_Inputs();      // Erillinen luokka tälle!
+       register_Inputs();      // Erillinen luokka tälle!
       
-        var guiTex          = assman.get( "data/crosshair1.png", function( renderer, path ) { return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  ); }); 
-         
-       var guiShader        = new   Shader  ( renderer.gl , "HAX_VS"          , "COLOR_PS"                );
-       var guiMaterial      = new Material  ( guiShader   , guiTex                                        );
+       var guiTex          = assman.get    ( "data/crosshair1.png", function( renderer, path ) { return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  ); }); 
+       var guiShader       = new   Shader  ( renderer.gl , "HAX_VS"          , "COLOR_PS"                );
+       var guiMaterial     = new Material  ( guiShader   , guiTex                                        );
+       var c1              = test_Rectangle( renderer.gl , guiMaterial       , [0.05,0.05]  , [1,1,1,1]  );
+       var gob1            = new Guiobject (          c1 , [0.0,1.0,0.0,1.0] , 1.0                       );
+       myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
        
-       var c1               = test_Rectangle( renderer.gl , guiMaterial       , [0.05,0.05]  , [1,1,1,1]  );
-       var gob1             = new Guiobject (          c1 , [0.0,1.0,0.0,1.0] , 1.0                       );
-        
-        
-       myScene.insert( gob1          , "GUI"       );
+       myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
+       
        myScene.insert( myCamera      , "CAM"       );
+       myScene.insert( gob1          , "GUI"       );
     
+       renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
+       
+       
     tick();   
     
     }
