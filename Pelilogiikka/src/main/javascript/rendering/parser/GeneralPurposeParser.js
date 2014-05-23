@@ -22,52 +22,65 @@
     };
        
        
-
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+    function perse( fileName )
+    {
+        alert( fileName );
+        
+        var parser       = new Parser( fileName );
+       
+        alert( parser.the_Document.rawData );
+    
+    }
+       
+       
 
     Parser.prototype.parse_Scene = function(  renderer  ) 
     { 
         var the_Scene = new Scene( renderer ); 
         var nodes     = this.the_Document.get_Subfields("node");
         
+        
         nodes.forEach( function( node )
         {
-             var type = node.get_Type();
-             
+            var type     = node.get_Type();
+            var meshes   = [];
+            var textures = [];
+           
+           
             if( type == "mesh")
             {
                  // These are the node attributes
                 var attributes           = node.get_Subfields("attributes");
                 var node_Variables       = attributes[0].get_Variables();                  // There shold be only ONE per node!
-            
                 var node_Description     = read_Node( node_Variables );
-           
-                
-                var meshPath = node_Description[3];
-           
-                alert( meshPath );
-           
-           
+                var meshPath             = node_Description[3];
+                    
+                // THIS IS FUCK
+                perse( fix_ResourcePath( meshPath ) );
+            
                 var node_Materials       = node.get_Subfields("materials");                 // There shold be only ONE per node!
                 var material_Attributes  = node_Materials[0].get_Subfields("attributes");   // There shold be only ONE per node!
                 var material_Variables   = material_Attributes[0].get_Variables();
-            
                 var material_Description = read_Material( material_Variables );
-            
-            
-            
-            
             }
             else
                 if( type == "light" )
                 {
-                    
                     // Read and insert lights here
                     node.report();
                 }
-                
-                
         });
-        
         
     alert(" Scene parsed! ");    
     return the_Scene;
@@ -97,8 +110,9 @@
             ret.push( node_Rotation.casted() );
             ret.push( node_Scale.casted()    );
             ret.push( node_Mesh.value        );
-            
-    return ret;
+    
+        
+    return  ret;
     }
     
     
