@@ -13,7 +13,7 @@ var comServer = null;
 module.exports = new function() {
     this.shutdown = function() {
         //server.close(); // doesn't work?
-    }
+    };
 
     this.start = function(nconf_, logger_, comServer_) {
         nconf = nconf_;
@@ -26,7 +26,7 @@ module.exports = new function() {
 
         // enable logging if needed
         if (nconf.get('debug')) {
-            server.use(morgan('short'));
+            //server.use(morgan('short'));
         }
 
         // send some config stuff to express
@@ -51,7 +51,14 @@ module.exports = new function() {
 
         server.get('/jquery/jquery.min.js', function(request, response) {
             response.setHeader('content-type', 'text/javascript');
-            response.sendfile(__dirname + "/lib/jquery.min.js");
+            //response.sendfile(__dirnamse + "/lib/jquery.min.js");
+            response.sendfile(__dirname + "/lib/jquery-2.1.1.min.js");
+        });
+
+        server.get('/jquery/jquery.mobile.min.js', function(request, response) {
+            response.setHeader('content-type', 'text/javascript');
+            //response.sendfile(__dirnamse + "/lib/jquery.min.js");
+            response.sendfile(__dirname + "/lib/jquery.mobile-1.4.2.min.js");
         });
 
         // send client stuff to 
@@ -78,5 +85,5 @@ module.exports = new function() {
         server.listen(nconf.get('http_port'));
 
         return this;
-    }
+    };
 }

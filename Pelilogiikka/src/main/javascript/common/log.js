@@ -14,10 +14,7 @@ var log = {
         }
         
         if (send) {
-            if (this.serverMsgr === null) {
-                this.serverMsgr = new ServerDebugMessenger();
-            }
-            this.serverMsgr.send(message);
+            serverDebugMessenger.send(message);
         }
     },
 
@@ -43,11 +40,6 @@ var log = {
         if(log.enabled && log.level > 2) {
             log.logMessage("DEBUG: ", msg, send, benchmark);
         }
-    },
-    
-    setComs: function(comsObject) {
-        log.warn("log.setComs is depracated, not needed anymore");
-        //log.coms = comsObject;
     },
 
     set_level: function(level) {

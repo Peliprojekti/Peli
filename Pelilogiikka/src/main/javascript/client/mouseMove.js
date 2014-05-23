@@ -1,30 +1,35 @@
-var mouseMove = {
-    //previousSendTime: 0,
-    //currentTime: null,
-    //interval: 20,
-    x: 0,
-    y: 0,
-    coms: null,
+var peli =  peli || {};
+peli.client = peli.client || {};
 
-    update: function(event) {
-        mouseMove.x = event.clientX;
-        mouseMove.y = event.clientY;
-        
-        var dimensions = getCanvasDimensions();
-        var relativeX = mouseMove.x / dimensions[0];
-        var relativeY = mouseMove.y / dimensions[1];
+peli.client.mouseMove = function(canvas, coms) {
+    var _LISTENER_NAME = 'hiiriLiike';
+    var _RESIZE_CHECK_INTERVAL = 300;
 
-        coms.position(relativeX, relativeY);
-        if (DEBUG) { updateCoordinatesText(relativeX, relativeY) };	
-    },
+    var x = 0;
+    var y = 0;
 
-    enable: function(coms,canvas) {
-        mouseMove.coms = coms;
-        log.info("Enabling mouseMove", true); //, false);
-        canvas.addEventListener("mousemove", mouseMove.update, false);
-    },
+    var canvasWidth;
+    var canvasHeight;
 
-    disable: function(canvas) {
-        canvas.removeEventListener("mousemove", mouseMove.update);
-    }
-}
+    // check for canvas resize events;
+    setInterval(function() {
+                canvasHeight = element.height;
+                canvasWidth = element.width;
+    }, _RESIZE_CHECK_INTERVAL);
+
+
+    // forward all events through coms
+    var listener = function(event) {
+        coms.position(event.clientX / canvasWidth, event.clientY / canvasHeight);
+    };
+
+    log.info("Enabling mouseMove", true);
+    canvas.addEventListener(_LISTENER_NAME, listener, false);
+
+    // return disabler function
+    return function() {
+        canvas.removeEventListener(_LISTENER_NAME, listener);
+        listener = null;
+        canvas = null;
+    };
+};

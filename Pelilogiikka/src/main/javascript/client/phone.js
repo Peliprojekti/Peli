@@ -2,162 +2,100 @@ var coms = null;
 var currentController = null;
 var controllerType = CONTROLLER;
 
+var peli = peli || {};
+peli.client = peli.client || {};
+peli.client.phone = peli.client.phone || {};
 
-//http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
+peli.client.phone._rc = 0;
+peli.client.phone._oc = 0;
 
-/*      function doClick(event) {
+/**
+ * This encapsulate all the comunications stuff
+ * @constructor
+ */
+peli.client.phone.windowOnload = function() {
+    var canvas = document.getElementById("canvas");
+    peli.client.phone._canvas = canvas;
 
-        var x = event.x;
-        var y = event.y;
+    var ctx = canvas.getContext("2d");
 
-        var canvas = document.getElementById("canvas");
-        canvas_width = canvas.width;
-        canvas_height = canvas.height;
+    var rc = 0; // resize counter
+    var oc = 0; // orientiation counter
+    var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
 
-        x -= canvas.offsetLeft;
-        y -= canvas.offsetTop;
-        alert("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
-        + "\ncanvas height: " + canvas_height);
-
-/*     clientComs.send({
-xCoordinate: x, 
-yCoordinate: y,
-width: canvas_width,
-height: canvas_height
-
-});
-//                clientComs.send("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
-//                        + "\ncanvas height: " + canvas_height);
-
-/*	event.preventDefault();
-canvas_x = event.targetTouches[0].pageX;
-canvas_y = event.targetTouches[0].pageY;
-var canvas = document.getElementById("canvas");
-canvas_width = canvas.width;
-canvas_height = canvas.height;
-alert("X=" + canvas_x + " Y=" + canvas_y + "\ncanvas width: " + canvas_width
-+ " canvas height: " + canvas_height);
-}*/
-
-
-function getFingerCoords(id) {
-    var canvas_x = event.targetTouches[id].pageX;
-    var canvas_y = event.targetTouches[id].pageY;
-    return [canvas_x, canvas_y];
-}
-
-//var canvasDimensions = null;
-
-function getRelativeCoords(id){
-    var coords = getFingerCoords(id);
-    var canvasDimensions = getCanvasDimensions();
-    var relativeX = coords[0] / canvasDimensions[0];
-    var relativeY = coords[1] / canvasDimensions[1];
-    return [relativeX, relativeY];
-}	
-
-//Test code
-function updateCoordinatesText(x, y){
-    var canvasDimensions = getCanvasDimensions();		
-
-    drawText("Coordinates: (" + x + ", " + y + ")", 2);
-    drawText("Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1], 3);
-}
-
-//Test code
-function updateStartTimeText(time) {
-    drawText("Start time: " + time, 4);
-}
-
-//Test code
-function updateCurrentTimeText(time) {
-    drawText("Current time: " + time, 5);
-}
-
-//Test code
-function updateStartCoordinatesText(x, y){
-    var canvasDimensions = getCanvasDimensions();		
-
-    drawText("Start coordinates: (" + x + ", " + y + ")", 6);
-}
-
-//Test code
-function updateSendTimeText(time){
-    drawText("Sent time: " + time, 7);
-}
-
-
-//Test code
-var texts = new Array();
-function drawText(text, id){
-    var canvasDimensions = getCanvasDimensions();
-
-    drawBackground();
-
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
-
-    if (typeof id !== 'undefined') {
-        texts[id] = text;
-    }
-
-    var offset = 0;
-
-    texts.forEach(function(entry) {
-        ctx.fillText(entry, canvasDimensions[0] / 2, canvasDimensions[1] / 2 + offset);
-        offset += 10;
+    log.info("trying to open connection");
+    coms.open(function() {
+        log.info("Connection establised, trying to join game");
+        peli.client.phone.onConnectionOpened();
     });
 
-}
+    $(window).on("orientationchange", peli.client.phone.onOrientationChange);
+    $(window).resize(peli.client.phone.onResize);
+};
 
-function drawBackground(){
-    ctx.fillStyle = 'green';
-    ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = 'black';
-    ctx.fillRect(10, 10, width - 20, height - 20);
-}
+peli.client.phone._orienting = false;
+peli.client.phone.onOrientationChange = function() {
+    if (peli.client.phone._orienting === false) {
+        peli.client.phone._orienting = true;
+        setTimeout(function() {
+            peli.client.phone._oc++;
+        }, 50);
+    }
+    peli.client.phone._orienting = false;
+};
 
-function getCanvasDimensions() {
-    canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d");
-    width = canvas.width;
-    height = canvas.height;
+peli.client.phone._resizing = false;
+peli.client.phone.onResize = function() {
+    if (peli.client.phone._resizing === false) {
+        peli.client.phone._resizing = true;
+        setTimeout(function() {
+            //rc++;
 
-    return [width, height];
-}
+            if (ios) {
+                // increase height to get rid off ios address bar
+                $("#container").height($(window).height() + 60);
+            }
 
-function drawCircle(x, y, r) {
-    //drawText();
-    
-    var canvas = document.getElementById("canvas");
-    var context = canvas.getContext("2d");
-    
-    context.strokeStyle = "#FF0000";
-    context.fillStyle = "#FFFF00";
-    context.beginPath();
-    context.arc(x,y,r,0,Math.PI*2,true);
-    context.closePath();
-    context.stroke();
-    context.fill();
-}
+            // set canvas width and height
+            $("#canvas").attr('width', $("#container").width());
+            $("#canvas").attr('height', $("#container").height());
 
-function loadController(canvas, type) {
-	if (typeof canvas == 'undefined') {
-		log.error("trying to loadController on undefined canvas");
-	}
-    if (typeof type != "undefined") {
-        controllerType = type;
+            // hides the WebKit url bar
+            if (navigator.userAgent.match(/(iPhone)|(iPod)/)) {
+                setTimeout(function() {
+                    window.scrollTo(0, 1);
+                }, 100);
+            }
+
+            drawText('Orientiation changes: ' + oc, 0);
+            drawText('Resize events: ' + rc, 1);
+        }, 100);
+        peli.client.phone._resizing = false;
+    }
+};
+
+peli.client.phone.onConnectionOpened = function() {
+    peli.client.coms.joinGame(function(controllerType) {
+        log.info("Game On!!");
+        peli.client.phone.loadController(canvas);
+    });
+};
+
+peli.client.phone.loadController = function(type) {
+    if (typeof type === undefined) {
+        type = CONTROLLER;
     }
 
-    if (currentController != null) {
-        currentController.disable(canvas);
+    if (typeof peli.client.phone._controllerDisabler === 'function') {
+        peli.client.phone._controllerDisable();
+        peli.client.phone._controllerDisable = null;
     }
 
-	log.info("changing controller type to " + controllerType);
-    switch(controllerType) {
+    var canvas = peli.client.phone._canvas;
+
+    switch (controllerType) {
         case 'mouseMove':
-            mouseMove.enable(coms, canvas);
-            currentController = mouseMove;
+            peli.client.phone._controllerDisable = peli.client.mouseMove(canvas);
             break;
         case 'touchDrag':
             var touchDragx = new TouchDrag();
@@ -180,100 +118,109 @@ function loadController(canvas, type) {
             currentController = motion;
             break;
     }
+};
+
+$(document).ready(peli.client.phone.windowOnLoad);
+
+function getFingerCoords(id) {
+    var canvas_x = event.targetTouches[id].pageX;
+    var canvas_y = event.targetTouches[id].pageY;
+    return [canvas_x, canvas_y];
 }
 
-$(function() { // document ready, resize container
-    //var canvas = document$("#canvas");
-	var canvas = document.getElementById("canvas");
-    //touchDrag.enable(canvas);
-    //mouseMove.enable(canvas);
+//var canvasDimensions = null;
 
-    var ctx = canvas.getContext("2d");
+function getRelativeCoords(id) {
+    var coords = getFingerCoords(id);
+    var canvasDimensions = getCanvasDimensions();
+    var relativeX = coords[0] / canvasDimensions[0];
+    var relativeY = coords[1] / canvasDimensions[1];
+    return [relativeX, relativeY];
+}
 
-    var rc = 0;  // resize counter
-    var oc = 0;  // orientiation counter
-    var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
+//Test code
+function updateCoordinatesText(x, y) {
+    var canvasDimensions = getCanvasDimensions();
 
-    if (coms == null) { // Load coms only once!
-        coms = new ControllerComs();
-        log.info("trying to open connection");
-        coms.open(function() {
-            log.info("Connection establised, trying to join game");
-            log.setComs(coms);
-            coms.joinGame(function() {
-                log.info("Game On!!");
-                loadController(canvas);
-            });
-        });
-    }
-    else{
-        loadController(canvas);
-    }
+    drawText("Coordinates: (" + x + ", " + y + ")", 2);
+    drawText("Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1], 3);
+}
 
-    //coms = new ControllerComs();
-    //loadController(canvas, 'touchDrag');
+//Test code
+function updateStartTimeText(time) {
+    drawText("Start time: " + time, 4);
+}
 
-    function orientationChange() {
-        // inc orientation counter
-        oc++;
-    }
+//Test code
+function updateCurrentTimeText(time) {
+    drawText("Current time: " + time, 5);
+}
 
-    function resizeCanvas() {
-        // inc resize counter
-        rc++;
+//Test code
+function updateStartCoordinatesText(x, y) {
+    var canvasDimensions = getCanvasDimensions();
 
-        if (ios) {
-            // increase height to get rid off ios address bar
-            $("#container").height($(window).height() + 60)
-        }
+    drawText("Start coordinates: (" + x + ", " + y + ")", 6);
+}
 
-        var width = $("#container").width();
-        var height = $("#container").height();
+//Test code
+function updateSendTimeText(time) {
+    drawText("Sent time: " + time, 7);
+}
 
-        cheight = height
-            cwidth = width;
 
-        // set canvas width and height
-        $("#canvas").attr('width', cwidth);
-        $("#canvas").attr('height', cheight);
+//Test code
+var texts = [];
 
-        // hides the WebKit url bar
-        if (ios) {
-            setTimeout(function() {
-                window.scrollTo(0, 1);
-            }, 100);
-        }
+function drawText(text, id) {
+    var canvasDimensions = getCanvasDimensions();
 
-        drawText('Orientiation changes: ' + oc, 0);
-        drawText('Resize events: ' + rc, 1);
+    drawBackground();
+
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+
+    if (typeof id !== 'undefined') {
+        texts[id] = text;
     }
 
-    // Install resize and orientation change handlers. Note Android may fire both
-    // resize and orientation changes when rotating.
-    var resizeTimeout;
-    $(window).resize(function() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(resizeCanvas, 100);
+    var offset = 0;
+
+    texts.forEach(function(entry) {
+        ctx.fillText(entry, canvasDimensions[0] / 2, canvasDimensions[1] / 2 + offset);
+        offset += 10;
     });
-    resizeCanvas();
 
-    var otimeout;
-    window.onorientationchange = function() {
-        clearTimeout(otimeout);
-        otimeout = setTimeout(orientationChange, 50);
-    }
+}
 
+function drawBackground() {
+    ctx.fillStyle = 'green';
+    ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(10, 10, width - 20, height - 20);
+}
 
+function getCanvasDimensions() {
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
+    width = canvas.width;
+    height = canvas.height;
 
-    /*
-       function hideAddressBar(){
-       if(document.documentElement.scrollHeight<window.outerHeight/window.devicePixelRatio)
-       document.documentElement.style.height=(window.outerHeight/window.devicePixelRatio)+'px';
-       setTimeout(window.scrollTo(1,1),0);
-       }
-       window.addEventListener("load",function(){hideAddressBar();});
-       window.addEventListener("scroll",function(){hideAddressBar();});
-       window.addEventListener("orientationchange",function(){hideAddressBar();}); 
-       */
+    return [width, height];
+}
 
-});
+function drawCircle(x, y, r) {
+    //drawText();
+
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+
+    context.strokeStyle = "#FF0000";
+    context.fillStyle = "#FFFF00";
+    context.beginPath();
+    context.arc(x, y, r, 0, Math.PI * 2, true);
+    context.closePath();
+    context.stroke();
+    context.fill();
+}
+
