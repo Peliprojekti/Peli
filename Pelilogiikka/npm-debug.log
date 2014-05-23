@@ -1,0 +1,164 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', '-g', 'karma-cli' ]
+2 info using npm@1.4.9
+3 info using node@v0.10.28
+4 verbose node symlink /usr/bin/node
+5 verbose cache add [ 'karma-cli', null ]
+6 verbose cache add name=undefined spec="karma-cli" args=["karma-cli",null]
+7 verbose parsed url { protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: 'karma-cli',
+7 verbose parsed url   path: 'karma-cli',
+7 verbose parsed url   href: 'karma-cli' }
+8 silly lockFile aa100f68-karma-cli karma-cli
+9 verbose lock karma-cli /home/lairala/.npm/aa100f68-karma-cli.lock
+10 silly lockFile aa100f68-karma-cli karma-cli
+11 silly lockFile aa100f68-karma-cli karma-cli
+12 verbose addNamed [ 'karma-cli', '' ]
+13 verbose addNamed [ null, '*' ]
+14 silly lockFile 8f6f2c72-karma-cli karma-cli@
+15 verbose lock karma-cli@ /home/lairala/.npm/8f6f2c72-karma-cli.lock
+16 silly addNameRange { name: 'karma-cli', range: '*', hasData: false }
+17 verbose url raw karma-cli
+18 verbose url resolving [ 'https://registry.npmjs.org/', './karma-cli' ]
+19 verbose url resolved https://registry.npmjs.org/karma-cli
+20 info trying registry request attempt 1 at 15:55:43
+21 http GET https://registry.npmjs.org/karma-cli
+22 http 200 https://registry.npmjs.org/karma-cli
+23 silly registry.get cb [ 200,
+23 silly registry.get   { date: 'Fri, 23 May 2014 12:55:43 GMT',
+23 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B)',
+23 silly registry.get     etag: '"D5LEFGQ6481T72583G7TGZS58"',
+23 silly registry.get     'content-type': 'application/json',
+23 silly registry.get     via: '1.1 varnish',
+23 silly registry.get     'cache-control': 'max-age=1',
+23 silly registry.get     'content-length': '5880',
+23 silly registry.get     'accept-ranges': 'bytes',
+23 silly registry.get     age: '611',
+23 silly registry.get     'x-served-by': 'cache-v37-ASH, cache-am76-AMS',
+23 silly registry.get     'x-cache': 'HIT, MISS',
+23 silly registry.get     'x-cache-hits': '1, 0',
+23 silly registry.get     'x-timer': 'S1400849743.365919,VS0,VE178',
+23 silly registry.get     vary: 'Accept',
+23 silly registry.get     'keep-alive': 'timeout=10, max=50',
+23 silly registry.get     connection: 'Keep-Alive' } ]
+24 silly addNameRange number 2 { name: 'karma-cli', range: '*', hasData: true }
+25 silly addNameRange versions [ 'karma-cli', [ '0.0.1', '0.0.2', '0.0.3', '0.0.4' ] ]
+26 verbose addNamed [ 'karma-cli', '0.0.4' ]
+27 verbose addNamed [ '0.0.4', '0.0.4' ]
+28 silly lockFile 0ef08b95-karma-cli-0-0-4 karma-cli@0.0.4
+29 verbose lock karma-cli@0.0.4 /home/lairala/.npm/0ef08b95-karma-cli-0-0-4.lock
+30 silly lockFile ad31c554-rg-karma-cli-karma-cli-0-0-4-tgz https://registry.npmjs.org/karma-cli/-/karma-cli-0.0.4.tgz
+31 verbose lock https://registry.npmjs.org/karma-cli/-/karma-cli-0.0.4.tgz /home/lairala/.npm/ad31c554-rg-karma-cli-karma-cli-0-0-4-tgz.lock
+32 verbose addRemoteTarball [ 'https://registry.npmjs.org/karma-cli/-/karma-cli-0.0.4.tgz',
+32 verbose addRemoteTarball   '1840a6a2545754bb02100f09229cdd9963a6cf68' ]
+33 info retry fetch attempt 1 at 15:55:43
+34 verbose fetch to= /tmp/user/1106728/npm-9499-Hbvw39sA/1400849743599-0.4384270654991269/tmp.tgz
+35 http GET https://registry.npmjs.org/karma-cli/-/karma-cli-0.0.4.tgz
+36 http 200 https://registry.npmjs.org/karma-cli/-/karma-cli-0.0.4.tgz
+37 verbose tar unpack /tmp/user/1106728/npm-9499-Hbvw39sA/1400849743599-0.4384270654991269/tmp.tgz
+38 silly lockFile 38888956-rala-npm-karma-cli-0-0-4-package tar:///home/lairala/.npm/karma-cli/0.0.4/package
+39 verbose lock tar:///home/lairala/.npm/karma-cli/0.0.4/package /home/lairala/.npm/38888956-rala-npm-karma-cli-0-0-4-package.lock
+40 silly lockFile 6388cc50-43599-0-4384270654991269-tmp-tgz tar:///tmp/user/1106728/npm-9499-Hbvw39sA/1400849743599-0.4384270654991269/tmp.tgz
+41 verbose lock tar:///tmp/user/1106728/npm-9499-Hbvw39sA/1400849743599-0.4384270654991269/tmp.tgz /home/lairala/.npm/6388cc50-43599-0-4384270654991269-tmp-tgz.lock
+42 silly gunzTarPerm modes [ '755', '644' ]
+43 silly gunzTarPerm extractEntry package.json
+44 silly gunzTarPerm extractEntry README.md
+45 silly gunzTarPerm extractEntry LICENSE
+46 silly gunzTarPerm extractEntry CHANGELOG.md
+47 silly gunzTarPerm extractEntry bin/karma
+48 silly lockFile 38888956-rala-npm-karma-cli-0-0-4-package tar:///home/lairala/.npm/karma-cli/0.0.4/package
+49 silly lockFile 38888956-rala-npm-karma-cli-0-0-4-package tar:///home/lairala/.npm/karma-cli/0.0.4/package
+50 silly lockFile 6388cc50-43599-0-4384270654991269-tmp-tgz tar:///tmp/user/1106728/npm-9499-Hbvw39sA/1400849743599-0.4384270654991269/tmp.tgz
+51 silly lockFile 6388cc50-43599-0-4384270654991269-tmp-tgz tar:///tmp/user/1106728/npm-9499-Hbvw39sA/1400849743599-0.4384270654991269/tmp.tgz
+52 silly lockFile ad31c554-rg-karma-cli-karma-cli-0-0-4-tgz https://registry.npmjs.org/karma-cli/-/karma-cli-0.0.4.tgz
+53 silly lockFile ad31c554-rg-karma-cli-karma-cli-0-0-4-tgz https://registry.npmjs.org/karma-cli/-/karma-cli-0.0.4.tgz
+54 silly lockFile 0ef08b95-karma-cli-0-0-4 karma-cli@0.0.4
+55 silly lockFile 0ef08b95-karma-cli-0-0-4 karma-cli@0.0.4
+56 silly lockFile 8f6f2c72-karma-cli karma-cli@
+57 silly lockFile 8f6f2c72-karma-cli karma-cli@
+58 silly resolved [ { name: 'karma-cli',
+58 silly resolved     description: 'The Karma command line interface.',
+58 silly resolved     homepage: 'http://karma-runner.github.io/',
+58 silly resolved     repository:
+58 silly resolved      { type: 'git',
+58 silly resolved        url: 'git://github.com/karma-runner/karma-cli.git' },
+58 silly resolved     bugs: { url: 'https://github.com/karma-runner/karma-cli/issues' },
+58 silly resolved     keywords:
+58 silly resolved      [ 'karma',
+58 silly resolved        'spectacular',
+58 silly resolved        'runner',
+58 silly resolved        'karma',
+58 silly resolved        'js',
+58 silly resolved        'javascript',
+58 silly resolved        'testing',
+58 silly resolved        'test',
+58 silly resolved        'remote',
+58 silly resolved        'execution' ],
+58 silly resolved     author: { name: 'Vojta Jína', email: 'vojta.jina@gmail.com' },
+58 silly resolved     contributors: [ [Object] ],
+58 silly resolved     dependencies: { resolve: '~0.5.1' },
+58 silly resolved     peerDependencies: {},
+58 silly resolved     devDependencies:
+58 silly resolved      { grunt: '~0.4.1',
+58 silly resolved        'grunt-contrib-jshint': '~0.7.2',
+58 silly resolved        'grunt-coffeelint': '0.0.7',
+58 silly resolved        'grunt-bump': '0.0.11',
+58 silly resolved        'grunt-npm': '0.0.2',
+58 silly resolved        'grunt-auto-release': '0.0.4',
+58 silly resolved        'grunt-conventional-changelog': '~1.0.0' },
+58 silly resolved     preferGlobal: true,
+58 silly resolved     bin: { karma: './bin/karma' },
+58 silly resolved     engines: { node: '~0.8 || ~0.10' },
+58 silly resolved     version: '0.0.4',
+58 silly resolved     readme: '# karma-cli\n\n> The [Karma] command line interface.\n\nInstall this module if you wanna be able to use `karma` in your command line.\n\n[Karma]: http://karma-runner.github.io\n',
+58 silly resolved     readmeFilename: 'README.md',
+58 silly resolved     _id: 'karma-cli@0.0.4',
+58 silly resolved     _shasum: '1840a6a2545754bb02100f09229cdd9963a6cf68',
+58 silly resolved     _from: 'karma-cli@',
+58 silly resolved     _resolved: 'https://registry.npmjs.org/karma-cli/-/karma-cli-0.0.4.tgz' } ]
+59 info install karma-cli@0.0.4 into /usr/lib
+60 info installOne karma-cli@0.0.4
+61 info /usr/lib/node_modules/karma-cli unbuild
+62 verbose tar unpack /home/lairala/.npm/karma-cli/0.0.4/package.tgz
+63 silly lockFile 13d2b23c-r-usr-lib-node-modules-karma-cli tar:///usr/lib/node_modules/karma-cli
+64 verbose lock tar:///usr/lib/node_modules/karma-cli /home/lairala/.npm/13d2b23c-r-usr-lib-node-modules-karma-cli.lock
+65 silly lockFile 33aa4d17--npm-karma-cli-0-0-4-package-tgz tar:///home/lairala/.npm/karma-cli/0.0.4/package.tgz
+66 verbose lock tar:///home/lairala/.npm/karma-cli/0.0.4/package.tgz /home/lairala/.npm/33aa4d17--npm-karma-cli-0-0-4-package-tgz.lock
+67 silly gunzTarPerm modes [ '755', '644' ]
+68 error Error: EACCES, mkdir '/usr/lib/node_modules/karma-cli'
+68 error  { [Error: EACCES, mkdir '/usr/lib/node_modules/karma-cli']
+68 error   errno: 3,
+68 error   code: 'EACCES',
+68 error   path: '/usr/lib/node_modules/karma-cli',
+68 error   fstream_type: 'Directory',
+68 error   fstream_path: '/usr/lib/node_modules/karma-cli',
+68 error   fstream_class: 'DirWriter',
+68 error   fstream_stack:
+68 error    [ '/usr/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23',
+68 error      '/usr/lib/node_modules/npm/node_modules/mkdirp/index.js:37:53',
+68 error      'Object.oncomplete (fs.js:107:15)' ] }
+69 error Please try running this command again as root/Administrator.
+70 error System Linux 3.8.0-39-generic
+71 error command "/usr/bin/node" "/usr/bin/npm" "install" "-g" "karma-cli"
+72 error cwd /home/ad/fshome3/u3/l/lairala/Linux/NetBeansProjects/Peli/Pelilogiikka
+73 error node -v v0.10.28
+74 error npm -v 1.4.9
+75 error path /usr/lib/node_modules/karma-cli
+76 error fstream_path /usr/lib/node_modules/karma-cli
+77 error fstream_type Directory
+78 error fstream_class DirWriter
+79 error code EACCES
+80 error errno 3
+81 error stack Error: EACCES, mkdir '/usr/lib/node_modules/karma-cli'
+82 error fstream_stack /usr/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23
+82 error fstream_stack /usr/lib/node_modules/npm/node_modules/mkdirp/index.js:37:53
+82 error fstream_stack Object.oncomplete (fs.js:107:15)
+83 verbose exit [ 3, true ]

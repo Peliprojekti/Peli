@@ -10,13 +10,17 @@ describe('the player object', function() {
 
     //Specs
     describe('player tests', function() {
+        it('initializes the player correctly, gets id', function() {
+            var testPlayer = new Player(1234);
+            expect(testPlayer.getID()).toBe(1234);
+            expect(testPlayer.x).toBe(0);
+            expect(testPlayer.y).toBe(0);
+            expect(testPlayer.gameOn).toBe(false);
+            expect(testPlayer.currentDirection).toEqual(new Vector2(0, 0));
+        });
         it('gets a player from the listing', function() {
             var testPlayer = playerFactory.getPlayer(1);
             expect(testPlayer.getID()).toBe(1);
-        });
-        it('gets id', function() {
-            var testPlayer = new Player(1234);
-            expect(testPlayer.getID()).toBe(1234);
         });
         it('sets a listener function', function() {
             var testPlayer = new Player(1);
@@ -30,13 +34,12 @@ describe('the player object', function() {
             test = testPlayer.onChangeListener;
             expect(test()).toBe(5);
         });
-        it('sets position', function() {
-            var testPlayer = new Player(1);
-            testPlayer.setPosition([0.4, 0.6]);
-            expect(testPlayer.x).toBe(0.4);
-            expect(testPlayer.y).toBe(0.6);
-        });
-
+//        it('sets position', function() {
+//            var testPlayer = new Player(1);
+//            testPlayer.setPosition([0.4, 0.6]);
+//            expect(testPlayer.x).toBe(0.4);
+//            expect(testPlayer.y).toBe(0.6);
+//        });
         it('sets game status', function() {
             var testPlayer = new Player(1);
             testPlayer.setGameOn(true);
