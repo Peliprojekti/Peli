@@ -25,8 +25,4 @@
         gl.drawElements(gl.TRIANGLES, this.indices.data.numItems, gl.UNSIGNED_SHORT, 0  );
      }
      
-     
-     Mesh.prototype.render_Explicit = function( gl, material  )
-     {
-       // Not yet implemented
-     }
+    

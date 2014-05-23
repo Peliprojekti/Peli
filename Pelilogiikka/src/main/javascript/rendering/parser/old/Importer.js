@@ -219,7 +219,6 @@
                break;
             }
             
-            
             var node   = build_Node( gl, assMan, descriptor[0] );
                 cursor = descriptor[1];
               
@@ -235,3 +234,23 @@
     
     return scene;
     }
+    
+    
+    
+    
+    ///////////////////
+    
+    function Importer( renderer, path ) 
+    {
+        
+        var parser = new Parser( renderer, path );
+            parser.parse_Scene( renderer );
+        
+        
+    }
+    
+    
+    
+    
+    
+    
