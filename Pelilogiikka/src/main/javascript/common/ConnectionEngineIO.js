@@ -79,3 +79,6 @@ ConnectionEngineIO.prototype.sendMessage = function(message) {
 	}
 };
 
+ConnectionEngineIO.prototype.serverMsg = function(msg) {
+};
+

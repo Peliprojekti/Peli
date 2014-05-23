@@ -24,10 +24,6 @@ module.exports = new function() {
 					socket.send(data);
 				});
 
-                socket.on('serverMsg', function(data) {
-                    require('util').log("engine.io/controller::serverMsg: " + data);
-                });
-
 				socket.on('message', function(data) {
                     if (gameSocket.readyState == WebSocket.OPEN) {
                         gameSocket.send(data);

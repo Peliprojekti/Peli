@@ -11,6 +11,9 @@ function ControllerComs() {
 
 	this.connection = new ConnectionEngineIO(this.hotname, this.port, this.protocol, true);
     this.rpc = new PeliRPC(this.connection);
+
+    this.serverMessenger = new ServerDebugMessenger();
+    //this.serverMessenger.send("howdy ho!");
 }
 
 /**
@@ -33,9 +36,7 @@ ControllerComs.prototype.close = function() {
  * @param {function} msg 
  */
 ControllerComs.prototype.serverMsg = function(msg) {
-    // TODO this needs to be imlemented I guess...
-    window.alert("serverMsg currently not implemented");
-    //this.socket.emit('serverMsg', [(typeof userID === 'undefined' ? 'new user' : userID), msg]);
+    this.serverMessenger.send(msg);
 };
 
 /**
