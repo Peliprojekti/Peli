@@ -56,33 +56,49 @@ var logger = new (winston.Logger)({
  * START THE THINGS...
  */
 
-logger.info("forking comServer");
-comServer = fork('comServer.js');
+function startComServer() {
+    require('util').log("main.js - starting comServer");
 
-comServer.send({ // disable/enable debugging mode on comServer
-    type: 'config',
-    value: {
-        debug:  nconf.get('debug'),
+    var comServer = fork('comServer.js');
+    comServer.on('error', function(data) {
+        require('util').error("comServer - exit on error");
+        require('util').error(data);
+        process.exit(-1);
+
+    });
+
+    comServer.on('close', function(code, signal) {
+        require('util').log("main.js - comServer closed " + code + ", " + signal);
+        process.exit(code);
+    });
+
+    comServer.send({ // disable/enable debugging mode on comServer
+        type: 'config',
+        value: {
+            debug:  nconf.get('debug'),
         client_port: nconf.get('client_port'),
-	    screen_port: nconf.get('screen_port'),
-	    benchmark: nconf.get('com_benchmark'),
+        screen_port: nconf.get('screen_port'),
+        benchmark: nconf.get('com_benchmark'),
         benchmark_timeout: nconf.get('com_benchmark_timeout'),
-		benchmark_filename: nconf.get('com_benchmark_filename')
+        benchmark_filename: nconf.get('com_benchmark_filename')
 
-	}
-});
+        }
+    });
 
-comServer.send({ type: 'startServer' });
+    comServer.send({ type: 'startServer' });
+    return comServer;
+}
 
-logger.info("starting http server");
+var comServer = startComServer();
+require('util').log("main.js - starting http server");
 initServer.start(nconf, logger, comServer);
 
 /*
  * Properly handle shutdown to ensure nothing remains listening on restarts
  */
 process.on( 'SIGINT', function() {
-	console.log("shutting down from SIGINT (Ctrl-C)");
-	comServer.send({ type: 'shutdown' });
-	initServer.shutdown();
-	setTimeout(process.exit(0), 100);
+    console.log("shutting down from SIGINT (Ctrl-C)");
+    comServer.send({ type: 'shutdown' });
+    initServer.shutdown();
+    setTimeout(process.exit(0), 100);
 });

@@ -21,13 +21,11 @@ var connected = false;
 
 function closeServer() {
 	this.connected = false;
+    process.exit(0);
 }
 
 function startServer() {
 	this.connected = true;
-	game.setDebug(DEBUG);
-	cont.setDebug(DEBUG);
-
 	game.start(SCREEN_PORT);
 	cont.start(CLIENT_PORT, game);
 }
@@ -42,32 +40,26 @@ process.on('message', function(msgobj) {
 		DEBUG = msgobj.value;
 	}
 	else if (msgobj.type == 'startServer') {
-		if (DEBUG) { console.log("   info  - firing up comServer"); }
+        require('util').log("comServer - starting connections");
 		startServer();
 	}
 	else if (msgobj.type == 'shutdown') {
-		if (DEBUG) { console.log("   info  - shutting down"); }
+        require('util').log("comServer - shuting down");
 		closeServer();
-		process.exit(0);
-	}
-	else if (msgobj.type == 'closeServer') {
-		if (DEBUG) { console.log("   info  - comServer shuting down"); }
-		// TODO
 	}
 	else if (msgobj.type == 'config') {
-		// TODO check values, error handling
+        require('util').log("comServer - configuring");
+		// TODO check values to detect errors?
 		CLIENT_PORT = msgobj.value.client_port;
 		SCREEN_PORT = msgobj.value.screen_port;
 		DEBUG = msgobj.value.debug;
 		BENCHMARK = msgobj.value.benchmark;
 		BENCHMARK_TIMEOUT = msgobj.value.benchmark_timeout;
 		BENCHMARK_FILENAME = msgobj.value.benchmark_filename;
-
-		if (DEBUG) { console.log("   info  - updated comServer configuration"); }
 	}
 	else {
-		console.log("   error - recieving unrecognized message from parent process");
-		// TODO handle error? send to parent?
+		require('util').error("recieving unrecognized message from parent process, quitting");
+        process.exit(-1);
 	}
 
 });
