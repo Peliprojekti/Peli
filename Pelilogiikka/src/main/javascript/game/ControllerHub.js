@@ -1,83 +1,20 @@
-function ControllerHub() {
-	this.hostname = location.hostname;
-	this.port = SCREEN_PORT;
-
-	this.socket = null;
-	this.onMessage = function() {};
-	this.onPosition = function() {};
-	this.onJoinPlayer = function() {};
-
-	this.players = {};
-}
-
-
-ControllerHub.prototype.open = function(callback) {
+/**
+ * ControllerHub
+ * @constructor
+ * @param {function} onJoinPlyaer - onJoinPlayer(player)
+ * @param {number} maxPlayers
+ */
+function ControllerHub(onJoinPlayer, maxPlayers) {
     var that = this;
-	var url = 'http://' + this.hostname + ":" + this.port;
-	log.info("connecting to " + url);
-	this.socket = io.connect(url);
 
-	var players = this.players;
+    this.onJoinPlayer = onJoinPlayer;
+    this.maxPlayers = (maxPlayers === undefined ? 100 : maxPlayers);
+    this.controllerCount = 0;
 
-	this.socket.on('connection', function() {
-	});
-
-	/*
-	this.socket.on('addPlayer', function(userID) {
-		socket.emit('userID', userID);
-	});
-	*/
-
-	var socket = this.socket;
-	this.socket.on('connectPlayer', function(userID) {
-		//log.info("registering player " + userID);
-		//that.players[userID] = new Player(userID);
-
-        that.addNewPlayer(userID);
-		//that.onJoinPlayer(players[userID]);
-
-		socket.emit('connectionOK', userID);
-		log.debug("Connected player with userID " + userID);
-	});
-
-    this.socket.on('joinGame', function(userID) {
-        that.players[userID].setGameOn(true);
-        socket.emit('gameJoined', userID);
-    });
-
-    this.socket.on('message', function(data) { that.onMessage(data); });
-    this.socket.on('position', function(data) { 
-        that.movePlayer(data); 
-    });
-    this.socket.on('swipe', function(data) { 
-        that.moveSwipe(data); 
-    });
-
-	/*
-	this.socket.on('joinGame', function(data) {
-		socket.emit('joinGame', true);
-	});
-	*/
+    this.addNewController();
 }
 
-ControllerHub.prototype.addNewPlayer = function(userID) {
-    log.info("registering player " + userID);
-    this.players[userID] = playerFactory.getPlayer(userID);
-    this.onJoinPlayer(this.players[userID]);
-    return true;
-}
-
-ControllerHub.prototype.movePlayer = function(data) {
-    var userID = data[0];
-    var sequence = data[1];
-    var position = data[2];
-
-    log.debug(userID + " setPosition " + position[0] + "x" + position[1]);
-
-    this.socket.emit('positionReturn', [userID, sequence]);
-    this.players[userID].setPosition(position);
-}
-
+/*
 ControllerHub.prototype.moveSwipe = function(data) {
     var userID = data[0];
     var swipeData = data[1];
@@ -87,12 +24,51 @@ ControllerHub.prototype.moveSwipe = function(data) {
     log.debug(userID + "swipe position: (" + position[0] + ", " + position[1] + "), Time since previous: " + sincePrevious + "ms");
     
     this.players[userID].pushSwipe(position, sincePrevious);
-}
+};
+*/
 
 ControllerHub.prototype.setOnMessage = function(callback) {
     this.onMessage = callback;
-}
+};
 
-ControllerHub.prototype.setOnJoinPlayer = function(callback) {
-    this.onJoinPlayer = callback;
-}
+ControllerHub.prototype.addNewController = function() {
+    var that = this;
+    if (this.controllerCount < this.maxPlayers) {
+        log.info("Trying to connect new Controller to server");
+        this.controllerCount++;
+        var controller = new Controller(function() {
+            //onConnect
+            log.info("Controller connected to server");
+        }, function() {
+            //onDisconnect
+            log.info("Controller lost connection to server");
+            that.controllerCount--;
+            that.addNewController();
+        }, function(newPlayer) {
+            // onJoinPlayer
+            log.info("Player joined game: " + newPlayer);
+            that.onJoinPlayer(newPlayer);
+            that.addNewController();
+        });
+
+        return true;
+    } else {
+        log.info("reached max players count: " + this.maxPlayers);
+        return false;
+    }
+};
+
+/**
+ * close connection
+ */
+ControllerHub.prototype.close = function() {
+    // TODO disconnect controllers
+};
+
+/**
+ * This will send messages directly to the server
+ * @param {function} msg
+ */
+Controller.prototype.serverMsg = function(msg) {
+    window.alert("serverMsg not implemented");
+};

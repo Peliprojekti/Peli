@@ -2,7 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var express = require('express');
 var morgan = require('morgan');
-//var socketio = require('socket.io');
+var userID = require('./userIdentification.js');
 
 var server = null;
 
@@ -44,6 +44,11 @@ module.exports = new function() {
             response.sendfile(__dirname + "/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js");
         });
 
+        server.get('/engine.io/engine.io.js', function(request, response) {
+            response.setHeader('content-type', 'text/javascript');
+            response.sendfile(__dirname + "/node_modules/engine.io-client/engine.io.js");
+        });
+
         server.get('/jquery/jquery.min.js', function(request, response) {
             response.setHeader('content-type', 'text/javascript');
             response.sendfile(__dirname + "/lib/jquery.min.js");
@@ -56,14 +61,17 @@ module.exports = new function() {
                 "debug": nconf.get("debug"),
                 "controller": nconf.get("controller"),
                 "client_port": nconf.get("client_port"),
-				"com_benchmark": nconf.get("com_benchmark")
+				"com_benchmark": nconf.get("com_benchmark"),
+                "userID": userID.getUserID(request),
+                "jsonrpc_protocol": nconf.get("jsonrpc_protocol")
             });
         });
 
         server.get('/screen', function(request, response) {
             response.render(nconf.get('screen_jade'), {
                 "debug": nconf.get("debug"),
-                "screen_port": nconf.get('screen_port')
+                "screen_port": nconf.get('screen_port'),
+                "jsonrpc_protocol": nconf.get("jsonrpc_protocol")
             });
         });
 

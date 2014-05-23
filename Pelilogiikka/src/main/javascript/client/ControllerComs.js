@@ -1,151 +1,72 @@
+/**
+* This encapsulate all the comunications stuff
+* @constructor
+*/
 function ControllerComs() {
-    log.debug("Creating new Controllercoms object");
 	this.hostname = location.hostname;
 	this.port = CLIENT_PORT;
-	this.userID = 0;
-	this.socket = null;
-    this.dummyMode = false;
-    this.userID = Math.floor(Math.random() * 10000000000);
-	this.sequence = 0;
-	this.seqCalls = [];
-	this.benchmarkLog = [];
+    this.protocol = JSONRPC_PROTOCOL;
 
-    //this.onConnection = function() { };
-	this.onMessage = function(msg) {
-		log.info("got message: " + msg);
-	};
+	this.userID = USERID;
 
-	this.onJoinGame = null;
+	this.connection = new ConnectionEngineIO(this.hotname, this.port, this.protocol, true);
+    this.rpc = new PeliRPC(this.connection);
+
+    this.serverMessenger = new ServerDebugMessenger();
+    //this.serverMessenger.send("howdy ho!");
 }
 
-ControllerComs.prototype.setDummyMode = function(dummyMode) {
-	this.dummyMode = dummyMode;
-}
-
-ControllerComs.prototype.serverMsg = function(msg) {
-	this.socket.emit('serverMsg', [(typeof userID === 'undefined' ? 'new user' : userID), msg]);
-}
-
+/**
+ * Used to initially open the connection
+ * @param {function} callback - will be called when connection opened
+ */
 ControllerComs.prototype.open = function(callback) {
-    var that = this;
-	this.onConnection = callback;
+    this.rpc.connect(callback);
+};
 
-	var url = 'http://' + this.hostname + ":" + this.port;
-	log.debug('connecting client to ' + url);
-	this.socket = io.connect(url);
+/**
+ * close connection
+ */
+ControllerComs.prototype.close = function() {
+    this.rpc.close();
+};
 
-	this.socket.on('disconnect', function() {
-		log.info("Connection closed for " + that.userID);
-		if (COM_BENCHMARK) {
-			that.benchmarkLog.push([Date.now(), that.userID, 'DICONNECT', 0]);
-		}
-	});
+/**
+ * This will send messages directly to the server
+ * @param {function} msg 
+ */
+ControllerComs.prototype.serverMsg = function(msg) {
+    this.serverMessenger.send(msg);
+};
 
-	this.socket.on('connect', function() {
-		log.info("Connection opened");
-		if (COM_BENCHMARK) {
-			that.benchmarkLog.push([Date.now(), that.userID, 'CONNECT', 0]);
-		}
-	});
-
-
-    var suggestUserID = this.userID;
-    this.socket.on('getConnectionInfo', function() {
-        log.info("negotiating connection");
-        that.socket.emit('returnConnectionInfo', {
-            hostname: location.hostname,
-            userID: suggestUserID
-        });
-    });
-
-    this.socket.on('connectionOK', function(userID) {
-        log.info("Got userID: " + userID);
-		coms.serverMsg("testing server messagers");
-        that.userID = userID;
-        callback(userID);
-        //that.onConnection(userID);
-    });
-
-    this.socket.on('gameJoined', function() {
-        log.info("Starting game!");
-        that.onJoinGame();
-    });
-
-    //this.socket.on('message', this.onMessage);
-
-    this.socket.on('error', function(data) {
-        log.error("Connection error");
-    });
-
-	this.socket.on('positionReturn', function(sequence) {
-		if (COM_BENCHMARK || DEBUG) {
-			var curTime = Date.now();
-			var retTime = curTime - that.seqCalls[sequence];
-			if (DEBUG) {
-				log.debug("positionReturn in " + retTime + "ms");
-			}
-			that.benchmarkLog.push([curTime, that.userID, 'position', retTime]);
-		}
-	});
-
-	this.socket.on('requestBenchmark', function() {
-		//window.alert("got request");
-		that.socket.emit('benchmarkLog', that.benchmarkLog);
-		that.benchmarkLog = [];
-	});
-}
-
-ControllerComs.prototype.close = function(callback) {
-    log.warn("ControllreComs.close not implemented");
-}
-
-/*
-   ControllerComs.prototype.setOnMessage = function(func) {
-   this.onMessage = func;
-   }
-
-   ControllerComs.prototype.setOnGameStarted = function(func) {
-   this.onGameStarted = func;
-   }
-   */
-
+/**
+ * Request a gameslot
+ * @param {function} callback - this will be called with the return value
+ */
 ControllerComs.prototype.joinGame = function(callback) {
-    this.onJoinGame = callback;
-    this.socket.emit('joinGame', this.userID);
-}
+    this.rpc.callRpc('joinGame', [this.userID], this, callback);
+};
 
+/**
+ * Set player position
+ * @param {number} x - relative position on screen [0,1]
+ * @param {number} y - relative position on screen [0,1]
+ */
 ControllerComs.prototype.position = function(x, y) {
-    if (this.checkSocket()) {
-        //log.debug("sending position");
+    this.rpc.callRpc('position', [this.userID, x, y], this, null);
+};
 
-		if (DEBUG || COM_BENCHMARK) {
-			this.seqCalls[this.sequence] = Date.now();
-		}
-
-        this.socket.emit('position', [this.userID, this.sequence++,  [x, y]]);
-    }
-}
-
+/**
+ * Launch swipe action for player
+ * @param {number} x - 
+ * @param {number} y - 
+ * @param {number} sincePreviousTime - 
+ */
 ControllerComs.prototype.swipe = function(x, y, sincePreviousTime) {
-    if (this.checkSocket()) {
-        log.debug("sending swipe details");
-        this.socket.emit('swipe', [this.userID, [x, y, sincePreviousTime]]);
-    }
+    this.rpc.callRpc('swipe', [this.userID, x, y, sincePreviousTime], this, null);
+};
+
+
+ControllerComs.prototype.orientation = function(tiltLR, tiltFB, dir){
+    this.rpc.callRpc('orientation', [this.userID, tiltLR, tiltFB, dir], this, null);
 }
-
-ControllerComs.prototype.checkSocket = function() {
-        if (this.socket == null) {
-            if (this.dummyMode != true) {
-                log.error("trying to use unopened socket");
-                return false;
-            }
-            else {
-                log.debug("socket not open, but dummyMode is enable");
-                return false;
-            }
-            return false;
-        }
-        return true;
-}
-
-

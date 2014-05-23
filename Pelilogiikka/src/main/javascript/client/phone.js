@@ -174,6 +174,11 @@ function loadController(canvas, type) {
             thumbStick.enable(coms, canvas);
             currentController = thumbStick;
             break;
+        case 'motion':
+            var motion = new MotionController();
+            motion.enable(coms, window);
+            currentController = motion;
+            break;
     }
 }
 
