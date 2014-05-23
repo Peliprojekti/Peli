@@ -52,7 +52,7 @@ ControllerComs.prototype.joinGame = function(callback) {
  * @param {number} y - relative position on screen [0,1]
  */
 ControllerComs.prototype.position = function(x, y) {
-    this.rpc.callRpc('position', [this.userID, x, y], this, listener);
+    this.rpc.callRpc('position', [this.userID, x, y], this, null);
 };
 
 /**

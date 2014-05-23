@@ -34,7 +34,7 @@ PeliRPC.prototype.connect = function(callback) {
         if (rpc.method) {
             if (!rpc.jsonrpc || rpc.jsonrpc != "2.0" || !rpc.method) {
                 // Invalid JSON-RPC
-                log.error("RPC::onMessage() . Received invalid JSON-RPC message: " + message);
+                log.error("PeliRPC::onMessage() . Received invalid JSON-RPC message: " + message);
                 that.connection.sendMessage({
                     "jsonrpc": "2.0",
                     "error": {
@@ -48,7 +48,7 @@ PeliRPC.prototype.connect = function(callback) {
 
             if (!that.rpcMethods.hasOwnProperty(rpc.method)) {
                 // Unknown function
-                log.error("RPC::onMessage() . Received a call to an unknown JSON-RPC method: " + rpc.method);
+                log.error("PeliRPC::onMessage() . Received a call to an unknown JSON-RPC method: " + rpc.method);
                 if (rpc.id !== null) {
                     that.connection.sendMessage({
                         "jsonrpc": "2.0",
@@ -90,7 +90,8 @@ PeliRPC.prototype.connect = function(callback) {
                 }
             }
         } else {
-            if (rpc.id && typeof that.callbacks[rpc.id] != "undefined") {
+            log.debug("PeliRPC::onMessage() - maybe a return value, for id " + rpc.id);
+            if (rpc.id !== undefined && typeof that.callbacks[rpc.id] != "undefined") {
                 if (!that.callbacks[rpc.id]) {
                     return;
                 }
@@ -102,6 +103,7 @@ PeliRPC.prototype.connect = function(callback) {
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
                 } else {
+                    log.debug("PeliRPC::onMessage() - calling callbac");
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, null, null]);
                 }
