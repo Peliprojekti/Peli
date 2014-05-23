@@ -35,7 +35,7 @@ PeliRPC.prototype.connect = function(callback) {
             if (!rpc.jsonrpc || rpc.jsonrpc != "2.0" || !rpc.method) {
                 // Invalid JSON-RPC
                 log.error("RPC::onMessage() . Received invalid JSON-RPC message: " + message);
-                that.sendMessage({
+                that.connection.sendMessage({
                     "jsonrpc": "2.0",
                     "error": {
                         "code": -32600,
@@ -71,6 +71,8 @@ PeliRPC.prototype.connect = function(callback) {
                         "result": result,
                         "id": rpc.id
                     });
+                }
+                else {
                 }
             } catch (err) {
                 var code = (err.code ? err.code : "");
@@ -177,8 +179,9 @@ PeliRPC.prototype.setCloseEventListener = function(callback) {
     closeEventCallback = (typeof callback == "function" ? callback : null);
 };
 
+/*
 PeliRPC.prototype.onMessage = function(message) {
-    log.info("RPC::onMessage() . Received message: " + message);
+    log.info("PeliRPC::onMessage() . Received message: " + message);
     var rpc = JSON.parse(message);
 
     if (rpc.method) {
@@ -213,6 +216,7 @@ PeliRPC.prototype.onMessage = function(message) {
         }
 
         try {
+            log.debug("PeliRPC::onMessage() - trying to execute method");
             var rpcMethod = this.rpcMethods[rpc.method];
             var result = rpcMethod.method.apply(rpcMethod.object, rpc.params);
             if (rpc.id !== null) {
@@ -258,3 +262,4 @@ PeliRPC.prototype.onMessage = function(message) {
         }
     }
 };
+*/

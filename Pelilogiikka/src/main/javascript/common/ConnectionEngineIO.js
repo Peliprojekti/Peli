@@ -59,11 +59,11 @@ ConnectionEngineIO.prototype.connect = function(connectCallback, closeCallback, 
 			that.socket.close();
 		}
 	});
-}
+};
 
 ConnectionEngineIO.prototype.isOpen = function() {
 	return (this.socket.readyState == 'open');
-}
+};
 
 ConnectionEngineIO.prototype.close = function() {
 	this.closeEventCallback = null;
@@ -71,12 +71,12 @@ ConnectionEngineIO.prototype.close = function() {
 	if (this.socket.readyState == 'open') {
 		socket.close();
 	}
-}
+};
 
 ConnectionEngineIO.prototype.sendMessage = function(message) {
-	log.info("RPC::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
+	log.info("ConnectionEngineIO::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
 	if (this.socket.readyState == "open") {
 		this.socket.send(JSON.stringify(message));	
 	}
-}
+};
 

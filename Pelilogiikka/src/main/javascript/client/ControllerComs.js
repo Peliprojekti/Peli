@@ -19,23 +19,24 @@ function ControllerComs() {
  */
 ControllerComs.prototype.open = function(callback) {
     this.rpc.connect(callback);
-}
+};
 
 /**
  * close connection
  */
 ControllerComs.prototype.close = function() {
     this.rpc.close();
-}
+};
 
 /**
  * This will send messages directly to the server
  * @param {function} msg 
  */
 ControllerComs.prototype.serverMsg = function(msg) {
-    // TODO ????
+    // TODO this needs to be imlemented I guess...
+    window.alert("serverMsg currently not implemented");
     //this.socket.emit('serverMsg', [(typeof userID === 'undefined' ? 'new user' : userID), msg]);
-}
+};
 
 /**
  * Request a gameslot
@@ -43,7 +44,7 @@ ControllerComs.prototype.serverMsg = function(msg) {
  */
 ControllerComs.prototype.joinGame = function(callback) {
     this.rpc.callRpc('joinGame', [this.userID], this, callback);
-}
+};
 
 /**
  * Set player position
@@ -52,7 +53,7 @@ ControllerComs.prototype.joinGame = function(callback) {
  */
 ControllerComs.prototype.position = function(x, y) {
     this.rpc.callRpc('position', [this.userID, x, y], this, listener);
-}
+};
 
 /**
  * Launch swipe action for player
@@ -62,4 +63,4 @@ ControllerComs.prototype.position = function(x, y) {
  */
 ControllerComs.prototype.swipe = function(x, y, sincePreviousTime) {
     this.rpc.callRpc('swipe', [this.userID, x, y, sincePreviousTime], this, null);
-}
+};

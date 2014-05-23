@@ -33,14 +33,14 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
     this.connection = new WebSocket(hoststr);
 
     this.connection.onopen = function() {
-        this.connected = true;
-        log.info("connection ok to " + hoststr);
+        that.connected = true;
+        log.info("ConnectionWebsocket::connect - connection opened " + hoststr);
         connectCallback(null, true);
     };
 
     this.connection.onclose = function() {
-        this.connected = false;
-        log.info("Disconnected from " + hoststr);
+        that.connected = false;
+        log.info("ConnectionWebsocket::connect - disconnected " + hoststr);
         if (typeof that.closCallback == "function") {
             that.closeCallback(true);
             that.closeCallback = null;
@@ -48,8 +48,8 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
     };
 
     this.connection.onerror = function(error) {
-        this.connected = false;
-        log.error("websocket connection error");
+        that.connected = false;
+        log.info("ConnectionWebsocket::connect - connection error " + hoststr);
         that.close();
 
         if (typeof connectionCallback == "function") {
@@ -73,6 +73,7 @@ ConnectionWebsocket.prototype.isOpen = function() {
 };
 
 ConnectionWebsocket.prototype.close = function() {
+    log.info("ConnectionWebsocket::close - closing connection");
     this.closeEventCallback = null; // do this to disable redundant calls to this
     if (this.connected === true) {
         this.connected = false;
@@ -82,6 +83,10 @@ ConnectionWebsocket.prototype.close = function() {
 
 ConnectionWebsocket.prototype.sendMessage = function(message) {
     if (this.connected === true) {
+        log.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
         this.connection.send(JSON.stringify(message));
+    }
+    else {
+        log.info("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
     }
 };
