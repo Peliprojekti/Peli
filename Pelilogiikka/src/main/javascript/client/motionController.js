@@ -23,12 +23,6 @@ MotionController.prototype.deviceOrientationHandler = function(eventData) {
                 "tiltFB (beta): " + this.toInteger(tiltFB) + "\n" +
                 "dir (alpha): " + this.toInteger(dir));
     }
-
-
-    if (DEBUG) {
-        updateCoordinatesText(this.coords[0], this.coords[1])
-    }
-    ;
 }
 
 MotionController.prototype.toInteger = function(num) {
@@ -37,6 +31,7 @@ MotionController.prototype.toInteger = function(num) {
 
 MotionController.prototype.enable = function(coms, window) {
     var thisObject = this;
+    this.coms = coms;
     if (window.DeviceOrientationEvent) {
         // Listen for the deviceorientation event and handle the raw data
         window.addEventListener('deviceorientation', function(eventData) {
@@ -46,8 +41,6 @@ MotionController.prototype.enable = function(coms, window) {
     } else {
         log.warn("Device orientation event not supported", true);
     }
-
-    log.coms = coms;
 }
 
 MotionController.prototype.disable = function(window) {
