@@ -28,7 +28,7 @@ PeliRPC.prototype.connect = function(callback) {
     };
 
     var onMessage = function(message) {
-        log.info("RPC::onMessage() . Received message: " + message);
+        //log.info("RPC::onMessage() . Received message: " + message);
         var rpc = JSON.parse(message);
 
         if (rpc.method) {
@@ -90,7 +90,7 @@ PeliRPC.prototype.connect = function(callback) {
                 }
             }
         } else {
-            log.debug("PeliRPC::onMessage() - maybe a return value, for id " + rpc.id);
+            //log.debug("PeliRPC::onMessage() - maybe a return value, for id " + rpc.id);
             if (rpc.id !== undefined && typeof that.callbacks[rpc.id] != "undefined") {
                 if (!that.callbacks[rpc.id]) {
                     return;
@@ -103,7 +103,7 @@ PeliRPC.prototype.connect = function(callback) {
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
                 } else {
-                    log.debug("PeliRPC::onMessage() - calling callbac");
+                    //log.debug("PeliRPC::onMessage() - calling callbac");
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, null, null]);
                 }
@@ -181,87 +181,3 @@ PeliRPC.prototype.setCloseEventListener = function(callback) {
     closeEventCallback = (typeof callback == "function" ? callback : null);
 };
 
-/*
-PeliRPC.prototype.onMessage = function(message) {
-    log.info("PeliRPC::onMessage() . Received message: " + message);
-    var rpc = JSON.parse(message);
-
-    if (rpc.method) {
-        if (!rpc.jsonrpc || rpc.jsonrpc != "2.0" || !rpc.method) {
-            // Invalid JSON-RPC
-            log.error("RPC::onMessage() . Received invalid JSON-RPC message: " + message);
-            this.sendMessage({
-                "jsonrpc": "2.0",
-                "error": {
-                    "code": -32600,
-                    "message": "Invalid JSON-RPC."
-                },
-                "id": null
-            });
-            return;
-        }
-
-        if (!this.rpcMethods.hasOwnProperty(rpc.method)) {
-            // Unknown function
-            log.error("RPC::onMessage() . Received a call to an unknown JSON-RPC method: " + rpc.method);
-            if (rpc.id !== null) {
-                this.sendMessage({
-                    "jsonrpc": "2.0",
-                    "error": {
-                        "code": -32601,
-                        "message": "Method " + rpc.method + " not found."
-                    },
-                    "id": rpc.id
-                });
-            }
-            return;
-        }
-
-        try {
-            log.debug("PeliRPC::onMessage() - trying to execute method");
-            var rpcMethod = this.rpcMethods[rpc.method];
-            var result = rpcMethod.method.apply(rpcMethod.object, rpc.params);
-            if (rpc.id !== null) {
-                this.sendMessage({
-                    "jsonrpc": "2.0",
-                    "result": result,
-                    "id": rpc.id
-                });
-            }
-        } catch (err) {
-            var code = (err.code ? err.code : "");
-            var message = (err.message ? err.message : "");
-            log.error("An exeption got raised when executing a RPC method . Code: " + code + ", message: " + message);
-            if (rpc.id !== null) {
-                this.sendMessage({
-                    "jsonrpc": "2.0",
-                    "error": {
-                        "code": code,
-                        "message": message
-                    },
-                    "id": rpc.id
-                });
-            }
-        }
-    } else {
-        if (rpc.id && typeof callbacks[rpc.id] != "undefined") {
-            if (!callbacks[rpc.id]) {
-                return;
-            }
-
-            if (typeof rpc.result != "undefined") {
-                callbacks[rpc.id].listener.apply(
-                    callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
-            } else if (typeof rpc.error != "undefined") {
-                callbacks[rpc.id].listener.apply(
-                    callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
-            } else {
-                callbacks[rpc.id].listener.apply(
-                    callbacks[rpc.id].object, [rpc.id, null, null]);
-            }
-
-            delete callbacks[rpc.id];
-        }
-    }
-};
-*/

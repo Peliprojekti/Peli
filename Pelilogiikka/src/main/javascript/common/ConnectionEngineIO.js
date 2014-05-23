@@ -74,7 +74,6 @@ ConnectionEngineIO.prototype.close = function() {
 };
 
 ConnectionEngineIO.prototype.sendMessage = function(message) {
-	log.info("ConnectionEngineIO::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
 	if (this.socket.readyState == "open") {
 		this.socket.send(JSON.stringify(message));	
 	}

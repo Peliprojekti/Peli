@@ -59,7 +59,6 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
     };
 
     this.connection.onmessage = function(e) {
-        log.debug("recieved msg on websocket");
         onMessage(e.data);
 
         if (!that.persistent) {

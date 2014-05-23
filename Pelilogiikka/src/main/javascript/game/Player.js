@@ -32,9 +32,9 @@ Player.prototype.setOnChangeListener = function(func) {
     this.onChangeListener = func;
 };
 
-Player.prototype.setPosition = function(position) {
-    this.x = position[0];
-    this.y = position[1];
+Player.prototype.setPosition = function(x,y) {
+    this.x = x;
+    this.y = y;
 };
 
 Player.prototype.pushSwipe = function(position, sincePrevious) {

@@ -18,11 +18,12 @@ function Controller(onConnect, onDisconnect, onJoinGame) {
     });
 
     this.rpc.exposeRpcMethod('position', this, function(userID, x, y) {
+        log.debug("Controller::RPC::position - Trying to move player " + userID + " to " + x + " - " + y);
         this.player.setPosition(x, y);
     });
 
     this.rpc.exposeRpcMethod('swipe', this, function(userID, x, y, sincePrevious) {
-        this.player.pushSwipe(position, sincePrevious);
+        this.player.pushSwipe(x,y, sincePrevious);
     });
 
     this.rpc.connect(onConnect);

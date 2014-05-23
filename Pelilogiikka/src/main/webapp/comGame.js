@@ -8,7 +8,7 @@ var free_sockets = [];
 module.exports = new function() {
 	this.setDebug = function(debugMode) {
 		DEBUG = debugMode;
-	}
+	};
 
 	this.start  = function(port) {
 		server = new WebSocket.Server({
@@ -38,7 +38,7 @@ module.exports = new function() {
 			if (DEBUG) console.log("websocket/game - disconnected");
 			process.exit(0);
 		});
-	}
+	};
 
 	this.close = function() {
 
