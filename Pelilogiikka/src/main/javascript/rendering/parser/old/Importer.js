@@ -219,7 +219,6 @@
                break;
             }
             
-            
             var node   = build_Node( gl, assMan, descriptor[0] );
                 cursor = descriptor[1];
               
@@ -245,9 +244,7 @@
     {
         
         var parser = new Parser( renderer, path );
-        
-        
-        parser.parse_Scene( renderer );
+            parser.parse_Scene( renderer );
         
         
     }

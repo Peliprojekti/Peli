@@ -6,6 +6,7 @@
     {
         this.rawData = data;
         this.label   = label;
+        this.type    = "NULL";
     }
     
     Field.prototype.report =  function()
@@ -43,15 +44,12 @@
     
     Field.prototype.get_Variables = function()
     {
-        var retArray    = [];
-       
-        alert( this.rawData );
-        var repeats = this.rawData.split("\n").length;
-            repeats -= 2; // Skip the <tag> line at the start as well as </tag> line at the end
+        var retArray         = [];
+        var repeats          = this.rawData.split("\n").length;
+            repeats         -= 2; // Skip the <tag> line at the start as well as </tag> line at the end
         
-        var stringIndex  = '<'+this.label+'>'.length;
-            stringIndex += '<attributes> \n'.length;  //field.rawData.indexOf( '<'+field.label+'>'  , stringIndex   );
-           
+        var stringIndex      = '<'+this.label+'>'.length;
+            stringIndex     += '<attributes> \n'.length;  //field.rawData.indexOf( '<'+field.label+'>'  , stringIndex   );
         
         for( var i = 0; i < repeats; i++ )
         {
@@ -73,7 +71,6 @@
              
             retArray.push( new Variable(  label,  value, type ) );
             stringIndex = value_End;
-        
         }
      
     return retArray;
@@ -114,7 +111,19 @@
     }
     
     
-    
+    Field.prototype.get_Type = function( tag )
+    {
+        if( this.type == "NULL")
+        {
+            var begin  = this.rawData.indexOf( '="' , 0    );
+                begin += '="'.length;
+            var end    = this.rawData.indexOf( '"'      , begin );
+            this.type  = this.rawData.substring( begin, end );
+            
+        }
+        
+    return this.type;
+    }
     
  //////////////////////////////   
     
@@ -153,14 +162,13 @@
             case "<bool"     : if( this.value == "true"){  return true; } else return false;
             
             case "<vector3d"  : var values = this.data.split(" ");
-                               return  new Vector3( parseFloat( values[0] ), parseFloat( values[1] ) , parseFloat( values[2] ) );
+                                return  new Vector3( parseFloat( values[0] ), parseFloat( values[1] ) , parseFloat( values[2] ) );
         
-            cae  "<color"    : return   parseInt( this.value );
+            case  "<color"    : return   parseInt( this.value );
             
             case "<string"   : return this.value;
             case "<texture"  : return this.value;
             case "<enum"     : return this.value;
-                
                                
         }
         
