@@ -14,15 +14,25 @@ function ControllerHub(onJoinPlayer, maxPlayers) {
     this.addNewController();
 }
 
-/**
- * Used to initially open the connections
- * @param {function} callback - will be called when connection opened
- */
-ControllerHub.prototype.open = function(callback) {};
+/*
+ControllerHub.prototype.moveSwipe = function(data) {
+    var userID = data[0];
+    var swipeData = data[1];
+    var position = [swipeData[0], swipeData[1]];
+    var sincePrevious = swipeData[2];
+    
+    log.debug(userID + "swipe position: (" + position[0] + ", " + position[1] + "), Time since previous: " + sincePrevious + "ms");
+    
+    this.players[userID].pushSwipe(position, sincePrevious);
+};
+*/
+
+ControllerHub.prototype.setOnMessage = function(callback) {
+    this.onMessage = callback;
+};
 
 ControllerHub.prototype.addNewController = function() {
     var that = this;
-
     if (this.controllerCount < this.maxPlayers) {
         log.info("Trying to connect new Controller to server");
         this.controllerCount++;
@@ -52,7 +62,7 @@ ControllerHub.prototype.addNewController = function() {
  * close connection
  */
 ControllerHub.prototype.close = function() {
-    // disconnect controllers
+    // TODO disconnect controllers
 };
 
 /**

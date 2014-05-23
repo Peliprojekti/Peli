@@ -23,7 +23,11 @@ function Controller(onConnect, onDisconnect, onJoinGame) {
     });
 
     this.rpc.exposeRpcMethod('swipe', this, function(userID, x, y, sincePrevious) {
-        this.player.pushSwipe(x,y, sincePrevious);
+        this.player.pushSwipe([x,y], sincePrevious);
+    });
+
+    this.rpc.exposeRpcMethod('moveSwipe', this, function(userID, x, y, sincePrevious) {
+        this.player.pushSwipe([x, y], sincePrevious);
     });
 
     this.rpc.connect(onConnect);

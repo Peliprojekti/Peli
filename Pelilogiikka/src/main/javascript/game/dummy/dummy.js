@@ -58,7 +58,7 @@ function connectToServer() {
         players.push(player);
     }, 10);
 
-    controllers.open();
+    //controllers.open();
 }
 
 function animate(time) {
@@ -79,7 +79,7 @@ function draw(time) {
     });
 
     /*
-	   for (var i = 0; i < messages.length; i++) {
+   for (var i = 0; i < messages.length; i++) {
 //ctx.font = "bold 20 sans-serif";
 ctx.fillText(messages[i], c_width/2, c_height/2 * 30);
 }
