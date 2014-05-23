@@ -1,153 +1,119 @@
 
-    function Parser( fileName )
+    function Vertex( pos, norm, uv )
+    {
+        this.position  = pos;
+        this.normal    = norm;
+        this.texcoords = uv; 
+    }
+
+    Vertex.prototype.report = function()
+    {
+        alert(" Vertex: [ " + this.position.x + " , "+ this.position.y + " , "+ this.position.z + "  ]");
+    }
+    
+
+    function Parser( renderer, fileName )
     {
         // Grab the file contents.
         var request = new XMLHttpRequest();
         request.open("GET", fileName, false);
         request.send(null);
-        this.parse_Mesh( new Field( request.responseText ) );
+        this.the_Document = new Field( request.responseText );
     };
        
-
-
-    Parser.prototype.get_Fields = function( tag, field )
-    {
-        var retArray    = [];
-        var stringIndex = 0;
-        
-        while( true )
-        {
-            var first_Line = field.rawData.indexOf( "<"+tag  ,    stringIndex );
-            var last_Line  = field.rawData.indexOf( "</"+tag+">", first_Line  );
-            
-             if( first_Line == -1  )
-             {
-                return retArray;
-             }
-             
-             if( last_Line == -1 )
-             {
-                throw "Bad Interval: " + first_Line + " , " + last_Line;
-             }
-            
-        retArray.push( new Field(  field.rawData.substring( first_Line, last_Line ), tag ) );
-        stringIndex = last_Line;
-        }
-        
-    }
-
-    // These are peculiar... Need to figure out whether to parse them as special variables. Stupid syntax.
-    Parser.prototype.get_Attributes = function( tag, field )
-    {
-        var retArray    = [];
-        var stringIndex = 0;
-        
-        while( true )
-        {
-        
-             var first_Line = field.rawData.indexOf( "<"+tag  , stringIndex );
-             var last_Line  = field.rawData.indexOf( "/>"     , first_Line  );
-        
-        
-            if( first_Line == -1  )
-            {
-                return retArray;
-            }
-
-            if( last_Line == -1 )
-            {
-                last_Line  = field.rawData.indexOf( "</"+tag+">",   first_Line );
-         
-                if( last_Line == -1 ) 
-                {
-                    throw "Opening " + "<"+tag+ " found but failed to terminate!: " + tag;
-                }
-            }
-   
-   
-        retArray.push( new Attribute(  field.rawData.substring( first_Line, last_Line ) ) );
-        stringIndex = last_Line;
-        }
-    }
-
-    Parser.prototype.get_Variables = function( field )
-    {
-        var retArray    = [];
        
-        alert( field.rawData );
-        var repeats = field.rawData.split("\n").length;
-            repeats -= 2; // Skip the <tag> line at the start as well as </tag> line at the end
-        
-        var stringIndex  = '<'+field.label+'>'.length;  
-           
-        
-        for( var i = 0; i < repeats; i++ )
-        {
-            var label_Begin  = field.rawData.indexOf( 'name="'  , stringIndex   );
-                label_Begin += 'name="'.length;
-            
-            var label_End    = field.rawData.indexOf( '"'       , label_Begin   );
-             
-            var value_Begin  = field.rawData.indexOf( 'value=' ,  stringIndex   );
-                value_Begin += 'value="'.length;
-            
-            var value_End    = field.rawData.indexOf( '"'      , value_Begin    );
-         
-            var label        = field.rawData.substring( label_Begin, label_End  );
-            var value        = field.rawData.substring( value_Begin, value_End  );
-             
-            retArray.push( new Variable(  label,  value ) );
-            stringIndex = value_End;
-        }
-     
-    return retArray;
-    }
 
-
-
-
-     // Extract high level blocks
-    Parser.prototype.parse_Mesh = function(  the_Document  ) 
+   
+    Parser.prototype.parse_Mesh = function(  renderer  ) 
     { 
-        var mesh                 = the_Document.get_Subfields( "mesh" );
-        var mesh_Box             = mesh[0].get_Attributes( "boundingBox");
-        var mesh_Materials       = mesh[0].get_Subfields("material");
-        var mesh_Buffers         = mesh[0].get_Subfields("buffer");        
-        var mesh_Buffer_vertices = mesh_Buffers[0].get_Attributes( "vertices" );
-        var mesh_Buffer_indices  = mesh_Buffers[0].get_Attributes( "indices"  );
+        var meshList               = [];
+        var meshes                 = this.the_Document.get_Subfields( "mesh" );    // Grab the mesh portion from the documentary
+        var buffers                = meshes[0].get_Subfields( "buffer" );
         
-        
-        var material_Variables   = [];
-        
-        /*
-        
-        mesh_Materials.forEach( function( field )
+        for( var j = 0; j < buffers.length; j++ )
         {
-            material_Variables.push( field.get_Variables() );
-        });
-        */
-    
-        
-        
-        
-       var materials            = this.parse_Materials( mesh_Materials );
-     
-     
-    alert(" OVER & OUT ");
-    }
-    
-    
-    Parser.prototype.parse_Materials = function( fields )
-    {
-        var retArray = [];
-     
-        for( var i = 0; i < fields.length; i++ )
-        {
-            fields[i].report();
-            retArray.push( this.get_Variables( fields[i] ) );
+            var positions  = [];
+            var normals    = [];
+            var texCoords  = [];
+            var indices    = [];
+                
+            var vData      = buffers[ j ].get_Attributes( "vertices" );
+            var iData      = buffers[ j ].get_Attributes( "indices"  );
+                           
+            var attribute  =  ( vData[ 0 ].rawData.split( "\n" ) );
+                attribute  = attribute.splice(1, attribute.length-2 );
+                
+            attribute.forEach( function( line )
+            { 
+                var variables = line.split( " " );
+                  
+                for( var a = 0; a < 3; a++ )
+                {
+                    positions.push( parseFloat( variables[ a   ]  ) );
+                    normals.push( parseFloat( variables[ 3+a ]  ) );
+                }
+                     
+                 texCoords.push( parseFloat( variables[6] ) );
+                 texCoords.push( parseFloat( variables[7] ) );
+            });
+                
+                
+            attribute  =  ( iData[ 0 ].rawData.split( "\n" ) );
+            attribute  = attribute.splice(1, attribute.length-3 );
+               
+            attribute.forEach( function( line )
+            { 
+                var variables = line.split( " " );
+                    
+                variables.forEach( function ( item ) 
+                {   
+                   indices.push( parseInt( item ) );
+                });
+            });
+               
+           
+        var new_Mesh = new Mesh( renderer.gl, positions, indices, texCoords, normals );
+        meshList.push( new_Mesh );
         }
-      
-         
-    return retArray;
+            // Extract material data from this mesh
+        
+        
+        alert("Done: " + meshList.length + " meshes loaded. ");    
+        return meshList;
     }
     
+   
+  
+    
+
+
+    Parser.prototype.parse_Scene = function(  renderer  ) 
+    { 
+        var the_Scene = new Scene( renderer ); 
+       
+        // These are all the nodes that inhabit the scene
+        var nodes      = this.the_Document.get_Subfields("node");
+        
+        
+        nodes.forEach( function( node )
+        {
+            var attributes      = node.get_Subfields("attributes");
+            var attribute_Table = [];   // ["Name"][Typed_Value]
+           
+            attributes.forEach( function( attribute )
+            {
+                var variables = attribute.get_Variables();
+               
+                variables.forEach( function( variable ) 
+                {
+                    alert( variable.type );// + " " + variable.label+ " = " + variable.value  );
+                });
+                
+            });
+           
+        });
+        
+        
+      
+    return the_Scene;
+    }

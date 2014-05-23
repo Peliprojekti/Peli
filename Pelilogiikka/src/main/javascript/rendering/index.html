@@ -16,6 +16,7 @@
 <script type="text/javascript" src="Texture.js"                ></script>
 
 <script type="text/javascript" src="Buffer.js"                 ></script>
+<script type="text/javascript" src="Model.js"                   ></script>
 <script type="text/javascript" src="Mesh.js"                   ></script>
 <script type="text/javascript" src="Light.js"                  ></script>
 
@@ -274,25 +275,36 @@
     }
        
        
+       
+ 
     function Start() 
     {
         
         
-        var p = new Parser( "data/Normal/Normal.irr.meshes/1.irrmesh" );
-        
+       
         var canvas          = document.getElementById("Canvas");
           
          
         renderer            = new Renderer( canvas                         );
         renderer.set_BgrColor( [0.0,0.0,0.0,1.0]                           );
         
+        
+         var parser    = new Parser( renderer, "data/Normal/Normal.irr.meshes/1.irrmesh" );
+             parser.parse_Mesh( renderer );
+        
+         var importer  = new Importer( renderer, "data/TestLevel/Test.irr" );
+        
+         alert(" OKAY ");
+        
         myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
         myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
+        
+        
         
         var assman          = new Assetmanager( renderer );
        
         myScene             = import_Scene( renderer, "data/TestLevel/Test.irr", assman  );
-     //   myScene           = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
+        myScene             = import_Scene( renderer, "data/Normal/Normal.irr", assman  );
         register_Inputs();      // Erillinen luokka tälle!
       
         var guiTex          = assman.get( "data/crosshair1.png", function( renderer, path ) { return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  ); }); 
@@ -302,6 +314,7 @@
        
        var c1               = test_Rectangle( renderer.gl , guiMaterial       , [0.05,0.05]  , [1,1,1,1]  );
        var gob1             = new Guiobject (          c1 , [0.0,1.0,0.0,1.0] , 1.0                       );
+        
         
        myScene.insert( gob1          , "GUI"       );
        myScene.insert( myCamera      , "CAM"       );
