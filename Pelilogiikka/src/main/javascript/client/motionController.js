@@ -32,6 +32,7 @@ MotionController.prototype.toInteger = function(num) {
 MotionController.prototype.enable = function(coms, window) {
     var thisObject = this;
     this.coms = coms;
+    log.info("Enabling MotionController", true);
     if (window.DeviceOrientationEvent) {
         // Listen for the deviceorientation event and handle the raw data
         window.addEventListener('deviceorientation', function(eventData) {
@@ -39,7 +40,7 @@ MotionController.prototype.enable = function(coms, window) {
         }, false);
 
     } else {
-        log.warn("Device orientation event not supported", true);
+        log.warn("Device orientation event not supported", true, false);
     }
 }
 

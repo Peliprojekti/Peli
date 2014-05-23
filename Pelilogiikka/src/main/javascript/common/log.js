@@ -14,7 +14,7 @@ var log = {
         }
         
         if (send) {
-            if (serverMsgr !== null) {
+            if (this.serverMsgr === null) {
                 this.serverMsgr = new ServerDebugMessenger();
             }
             this.serverMsgr.send(message);

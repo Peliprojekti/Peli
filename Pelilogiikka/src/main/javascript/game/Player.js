@@ -27,9 +27,9 @@ function Player(userID) {
         this.interpolator = new Interpolator(1, 0);
         this.time = 0;
         this.previousTime = 0;
-        this.tiltLR;
-        this.tiltFB;
-        this.dir;
+        this.tiltLR = null;
+        this.tiltFB = null;
+        this.dir = null;
 }
 
 Player.prototype.getID = function() {
@@ -50,12 +50,12 @@ Player.prototype.pushSwipe = function(position, sincePrevious) {
         //log.info("Pushed swipe: (" + position[0] + ", " + position[1] + ")" + ", " + sincePrevious);
 };
 
-Player.prototype.showOrientation = function(tiltLR, tiltFB, dir){
-    console.log("Orientation changed, new orientation:\n" +
-                "tiltLR (gamma): " + this.toInteger(tiltLR) + "\n" +
-                "tiltFB (beta): " + this.toInteger(tiltFB) + "\n" +
-                "dir (alpha): " + this.toInteger(dir));
-}
+Player.prototype.orientation = function(tiltLR, tiltFB, dir){
+    log.debug("Orientation changed, new orientation:\n" +
+                "tiltLR (gamma): " + tiltLR + "\n" +
+                "tiltFB (beta): " + tiltFB + "\n" +
+                "dir (alpha): " + dir);
+};
 
 Player.prototype.setCrosshair = function(crosshair) {
     this.crosshair = crosshair;
@@ -63,8 +63,8 @@ Player.prototype.setCrosshair = function(crosshair) {
 
 Player.prototype.draw = function(ctx) {
     this.crosshair.draw(ctx, this.x, this.y);
-    if(tiltLR !== undefined){
-        
+    if(this.tiltLR !== null){
+        // TODO tee jotin näillä arvoilla
     }
 };
 

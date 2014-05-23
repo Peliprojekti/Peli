@@ -20,6 +20,7 @@ var mouseMove = {
 
     enable: function(coms,canvas) {
         mouseMove.coms = coms;
+        log.info("Enabling mouseMove", true); //, false);
         canvas.addEventListener("mousemove", mouseMove.update, false);
     },
 
