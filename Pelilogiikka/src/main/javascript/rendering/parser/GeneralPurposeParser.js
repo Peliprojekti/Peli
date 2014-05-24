@@ -183,6 +183,13 @@
     }
 
 
+
+//   -240.000000 -45.000000 -210.000000 
+//    0.000000 1.000000 0.000000 
+//    ffffffff 
+//    0.000000 0.000000 
+//    1.000000 0.000000 0.000000 
+//    0.000000 0.000000 -1.000000
     /*
 	[0],[1],[2] 	// Position
 	[3],[4],[5]     // Normal
@@ -241,6 +248,12 @@
                 var line   = lines[i];
                 var tokens = line.split(" ");
                 
+                
+                
+           
+                
+                
+                
                 var x = parseFloat( tokens[0]);
                 var y = parseFloat( tokens[1]);
                 var z = parseFloat( tokens[2]);
@@ -265,7 +278,7 @@
                 positions.push( z );
                 
                 texCoords.push( u );
-                texCoords.push( v );
+                texCoords.push( -v );       // Negate V to accomodate handedness shift
                 
                 normals.push( nX );
                 normals.push( nY );
@@ -273,16 +286,15 @@
                
                 binormals.push( bX );
                 binormals.push( bY );
-                binormals.push( bZ );
+                binormals.push( bZ );  // Flip the binormal attribute or not?
                 
                 tangents.push( tX );
                 tangents.push( tY );
                 tangents.push( tZ );
                 
             }
-            
-         //   vertexData.push( [ positions, texCoords, normals, binormals, tangents] );
-            var mesh   = new Mesh( renderer.gl, positions, indexData[f], texCoords, normals, binormals, tangents ); //( gl, vertice_List, indice_List, uv_List, normal_List, binormal_List, tangent_List )
+                                       
+            var mesh   = new Mesh( renderer.gl, positions, indexData[f], texCoords, normals, binormals, tangents ); 
             meshList.push( mesh );
         }
         
