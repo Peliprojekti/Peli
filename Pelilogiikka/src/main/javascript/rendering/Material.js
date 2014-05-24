@@ -13,9 +13,6 @@
     
     Material.prototype.bind = function( gl, slot, lights ) 
     {
-        
-        console.log(" Material bound " + lights.length );
-        
         this.shader.bind( gl , this.texture, this.texture2, this.texture3, this.texture4, lights );
        
         

@@ -74,12 +74,14 @@
      
      
      
-     
+     // NEEDS A DIFFERENT SHADER!
      Renderer.prototype.draw_SS = function( myEntity ) 
      {
         var shaderProgram   = myEntity.material.shader.shaderProgram;
         var worldViewMatrix = myEntity.orientation.get_Matrix();  
      
+     
+        
         myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
       
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix           );

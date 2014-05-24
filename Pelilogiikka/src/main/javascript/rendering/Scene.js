@@ -44,11 +44,18 @@
                 else
                     if( type === "CAM") this.entries_Cameras.push( entity );
                     else
-                        if( type === "LIGHT" ) this.entries_Lights.push( entity );
+                        if( type === "LIGHT" ) 
+                        {
+                            this.entries_Lights.push( entity );
+                            alert("Lights in scene " + this.entries_Lights.length );
+                       }
                         else
                             alert("Undefined entity type: " + type);  
                  
     }
+
+
+
 
 
     Scene.prototype.render = function( )
@@ -59,19 +66,22 @@
         rnd.begin();   
         
         
+            var lights = this.entries_Lights;
            
             this.entries_Dynamic.forEach(function( entry )
             {
-                rnd.draw( entry , this.entries_Lights );   
+                rnd.draw( entry , lights );   
             });
            
-           
+           /*
             this.entries_GUI.forEach(function( entry )
             {
                 entry.prepare( this.renderer );
                   rnd.draw_SS( entry.entity );  
             });
-      
+            */
+           // Disable momentarily
+           
         rnd.end();     // All drawing is to be done here.
     }
 

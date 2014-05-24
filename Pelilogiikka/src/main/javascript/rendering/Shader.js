@@ -155,33 +155,37 @@ To do this we make sure we declare a varying variable of the same type and name 
             }
         }
        
-        
-        if (typeof lights  != 'undefined')  // Setup lights if any
-        {
-            var limit       = ( lights.length > 12 ) ? 12 : lights.length;      // Once the rack is full, It's kicking out time by LIFO. Last lights in are probably emitted by effects anyhow.
-            var posArray    = [];
-            
-            for( var l = 0; l < limit; l++ )
-            {
-                posArray.push ( lights[l].orientation.position.x );
-                posArray.push ( lights[l].orientation.position.y );
-                posArray.push ( lights[l].orientation.position.z );
-            }
-                
-            gl.uniform3fv(this.shaderProgram.lightsUniform, new Float32Array([ [0,0,0],[1,1,1],[2,2,2] ]  )); // Let's try to send some light (currently each light is one float) as array.
-        }
-        
-        
-        /*
         // Setup lights here.
-        var testPos = [-50.226761, -31.182508, -106.169586];
-        */
+        var posArray = [];
         
+        for( var i = 0; i < lights.length; i++ )   //"-64.297035 , -34.088657 , -117.10157"
+        {
+            var x = lights[i].position.x;
+            var y = lights[i].position.y;
+            var z = lights[i].position.z;
+            
+          //  console.log( x + " , " + y + " , " + z );
+            
+            posArray.push( x );
+            posArray.push( y );
+            posArray.push( z );
+        }
+            
+        console.log( "Shader has generated " + lights.length + " groups of 3");
                
         this.shaderProgram.vColor    = gl.getUniformLocation(this.shaderProgram, "vColor");
-        this.shaderProgram.light1    = gl.getUniformLocation(this.shaderProgram, "light1");
+      
         
-        gl.uniform4f( this.shaderProgram.light1, testPos[0], testPos[1], testPos[2], 1.0 );
+        this.shaderProgram.lights    = gl.getUniformLocation(this.shaderProgram, "lights");  
+        gl.uniform3fv( this.shaderProgram.lights   , posArray                             );
+        
+        
+     // this.shaderProgram.lightCnt  = gl.getUniformLocation(this.shaderProgram, "lightCnt");
+     //   gl.uniform1i( this.shaderProgram.lightCnt , lights.length                           );
+       
+      //  var testPos = [-50.226761, -31.182508, -106.169586];
+      //  this.shaderProgram.light1    = gl.getUniformLocation(this.shaderProgram, "light1");
+       // gl.uniform4f( this.shaderProgram.light1   , testPos[0], testPos[1], testPos[2], 1.0 );
         
         
         
