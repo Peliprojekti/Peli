@@ -130,28 +130,28 @@
         float final_Multiplier      = 0.0;                     // ATTENTION. Colored lights require component wise operation! This is for white light only!
         
         // Generate the illumination for each light. Highest scalars win.
-        for( int i = 0; i < 100; i++ )
+        for( int i = 0; i < 128; i++ )  // Arbitrarily large index to scam the shader into "infinite" loop. Thx glsl for being flexible.
         {
-           vec3 light                = lights[i];
-           vec3 pixelToLight         = light - fragPos;    // Vector from pixel to light source
-           vec3 lightVector          = normalize( pixelToLight );
-           float dist2Light          = length( pixelToLight );
+            vec3 light                = lights[i];
+            vec3 pixelToLight         = light - fragPos;    // Vector from pixel to light source
+            vec3 lightVector          = normalize( pixelToLight );
+            float dist2Light          = length( pixelToLight );
              
-            float cosAngle           = dot( lightVector , vec3( fragmentNormal ) ); 
-                  cosAngle           = clamp( cosAngle, 0.0, 1.0 );
+            float cosAngle            = dot( lightVector , vec3( fragmentNormal ) ); 
+                  cosAngle            = clamp( cosAngle, 0.0, 1.0 );
               
-            float constant_Term      = 0.5;
-            float linear_Term        = 0.010;
-            float quadratic_Term     = 0.00005;
-            float attenuation        = 1.0 / (constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term);
-            float multiplier         = cosAngle * attenuation;
+            float constant_Term       = 0.5;
+            float linear_Term         = 0.010;
+            float quadratic_Term      = 0.00005;
+            float attenuation         = 1.0 / ( constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term );
             
-            final_Multiplier         = max( multiplier, final_Multiplier );
-         
-        if( i > lightCnt ) break;
+            float multiplier          = cosAngle * attenuation;
+            final_Multiplier          = max( multiplier, final_Multiplier );
+        
+        if( i+1 == lightCnt ) break;
         }
       
-        vec4 color             = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));   // Diffuse
+        vec4 color    = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));   // Diffuse
              color.r = clamp( ( color.r * final_Multiplier), 0.01, 1.0 ); ;
              color.g = clamp( ( color.g * final_Multiplier), 0.02, 1.0 ); ;
              color.b = clamp( ( color.b * final_Multiplier), 0.04, 1.0 ); ;
@@ -165,67 +165,6 @@
 
 
 
-
-<script id="pixel_Shader_BACUKP" type="x-shader/x-fragment">
-    precision mediump float;
-
-    uniform sampler2D     texSampler;
-  
-    varying vec4         fragmentPos;       // Contains the fragment world position in VIEW_SPACE
-    
-    varying vec2          fragmentUV;
-    varying vec4      fragmentNormal;
-    
-    varying vec4             vLight1;
-    varying vec4             vLight2;       // Obsolete very soon
-    
-    varying  vec3        vLights[12];
-    varying  int           vLightCnt;
-    
-    
-    void main(void) 
-    {
-        
-       
-        
-        
-        
-        
-        // Compute light 1
-        vec3 pixelToLight        = vec3(vLight1) - vec3(fragmentPos);    // Vector from pixel to light source
-        vec3 lightVector         = normalize( pixelToLight );
-        float dist2Light         = length( pixelToLight );
-         
-        float cosAngle           = dot( lightVector , vec3( fragmentNormal ) ); 
-              cosAngle           = clamp( cosAngle, 0.0, 1.0 );
-        
-        float constant_Term      = 0.5;
-        float linear_Term        = 0.010;
-        float quadratic_Term     = 0.00005;
-        
-        float attenuation        = 1.0 / (constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term); //100.0 / dist2Light;
-        float final_Multiplier   = cosAngle * attenuation;
-        
-        
-        vec4 color             = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));   // Diffuse
-        
-        color.r = clamp( ( color.r * final_Multiplier), 0.01, 1.0 ); ;
-        color.g = clamp( ( color.g * final_Multiplier), 0.02, 1.0 ); ;
-        color.b = clamp( ( color.b * final_Multiplier), 0.04, 1.0 ); ;
-       
-        
-        gl_FragColor = color;
-        // gl_FragColor = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
-    }
-</script>
-
-        
-        
-        
-        
-        
-        
-        
         
         
         
