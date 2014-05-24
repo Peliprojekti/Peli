@@ -1,13 +1,13 @@
 doctype html
 html(lang='en')  
   head  
-  title= title  
-  style
-    include controller.css
+    title= title  
+    style
+      include controller.css
 
-  meta(name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width")
-  meta(name="apple-mobile-web-app-capable" content="yes")
-  meta(http-equiv="Content-Type" content="text/html; charset=utf-8")
+    meta(name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width")
+    meta(name="apple-mobile-web-app-capable" content="yes")
+    meta(http-equiv="Content-Type" content="text/html; charset=utf-8")
 
   body
     #container
@@ -16,7 +16,7 @@ html(lang='en')
     script(type="text/javascript").
        
       var CLIENT_PORT = #{client_port};
-      var DEBUG = #{debug};
+      var DEBUG = #{jsdebug};
       var CONTROLLER = '#{controller}';
       var COM_BENCHMARK = '#{com_benchmark}';
       var USERID = '#{userID}'
@@ -25,14 +25,11 @@ html(lang='en')
     script(type="text/javascript" src="/jquery/jquery.min.js")
     script(type="text/javascript" src="/engine.io/engine.io.js")
     script(type="text/javascript" src="/javascript/common/log.js")
-    script(type="text/javascript" src="/javascript/common/ServerDebugMessenger.js")
+    script(type="text/javascript" src="/javascript/common/sendServerMessage.js")
     script(type="text/javascript" src="/javascript/common/PeliRPC.js")
     script(type="text/javascript" src="/javascript/common/ConnectionEngineIO.js")
 
-    script(type="text/javascript" src="/javascript/client/ControllerComs.js")
+    script(type="text/javascript" src="/javascript/client/coms.js")
     script(type="text/javascript" src="/javascript/client/phone.js")
-    script(type="text/javascript" src="/javascript/client/touchDrag.js")
     script(type="text/javascript" src="/javascript/client/mouseMove.js")
-    script(type="text/javascript" src="/javascript/client/swipe.js")
-    script(type="text/javascript" src="/javascript/client/ThumbStick.js")
-    script(type="text/javascript" src="/javascript/client/motionController.js")
+    script(type="text/javascript" src="/javascript/client/speedTest.js")

@@ -1,279 +1,262 @@
-var coms = null;
-var currentController = null;
-var controllerType = CONTROLLER;
+var client = client || {};
 
+client.phone = {
+    controllerDisabler: null,
+    isOrienting: false,
+    isResizing: false,
+    rc: 0,
+    oc: 0,
+    canvas: null,
+    container: null,
+    texts: [],
+    textIndexes: {},
+    textLines: 0,
 
-//http://bravenewmethod.com/2011/08/28/html5-canvas-layout-and-mobile-devices/
+    onDocumentReady: function() {
+        var self = client.phone;
 
-/*      function doClick(event) {
+        self.canvas = document.getElementById('canvas'); //$('#canvas');
+        self.container = $('#container');
 
-        var x = event.x;
-        var y = event.y;
+        var ctx = canvas.getContext("2d");
 
-        var canvas = document.getElementById("canvas");
-        canvas_width = canvas.width;
-        canvas_height = canvas.height;
+        var rc = 0; // resize counter
+        var oc = 0; // orientiation counter
 
-        x -= canvas.offsetLeft;
-        y -= canvas.offsetTop;
-        alert("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
-        + "\ncanvas height: " + canvas_height);
-
-/*     clientComs.send({
-xCoordinate: x, 
-yCoordinate: y,
-width: canvas_width,
-height: canvas_height
-
-});
-//                clientComs.send("X=" + x + " Y=" + y + "\ncanvas width: " + canvas_width
-//                        + "\ncanvas height: " + canvas_height);
-
-/*	event.preventDefault();
-canvas_x = event.targetTouches[0].pageX;
-canvas_y = event.targetTouches[0].pageY;
-var canvas = document.getElementById("canvas");
-canvas_width = canvas.width;
-canvas_height = canvas.height;
-alert("X=" + canvas_x + " Y=" + canvas_y + "\ncanvas width: " + canvas_width
-+ " canvas height: " + canvas_height);
-}*/
-
-
-function getFingerCoords(id) {
-    var canvas_x = event.targetTouches[id].pageX;
-    var canvas_y = event.targetTouches[id].pageY;
-    return [canvas_x, canvas_y];
-}
-
-//var canvasDimensions = null;
-
-function getRelativeCoords(id){
-    var coords = getFingerCoords(id);
-    var canvasDimensions = getCanvasDimensions();
-    var relativeX = coords[0] / canvasDimensions[0];
-    var relativeY = coords[1] / canvasDimensions[1];
-    return [relativeX, relativeY];
-}	
-
-//Test code
-function updateCoordinatesText(x, y){
-    var canvasDimensions = getCanvasDimensions();		
-
-    drawText("Coordinates: (" + x + ", " + y + ")", 2);
-    drawText("Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1], 3);
-}
-
-//Test code
-function updateStartTimeText(time) {
-    drawText("Start time: " + time, 4);
-}
-
-//Test code
-function updateCurrentTimeText(time) {
-    drawText("Current time: " + time, 5);
-}
-
-//Test code
-function updateStartCoordinatesText(x, y){
-    var canvasDimensions = getCanvasDimensions();		
-
-    drawText("Start coordinates: (" + x + ", " + y + ")", 6);
-}
-
-//Test code
-function updateSendTimeText(time){
-    drawText("Sent time: " + time, 7);
-}
-
-
-//Test code
-var texts = new Array();
-function drawText(text, id){
-    var canvasDimensions = getCanvasDimensions();
-
-    drawBackground();
-
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
-
-    if (typeof id !== 'undefined') {
-        texts[id] = text;
-    }
-
-    var offset = 0;
-
-    texts.forEach(function(entry) {
-        ctx.fillText(entry, canvasDimensions[0] / 2, canvasDimensions[1] / 2 + offset);
-        offset += 10;
-    });
-
-}
-
-function drawBackground(){
-    ctx.fillStyle = 'green';
-    ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = 'black';
-    ctx.fillRect(10, 10, width - 20, height - 20);
-}
-
-function getCanvasDimensions() {
-    canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d");
-    width = canvas.width;
-    height = canvas.height;
-
-    return [width, height];
-}
-
-function drawCircle(x, y, r) {
-    //drawText();
-    
-    var canvas = document.getElementById("canvas");
-    var context = canvas.getContext("2d");
-    
-    context.strokeStyle = "#FF0000";
-    context.fillStyle = "#FFFF00";
-    context.beginPath();
-    context.arc(x,y,r,0,Math.PI*2,true);
-    context.closePath();
-    context.stroke();
-    context.fill();
-}
-
-function loadController(canvas, type) {
-	if (typeof canvas == 'undefined') {
-		log.error("trying to loadController on undefined canvas");
-	}
-    if (typeof type != "undefined") {
-        controllerType = type;
-    }
-
-    if (currentController != null) {
-        currentController.disable(canvas);
-    }
-
-	log.info("changing controller type to " + controllerType);
-    switch(controllerType) {
-        case 'mouseMove':
-            mouseMove.enable(coms, canvas);
-            currentController = mouseMove;
-            break;
-        case 'touchDrag':
-            var touchDragx = new TouchDrag();
-            touchDragx.enable(coms, canvas);
-            currentController = touchDragx;
-            break;
-        case 'swipe':
-            var swipe = new Swipe();
-            swipe.enable(coms, canvas);
-            currentController = swipe;
-            break;
-        case 'ThumbStick':
-            var thumbStick = new ThumbStick();
-            thumbStick.enable(coms, canvas);
-            currentController = thumbStick;
-            break;
-        case 'motion':
-            var motion = new MotionController();
-            motion.enable(coms, window);
-            currentController = motion;
-            break;
-    }
-}
-
-$(function() { // document ready, resize container
-    //var canvas = document$("#canvas");
-	var canvas = document.getElementById("canvas");
-    //touchDrag.enable(canvas);
-    //mouseMove.enable(canvas);
-
-    var ctx = canvas.getContext("2d");
-
-    var rc = 0;  // resize counter
-    var oc = 0;  // orientiation counter
-    var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
-
-    if (coms == null) { // Load coms only once!
-        coms = new ControllerComs();
         log.info("trying to open connection");
-        coms.open(function() {
-            log.info("Connection establised, trying to join game");
-            log.setComs(coms);
-            coms.joinGame(function() {
-                log.info("Game On!!");
-                loadController(canvas);
-            });
-        });
-    }
-    else{
-        loadController(canvas);
-    }
+        client.coms.open(self.onConnectionOpened);
 
-    //coms = new ControllerComs();
-    //loadController(canvas, 'touchDrag');
+        $(window).on("orientationchange", self.onOrientationChange);
+        $(window).resize(self.onResize);
 
-    function orientationChange() {
-        // inc orientation counter
-        oc++;
-    }
+        self.onResize();
+    },
 
-    function resizeCanvas() {
-        // inc resize counter
-        rc++;
+    onOrientationChange: function() {
+        var self = client.phone;
 
-        if (ios) {
-            // increase height to get rid off ios address bar
-            $("#container").height($(window).height() + 60)
-        }
-
-        var width = $("#container").width();
-        var height = $("#container").height();
-
-        cheight = height
-            cwidth = width;
-
-        // set canvas width and height
-        $("#canvas").attr('width', cwidth);
-        $("#canvas").attr('height', cheight);
-
-        // hides the WebKit url bar
-        if (ios) {
+        if (self.isOrienting === false) {
+            self.isOrienting = true;
             setTimeout(function() {
-                window.scrollTo(0, 1);
+                self._oc++;
+            }, 50);
+        }
+        self.isOrienting = false;
+    },
+
+    onResize: function() {
+        var self = client.phone;
+
+        if (self.isResizing === false) {
+            self.isResizing = true;
+            setTimeout(function() {
+                self.rc++;
+                var ios = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
+
+                if (ios) {
+                    // increase height to get rid off ios address bar
+                    $("#container").height($(window).height() + 60);
+                }
+
+                // set canvas width and height
+                //self._canvas.widht = self._container.width();
+                //self._canvas.height = self._container.height();
+
+                $("#canvas").attr('width', $("#container").width());
+                $("#canvas").attr('height', $("#container").height());
+
+                // hides the WebKit url bar
+                if (ios) {
+                    setTimeout(function() {
+                        window.scrollTo(0, 1);
+                    }, 100);
+                }
+
+                self.drawText('Orientiation changes: ' + self.oc++, 0);
+                self.drawText('Resize events: ' + self.rc++, 1);
             }, 100);
+            self.isResizing = false;
+        }
+    },
+
+    onConnectionOpened: function() {
+        var self = client.phone;
+        client.coms.call('joinGame', [USERID], self, 
+                function(rpc_id, rpc_error, retval) {
+                    self.loadController(retval);
+                });
+    },
+
+
+
+    drawText: function(text, textID) {
+        var self = client.phone;
+
+        if (typeof textID === 'undefined') {
+            throw "peli.client.phone.drawText - needs a textID";
         }
 
-        drawText('Orientiation changes: ' + oc, 0);
-        drawText('Resize events: ' + rc, 1);
-    }
 
-    // Install resize and orientation change handlers. Note Android may fire both
-    // resize and orientation changes when rotating.
-    var resizeTimeout;
-    $(window).resize(function() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(resizeCanvas, 100);
-    });
-    resizeCanvas();
+        if (self.textIndexes[textID] === undefined) {
+            self.textIndexes[textID] = self.textLines++;
+            self.texts.push(null);
+        }
 
-    var otimeout;
-    window.onorientationchange = function() {
-        clearTimeout(otimeout);
-        otimeout = setTimeout(orientationChange, 50);
+        if (self.texts[self.textIndexes[textID]] != text) {
+            self.texts[self.textIndexes[textID]] = text;
+            self.draw();
+        }
+    },
+
+    draw: function() {
+        var self = client.phone;
+
+        var width = self.canvas.width;
+        var height = self.canvas.height;
+        var canvasDimensions = [width, height];
+
+        var ctx = self.canvas.getContext("2d");
+        drawBackground(ctx);
+
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+
+        for (var i = 0; i < self.texts.length; i++) {
+            ctx.fillText(self.texts[i],
+                    width / 2, (height / 2) + (i * 10));
+        }
+
+        function drawBackground(ctx) {
+            ctx.fillStyle = 'green';
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = 'black';
+            ctx.fillRect(10, 10, width - 20, height - 20);
+        }
+
+        /*
+        //Test code
+        function updateCoordinatesText(x, y) {
+        var canvasDimensions = getCanvasDimensions();
+
+        drawText("Coordinates: (" + x + ", " + y + ")", 2);
+        drawText("Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1], 3);
+        }
+
+        //Test code
+        function updateStartTimeText(time) {
+        drawText("Start time: " + time, 4);
+        }
+
+        //Test code
+        function updateCurrentTimeText(time) {
+        drawText("Current time: " + time, 5);
+        }
+
+        //Test code
+        function updateStartCoordinatesText(x, y) {
+        var canvasDimensions = getCanvasDimensions();
+
+        drawText("Start coordinates: (" + x + ", " + y + ")", 6);
+        }
+
+        //Test code
+        function updateSendTimeText(time) {
+        drawText("Sent time: " + time, 7);
+        }
+        */
+    },
+
+    loadController: function(type) {
+        log.debug("and here we are " + type);
+        log.debug(this);
+        var self = client.phone;
+
+        if (typeof type === undefined) {
+            type = CONTROLLER;
+        }
+
+        if (typeof self.controllerDisabler === 'function') {
+            self.controllerDisabler();
+            self.controllerDisabler = null;
+        }
+
+        self.canvas.drawText = self.drawText;
+
+        switch (type) {
+            case 'mouseMove':
+                self.controllerDisabler = controller.mouseMove(self.container, self.canvas);
+                break;
+            case 'speedTest':
+                self.controllerDisabler = controller.speedTest(self.container, self.canvas);
+                break;
+            default:
+                throw new Error("Trying to load unknown controller: '" + type + "'");
+
+                /*
+                   case 'touchDrag':
+                   var touchDragx = new TouchDrag();
+                   touchDragx.enable(coms, canvas);
+                   currentController = touchDragx;
+                   break;
+                   case 'swipe':
+                   var swipe = new Swipe();
+                   swipe.enable(coms, canvas);
+                   currentController = swipe;
+                   break;
+                   case 'ThumbStick':
+                   var thumbStick = new ThumbStick();
+                   thumbStick.enable(coms, canvas);
+                   currentController = thumbStick;
+                   break;
+                   case 'motion':
+                   var motion = new MotionController();
+                   motion.enable(coms, window);
+                   currentController = motion;
+                   break;
+                   */
+        }
     }
+};
+
+$(document).ready(client.phone.onDocumentReady);
 
 
 
     /*
-       function hideAddressBar(){
-       if(document.documentElement.scrollHeight<window.outerHeight/window.devicePixelRatio)
-       document.documentElement.style.height=(window.outerHeight/window.devicePixelRatio)+'px';
-       setTimeout(window.scrollTo(1,1),0);
-       }
-       window.addEventListener("load",function(){hideAddressBar();});
-       window.addEventListener("scroll",function(){hideAddressBar();});
-       window.addEventListener("orientationchange",function(){hideAddressBar();}); 
-       */
 
-});
+       function getFingerCoords(id) {
+       var canvas_x = event.targetTouches[id].pageX;
+       var canvas_y = event.targetTouches[id].pageY;
+       return [canvas_x, canvas_y];
+       }
+
+       function getRelativeCoords(id) {
+       var coords = getFingerCoords(id);
+       var canvasDimensions = getCanvasDimensions();
+       var relativeX = coords[0] / canvasDimensions[0];
+       var relativeY = coords[1] / canvasDimensions[1];
+       return [relativeX, relativeY];
+       }
+
+
+
+    //Test code
+    var texts = [];
+
+    function drawCircle(x, y, r) {
+//drawText();
+
+var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+
+context.strokeStyle = "#FF0000";
+context.fillStyle = "#FFFF00";
+context.beginPath();
+context.arc(x, y, r, 0, Math.PI * 2, true);
+context.closePath();
+context.stroke();
+context.fill();
+}
+
+*/
+

@@ -97,18 +97,22 @@ PeliRPC.prototype.connect = function(callback) {
                 }
 
                 if (typeof rpc.result != "undefined") {
-                    that.callbacks[rpc.id].listener.apply(
-                        that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
+                    log.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
+                    that.callbacks[rpc.id].listener.apply(that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
                 } else if (typeof rpc.error != "undefined") {
+                    log.debug("PeliRPC::onMessage() - returning an error to callback: " + rcp.error);
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
                 } else {
-                    //log.debug("PeliRPC::onMessage() - calling callbac");
+                    log.debug("PeliRPC::onMessage() - calling callbac with no return value");
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, null, null]);
                 }
 
                 delete that.callbacks[rpc.id];
+            }
+            else {
+                    //log.debug("PeliRPC::onMessage() - oh, whatever, no callbacks for id " + rpc.id);
             }
         }
     };
@@ -125,22 +129,6 @@ PeliRPC.prototype.close = function() {
 PeliRPC.prototype.callRpc = function(method, params, object, listener) {
     if (this.connection.isOpen()) {
         var callObject;
-
-        /*
-		   not like this...
-		   Instead use this.callSequence to keep track of these.... 
-		   j
-		   if (this.benchmarking) {
-		   var sendTime = Date.now();
-		   var origListener = listener;
-		   var bm = this.benchmarkLog;
-
-		   listener = function() {
-		   bm.push([sendTime, params[0], method, Date.now() - sendTime]);
-		   typeof origListener == "function" && origListener;
-		   }
-		   }
-		   */
 
         if (typeof listener == "function") {
             callObject = {

@@ -1,30 +1,41 @@
-var mouseMove = {
-    //previousSendTime: 0,
-    //currentTime: null,
-    //interval: 20,
-    x: 0,
-    y: 0,
-    coms: null,
+var controller = controller || {};
 
-    update: function(event) {
-        mouseMove.x = event.clientX;
-        mouseMove.y = event.clientY;
-        
-        var dimensions = getCanvasDimensions();
-        var relativeX = mouseMove.x / dimensions[0];
-        var relativeY = mouseMove.y / dimensions[1];
+controller.mouseMove = function(container, canvas) {
+    var _LISTENER_NAME = 'hiiriLiike';
+    var _RESIZE_CHECK_INTERVAL = 300;
 
-        coms.position(relativeX, relativeY);
-        if (DEBUG) { updateCoordinatesText(relativeX, relativeY) };	
-    },
+    var x = 0;
+    var y = 0;
 
-    enable: function(coms,canvas) {
-        mouseMove.coms = coms;
-        log.info("Enabling mouseMove", true); //, false);
-        canvas.addEventListener("mousemove", mouseMove.update, false);
-    },
+    var canvasWidth;
+    var canvasHeight;
 
-    disable: function(canvas) {
-        canvas.removeEventListener("mousemove", mouseMove.update);
-    }
-}
+    // check for canvas resize events;
+    setInterval(function() {
+        //canvasHeight = element.height;
+        //canvasWidth = element.width;
+    }, _RESIZE_CHECK_INTERVAL);
+
+    var coms = client.coms;
+
+    // forward all events through coms
+    var listener = function(event) {
+        canvas.drawText(event.clientX + " x " + event.clientY, 'position');
+        //coms.position(event.clientX / canvas.width, event.clientY / canvas.height);
+        coms.call('position', [
+                event.clientX / canvas.width,
+                event.clientY / canvas.height
+            ],
+            null, null);
+    };
+
+    log.info("Enabling mouseMove", true);
+    $('#canvas').mousemove(listener);
+
+    // return disabler function
+    return function() {
+        canvas.unbind('mousemove', listener);
+        listener = null;
+        canvas = null;
+    };
+};

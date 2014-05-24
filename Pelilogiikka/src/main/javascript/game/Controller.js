@@ -13,12 +13,14 @@ function Controller(onConnect, onDisconnect, onJoinGame) {
     this.rpc = new PeliRPC(this.connection);
 
     this.rpc.exposeRpcMethod('joinGame', this, function(userID) {
+        log.info("Controller::RPC::joinGame - " + userID);
         this.player = playerFactory.getPlayer(userID);
         onJoinGame(this.player);
+        return CONTROLLER;
     });
 
-    this.rpc.exposeRpcMethod('position', this, function(userID, x, y) {
-        log.debug("Controller::RPC::position - Trying to move player " + userID + " to " + x + " - " + y);
+    this.rpc.exposeRpcMethod('position', this, function(x, y) {
+        log.debug("Controller::RPC::position - Trying to move player " + this.player.userID + " to " + x + " - " + y);
         this.player.setPosition(x, y);
     });
 
