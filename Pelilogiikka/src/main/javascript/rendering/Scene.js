@@ -57,7 +57,9 @@
             rnd.bind_Camera( this.entries_Cameras[0] );
             
         rnd.begin();   
-            
+        
+        
+           
             this.entries_Dynamic.forEach(function( entry )
             {
                 rnd.draw( entry , this.entries_Lights );   

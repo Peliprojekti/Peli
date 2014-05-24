@@ -164,11 +164,17 @@
             case "<vector3d" : var values = this.value.split(" ");  
                                return  new Vector3( parseFloat( values[0] ), parseFloat( values[1] ) , parseFloat( values[2] ) );
         
+            case "<colorf"   : var values = this.value.split(" "); 
+                               return new Vector3( parseFloat( values[0] ), parseFloat( values[1] ) , parseFloat( values[2] ) );                   
+        
+        
             case  "<color"   : return   parseInt( this.value );
             
             case "<string"   : return this.value;
             case "<texture"  : return this.value;
             case "<enum"     : return this.value;
+                
+            
         }
         
     return "NULL";

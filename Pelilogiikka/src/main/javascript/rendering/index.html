@@ -137,20 +137,8 @@
         float quadratic_Term     = 0.00005;
         
         float attenuation        = 1.0 / (constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term); //100.0 / dist2Light;
-        float final_Multiplier_1 = cosAngle * attenuation;
+        float final_Multiplier   = cosAngle * attenuation;
         
-        
-        // Compute light 2
-             pixelToLight        = vec3(vLight2) - vec3(fragmentPos);    // Vector from pixel to light source
-             lightVector         = normalize( pixelToLight );
-             dist2Light          = length( pixelToLight );
-             cosAngle            = dot( lightVector , vec3( fragmentNormal ) ); 
-             cosAngle            = clamp( cosAngle, 0.0, 1.0 );
-             attenuation         = 1.0 / (constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term); //100.0 / dist2Light;
-        float final_Multiplier_2 = cosAngle * attenuation;
-        
-        
-        float final_Multiplier = max( final_Multiplier_1 , final_Multiplier_2 );
         
         vec4 color             = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));   // Diffuse
         

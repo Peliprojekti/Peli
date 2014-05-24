@@ -13,7 +13,10 @@
     
     Material.prototype.bind = function( gl, slot, lights ) 
     {
-        this.shader.bind( gl , this.texture, this.texture2, this.texture3, this.texture4 );
+        
+        console.log(" Material bound " + lights.length );
+        
+        this.shader.bind( gl , this.texture, this.texture2, this.texture3, this.texture4, lights );
        
         
         gl.uniform1i(this.shader.shaderProgram.samplerUniform, 0); 

@@ -112,22 +112,17 @@ To do this we make sure we declare a varying variable of the same type and name 
         
     
     // Setting up the light rack
-    
-        this.shaderProgram.lightsUniform = gl.getUniformLocation( this.shaderProgram, "lights"); // Getting location
-                                           gl.uniform3fv(this.shaderProgram.lightsUniform, new Float32Array([ [0,0,0],[1,1,1],[2,2,2] ]  )); // Let's try to send some light (currently each light is one float) as array.
         
+        this.shaderProgram.lightsUniform = gl.getUniformLocation( this.shaderProgram, "lights"); // Getting location
+                                       
         
         if (typeof features  != 'undefined')
         {
           // Setup the extended capabilities
-          
             if( features.normal_Map )
             {
                 
-                
             }
-          
-          
         }
          
  
@@ -163,15 +158,24 @@ To do this we make sure we declare a varying variable of the same type and name 
         
         if (typeof lights  != 'undefined')  // Setup lights if any
         {
-            var limit = ( lights.length > 12 ) ? 12 : lights.length;
+            var limit       = ( lights.length > 12 ) ? 12 : lights.length;      // Once the rack is full, It's kicking out time by LIFO. Last lights in are probably emitted by effects anyhow.
+            var posArray    = [];
+            
+            for( var l = 0; l < limit; l++ )
+            {
+                posArray.push ( lights[l].orientation.position.x );
+                posArray.push ( lights[l].orientation.position.y );
+                posArray.push ( lights[l].orientation.position.z );
+            }
                 
-          
+            gl.uniform3fv(this.shaderProgram.lightsUniform, new Float32Array([ [0,0,0],[1,1,1],[2,2,2] ]  )); // Let's try to send some light (currently each light is one float) as array.
         }
         
         
-        
+        /*
+        // Setup lights here.
         var testPos = [-50.226761, -31.182508, -106.169586];
-        
+        */
         
                
         this.shaderProgram.vColor    = gl.getUniformLocation(this.shaderProgram, "vColor");
