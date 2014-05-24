@@ -101,6 +101,8 @@
     function read_Batch( index, rawData )
     {
   
+     //  console.log("Batch total = " + rawData );
+  
        var begin_Verts = rawData.indexOf("<vertices"  , index );
        
        if( begin_Verts == -1 )   return [ null, 0, null, 0 ];       // No verts - game over.
@@ -110,6 +112,12 @@
        var begin_Inds  = rawData.indexOf("<indices"  , end_Verts    );              
        var   end_Inds  = rawData.indexOf("</indices>", begin_Inds   );
        var      iData  = rawData.substring( begin_Inds, end_Inds    ); 
+    
+    
+    
+       // HAX extension... Handling the texture loading here
+       // Possibly here? Dunno yet.
+    
     
     return [ vData, iData, end_Inds ];      // Third index is a hax. No long term use for it!
     }
@@ -138,15 +146,25 @@
 
 
 
-
-
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     function import_Irmesh( gl, fileName )
     {
        var meshList    = [];
         
        var rawData     = FileHelper.readStringFromFileAtPath ( fileName );
+       
        var batches     = get_Batches( rawData );
        
         for( var b = 0; b < batches.length; b++ )
@@ -159,7 +177,6 @@
             var     uv_List = [];
             var        vCnt = batch[0].length;
             var        iCnt = batch[1].length;
-        
         
        
         for( var i = 0; i < vCnt; i++ )
@@ -210,12 +227,13 @@
     
     
     
-    
-    function import_Irmesh_2( block )
+    // THE CURRENT WAY
+    // Renderer needed as a nominal parameter for the asset manager! 
+    function import_MeshData(  rawData , renderer )      
     {
-       var batches     = get_Batches( block );
        var meshList    = [];
-        
+       var batches     = get_Batches( rawData );
+       
         for( var b = 0; b < batches.length; b++ )
         {
             var batch       = parse_Batch( batches[b] );   
@@ -242,7 +260,6 @@
             var u = batch[0][i][2][0];
             var v = batch[0][i][2][1];
             
-        
             // This is probably a HAX, but until a formal solution is found, it would seem correct.
             // x *= -1;   // Flip the x-axis of the vertices local space
             v *= -1;   // Flip the v-axis of the uv space.
@@ -259,15 +276,17 @@
             uv_List.push( v );     // ATTENTION! Some confusion with UV-coords... FLIPPED V?!?! WHAT THE HELL?
         }
       
-      
        for( var j = 0; j < iCnt; j++ )
        {
            index_List.push( batch[1][j] );
        }
             
-       //var mesh = new Mesh  ( gl, vertex_List, index_List, uv_List, normal_List );   
-         meshList.push(  [ vertex_List, index_List, uv_List, normal_List ] ); 
-      }
-        
+
+       meshList.push( [vertex_List, index_List, uv_List, normal_List] ); 
+       }
+       
     return meshList;
     }
+    
+    
+    

@@ -143,9 +143,9 @@
        
     function Variable( label, value, type )
     {
-        this.label = label;
-        this.value = value;
-        this.type  = type;       
+        this.label = label.trim();  
+        this.value = value.trim();  
+        this.type  = type.trim();       
     }
     
     Variable.prototype.report =  function()
@@ -161,16 +161,22 @@
             case "<float"    : return parseFloat( this.value );
             case "<bool"     : if( this.value == "true"){  return true; } else return false;
             
-            case "<vector3d"  : var values = this.data.split(" ");
-                                return  new Vector3( parseFloat( values[0] ), parseFloat( values[1] ) , parseFloat( values[2] ) );
+            case "<vector3d" : var values = this.value.split(" ");  
+                               return  new Vector3( parseFloat( values[0] ), parseFloat( values[1] ) , parseFloat( values[2] ) );
         
-            case  "<color"    : return   parseInt( this.value );
+            case "<colorf"   : var values = this.value.split(" "); 
+                               return new Vector3( parseFloat( values[0] ), parseFloat( values[1] ) , parseFloat( values[2] ) );                   
+        
+        
+            case  "<color"   : return   parseInt( this.value );
             
             case "<string"   : return this.value;
             case "<texture"  : return this.value;
             case "<enum"     : return this.value;
-                               
+                
+            
         }
         
+    return "NULL";
     }
 

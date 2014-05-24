@@ -10,6 +10,17 @@ To do this we make sure we declare a varying variable of the same type and name 
 */
 
 
+    function ShaderFeatures( mappings )    
+    {
+        if( mappings[0] == "NORMAL") this.normal_Map = true;
+        else
+            this.normal_Map   = false;
+        
+        if( mappings[1] == "PARALLAX") this.parallax_Map = true;
+        else
+            this.parallax_Map   = false;
+    }
+
 
 
  Shader.prototype.getShader = function (gl, id) 
@@ -18,6 +29,7 @@ To do this we make sure we declare a varying variable of the same type and name 
        
         if (!shaderScript) 
         {
+            alert(" NULL script shader! - ABORT - ");
             return null;
         }
 
@@ -34,26 +46,18 @@ To do this we make sure we declare a varying variable of the same type and name 
 
         var shader;
         
-        if ( shaderScript.type == "x-shader/x-fragment") 
-        {
-            shader = gl.createShader(gl.FRAGMENT_SHADER);
-        } 
+        if ( shaderScript.type == "x-shader/x-fragment")     shader = gl.createShader(gl.FRAGMENT_SHADER);
         else 
-            if ( shaderScript.type == "x-shader/x-vertex") 
-            {
-                shader = gl.createShader(gl.VERTEX_SHADER);
-            } 
+            if ( shaderScript.type == "x-shader/x-vertex")   shader = gl.createShader(gl.VERTEX_SHADER);
             else 
-                {
-                    return null;
-                }
-
+                 return null;
+               
         gl.shaderSource(shader, str);
         gl.compileShader(shader);
 
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) 
         {
-            alert(gl.getShaderInfoLog(shader));
+            alert( gl.getShaderInfoLog(shader) );
             return null;
         }
 
@@ -61,70 +65,129 @@ To do this we make sure we declare a varying variable of the same type and name 
     }
 
 
-      
+    
+    
 
+    // MAPPING_TEXTURE
+    // MAPPING_NORMAL
+    // MAPPING_NORMAL_PARALLAX
+   
 
-    function Shader( gl, vs_Program, ps_Program )
+    function Shader( gl, vs_Program, ps_Program, features )
     {
-	var fragmentShader  = this.getShader( gl, ps_Program);	
-	var vertexShader    = this.getShader( gl, vs_Program);
+        this.features       = new ShaderFeatures( ["NULL","NULL"] );//features;
+        
+	var fragmentShader  = this.getShader( gl, ps_Program      );	
+	var vertexShader    = this.getShader( gl, vs_Program      );
         this.shaderProgram  = gl.createProgram();
 	
-	gl.attachShader( this.shaderProgram, vertexShader      );
-	gl.attachShader( this.shaderProgram, fragmentShader    );	
-	gl.linkProgram ( this.shaderProgram                    );
+	gl.attachShader( this.shaderProgram, vertexShader         );
+	gl.attachShader( this.shaderProgram, fragmentShader       );	
+	gl.linkProgram ( this.shaderProgram                       );
 
 	if (!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)) 
 	{
             alert("Could not load shader!");
 	}
         
-        //gl.useProgram( this.shaderProgram );
-
-	this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation( this.shaderProgram, "vertexPos");
+        
+    // Enabling universal terms - These had better be present in every single shader, or there will be a nasty crash.
+        
+        this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation( this.shaderProgram, "vertexPos");
                                                      gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
 
-
         this.shaderProgram.vertexNormalAttribute   = gl.getAttribLocation( this.shaderProgram, "vertexNormal");
-                                                     gl.enableVertexAttribArray(this.shaderProgram.vertexNormalAttribute);                                                
-                                                     
-
-	this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram,  "vertexUV");
+                                                     gl.enableVertexAttribArray(this.shaderProgram.vertexNormalAttribute);                
+        
+        this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram,  "vertexUV");
                                                      gl.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
-	
+        
         this.shaderProgram.samplerUniform          = gl.getUniformLocation(this.shaderProgram, "textureSampler");
         
+        this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "projMatrix"     );
+	
+        this.shaderProgram.mvMatrixUniform         = gl.getUniformLocation(this.shaderProgram, "worldViewMatrix");
         
-        
-	this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "projMatrix"     );
-	this.shaderProgram.mvMatrixUniform         = gl.getUniformLocation(this.shaderProgram, "worldViewMatrix");
         this.shaderProgram.mMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "worldMatrix"    );
-
         
-        this.shaderProgram.vColor                  = gl.getUniformLocation(this.shaderProgram, "vColor");
+    
+    // Setting up the light rack
+        
+        this.shaderProgram.lightsUniform = gl.getUniformLocation( this.shaderProgram, "lights"); // Getting location
+                                       
+        
+        if (typeof features  != 'undefined')
+        {
+          // Setup the extended capabilities
+            if( features.normal_Map )
+            {
+                
+            }
+        }
          
-        this.shaderProgram.light1                  = gl.getUniformLocation(this.shaderProgram, "light1");
-        
+ 
         
     }
     
    
    
 
-    Shader.prototype.bind = function( gl )
+    Shader.prototype.bind = function( gl , tex1, tex2, tex3, tex4, lights )
     {
         
         gl.uniform4f( this.shaderProgram.vColor, 1.0,1.0,1.0,1.0 ); // Upload various values to the shader
-       
         
-        var testPos = [-50.226761, -31.182508, -106.169586];
-            
-          // For Normal
-         // [-2.750824,0.444516,-24.011581, 1.0 ];
-         // For Test
-         // [-50.226761, -31.182508, -106.169586]
+        
+        // Texture 1 is always active! 
+        gl.activeTexture( gl.TEXTURE0 );
+        gl.bindTexture(gl.TEXTURE_2D, tex1.data );
          
-        gl.uniform4f( this.shaderProgram.light1, testPos[0], testPos[1], testPos[2], 1.0 );
+       
+        if( this.features.normal_Map )
+        {
+             gl.activeTexture( gl.TEXTURE1 );
+             gl.bindTexture(gl.TEXTURE_2D, tex2.data);
+         
+            if( this.features.parallax_Map )
+            {
+                 gl.activeTexture( gl.TEXTURE2 );
+                 gl.bindTexture(gl.TEXTURE_2D, tex3.data);
+            }
+        }
+       
+        // Setup lights here.
+        var posArray = [];
+        
+        for( var i = 0; i < lights.length; i++ )   //"-64.297035 , -34.088657 , -117.10157"
+        {
+            var x = lights[i].position.x;
+            var y = lights[i].position.y;
+            var z = lights[i].position.z;
+            
+          //  console.log( x + " , " + y + " , " + z );
+            
+            posArray.push( x );
+            posArray.push( y );
+            posArray.push( z );
+        }
+            
+        console.log( "Shader has generated " + lights.length + " groups of 3");
+               
+        this.shaderProgram.vColor    = gl.getUniformLocation(this.shaderProgram, "vColor");
+      
+        
+        this.shaderProgram.lights    = gl.getUniformLocation(this.shaderProgram, "lights");  
+        gl.uniform3fv( this.shaderProgram.lights   , posArray                             );
+        
+        
+     // this.shaderProgram.lightCnt  = gl.getUniformLocation(this.shaderProgram, "lightCnt");
+     //   gl.uniform1i( this.shaderProgram.lightCnt , lights.length                           );
+       
+      //  var testPos = [-50.226761, -31.182508, -106.169586];
+      //  this.shaderProgram.light1    = gl.getUniformLocation(this.shaderProgram, "light1");
+       // gl.uniform4f( this.shaderProgram.light1   , testPos[0], testPos[1], testPos[2], 1.0 );
+        
+        
         
        
     gl.useProgram( this.shaderProgram );        // Make the shader active.

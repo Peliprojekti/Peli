@@ -1,16 +1,20 @@
  
-    function Material( shader, texture )
+    function Material( shader, texture, texture2, texture3, texture4, flags )
     {
-        this.shader  = shader;
-        this.texture = texture;
+        this.shader       = shader;
+        this.texture      = texture;
+        this.texture2     = texture2;
+        this.texture3     = texture3;
+        this.texture4     = texture4;
+        this.textureFlags = flags;
+        
     }
     
     
-    Material.prototype.bind = function( gl, slot ) 
+    Material.prototype.bind = function( gl, slot, lights ) 
     {
-        this.shader.bind( gl );
+        this.shader.bind( gl , this.texture, this.texture2, this.texture3, this.texture4, lights );
+       
         
-        gl.activeTexture(slot);
-        gl.bindTexture(gl.TEXTURE_2D, this.texture.data);
         gl.uniform1i(this.shader.shaderProgram.samplerUniform, 0); 
     }

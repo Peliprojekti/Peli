@@ -26,8 +26,7 @@ Assetmanager.prototype.get = function(  path, initializer )
     }
     else
         {
-            console.log("Loaded " + path + " from the file! " );
-        //   alert( "Loaded " + path + " from the file! ");
+           console.log("Loaded " + path + " from the file! " );
            var temp = initializer( this.renderer, path );
            this.repository[ path ] = temp; 
            return temp;   

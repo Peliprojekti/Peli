@@ -54,7 +54,7 @@
         // Postprocessing here
     }
 
-    Renderer.prototype.draw = function(  myEntity  )
+    Renderer.prototype.draw = function(  myEntity , lights  )
     {
         var shaderProgram   = myEntity.material.shader.shaderProgram;
         var worldMatrix     = myEntity.orientation.get_Matrix();       
@@ -62,7 +62,8 @@
         
         var worldViewMatrix = mat4.multiply( viewMatrix , worldMatrix  );
      
-        myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
+        myEntity.material.bind( this.gl, this.gl.TEXTURE0, lights );    // SLOT is OBSOLETE here!
+        
       
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix           );
         this.gl.uniformMatrix4fv( shaderProgram.mMatrixUniform , false,  worldMatrix                      );
@@ -73,12 +74,14 @@
      
      
      
-     
+     // NEEDS A DIFFERENT SHADER!
      Renderer.prototype.draw_SS = function( myEntity ) 
      {
         var shaderProgram   = myEntity.material.shader.shaderProgram;
         var worldViewMatrix = myEntity.orientation.get_Matrix();  
      
+     
+        
         myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
       
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix           );
