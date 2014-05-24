@@ -75,8 +75,8 @@ client.coms.position = function(params, object, callback) {
 };
 
 client.coms.swipe = function(x, y, sincePreviousTime) {
-    client.coms.call('position', [x,y,xincePreviousTime], null, null);
-    //this.rpc.callRpc('swipe', [null, x, y, sincePreviousTime], this, null);
+    //client.coms.call('position', [x,y,sincePreviousTime], null, null);
+    //this.rpc.callRpc('swipe', [x, y, sincePreviousTime], this, null);
 };
 
 client.coms.orientation = function(tiltLR, tiltFB, dir) {

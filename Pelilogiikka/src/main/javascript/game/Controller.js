@@ -2,7 +2,7 @@
  * Controller
  * @constructor
  */
-function Controller(onConnect, onDisconnect, onJoinGame) {
+function Controller(onConnect, onDisconnect, onJoinGame, onLeftGame) {
     var that = this;
 
     this.hostname = location.hostname;
@@ -44,14 +44,4 @@ function Controller(onConnect, onDisconnect, onJoinGame) {
  */
 Controller.prototype.close = function() {
     this.rpc.close();
-};
-
-/**
- * This will send messages directly to the server
- * @param {function} msg
- */
-Controller.prototype.serverMsg = function(msg) {
-    log.error("this is currently kinda depracated");
-    // TODO ????
-    //this.socket.emit('serverMsg', [(typeof userID === 'undefined' ? 'new user' : userID), msg]);
 };

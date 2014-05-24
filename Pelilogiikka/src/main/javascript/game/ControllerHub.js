@@ -33,6 +33,7 @@ ControllerHub.prototype.setOnMessage = function(callback) {
 
 ControllerHub.prototype.addNewController = function() {
     var that = this;
+
     if (this.controllerCount < this.maxPlayers) {
         log.info("Trying to connect new Controller to server");
         this.controllerCount++;
@@ -63,12 +64,4 @@ ControllerHub.prototype.addNewController = function() {
  */
 ControllerHub.prototype.close = function() {
     // TODO disconnect controllers
-};
-
-/**
- * This will send messages directly to the server
- * @param {function} msg
- */
-Controller.prototype.serverMsg = function(msg) {
-    window.alert("serverMsg not implemented");
 };

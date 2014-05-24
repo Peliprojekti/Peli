@@ -1,11 +1,10 @@
-var peli = peli || {};
-peli.common = peli.client || {};
+var io = io || {};
 
 /**
  * Sends messages to server
  */
-peli.common.sendServerMessage = function(msg) {
-    if (peli.common.sendServerMessage._socket === undefined) {
+io.sendServerMessage = function(msg) {
+    if (io.sendServerMessage._socket === undefined) {
         var socket = eio.Socket(
                 { host: location.hostname, port: 1340 }, // TODO hardcoded port here!
                 { transports: ['websocket','polling'] });
@@ -20,7 +19,7 @@ peli.common.sendServerMessage = function(msg) {
             peli.common.sendServerMessage._socket = null;
         });
 
-        peli.common.sendServerMessage._socket = socket;
+        io.sendServerMessage._socket = socket;
     }
-    peli.common.sendServerMessage._socket.send(msg);
+    io.sendServerMessage._socket.send(msg);
 };

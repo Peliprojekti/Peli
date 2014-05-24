@@ -28,7 +28,7 @@ PeliRPC.prototype.connect = function(callback) {
     };
 
     var onMessage = function(message) {
-        //log.info("RPC::onMessage() . Received message: " + message);
+        log.info("PeliRPC::onMessage() . Received message: " + message);
         var rpc = JSON.parse(message);
 
         if (rpc.method) {

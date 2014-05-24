@@ -58,12 +58,10 @@ function connectToServer() {
 
     controllers = new ControllerHub(function(player) {
         //onConnect
-        log.info("New player joined dummy game");
+        log.info("New player connected to dummy game");
         var crosshair = new Crosshair(0, 0, 20, "#0000FF");
         player.setCrosshair(crosshair);
         players.push(player);
-        //return 'mouseMove';
-        //
     }, 100);
 
     //controllers.open();

@@ -1,6 +1,6 @@
 var controller = controller || {};
 
-controller.speedTest = function(container, canvas) {
+controller.speedTest = function(container, canvas, drawText) {
     var coms = client.coms;
     var autoFireInterval = 1;
     var reportInterval = 1000;
@@ -50,8 +50,8 @@ controller.speedTest = function(container, canvas) {
 
         var avgResTime = retTime/msgSec;
 
-        canvas.drawText("messages sent: " + msgSec, "msgSent");
-        canvas.drawText("repsonse time: " + avgResTime, "restime");
+        drawText("messages sent: " + msgSec, "msgSent");
+        drawText("repsonse time: " + avgResTime, "restime");
 
         bi.callsMade -= msgSec;
     }, reportInterval);
@@ -64,3 +64,7 @@ controller.speedTest = function(container, canvas) {
         canvas = null;
     };
 };
+
+$(document).ready(function() {
+    client.phone.registerController('speedTest', controller.speedTest);
+});

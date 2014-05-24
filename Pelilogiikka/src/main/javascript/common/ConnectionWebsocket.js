@@ -59,7 +59,12 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
     };
 
     this.connection.onmessage = function(e) {
-        onMessage(e.data);
+        if (e.data == 'playerDisconnected') {
+            log.info("Player has disconnected");
+        }
+        else {
+            onMessage(e.data);
+        }
 
         if (!that.persistent) {
             that.socket.close();
