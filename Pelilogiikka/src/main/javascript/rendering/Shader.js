@@ -175,17 +175,13 @@ To do this we make sure we declare a varying variable of the same type and name 
             
             for( var i = 0; i < lightCnt; i++ )   //"-64.297035 , -34.088657 , -117.10157"
             {
-                var x = lights[i].position.x;
-                var y = lights[i].position.y;
-                var z = lights[i].position.z;
-            
-                posArray.push( x );
-                posArray.push( y );
-                posArray.push( z );
+                var pos = lights[i].orientation.get_Position();
+              
+                posArray.push( pos.x );
+                posArray.push( pos.y );
+                posArray.push( pos.z );
             }
             
-            //console.log( "Shader has received" + lightCnt + " lights ");
-        
             this.shaderProgram.lights    = gl.getUniformLocation(this.shaderProgram , "lights"    );  
                                            gl.uniform3fv( this.shaderProgram.lightsUniform   , posArray  );
         

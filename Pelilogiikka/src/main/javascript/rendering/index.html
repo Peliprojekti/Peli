@@ -98,13 +98,12 @@
         vec4 temp       = normalize( worldMatrix * vec4( vertexNormal , 0.0 ) );
         surfaceNormal   = vec3( temp.x, temp.y, temp.z );
         
-             temp       = normalize( worldMatrix * vec4( vec3( 1,0,0 ) , 0.0 ) );
+             temp       = normalize( worldMatrix * vec4( vec3( 0,-1,0 ) , 0.0 ) );
         surfaceBinormal = vec3( temp.x, temp.y, temp.z );
           
-        surfaceTangent  = cross( surfaceNormal, surfaceBinormal );
-            
-         
-        
+    //       surfaceTangent  = cross( surfaceBinormal ,  surfaceNormal  );
+        surfaceTangent  = cross(   surfaceNormal , surfaceBinormal );           // God damn handedness... Which way?!
+      
         
     gl_Position    = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
     }
@@ -140,8 +139,8 @@
           vec4 fragVector = texture2D( normalSampler, vec2(fragmentUV.s, fragmentUV.t));    // This should hopefully contain the normal [x,y,z,0] in its own space
         
           
-          vec3 tNormal    = (fragVector.x * surfaceBinormal) + (fragVector.x * surfaceTangent) + (fragVector.z * surfaceNormal);
-        
+          vec3 tNormal    = (fragVector.y * surfaceBinormal) + (fragVector.x * surfaceTangent) + (fragVector.z * surfaceNormal);
+               normalize( tNormal );
         
         // Transform the fragment normal into the tangent space of the surface.
         
@@ -266,7 +265,7 @@
     var myScene    = null;
 
 
- 
+    var haxLight   = new Light( new Vector3(-64.297035 , -34.088657 , -117.10157), 100.0, 0, 0, 0, 0, 0, 0 );
     
     
       
@@ -274,20 +273,50 @@
     {   
         requestAnimFrame(tick);
           
-        if( key_Down( 37 ) )   myCamera.yaw( -0.05  );
-        if( key_Down( 39 ) )   myCamera.yaw(  0.05 );
-          
-        if( key_Down( 38 ) )   myCamera.forward(  1.0 );  
-        if( key_Down( 40 ) )   myCamera.backward( 1.0 );
-
-        if( key_Down( 33 ) )   myCamera.move([0,1,0]);
-        if( key_Down( 34 ) )   myCamera.move([0,-1,0]);
+      
          
         if(  key_Down( 87 ) )   myCamera.pitch( 0.008 );        // W to pitch up
         if(  key_Down( 83 ) )   myCamera.pitch( -0.008 );      // S to pitch down
          
         if(  key_Down( 81 ) )   myCamera.roll( 0.008 );       // Q to roll left
         if(  key_Down( 69 ) )   myCamera.roll( -0.008 );      // E to roll right
+         
+            
+        if( key_Down( 16) ) // Shift
+        {
+            if( key_Down( 38 ) )   haxLight.forward(  1.0 );
+            if( key_Down( 40 ) )   haxLight.backward( 1.0 );
+
+            if( key_Down( 33 ) )   haxLight.move([0,1,0]);
+            if( key_Down( 34 ) )   haxLight.move([0,-1,0]);
+             
+            if( key_Down( 37 ) )   haxLight.move([1,0,0]);
+            if( key_Down( 39 ) )   haxLight.move([-1,0,0]);
+            
+        }
+        else
+            {
+                if( key_Down( 38 ) )   myCamera.forward(  1.0 );
+                if( key_Down( 40 ) )   myCamera.backward( 1.0 );
+
+                if( key_Down( 33 ) )   myCamera.move([0,1,0]);
+                if( key_Down( 34 ) )   myCamera.move([0,-1,0]);
+                
+                if( key_Down( 37 ) )   myCamera.yaw( -0.05  );
+                if( key_Down( 39 ) )   myCamera.yaw(  0.05 );
+   
+            }
+         
+         
+        // Snap testlight to cam position
+        if( key_Down( 13 ) )
+        {    
+           // var vec3 = 
+              var vec  = myCamera.orientation.get_Position();
+              haxLight.orientation.set_Position( [vec.x,vec.y,vec.z] );
+            //myCamera.forward(  1.0 );
+        }
+         
          
         myScene.render();
     }
@@ -317,7 +346,7 @@
        var canvas          = document.getElementById("Canvas");
        renderer            = new Renderer( canvas );
        var assman          = new Assetmanager( renderer );
-       myScene             = new Scene( renderer, assman, "data/TestLevel/Test.irr" ); 
+       myScene             = new Scene( renderer, assman, "data/Basic/Basic.irr" ); 
         
        register_Inputs();      // Erillinen luokka tälle!
       
@@ -332,6 +361,8 @@
        
        myScene.insert( myCamera      , "CAM"       );
    //    myScene.insert( gob1          , "GUI"       );
+    
+       myScene.insert( haxLight, "LIGHT" );
     
        renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
        
