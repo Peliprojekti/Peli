@@ -1,13 +1,11 @@
 var http = require('http');
 var fs = require('fs');
 var express = require('express');
-var morgan = require('morgan');
 var userID = require('./userIdentification.js');
 
 var server = null;
 
 var nconf = null;
-var logger = null;
 var comServer = null;
 
 module.exports = new function() {
@@ -15,34 +13,19 @@ module.exports = new function() {
         //server.close(); // doesn't work?
     };
 
-    this.start = function(nconf_, logger_, comServer_) {
+    this.start = function(nconf_,  comServer_) {
         nconf = nconf_;
-        logger = logger_;
         comServer = comServer_;
         var winston = require('winston');
         var express = require('express');
 
         server = express();
 
-        // enable logging if needed
-        if (nconf.get('debug')) {
-            //server.use(morgan('short'));
-        }
-
-        // send some config stuff to express
-        server.set('view engine', 'jade');
-        server.set('view options', { pretty: true }); // doesn't seem to work?
         server.set('views', nconf.get('jade_views'));
 
         // serve some static files
         server.use("/javascript", express.static(nconf.get('static_javascript')));
         server.use("/data", express.static(nconf.get('static_data')));
-
-        // server socket.io.js from modules directory
-        server.get('/socket.io/socket.io.js', function(request, response) {
-            response.setHeader('content-type', 'text/javascript');
-            response.sendfile(__dirname + "/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js");
-        });
 
         server.get('/engine.io/engine.io.js', function(request, response) {
             response.setHeader('content-type', 'text/javascript');
@@ -64,8 +47,9 @@ module.exports = new function() {
         // send client stuff to 
         server.get('/', function(request, response) {
             response.render(nconf.get('client_jade'), {
+                "pretty": nconf.get('html_pretty'),
                 "title": nconf.get("game_name"),
-                "debug": nconf.get("debug"),
+                "jsdebug": nconf.get("debug"),
                 "controller": nconf.get("controller"),
                 "client_port": nconf.get("client_port"),
 				"com_benchmark": nconf.get("com_benchmark"),
@@ -76,7 +60,8 @@ module.exports = new function() {
 
         server.get('/screen', function(request, response) {
             response.render(nconf.get('screen_jade'), {
-                "debug": nconf.get("debug"),
+                "pretty": nconf.get('html_pretty'),
+                "jsdebug": nconf.get("debug"),
                 "screen_port": nconf.get('screen_port'),
                 "jsonrpc_protocol": nconf.get("jsonrpc_protocol")
             });

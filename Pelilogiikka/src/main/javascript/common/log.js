@@ -14,7 +14,7 @@ var log = {
         }
         
         if (send) {
-            serverDebugMessenger.send(message);
+            peli.common.sendServerMessage(message);
         }
     },
 

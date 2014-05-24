@@ -1,37 +1,34 @@
 doctype html
 html(lang='en')  
   head  
-  title= title  
+    title= title  
 
-  style
-    include dummy.css
+    style
+      include dummy.css
 
   body
     #container
       canvas#canvas HTML5 Canvas not supported.
 
-    script(type="text/javascript")
-      include ../onload.js
-
     script(type="text/javascript").
       var SCREEN_PORT = #{screen_port};
-      var DEBUG = #{debug};
+      var DEBUG = #{jsdebug};
       var JSONRPC_PROTOCOL = "#{jsonrpc_protocol}"
 
 
-    script(src="/socket.io/socket.io.js")
+    script(type="text/javascript" src="/jquery/jquery.min.js")
 
-    script(src="/javascript/common/log.js")
+    script(type="text/javascript" src="/javascript/common/log.js")
 
-    script(src="/javascript/game/Player.js")
-    script(src="/javascript/game/Controller.js")
-    script(src="/javascript/game/ControllerHub.js")
+    script(type="text/javascript" src="/javascript/game/Player.js")
+    script(type="text/javascript" src="/javascript/game/Controller.js")
+    script(type="text/javascript" src="/javascript/game/ControllerHub.js")
 
     script(type="text/javascript" src="/javascript/common/ConnectionWebsocket.js")
     script(type="text/javascript" src="/javascript/common/PeliRPC.js")
 
-    script(src="/javascript/game/dummy/crosshair.js")
-    script(src="/javascript/game/dummy/dummy.js")
+    script(type="text/javascript" src="/javascript/game/dummy/crosshair.js")
+    script(type="text/javascript" src="/javascript/game/dummy/dummy.js")
 
-    script(src="/javascript/rendering/math/Interpolator.js")
-    script(src="/javascript/rendering/math/Vector2.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Interpolator.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Vector2.js")

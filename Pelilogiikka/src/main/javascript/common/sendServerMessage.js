@@ -2,23 +2,25 @@ var peli = peli || {};
 peli.common = peli.client || {};
 
 /**
- * Sends debug messages to server
+ * Sends messages to server
  */
 peli.common.sendServerMessage = function(msg) {
-    if (peli.io.serverDebugMessenger._socket === undefined) {
+    if (peli.common.sendServerMessage._socket === undefined) {
         var socket = eio.Socket(
                 { host: location.hostname, port: 1340 }, // TODO hardcoded port here!
                 { transports: ['websocket','polling'] });
 
         socket.on('close', function() {
-            log.warn("ServerDebugMessenger disconnected");
+            log.warn("sendServerMessage disconnected");
+            peli.common.sendServerMessage._socket = null;
         });
 
         socket.on('error', function() {
-            log.errorr("ServerDebugMessenger connection error");
+            log.errorr("sendServerMessage connection error");
+            peli.common.sendServerMessage._socket = null;
         });
 
-        peli.io.serverDebugMessenger._socket = socket;
+        peli.common.sendServerMessage._socket = socket;
     }
-    peli.io.serverDebugMessenger._socket.send(msg);
+    peli.common.sendServerMessage._socket.send(msg);
 };

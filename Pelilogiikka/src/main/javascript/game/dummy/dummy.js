@@ -144,7 +144,7 @@ function drawRectangle(ctx) {
    }
    */
 
-addWindowOnload(function() {
+$(document).ready(function() {
     log.debug("entering dummy onload");
 
     initializeUI();

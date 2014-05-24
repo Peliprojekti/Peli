@@ -1,12 +1,11 @@
 var initServer = require("./initServer");
 var fs = require('fs');
 var nconf = require('nconf');
-var winston = require('winston');
 var fork = require('child_process').fork;
 
 /*
  * SETUP
- * 
+ *
  * All of the setup stuff can be passed on the comman line.
  *
  * In case of booleans no parameters need to be passed, like so:
@@ -20,20 +19,25 @@ var fork = require('child_process').fork;
  * success with it... -hasse
  */
 
-nconf.argv().env().file({ file: 'peli_config.json'});
+nconf.argv().env().file({
+    file: 'peli_config.json'
+});
+
 nconf.defaults({
     game_name: 'Peliprojektin Peli',
     http_port: 8080, // this is the port where the clients need to connect initially
     client_port: 1338, // client and screen port is for coms, and not directly exposed to users
-    screen_port: 1339,  
+    screen_port: 1339,
     log_level: 'error', // debug switch overrides this to debug
 
-    jsonrpc_protocol: 'peliprojekti-controller', // currently just a random name
+    jsonrpc_protocol: 'peliprojekti-controller', // does nothing?
 
     debug: false,
-	com_benchmark: false,
-	com_benchmark_timeout: 5000,
-	com_benchmark_file: __dirname + '/log/benchmark.log',
+    html_pretty: true,
+
+    com_benchmark: false,
+    com_benchmark_timeout: 5000,
+    com_benchmark_file: __dirname + '/log/benchmark.log',
 
     static_javascript: __dirname + '/../javascript',
     static_data: __dirname + "/../javascript/renderind/data",
@@ -43,13 +47,6 @@ nconf.defaults({
     screen_jade: 'dummy/dummy.jade',
 
     controller: 'touchDrag'
-});
-
-var logger = new (winston.Logger)({
-      transports: [
-        //new (winston.transports.File)({ filename: 'somefile.log', level: 'error' }),
-        new (winston.transports.Console)({ level: (nconf.get('debug') ? 'debug' : nconf.get('log_level')) })
-      ]
 });
 
 /*
@@ -75,30 +72,33 @@ function startComServer() {
     comServer.send({ // disable/enable debugging mode on comServer
         type: 'config',
         value: {
-            debug:  nconf.get('debug'),
-        client_port: nconf.get('client_port'),
-        screen_port: nconf.get('screen_port'),
-        benchmark: nconf.get('com_benchmark'),
-        benchmark_timeout: nconf.get('com_benchmark_timeout'),
-        benchmark_filename: nconf.get('com_benchmark_filename')
-
+            debug: nconf.get('debug'),
+            client_port: nconf.get('client_port'),
+            screen_port: nconf.get('screen_port'),
+            benchmark: nconf.get('com_benchmark'),
+            benchmark_timeout: nconf.get('com_benchmark_timeout'),
+            benchmark_filename: nconf.get('com_benchmark_filename')
         }
     });
 
-    comServer.send({ type: 'startServer' });
+    comServer.send({
+        type: 'startServer'
+    });
     return comServer;
 }
 
 var comServer = startComServer();
 require('util').log("main.js - starting http server");
-initServer.start(nconf, logger, comServer);
+initServer.start(nconf, comServer);
 
 /*
  * Properly handle shutdown to ensure nothing remains listening on restarts
  */
-process.on( 'SIGINT', function() {
+process.on('SIGINT', function() {
     console.log("shutting down from SIGINT (Ctrl-C)");
-    comServer.send({ type: 'shutdown' });
+    comServer.send({
+        type: 'shutdown'
+    });
     initServer.shutdown();
     setTimeout(process.exit(0), 100);
 });
