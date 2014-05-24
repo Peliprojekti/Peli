@@ -75,7 +75,7 @@ client.phone = {
                 self.drawText('Orientiation changes: ' + self.oc++, 0);
                 self.drawText('Resize events: ' + self.rc++, 1);
             }, 100);
-            self.isResizing = flase;
+            self.isResizing = false;
         }
     },
 
@@ -186,8 +186,11 @@ client.phone = {
             case 'mouseMove':
                 self.controllerDisabler = controller.mouseMove(self.container, self.canvas);
                 break;
+            case 'speedTest':
+                self.controllerDisabler = controller.speedTest(self.container, self.canvas);
+                break;
             default:
-                log.error('trying to load unknown controller: ' + type);
+                throw new Error("Trying to load unknown controller: '" + type + "'");
 
                 /*
                    case 'touchDrag':

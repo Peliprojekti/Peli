@@ -63,6 +63,7 @@ module.exports = new function() {
                 "pretty": nconf.get('html_pretty'),
                 "jsdebug": nconf.get("debug"),
                 "screen_port": nconf.get('screen_port'),
+                "controller": nconf.get("controller"),
                 "jsonrpc_protocol": nconf.get("jsonrpc_protocol")
             });
         });

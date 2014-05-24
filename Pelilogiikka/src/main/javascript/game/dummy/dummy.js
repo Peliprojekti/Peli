@@ -62,7 +62,9 @@ function connectToServer() {
         var crosshair = new Crosshair(0, 0, 20, "#0000FF");
         player.setCrosshair(crosshair);
         players.push(player);
-    }, 10);
+        //return 'mouseMove';
+        //
+    }, 100);
 
     //controllers.open();
 }

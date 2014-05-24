@@ -41,11 +41,12 @@ Player.prototype.setOnChangeListener = function(func) {
 };
 
 Player.prototype.setPosition = function(x, y) {
-    if (x <= 1 && x >= 0) {
+    if (x <= 1 && x >= 0 && y <= 1 && y >= 0) {
         this.x = x;
-    }
-    if (y <= 1 && y >= 0) {
         this.y = y;
+    }
+    else {
+        throw new Error("setPosition recieved incorrect values " + x + "," + y);
     }
 };
 
