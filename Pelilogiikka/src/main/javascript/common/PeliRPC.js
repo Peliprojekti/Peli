@@ -97,18 +97,23 @@ PeliRPC.prototype.connect = function(callback) {
                 }
 
                 if (typeof rpc.result != "undefined") {
-                    that.callbacks[rpc.id].listener.apply(
-                        that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
+                    log.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
+                    that.callbacks[rpc.id].listener.apply(that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
+                    //that.callbacks[rpc.id].listener.apply(that.callbacks[rpc.id].object, ['asdfas']);
                 } else if (typeof rpc.error != "undefined") {
+                    log.debug("PeliRPC::onMessage() - returning an error to callback");
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
                 } else {
-                    //log.debug("PeliRPC::onMessage() - calling callbac");
+                    log.debug("PeliRPC::onMessage() - calling callbac with no return value");
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, null, null]);
                 }
 
                 delete that.callbacks[rpc.id];
+            }
+            else {
+                    //log.debug("PeliRPC::onMessage() - oh, whatever, no callbacks for id " + rpc.id);
             }
         }
     };

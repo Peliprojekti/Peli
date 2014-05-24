@@ -16,6 +16,7 @@ function Controller(onConnect, onDisconnect, onJoinGame) {
         log.info("Controller::RPC::joinGame - " + userID);
         this.player = playerFactory.getPlayer(userID);
         onJoinGame(this.player);
+        return CONTROLLER;
     });
 
     this.rpc.exposeRpcMethod('position', this, function(x, y) {

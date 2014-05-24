@@ -1,3 +1,5 @@
+var dummy = dummy || {};
+
 var MESSAGE_TIME = 10000;
 
 var canvas = null;
@@ -10,6 +12,8 @@ var players = [];
 var messages = [];
 var message_timer = [];
 var context = null;
+
+var updateables = [];
 
 function showMessage(msg) {
     log.info("displaying message: " + msg);
@@ -24,6 +28,8 @@ function initializeUI() {
 
     c_width = canvas.width;
     c_height = canvas.height;
+
+    this.updateables.push(dummy.fpsDisplay.createFancy(context));
 
     requestAnimationFrame(animate);
 
@@ -62,10 +68,19 @@ function connectToServer() {
 }
 
 function animate(time) {
+    update(time);
     draw(time);
+
     requestAnimationFrame(animate);
+}
+
+function update(time) {
     players.forEach(function(player) {
-        player.update();
+        player.update(time);
+    });
+
+    updateables.forEach(function(updatable) {
+        updatable.update(time);
     });
 }
 
@@ -73,25 +88,16 @@ function draw(time) {
     ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, c_width, c_height);
 
-    drawRectangle(ctx);
-    players.forEach(function(player) {
-        player.draw(ctx);
+    updateables.forEach(function(updatable) {
+        updatable.draw(ctx, time);
     });
 
-    /*
-   for (var i = 0; i < messages.length; i++) {
-//ctx.font = "bold 20 sans-serif";
-ctx.fillText(messages[i], c_width/2, c_height/2 * 30);
-}
-*/
+    drawRectangle(ctx);
 
-    /*
+    players.forEach(function(player) {
+        player.draw(ctx, time);
+    });
 
-   dummy.msgTimers[0]--;
-   if (dummy.msgTimers[0] == 0) {
-
-   }
-   */
     ctx.restore();
 }
 

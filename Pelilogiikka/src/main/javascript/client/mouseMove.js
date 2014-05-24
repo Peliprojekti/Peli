@@ -1,7 +1,6 @@
-var peli = peli || {};
-peli.client = peli.client || {};
+var controller = controller || {};
 
-peli.client.mouseMove = function(container, canvas) {
+controller.mouseMove = function(container, canvas) {
     var _LISTENER_NAME = 'hiiriLiike';
     var _RESIZE_CHECK_INTERVAL = 300;
 
@@ -17,8 +16,7 @@ peli.client.mouseMove = function(container, canvas) {
         //canvasWidth = element.width;
     }, _RESIZE_CHECK_INTERVAL);
 
-
-    var coms = peli.client.coms;
+    var coms = client.coms;
 
     // forward all events through coms
     var listener = function(event) {
@@ -32,10 +30,6 @@ peli.client.mouseMove = function(container, canvas) {
     };
 
     log.info("Enabling mouseMove", true);
-    //Icanvas.mousemove(_LISTENER_NAME, listener );
-    //canvas.bind('mousemove.mouseMove', listener);
-    //canvas.mousemove(listener);
-    //doument.getElmentById("canvas").mousemove(listener);
     $('#canvas').mousemove(listener);
 
     // return disabler function

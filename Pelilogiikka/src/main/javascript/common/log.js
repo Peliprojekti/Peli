@@ -44,7 +44,29 @@ var log = {
 
     set_level: function(level) {
         log.level = level;
+    },
+
+    socket: null,
+
+    sendServerMessage:  function(msg) {
+        if (this.socket === undefined) {
+            var socket = eio.Socket(
+                    { host: location.hostname, port: 1340 }, // TODO hardcoded port here!
+                    { transports: ['websocket','polling'] });
+
+            socket.on('close', function() {
+                log.warn("sendServerMessage disconnected");
+                this.socket = null;
+            });
+
+            socket.on('error', function() {
+                log.errorr("sendServerMessage connection error");
+                this.socket = null;
+            });
+
+            this.socket = socket;
+        }
+
+        this.socket.send(msg);
     }
 };
-
-

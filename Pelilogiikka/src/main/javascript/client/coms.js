@@ -1,19 +1,18 @@
-var peli = peli || {};
-peli.client = peli.client || {};
-peli.client.coms = peli.client.coms || {};
+var client = client || {};
+client.coms = client.coms || {};
 
 /**
  * This opens the initial connection
  * @param {function} callback - will be called when connection is opened
  */
-peli.client.coms.open = function(callback) {
-    if (!peli.client.coms._isOpened) {
+client.coms.open = function(callback) {
+    if (!client.coms._isOpened) {
         var connection = new ConnectionEngineIO(location.hostname, CLIENT_PORT, JSONRPC_PROTOCOL, true);
         var rpc = new PeliRPC(connection);
 
-        peli.client.coms._rpc = rpc;
+        client.coms._rpc = rpc;
 
-        peli.client.coms._isOpened = true;
+        client.coms._isOpened = true;
         rpc.connect(callback);
     }
 };
@@ -21,35 +20,35 @@ peli.client.coms.open = function(callback) {
 /**
  * close connection
  */
-peli.client.coms.close = function() {
-    if (peli.client.coms._rpc === undefined) {
-        throw "peli.client.coms.close() - trying to close before creating";
+client.coms.close = function() {
+    if (client.coms._rpc === undefined) {
+        throw "client.coms.close() - trying to close before creating";
     }
-    peli.client.coms._rpc.close();
+    client.coms._rpc.close();
 };
 
 /**
  * This will send messages directly to the server
  * @param {function} msg
  */
-peli.client.coms.serverMsg = function(msg) {
-    log.warn('deprecated, use peli.common.sendServerMessage directly');
-    peli.common.sendServerMessage(msg);
+client.coms.serverMsg = function(msg) {
+    log.warn('deprecated, instead use log.sendServerMessage directly');
+    log.sendServerMessage(msg);
 };
 
 /**
  * Request a gameslot
  * @param {function} callback - will be called like so callback(controllerType);
  */
-peli.client.coms.joinGame = function(userID, callback) {
-    if (peli.client.coms._rpc === undefined) {
-        log.error("peli.client.coms.joinGame - trying to join before opening connection");
+client.coms.joinGame = function(userID, callback) {
+    if (client.coms._rpc === undefined) {
+        log.error("client.coms.joinGame - trying to join before opening connection");
     }
     if (!userID) {
-        log.error("peli.client.coms.joinGame - must supply userID, recieved: " + userID);
+        log.error("client.coms.joinGame - must supply userID, recieved: " + userID);
     }
-    log.info("peli.client.coms.joinGame - calling RPC::joinGame(" + userID + ")");
-    peli.client.coms._rpc.callRpc('joinGame', [userID], this, callback);
+    log.info("client.coms.joinGame - calling RPC::joinGame(" + userID + ")");
+    client.coms._rpc.callRpc('joinGame', [userID], this, callback);
 };
 
 /**
@@ -61,8 +60,8 @@ peli.client.coms.joinGame = function(userID, callback) {
  * @param {object} callback - will be called with return value
  *
  */
-peli.client.coms.call = function(method, params, object, callback) {
-    peli.client.coms._rpc.callRpc(method, params, object, callback);
+client.coms.call = function(method, params, object, callback) {
+    client.coms._rpc.callRpc(method, params, object, callback);
 };
 
 /*
@@ -71,16 +70,16 @@ peli.client.coms.call = function(method, params, object, callback) {
  * instead at some point expose the carrRpc thingy to the outside, like the upper method
  */
 
-peli.client.coms.position = function(params, object, callback) {
-    peli.client.coms.call('position', params, object, callback);
+client.coms.position = function(params, object, callback) {
+    client.coms.call('position', params, object, callback);
 };
 
-peli.client.coms.swipe = function(x, y, sincePreviousTime) {
-    peli.client.coms.call('position', [x,y,xincePreviousTime], null, null);
+client.coms.swipe = function(x, y, sincePreviousTime) {
+    client.coms.call('position', [x,y,xincePreviousTime], null, null);
     //this.rpc.callRpc('swipe', [null, x, y, sincePreviousTime], this, null);
 };
 
-peli.client.coms.orientation = function(tiltLR, tiltFB, dir) {
-    peli.client.coms.call('orientation', [titleLR, titleFB, dir], null, null);
+client.coms.orientation = function(tiltLR, tiltFB, dir) {
+    client.coms.call('orientation', [titleLR, titleFB, dir], null, null);
     //this.rpc.callRpc('orientation', [null, tiltLR, tiltFB, dir], this, null);
 };

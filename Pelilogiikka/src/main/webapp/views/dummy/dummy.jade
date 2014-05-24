@@ -14,6 +14,7 @@ html(lang='en')
       var SCREEN_PORT = #{screen_port};
       var DEBUG = #{jsdebug};
       var JSONRPC_PROTOCOL = "#{jsonrpc_protocol}"
+      var CONTROLLER = '#{controller}';
 
 
     script(type="text/javascript" src="/jquery/jquery.min.js")
@@ -28,6 +29,7 @@ html(lang='en')
     script(type="text/javascript" src="/javascript/common/PeliRPC.js")
 
     script(type="text/javascript" src="/javascript/game/dummy/crosshair.js")
+    script(type="text/javascript" src="/javascript/game/dummy/fpsDisplay.js")
     script(type="text/javascript" src="/javascript/game/dummy/dummy.js")
 
     script(type="text/javascript" src="/javascript/rendering/math/Interpolator.js")
