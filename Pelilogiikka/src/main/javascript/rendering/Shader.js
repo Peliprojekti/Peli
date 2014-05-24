@@ -23,7 +23,7 @@ To do this we make sure we declare a varying variable of the same type and name 
 
 
 
- Shader.prototype.getShader = function (gl, id) 
+ Shader.prototype.getShader = function (gl, id ) 
  {
         var shaderScript = document.getElementById(id);
        
@@ -75,7 +75,7 @@ To do this we make sure we declare a varying variable of the same type and name 
 
     function Shader( gl, vs_Program, ps_Program, features )
     {
-        this.features       = new ShaderFeatures( ["NULL","NULL"] );//features;
+        this.features       = features;//features;
         
 	var fragmentShader  = this.getShader( gl, ps_Program      );	
 	var vertexShader    = this.getShader( gl, vs_Program      );
@@ -90,7 +90,8 @@ To do this we make sure we declare a varying variable of the same type and name 
             alert("Could not load shader!");
 	}
         
-        
+        gl.useProgram( this.shaderProgram );        // Make the shader active.
+         //
     // Enabling universal terms - These had better be present in every single shader, or there will be a nasty crash.
         
         this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation( this.shaderProgram, "vertexPos");
@@ -102,7 +103,7 @@ To do this we make sure we declare a varying variable of the same type and name 
         this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram,  "vertexUV");
                                                      gl.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
         
-        this.shaderProgram.samplerUniform          = gl.getUniformLocation(this.shaderProgram, "textureSampler");
+        this.shaderProgram.samplerUniform          = gl.getUniformLocation(this.shaderProgram, "texSampler" );
         
         this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "projMatrix"     );
 	
@@ -113,13 +114,14 @@ To do this we make sure we declare a varying variable of the same type and name 
     
     // Setting up the light rack
         
-        this.shaderProgram.lightsUniform = gl.getUniformLocation( this.shaderProgram, "lights"); // Getting location
-                                       
+        this.shaderProgram.lightsUniform   = gl.getUniformLocation( this.shaderProgram, "lights"); 
+        this.shaderProgram.lightCntUniform = gl.getUniformLocation( this.shaderProgram, "lightCnt"); 
+                                                    
         
         if (typeof features  != 'undefined')
         {
           // Setup the extended capabilities
-            if( features.normal_Map )
+            if( features.normal_Map == true )
             {
                 
             }
@@ -139,56 +141,59 @@ To do this we make sure we declare a varying variable of the same type and name 
         
         
         // Texture 1 is always active! 
-        gl.activeTexture( gl.TEXTURE0 );
+      //  gl.activeTexture( gl.TEXTURE0 );
+       //   gl.bindTexture( gl.TEXTURE_2D, tex1.data );
+   
+        gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, tex1.data );
+        gl.uniform1i( gl.getUniformLocation(this.shaderProgram, "texSampler"), 0);
+        
          
-       
-        if( this.features.normal_Map )
-        {
-             gl.activeTexture( gl.TEXTURE1 );
-             gl.bindTexture(gl.TEXTURE_2D, tex2.data);
+        if( this.features.normal_Map == true )
+        {  
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, tex2.data );
+            gl.uniform1i( gl.getUniformLocation(this.shaderProgram, "normalSampler"), 1);
          
             if( this.features.parallax_Map )
             {
-                 gl.activeTexture( gl.TEXTURE2 );
-                 gl.bindTexture(gl.TEXTURE_2D, tex3.data);
+                /*
+                gl.activeTexture(gl.TEXTURE2);
+                gl.bindTexture(gl.TEXTURE_2D, tex3.data );
+                gl.uniform1i( gl.getUniformLocation(this.shaderProgram, "normalSampler"), 1);
+                */
             }
+       
         }
        
-        // Setup lights here.
-        var posArray = [];
-        
-        for( var i = 0; i < lights.length; i++ )   //"-64.297035 , -34.088657 , -117.10157"
+       
+        var lightCnt = lights.length;
+       
+        if( lightCnt != 0 )  // Setup lights here.
         {
-            var x = lights[i].position.x;
-            var y = lights[i].position.y;
-            var z = lights[i].position.z;
+            var posArray = [];
             
-          //  console.log( x + " , " + y + " , " + z );
+            for( var i = 0; i < lightCnt; i++ )   //"-64.297035 , -34.088657 , -117.10157"
+            {
+                var x = lights[i].position.x;
+                var y = lights[i].position.y;
+                var z = lights[i].position.z;
             
-            posArray.push( x );
-            posArray.push( y );
-            posArray.push( z );
-        }
+                posArray.push( x );
+                posArray.push( y );
+                posArray.push( z );
+            }
             
-        console.log( "Shader has generated " + lights.length + " groups of 3");
-               
-        this.shaderProgram.vColor    = gl.getUniformLocation(this.shaderProgram, "vColor");
-      
+            //console.log( "Shader has received" + lightCnt + " lights ");
         
-        this.shaderProgram.lights    = gl.getUniformLocation(this.shaderProgram, "lights");  
-        gl.uniform3fv( this.shaderProgram.lights   , posArray                             );
+            this.shaderProgram.lights    = gl.getUniformLocation(this.shaderProgram , "lights"    );  
+                                           gl.uniform3fv( this.shaderProgram.lightsUniform   , posArray  );
         
-        
-     // this.shaderProgram.lightCnt  = gl.getUniformLocation(this.shaderProgram, "lightCnt");
-     //   gl.uniform1i( this.shaderProgram.lightCnt , lights.length                           );
+                                           
+            this.shaderProgram.lightCnt  = gl.getUniformLocation(this.shaderProgram, "lightCnt"    );
+                                           gl.uniform1i( this.shaderProgram.lightCntUniform , lightCnt    );
        
-      //  var testPos = [-50.226761, -31.182508, -106.169586];
-      //  this.shaderProgram.light1    = gl.getUniformLocation(this.shaderProgram, "light1");
-       // gl.uniform4f( this.shaderProgram.light1   , testPos[0], testPos[1], testPos[2], 1.0 );
-        
-        
-        
+        }
        
     gl.useProgram( this.shaderProgram );        // Make the shader active.
     }

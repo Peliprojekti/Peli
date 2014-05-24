@@ -227,12 +227,11 @@
             var attributes               = node.get_Subfields("attributes");
            
             var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
-            var node_Description         = read_Node( node_Variables      );
+            var node_Description         = read_Node( node_Variables );
                 
             var node_Position            = node_Description[0].casted();
             var node_Rotation            = node_Description[1].casted();
             var node_Scale               = node_Description[2].casted();
-        
         
           
         
@@ -240,7 +239,7 @@
             if( type == "mesh")
             {
                 var node_Materials       = node.get_Subfields("materials");                 
-                var material_Attributes  = node_Materials[0].get_Subfields("attributes");  // There should be exactly ONE <materials> tag per node! More -> assert fail here.
+                var material_Attributes  = node_Materials[0].get_Subfields("attributes");  // There should be exactly ONE <materials> tag per field! More -> assert fail here.
                 var materialList         = build_Materials( material_Attributes, assetManager, renderer );
                 var materialCount        = materialList.length; 
          
@@ -263,14 +262,14 @@
                 the_Scene.insert( entity , "DYNAMIC" );
                 }
                 
+                
             }       
             else
-                if( type == "light" )    // For a node that is of type "mesh"....
+                if( type == "light" )    // For a node that is of type "light"....
                 {
                   
-                    var variables = attributes[0].get_Variables();
-                            
-                                                                      // IF not... Need to implement a retarded case - switch or if then else loop.
+                        var variables       = attributes[0].get_Variables();     // Plz god, let the light variables be in a fixed order...
+                                                                                 // IF not... Need to implement a retarded case - switch or if then else loop.
                         var lightName       = variables[0].casted();
                         var lightID         = variables[1].casted();
                         var lightPos        = variables[2].casted();
@@ -284,8 +283,7 @@
                         var attenuation     = variables[12].casted();
                         var radius          = variables[13].casted();
                         
-                        
-                        var light = new Light( lightPos , radius, color_Ambient, color_Diffuse, color_Specular, attenuation.x, attenuation.y, attenuation.z );
+                        var light           = new Light( lightPos , radius, color_Ambient, color_Diffuse, color_Specular, attenuation.x, attenuation.y, attenuation.z );
                         
                         the_Scene.insert( light , "LIGHT" );
                 }
