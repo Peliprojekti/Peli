@@ -169,7 +169,9 @@
                 else
                     textureList.push( assetManager.get( texturePaths[t] , function( renderer ,path )
                     {
-                        return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
+                        var filterType = ( t == 0) ? "FILTER_FANCY" : "FILTER_PLAIN";
+                            
+                        return new Texture( renderer.gl, path, filterType );  // Substitute PLAIN from extracted flags!
                     }));
             }
             
@@ -187,9 +189,6 @@
                    {
                        return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
                    }));
-                  
-                  
-                 alert( haxPath );
             }
             
             
@@ -347,6 +346,16 @@
         nodes.forEach( function( node )
         {
             var type                     = node.get_Type();
+            
+            if( type == "path" )
+            {
+            
+            alert( "path found!");
+            return;
+            }
+            
+            
+            
             var attributes               = node.get_Subfields("attributes");
            
             var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
@@ -419,7 +428,7 @@
         
         
     console.log(" Scene parsed succesfully! ");    
-    alert("OK with " + the_Scene.entries_Dynamic.length + " nodes");
+    //alert("OK with " + the_Scene.entries_Dynamic.length + " nodes");
     return the_Scene;
     }
     
