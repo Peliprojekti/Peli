@@ -51,6 +51,8 @@
             var material_textureWrap2;
             var material_textureWrap3;
             var material_textureWrap4;
+            var material_Parallax;
+            
             
             material_Variables.forEach( function( variable )
             {
@@ -80,7 +82,9 @@
               else
               if( variable.label == "TextureWrap3"     ) material_textureWrap3 = variable;
               else
-              if( variable.label == "TextureWrap4"     ) material_textureWrap4 = variable;                                                        
+              if( variable.label == "TextureWrap4"     ) material_textureWrap4 = variable;
+              else
+              if( variable.label == "Lighting"         ) material_Parallax     = variable;
             });
             
           var ret = [];
@@ -98,11 +102,14 @@
               ret.push( material_Texture3.value                );
               ret.push( material_Texture4.value                );
               
-              ret.push( material_textureWrap1.value )
-              ret.push( material_textureWrap2.value )
-              ret.push( material_textureWrap3.value )
-              ret.push( material_textureWrap4.value )
-            
+              ret.push( material_textureWrap1.value );
+              ret.push( material_textureWrap2.value );
+              ret.push( material_textureWrap3.value );
+              ret.push( material_textureWrap4.value );
+              
+              ret.push( material_Parallax.value     );
+              
+              
     return ret;
     }
     
@@ -152,7 +159,10 @@
             var textureList          = [];
             var texturePaths         = [ relative_Path( material_Description[6] ), relative_Path( material_Description[7] ), 
                                          relative_Path( material_Description[8] ), relative_Path( material_Description[9] ) ];  // Each attribute field can declare at most four textures, each for each active slot
-                    
+            
+            
+            
+            
             for( var t = 0; t < MAX_TEXTURES; t++ ) 
             {
                 if( texturePaths[t] == "NULL") textureList.push( new Texture( renderer.gl, "data/NULL.png", "FILTER_PLAIN" ) );  // WARNING! -> hardcoded
@@ -162,7 +172,27 @@
                         return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
                     }));
             }
-                     
+            
+            // Check for Parallax mapping hax:
+            var parallax = material_Description[ 14 ];
+            
+            if( parallax == "true" )  // Loads and assigns the map into FOURTH texture slot.
+            { 
+             
+                var cutoff   =  texturePaths[1].indexOf( "_", 0 );
+                var haxPath  = texturePaths[1].substring( 0, cutoff );
+                    haxPath += "_DISP.bmp";
+                  
+                   textureList[2] = ( assetManager.get( haxPath , function( renderer , path )
+                   {
+                       return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
+                   }));
+                  
+                  
+                 alert( haxPath );
+            }
+            
+            
             var shaderPath = "DEFAULT_SHADER";                                                      // This is a dummy "path" for now
             
             var shader     = assetManager.get( shaderPath , function( renderer , shaderPath )
@@ -248,12 +278,6 @@
                 var line   = lines[i];
                 var tokens = line.split(" ");
                 
-                
-                
-           
-                
-                
-                
                 var x = parseFloat( tokens[0]);
                 var y = parseFloat( tokens[1]);
                 var z = parseFloat( tokens[2]);
@@ -332,7 +356,7 @@
             var node_Rotation            = node_Description[1].casted();
             var node_Scale               = node_Description[2].casted();
         
-          
+            
         
             // For a node that is of type "mesh"....
             if( type == "mesh")
