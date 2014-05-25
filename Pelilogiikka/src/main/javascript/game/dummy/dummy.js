@@ -30,6 +30,7 @@ function initializeUI() {
     c_height = canvas.height;
 
     this.updateables.push(dummy.fpsDisplay.createFancy(context));
+    this.updateables.push(dummy.rpsDisplay.createFancy(context));
 
     requestAnimationFrame(animate);
 
@@ -53,21 +54,23 @@ function setupCanvas() {
     return canvas;
 }
 
+
+
 function connectToServer() {
     var players = this.players;
 
     log.info("Opening controllerHub");
     game.controllerHub.openHub(
-            function(player) { // onPlayerJoined
-                log.info("New player connected to dummy game");
-                var crosshair = new Crosshair(0, 0, 20, "#0000FF");
-                player.setCrosshair(crosshair);
-                players.push(player);
-            },
-            function(player) { // onPlayerLeft
-            },
-            100 // maxPlayers
-            );
+        function(player) { // onPlayerJoined
+            log.info("New player connected to dummy game");
+            var crosshair = new Crosshair(0, 0, 20);
+            player.setCrosshair(crosshair);
+            players.push(player);
+        },
+        function(player) { // onPlayerLeft
+        },
+        100 // maxPlayers
+    );
 
     //controllers.open();
 }
@@ -93,11 +96,12 @@ function draw(time) {
     ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, c_width, c_height);
 
+    drawRectangle(ctx);
+
     updateables.forEach(function(updatable) {
         updatable.draw(ctx, time);
     });
 
-    drawRectangle(ctx);
 
     players.forEach(function(player) {
         player.draw(ctx, time);
@@ -117,7 +121,7 @@ var testRect = {
 
 function drawRectangle(ctx) {
     ctx.save();
-    ctx.fillStyle = "rgb(200,0,0)";
+    ctx.fillStyle = "rgb(200, 0, 0)";
     testRect.x += testRect.xm;
     testRect.y += testRect.ym;
     ctx.fillRect(testRect.x, testRect.y, 100, 100);

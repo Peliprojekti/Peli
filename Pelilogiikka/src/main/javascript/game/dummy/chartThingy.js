@@ -8,9 +8,11 @@ dummy.chartThingy = {
     ChartThingy: function(ctx, x, y, width, height, scale, flip) {
         this.x = x || 0;
         this.y = y || 0;
+        this.width = width || (ctx.canvas.width - this.x);
+        this.height = height || (ctx.canvas.height - this.y);
         this.scale = Math.abs(scale) || 1000;
-        this.width = width || ctx.canvas.width;
-        this.height = height || ctx.canvas.height;
+
+        console.info("creating ChartThingy", this.x, this.y, this.width, this.height, this.scale);
 
         if (flip) {
             this.scale = this.scale * -1;

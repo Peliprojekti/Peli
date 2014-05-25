@@ -50,3 +50,12 @@ var log = {
         sendServerMessage(error);
     },
 };
+
+$(document).ready(function() {
+    if (!DEBUG) {
+        console.info("disabling all console log/info/debug messages");
+        console.info = function() {};
+        console.log = function() {};
+        console.debug = function() {};
+    }
+});

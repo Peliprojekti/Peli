@@ -38,7 +38,7 @@ game.controllerHub = {
                 console.info("Player joined with userID ", userID);
 
                 var player = playerFactory.getPlayer(userID);
-                controller.setPlayer(player);
+                controller.setPlayer(player, self.controllerType);
                 self.onPlayerJoined(player);
 
                 createNewController();

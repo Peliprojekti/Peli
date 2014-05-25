@@ -9,12 +9,12 @@ sendServerMessage = function(msg) {
 
         socket.on('close', function() {
             log.warn("sendServerMessage disconnected");
-            peli.common.sendServerMessage._socket = null;
+            sendServerMessage._socket = null;
         });
 
         socket.on('error', function() {
             log.errorr("sendServerMessage connection error");
-            peli.common.sendServerMessage._socket = null;
+            sendServerMessage._socket = null;
         });
 
         sendServerMessage._socket = socket;

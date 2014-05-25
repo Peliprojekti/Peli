@@ -1,3 +1,7 @@
+var peliRPC = {
+    totalMessagesProcessed: 0
+};
+
 /**
  * This encapsulate all the comunications stuff
  * @constructor
@@ -13,6 +17,7 @@ function PeliRPC(connection) {
     this.benchmarkLog = [];
 }
 
+
 PeliRPC.prototype.getOnMessage = function() {
     var that = this;
     var closeCallback = function() {
@@ -21,7 +26,8 @@ PeliRPC.prototype.getOnMessage = function() {
     };
 
     var onMessage = function(message) {
-        console.debug("PeliRPC::onMessage() . Received message: ", message);
+        peliRPC.totalMessagesProcessed++;
+        //console.debug("PeliRPC::onMessage() . Received message: ", message);
         var rpc = JSON.parse(message);
 
         if (rpc.method) {
@@ -93,7 +99,7 @@ PeliRPC.prototype.getOnMessage = function() {
                     console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
                     that.callbacks[rpc.id].listener.apply(that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
                 } else if (typeof rpc.error != "undefined") {
-                    console.warn("PeliRPC::onMessage() - returning an error to callback: ", rcp.error);
+                    console.warn("PeliRPC::onMessage() - returning an error to callback: ", rpc.error);
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
                 } else {

@@ -13,7 +13,6 @@ controller.mouseMove = function(container, canvas, drawText) {
             null, null);
     };
 
-    log.info("Enabling mouseMove", true);
     $('#canvas').mousemove(listener);
 
     // return disabler function
