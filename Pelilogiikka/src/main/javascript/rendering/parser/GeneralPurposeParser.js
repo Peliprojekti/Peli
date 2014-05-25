@@ -51,6 +51,8 @@
             var material_textureWrap2;
             var material_textureWrap3;
             var material_textureWrap4;
+            var material_Parallax;
+            
             
             material_Variables.forEach( function( variable )
             {
@@ -80,7 +82,9 @@
               else
               if( variable.label == "TextureWrap3"     ) material_textureWrap3 = variable;
               else
-              if( variable.label == "TextureWrap4"     ) material_textureWrap4 = variable;                                                        
+              if( variable.label == "TextureWrap4"     ) material_textureWrap4 = variable;
+              else
+              if( variable.label == "Lighting"         ) material_Parallax     = variable;
             });
             
           var ret = [];
@@ -98,11 +102,14 @@
               ret.push( material_Texture3.value                );
               ret.push( material_Texture4.value                );
               
-              ret.push( material_textureWrap1.value )
-              ret.push( material_textureWrap2.value )
-              ret.push( material_textureWrap3.value )
-              ret.push( material_textureWrap4.value )
-            
+              ret.push( material_textureWrap1.value );
+              ret.push( material_textureWrap2.value );
+              ret.push( material_textureWrap3.value );
+              ret.push( material_textureWrap4.value );
+              
+              ret.push( material_Parallax.value     );
+              
+              
     return ret;
     }
     
@@ -152,7 +159,10 @@
             var textureList          = [];
             var texturePaths         = [ relative_Path( material_Description[6] ), relative_Path( material_Description[7] ), 
                                          relative_Path( material_Description[8] ), relative_Path( material_Description[9] ) ];  // Each attribute field can declare at most four textures, each for each active slot
-                    
+            
+            
+            
+            
             for( var t = 0; t < MAX_TEXTURES; t++ ) 
             {
                 if( texturePaths[t] == "NULL") textureList.push( new Texture( renderer.gl, "data/NULL.png", "FILTER_PLAIN" ) );  // WARNING! -> hardcoded
@@ -162,7 +172,27 @@
                         return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
                     }));
             }
-                     
+            
+            // Check for Parallax mapping hax:
+            var parallax = material_Description[ 14 ];
+            
+            if( parallax == "true" )  // Loads and assigns the map into FOURTH texture slot.
+            { 
+             
+                var cutoff   =  texturePaths[1].indexOf( "_", 0 );
+                var haxPath  = texturePaths[1].substring( 0, cutoff );
+                    haxPath += "_DISP.bmp";
+                  
+                   textureList[2] = ( assetManager.get( haxPath , function( renderer , path )
+                   {
+                       return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
+                   }));
+                  
+                  
+                 alert( haxPath );
+            }
+            
+            
             var shaderPath = "DEFAULT_SHADER";                                                      // This is a dummy "path" for now
             
             var shader     = assetManager.get( shaderPath , function( renderer , shaderPath )
@@ -183,32 +213,125 @@
     }
 
 
-    function build_Meshes( meshPath, assetManager, renderer )
-    {
-         // Here we download a list of meshes, ignoring the infile material definitions.
-        var meshList  = assetManager.get( meshPath , function( renderer , meshPath )
-        {
-            var meshParser  = new Parser( meshPath );
-            var meshTexts   = import_MeshData( meshParser.the_Document.rawData );
-            var meshes      = [];
-                    
-            meshTexts.forEach( function( meshData )
-            {
-                var vertices  = meshData[0];
-                var indices   = meshData[1];
-                var texCoords = meshData[2];
-                var normals   = meshData[3];
-                       
-                meshes.push( new Mesh( renderer.gl, vertices, indices, texCoords, normals )  );
-            });
 
-        console.log("Loaded " + meshes.length + " meshes from file ");
-        return meshes;
+//   -240.000000 -45.000000 -210.000000 
+//    0.000000 1.000000 0.000000 
+//    ffffffff 
+//    0.000000 0.000000 
+//    1.000000 0.000000 0.000000 
+//    0.000000 0.000000 -1.000000
+    /*
+	[0],[1],[2] 	// Position
+	[3],[4],[5]     // Normal
+	[6]             // Diffuse color?!
+	[7], [8] 	// UV
+	[9], [10],[11] 	// Binormal
+	[12],[13],[14]	// Tangent
+     */
+
+    function build_Meshes( meshPath, assetManager, renderer )
+    {    
+        var meshList      = [];
+        var vertexData    = []; 
+        var indexData     = [];
+        
+        var meshParser  = new Parser( meshPath );
+        
+        var fields = meshParser.the_Document.get_Subfields( "indices" );
+        
+        
+        fields.forEach( function( field )           
+        {
+            var lines   = field.rawData.split("\n");
+            var indices = [];
+            
+            for( var t = 1; t < lines.length; t++ )     // Skip over the header [0]
+            {
+                var tokens  = lines[t].split(" ");
+                 
+                for( var i = 0; i < tokens.length; i++ )  // Skip the header 
+                {
+                    var index = parseInt( tokens[i] );
+                    indices.push( index );
+                }
+            }   
+           
+           
+        indexData.push( indices );
         });
         
+        fields = meshParser.the_Document.get_Subfields( "vertices" );
+     
+        for( var f = 0; f < fields.length; f++ )
+        {
+            var field     = fields[f];
+            var lines     = field.rawData.split("\n");
+            
+            var positions = [];
+            var texCoords = [];
+            var normals   = [];
+            var binormals = [];
+            var tangents  = [];
+            
+            for( var i = 1; i < lines.length; i++ )     // Skip the header at 0
+            {
+                var line   = lines[i];
+                var tokens = line.split(" ");
+                
+                var x = parseFloat( tokens[0]);
+                var y = parseFloat( tokens[1]);
+                var z = parseFloat( tokens[2]);
+                  
+                var nX = parseFloat( tokens[3]);
+                var nY = parseFloat( tokens[4]);
+                var nZ = parseFloat( tokens[5]);
+                             
+                var u  = parseFloat( tokens[7]);
+                var v  = parseFloat( tokens[8]);
+                
+                var bX = parseFloat( tokens[9]);
+                var bY = parseFloat( tokens[10]);
+                var bZ = parseFloat( tokens[11]);
+                  
+                var tX = parseFloat( tokens[12]);
+                var tY = parseFloat( tokens[13]);
+                var tZ = parseFloat( tokens[14]);
+                
+                positions.push( x );
+                positions.push( y );
+                positions.push( z );
+                
+                texCoords.push( u );
+                texCoords.push( -v );       // Negate V to accomodate handedness shift
+                
+                normals.push( nX );
+                normals.push( nY );
+                normals.push( nZ );
+               
+                binormals.push( bX );
+                binormals.push( bY );
+                binormals.push( bZ );  // Flip the binormal attribute or not?
+                
+                tangents.push( tX );
+                tangents.push( tY );
+                tangents.push( tZ );
+                
+            }
+                                       
+            var mesh   = new Mesh( renderer.gl, positions, indexData[f], texCoords, normals, binormals, tangents ); 
+            meshList.push( mesh );
+        }
         
-    return meshList; 
+    return meshList;
     }
+
+
+
+
+
+
+
+
 
 
 
@@ -227,20 +350,19 @@
             var attributes               = node.get_Subfields("attributes");
            
             var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
-            var node_Description         = read_Node( node_Variables      );
+            var node_Description         = read_Node( node_Variables );
                 
             var node_Position            = node_Description[0].casted();
             var node_Rotation            = node_Description[1].casted();
             var node_Scale               = node_Description[2].casted();
         
-        
-          
+            
         
             // For a node that is of type "mesh"....
             if( type == "mesh")
             {
                 var node_Materials       = node.get_Subfields("materials");                 
-                var material_Attributes  = node_Materials[0].get_Subfields("attributes");  // There should be exactly ONE <materials> tag per node! More -> assert fail here.
+                var material_Attributes  = node_Materials[0].get_Subfields("attributes");  // There should be exactly ONE <materials> tag per field! More -> assert fail here.
                 var materialList         = build_Materials( material_Attributes, assetManager, renderer );
                 var materialCount        = materialList.length; 
          
@@ -263,14 +385,14 @@
                 the_Scene.insert( entity , "DYNAMIC" );
                 }
                 
+                
             }       
             else
-                if( type == "light" )    // For a node that is of type "mesh"....
+                if( type == "light" )    // For a node that is of type "light"....
                 {
                   
-                    var variables = attributes[0].get_Variables();
-                            
-                                                                      // IF not... Need to implement a retarded case - switch or if then else loop.
+                        var variables       = attributes[0].get_Variables();     // Plz god, let the light variables be in a fixed order...
+                                                                                 // IF not... Need to implement a retarded case - switch or if then else loop.
                         var lightName       = variables[0].casted();
                         var lightID         = variables[1].casted();
                         var lightPos        = variables[2].casted();
@@ -284,8 +406,7 @@
                         var attenuation     = variables[12].casted();
                         var radius          = variables[13].casted();
                         
-                        
-                        var light = new Light( lightPos , radius, color_Ambient, color_Diffuse, color_Specular, attenuation.x, attenuation.y, attenuation.z );
+                        var light           = new Light( lightPos , radius, color_Ambient, color_Diffuse, color_Specular, attenuation.x, attenuation.y, attenuation.z );
                         
                         the_Scene.insert( light , "LIGHT" );
                 }
