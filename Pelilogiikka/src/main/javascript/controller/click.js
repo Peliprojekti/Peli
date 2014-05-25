@@ -1,38 +1,23 @@
-function Click() {}
+var controller = controller || {};
 
-Click.prototype.initCanvas = function(){
-	var canvas = document.getElementById("canvas");
-        var thisObject = this;
-	canvas.addEventListener("click", function(event){ thisObject.doClick(event); }, false);
-	return canvas;
-}
+controller.click = function(container, canvas, drawText) {
+    var listener = function(event) {
+        var x = event.x / canvas.width;
+        var y = event.y / canvas.width;
 
-Click.prototype.doClick = function(event) {
-	event.preventDefault();
-	var coords = this.getRelativeClickCoords(event);
+        client.coms.call('position', [x, y], null, null);
 
-	/*
-        var x = event.x;
-        var y = event.y;
-	var canvasDimensions = getCanvasDimensions();
-	*/
+        drawText("Coordinates: (" + x + ", " + y + ")", 'coords');
+        drawText("Canvas: (" + canvas.width + ", " + canvas.height + ")", 'canvas');
+    };
 
-	//Test code
-	updateCoordinatesText(coords[0], coords[1]);
-	//clientComs.send(coords);
-      clientComs.send({
-            position: coords
-        });
-}
+    canvas.addEventListener("click", listener);
 
-Click.prototype.getRelativeClickCoords = function(event) {
-        var x = event.x;
-        var y = event.y;
+    return  function() {
+        canvas.removeEventListener("click", listener);
+    };
+};
 
-	var dimensions = getCanvasDimensions();
-
-	var relativeX = x / dimensions[0];
-	var relativeY = y / dimensions[1];
-
-	return [relativeX, relativeY];
-}
+$(document).ready(function() {
+    client.phone.registerController('click', controller.click);
+});

@@ -1,21 +1,23 @@
-function Touch() {}
+var controller = controller || {};
 
-Touch.prototype.initCanvas = function(){
-	var canvas = document.getElementById("canvas");
-        var thisObject = this;
-	canvas.addEventListener("touchstart", function(event){ thisObject.doTouch(event); }, false);
-	return canvas;
-}
+controller.touch = function(container, canvas, drawText) {
+    var listener = function(event) {
+        var x = event.targetTouches[0].pageX / canvas.width;
+        var y = event.targetTouches[0].pageY / canvas.height;
 
-Touch.prototype.doTouch = function(event) {
-	event.preventDefault();
-	var coords = getRelativeCoords(0);
+        client.coms.call('position', [x, y], null, null);
 
-	//Test code
-	updateCoordinatesText(coords[0], coords[1]);
-	//clientComs.send(coords);
-        clientComs.send({
-              position: coords
-        });
-}
+        drawText("Coordinates: (" + x + ", " + y + ")", 'coords');
+        drawText("Canvas: (" + canvas.width + ", " + canvas.height + ")", 'canvas');
+    };
 
+    canvas.addEventListener("touchstart", listener);
+
+    return  function() {
+        canvas.removeEventListener("touchstart", listener);
+    };
+};
+
+$(document).ready(function() {
+    client.phone.registerController('touch', controller.touch);
+});
