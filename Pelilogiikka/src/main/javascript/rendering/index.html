@@ -71,15 +71,16 @@
     uniform vec3   lAtten[32];   // Constant term, Linear term, Quadratic term
     uniform  int     lightCnt;
    
-   
-   // Haxlight
-    //uniform vec4 light1;
+    uniform vec3  eyePosition;
     
     
     // Vertex attributes
     attribute vec3    vertexPos;
     attribute vec2    vertexUV;
+    
     attribute vec3    vertexNormal;
+    attribute vec3    vertexBinormal;
+    attribute vec3    vertexTangent;
     
     // Parameters for pixel shader
     varying   vec4  fragmentPos;
@@ -91,19 +92,20 @@
     
     void main(void) 
     {
-        fragmentUV     = vertexUV;
-        fragmentPos    = worldMatrix * vec4(    vertexPos , 1.0 );                   // Needs to be taken from model space to world space.
+        fragmentUV      = vertexUV;
+        fragmentPos     = worldMatrix * vec4( vertexPos , 1.0 );                   // Needs to be taken from model space to world space.
         
         
-        vec4 temp       = normalize( worldMatrix * vec4( vertexNormal , 0.0 ) );
-        surfaceNormal   = vec3( temp.x, temp.y, temp.z );
-        
-             temp       = normalize( worldMatrix * vec4( vec3( 0,-1,0 ) , 0.0 ) );
-        surfaceBinormal = vec3( temp.x, temp.y, temp.z );
-          
-    //       surfaceTangent  = cross( surfaceBinormal ,  surfaceNormal  );
-        surfaceTangent  = cross(   surfaceNormal , surfaceBinormal );           // God damn handedness... Which way?!
+        // These seem correct
+        vec4 sN4        = normalize( worldMatrix * vec4( vertexNormal   , 0.0 ) );  // Inverse transpose required if nonuniform scale.
+        surfaceNormal   = vec3( sN4.x, sN4.y, sN4.z );
       
+        vec4 sB4        = normalize( worldMatrix * vec4( vertexBinormal  , 0.0 ) ); 
+        surfaceBinormal = vec3( -sB4.x, -sB4.y, -sB4.z );
+        
+        surfaceTangent  = cross( surfaceNormal ,  surfaceBinormal );
+        // These seem correct
+        // BUT WHY?! How the hell is the handedness going here anyhow?
         
     gl_Position    = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
     }
@@ -120,37 +122,54 @@
     uniform vec3   lAtten[32];   // Constant term, Linear term, Quadratic term
     uniform  int     lightCnt;
 
+    uniform vec3  eyePosition;   // This is where the camera is located
+
+
     uniform sampler2D       texSampler;
     uniform sampler2D    normalSampler;
+    uniform sampler2D      dispSampler;
     
     
-    varying vec4         fragmentPos;       // Contains the fragment world position in VIEW_SPACE
-    varying vec2         fragmentUV;
-    
+    varying   vec4         fragmentPos;       // Contains the fragment world position in VIEW_SPACE
+    varying   vec2          fragmentUV;
     varying   vec3       surfaceNormal;
-    varying   vec3       surfaceBinormal;
-    varying   vec3       surfaceTangent;
+    varying   vec3     surfaceBinormal;
+    varying   vec3      surfaceTangent;
     
     
     void main(void) 
     {
-          vec3 fragPos    = vec3(fragmentPos);  
-          
-          vec4 fragVector = texture2D( normalSampler, vec2(fragmentUV.s, fragmentUV.t));    // This should hopefully contain the normal [x,y,z,0] in its own space
+          vec2 texCoords      = vec2(fragmentUV.s, fragmentUV.t);
+          vec3 fragPos        = vec3(fragmentPos);
+          vec3 eyeToPixel     = fragPos - eyePosition;
+             eyeToPixel       = normalize( eyeToPixel );
+         // Get the displacement here
+   
+              eyeToPixel      = vec3( dot(eyeToPixel,surfaceTangent) , dot(eyeToPixel,surfaceBinormal) , dot(eyeToPixel,surfaceNormal) );
+              eyeToPixel.x   /= eyeToPixel.z;
+              eyeToPixel.y   /= eyeToPixel.z;
+              
+              
+              
+              // Now we have the vector, lets multiply it with weights
+               float weight    = 1.0;
+               vec2   shift    = vec2( eyeToPixel.x, eyeToPixel.y) * texture2D( dispSampler, texCoords ).r * weight;
+                      shift.x  /= 512.0;
+                      shift.y  /= 512.0; // Divide by map dimensions to get get texel units.
+            
+      //          texCoords     += shift;
+       
+         // Grab the per fragment normal from the associated map
+          vec4 fragVector     = texture2D( normalSampler, texCoords );    // This should hopefully contain the normal [x,y,z,0] in its own space
+               fragVector    *= 2.0;
+               fragVector    -= vec4( 1.0,1.0,1.0,0.0);                   // Convert the encoded normal [0,1] to [-1,-1]
+            
+          vec3 tNormal        = fragVector.x * surfaceTangent + fragVector.y * surfaceBinormal + fragVector.z * surfaceNormal;
         
-          
-          vec3 tNormal    = (fragVector.y * surfaceBinormal) + (fragVector.x * surfaceTangent) + (fragVector.z * surfaceNormal);
-               normalize( tNormal );
-        
-        // Transform the fragment normal into the tangent space of the surface.
-        
-        
-        
-        
-        float final_Illumination      = 0.0;                     // ATTENTION. Colored lights require component wise operation! This is for white light only!
-        
+          float total         = 0.0;                     // ATTENTION. Colored lights require component wise operation! This is for white light only!
+       
         // Generate the illumination for each light. Highest scalars win.
-        for( int i = 0; i < 128; i++ )  // Arbitrarily large index to scam the shader into "infinite" loop. Thx glsl for being flexible.
+        for( int i = 0; i < 16; i++ )  // Arbitrarily large index to scam the shader into "infinite" loop. Thx glsl for being flexible.
         {
             if( i == lightCnt ) break;
             
@@ -168,16 +187,15 @@
             float attenuation         = 1.0 / ( constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term );
             
             float multiplier          = cosAngle * attenuation;
-            final_Illumination        = max( multiplier, final_Illumination );
+            total                     = max( multiplier, total );
         }
       
       
-      
-        vec4 color    = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));   // Diffuse
+        vec4 color    = texture2D( texSampler, texCoords );   // Diffuse
         
-             color.r = clamp( ( color.r * final_Illumination), 0.01, 1.0 ); ;
-             color.g = clamp( ( color.g * final_Illumination), 0.02, 1.0 ); ;
-             color.b = clamp( ( color.b * final_Illumination), 0.04, 1.0 ); ;
+             color.r = clamp( ( color.r * total ), 0.01, 1.0 ); ;
+             color.g = clamp( ( color.g * total ), 0.02, 1.0 ); ;
+             color.b = clamp( ( color.b * total ), 0.04, 1.0 ); ;
         
     gl_FragColor  = color;
     }
@@ -190,6 +208,12 @@
 
         
         
+
+
+
+
+
+
         
         
         
@@ -224,9 +248,7 @@
         gl_Position   = worldViewMatrix * vec4(vertexPos, 1.0);
        
     }
-   
 </script>
-
 
 
 <script id="COLOR_PS" type="x-shader/x-fragment">
@@ -343,18 +365,15 @@
  
     function Start() 
     {
+        
        var canvas          = document.getElementById("Canvas");
        renderer            = new Renderer( canvas );
        var assman          = new Assetmanager( renderer );
-       myScene             = new Scene( renderer, assman, "data/Basic/Basic.irr" ); 
+       myScene             = new Scene( renderer, assman, "Showcase" ); 
         
        register_Inputs();      // Erillinen luokka tälle!
       
-       var guiTex          = assman.get    ( "data/crosshair1.png", function( renderer, path ) { return new  Texture( renderer.gl ,  path, "FILTER_PLAIN"  ); }); 
-       var guiShader       = new   Shader  ( renderer.gl , "HAX_VS"          , "COLOR_PS"                );
-       var guiMaterial     = new Material  ( guiShader   , guiTex                                        );
-       var c1              = test_Rectangle( renderer.gl , guiMaterial       , [0.05,0.05]  , [1,1,1,1]  );
-       var gob1            = new Guiobject (          c1 , [0.0,1.0,0.0,1.0] , 1.0                       );
+    
        myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
        
        myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
