@@ -27,8 +27,6 @@ game.controllerHub = {
             }
 
             log.info("Creating and connecting new Controller");
-            // TODO move all the connection stuff here instead of in PeliRPC.
-            // will have to wait since it requires rewrite of PeliRPC.
             var connection = new ConnectionWebsocket(location.hostname, self.ws_port, self.ws_protocol, true);
 
             var rpc = new PeliRPC(connection);
@@ -37,6 +35,7 @@ game.controllerHub = {
             rpc.exposeRpcMethod('joinGame', this, function(userID) {
                 console.info("Player joined with userID ", userID);
 
+                self.controllersFree--;
                 var player = playerFactory.getPlayer(userID);
                 controller.setPlayer(player, self.controllerType);
                 self.onPlayerJoined(player);
@@ -45,22 +44,23 @@ game.controllerHub = {
                 return self.controllerType;
             });
 
+            var onMessage = rpc.getOnMessage();
+
             connection.connect(function() {
                     // onConnection
                     self.controllerCount++;
                     self.controllersFree++;
                     console.log("Controller successfully connected ", self.controllerCount);
                     createNewController();
-                }, function() {
-                    // onClose
+                }, 
+                function() { // onClose
                     self.controllerCount--;
+                    // TODO check if was connected to player, and create update freeControllers ccordingly
                     console.log("Controller disconnected, now have a total of ", self.controllerCount);
-                },
-                rpc.getOnMessage(),
-                function() {
-                    // onPlayerDisconnected
-
-                    controller.freePlayer();
+                }, 
+                rpc.getOnMessage(),// onMessage
+                function() { // onPlayerDisconnected
+                    self.controllersFree++;
                     self.onPlayerLeft(controller.clearPlayer());
                 });
         }

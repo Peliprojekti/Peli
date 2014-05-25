@@ -68,6 +68,13 @@ function connectToServer() {
             players.push(player);
         },
         function(player) { // onPlayerLeft
+            var i = 0;
+            for (; i < players.length; i++) {
+                if (players[i] == player) {
+                    break;
+                }
+            }
+            players.splice(i, 1);
         },
         100 // maxPlayers
     );

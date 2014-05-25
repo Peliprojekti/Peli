@@ -61,6 +61,7 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
     this.connection.onmessage = function(e) {
         if (e.data == 'playerDisconnected') {
             log.info("Player has disconnected");
+            onPlayerDisconnect();
         }
         else {
             onMessage(e.data);

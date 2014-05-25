@@ -84,21 +84,23 @@ client.phone = {
 
 
     drawText: function(text, textID) {
-        var self = client.phone;
+        if (DEBUG) {
+            var self = client.phone;
 
-        if (typeof textID === 'undefined') {
-            throw "peli.client.phone.drawText - needs a textID";
-        }
+            if (typeof textID === 'undefined') {
+                throw "peli.client.phone.drawText - needs a textID";
+            }
 
 
-        if (self.textIndexes[textID] === undefined) {
-            self.textIndexes[textID] = self.textLines++;
-            self.texts.push(null);
-        }
+            if (self.textIndexes[textID] === undefined) {
+                self.textIndexes[textID] = self.textLines++;
+                self.texts.push(null);
+            }
 
-        if (self.texts[self.textIndexes[textID]] != text) {
-            self.texts[self.textIndexes[textID]] = text;
-            self.draw();
+            if (self.texts[self.textIndexes[textID]] != text) {
+                self.texts[self.textIndexes[textID]] = text;
+                self.draw();
+            }
         }
     },
 
@@ -117,7 +119,7 @@ client.phone = {
 
         for (var i = 0; i < self.texts.length; i++) {
             ctx.fillText(self.texts[i],
-                width / 2, (height / 2) + (i * 10));
+                    width / 2, (height / 2) + (i * 10));
         }
 
         function drawBackground(ctx) {
@@ -126,31 +128,6 @@ client.phone = {
             ctx.fillStyle = 'black';
             ctx.fillRect(10, 10, width - 20, height - 20);
         }
-
-        /*
-
-        //Test code
-        function updateStartTimeText(time) {
-        drawText("Start time: " + time, 4);
-        }
-
-        //Test code
-        function updateCurrentTimeText(time) {
-        drawText("Current time: " + time, 5);
-        }
-
-        //Test code
-        function updateStartCoordinatesText(x, y) {
-        var canvasDimensions = getCanvasDimensions();
-
-        drawText("Start coordinates: (" + x + ", " + y + ")", 6);
-        }
-
-        //Test code
-        function updateSendTimeText(time) {
-        drawText("Sent time: " + time, 7);
-        }
-        */
     },
 
     /**
@@ -180,9 +157,9 @@ client.phone = {
         }
 
         self.controllerDisabler = self.controllers[type](
-            self.container,
-            self.canvas,
-            self.drawText);
+                self.container,
+                self.canvas,
+                self.drawText);
     }
 };
 
@@ -190,17 +167,17 @@ $(document).ready(client.phone.onDocumentReady);
 
 /*
 
-function getFingerCoords(id) {
+   function getFingerCoords(id) {
    var canvas_x = event.targetTouches[id].pageX;
    var canvas_y = event.targetTouches[id].pageY;
    return [canvas_x, canvas_y];
-}
+   }
 
-function getRelativeCoords(id) {
+   function getRelativeCoords(id) {
    var coords = getFingerCoords(id);
    var canvasDimensions = getCanvasDimensions();
    var relativeX = coords[0] / canvasDimensions[0];
    var relativeY = coords[1] / canvasDimensions[1];
    return [relativeX, relativeY];
-}
-*/
+   }
+   */

@@ -31,11 +31,12 @@ game.Controller.prototype.setPlayer = function(player, controllerType) {
 };
 
 game.Controller.prototype.clearPlayer = function() {
-    var player = this.player;
+    var oldPlayer = this.player;
     this.reset();
     this.player = null;
-    player.setOnUpdate(null);
-    return player;
+
+    oldPlayer.setOnUpdate(null);
+    return oldPlayer;
 };
 
 /*
@@ -71,7 +72,7 @@ game.Controller.prototype.setControlTypeUpdater = function() {
             if (self.lastSwipe !== null) {
                 var coords = self.lastSwipe[0];
                 //Swipe start
-                if (self.lastSwipe[1] == 0) {
+                if (self.lastSwipe[1] === 0) {
                     self.startCoords = coords;
                     //self.previousDirection = null;
                     self.previousTime = 0;
@@ -91,7 +92,7 @@ game.Controller.prototype.setControlTypeUpdater = function() {
 };
 
 game.Controller.prototype.setPosition = function(x, y) {
-    console.debug("setPosition ", x, y);
+    //console.debug("setPosition ", x, y);
     this.player.setPosition(x,y);
 };
 
@@ -105,7 +106,7 @@ game.Controller.prototype.calcNewPosition = function(timestamp) {
     if (this.currentDirection.length() > 0.001) {
         if (this.time <= 1) {
             var addition = 0;
-            if (this.previousTime == 0) {
+            if (this.previousTime === 0) {
                 addition = 0.01;
             } else {
                 addition = (timestamp - this.previousTime) * 0.0001;

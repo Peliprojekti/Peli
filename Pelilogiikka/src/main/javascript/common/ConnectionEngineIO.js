@@ -44,7 +44,8 @@ ConnectionEngineIO.prototype.connect = function(connectCallback, closeCallback, 
 		}
 	});
 
-	this.socket.on('error', function() {
+	this.socket.on('error', function(err) {
+        console.warn("error connecting ", err);
 		that.close();
 
 		if(typeof connectCallback == "function") {
