@@ -70,6 +70,7 @@ client.phone = {
                 self.drawText('Resize events: ' + self.rc++, 1);
             }, 100);
             self.isResizing = false;
+            self.draw();
         }
     },
 
@@ -84,8 +85,8 @@ client.phone = {
 
 
     drawText: function(text, textID) {
+        var self = client.phone;
         if (DEBUG) {
-            var self = client.phone;
 
             if (typeof textID === 'undefined') {
                 throw "peli.client.phone.drawText - needs a textID";
@@ -99,9 +100,9 @@ client.phone = {
 
             if (self.texts[self.textIndexes[textID]] != text) {
                 self.texts[self.textIndexes[textID]] = text;
-                self.draw();
             }
         }
+        self.draw();
     },
 
     draw: function() {
@@ -114,12 +115,14 @@ client.phone = {
         var ctx = self.canvas.getContext("2d");
         drawBackground(ctx);
 
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
+        if (DEBUG) {
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
 
-        for (var i = 0; i < self.texts.length; i++) {
-            ctx.fillText(self.texts[i],
+            for (var i = 0; i < self.texts.length; i++) {
+                ctx.fillText(self.texts[i],
                     width / 2, (height / 2) + (i * 10));
+            }
         }
 
         function drawBackground(ctx) {
@@ -157,9 +160,9 @@ client.phone = {
         }
 
         self.controllerDisabler = self.controllers[type](
-                self.container,
-                self.canvas,
-                self.drawText);
+            self.container,
+            self.canvas,
+            self.drawText);
     }
 };
 

@@ -70,9 +70,7 @@ PeliRPC.prototype.getOnMessage = function() {
                         "result": result,
                         "id": rpc.id
                     });
-                }
-                else {
-                }
+                } else {}
             } catch (err) {
                 var code = (err.code ? err.code : "");
                 var message = (err.message ? err.message : "");
@@ -109,9 +107,8 @@ PeliRPC.prototype.getOnMessage = function() {
                 }
 
                 delete that.callbacks[rpc.id];
-            }
-            else {
-                    //log.debug("PeliRPC::onMessage() - oh, whatever, no callbacks for id " + rpc.id);
+            } else {
+                //log.debug("PeliRPC::onMessage() - oh, whatever, no callbacks for id " + rpc.id);
             }
         }
     };
@@ -150,8 +147,13 @@ PeliRPC.prototype.callRpc = function(method, params, object, listener) {
 };
 
 PeliRPC.prototype.exposeRpcMethod = function(name, object_, method_) {
-    this.rpcMethods[name] = {
-        object: object_,
-        method: method_
-    };
+    console.info("RPC exposing ", name);
+    if (!this.rpcMethods[name]) {
+        this.rpcMethods[name] = {
+            object: object_,
+            method: method_
+        };
+    } else {
+        throw new Error("Trying to expose rpcMethods with the same name: " + name);
+    }
 };

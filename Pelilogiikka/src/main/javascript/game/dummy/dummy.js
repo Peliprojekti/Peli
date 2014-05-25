@@ -31,6 +31,7 @@ function initializeUI() {
 
     this.updateables.push(dummy.fpsDisplay.createFancy(context));
     this.updateables.push(dummy.rpsDisplay.createFancy(context));
+    //this.updateables.push(dummy.playerPerformance.create(context));
 
     requestAnimationFrame(animate);
 
@@ -60,14 +61,24 @@ function connectToServer() {
     var players = this.players;
 
     log.info("Opening controllerHub");
+
+    /*
+    game.controllerHub.addCustomRpcMethod(
+        'playerPerformanceReport',
+        dummy.playerPerformance,
+        dummy.playerPerformance.playerPerformanceReport);
+        */
+
     game.controllerHub.openHub(
         function(player) { // onPlayerJoined
             log.info("New player connected to dummy game");
             var crosshair = new Crosshair(0, 0, 20);
             player.setCrosshair(crosshair);
             players.push(player);
+            //playerPerformance.addPlayer(player);
         },
         function(player) { // onPlayerLeft
+            //playerPerformance.removePlayer(player);
             var i = 0;
             for (; i < players.length; i++) {
                 if (players[i] == player) {

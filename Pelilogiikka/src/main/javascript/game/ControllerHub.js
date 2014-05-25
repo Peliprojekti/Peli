@@ -13,6 +13,13 @@ game.controllerHub = {
     controllers: [],
     controllersFree: 0,
 
+    customRpcs: [],
+
+
+    addCustomRpcMethod: function(methodName, methodContext, method) {
+        this.customRpcs.push([methodName, methodContext, method]);
+    },
+
     openHub: function(onPlayerJoined, onPlayerLeft, maxPlayers) {
         var self = this;
         if (onPlayerJoined === undefined) throw new Error("Need to supply at least a onPlayerJoined callback");
@@ -31,6 +38,10 @@ game.controllerHub = {
 
             var rpc = new PeliRPC(connection);
             var controller = game.controller.create(rpc);
+
+            self.customRpcs.forEach(function(rpcMethod) {
+                rpc.exposeRpcMethod(rpcMethod[0], rpcMethod[1], rpcMethod[2]);
+            });
 
             rpc.exposeRpcMethod('joinGame', this, function(userID) {
                 console.info("Player joined with userID ", userID);
