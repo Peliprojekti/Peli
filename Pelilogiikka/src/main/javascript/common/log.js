@@ -5,8 +5,8 @@ var log = {
     //coms: null,
     serverMsgr: null,
     
-    logMessage: function(type, caller, msg, send, benchmark) {
-        var message = type + caller + " " + msg;
+    logMessage: function(type, msg, send, benchmark) {
+        var message = type + msg;
         console.log(message);
         
         if (benchmark) {
@@ -14,31 +14,31 @@ var log = {
         }
         
         if (send) {
-            io.sendServerMessage(message);
+            sendServerMessage(message);
         }
     },
 
     error: function(msg, send, benchmark) {
         if(log.enabled) {
-            log.logMessage("ERROR: ", this.caller, msg, send, benchmark);
+            log.logMessage("ERROR: ", msg, send, benchmark);
         }
     },
 
     warn: function(msg, send, benchmark) {
         if(log.enabled && log.level > 0) {
-            log.logMessage("WARN: ", this.caller, msg, send, benchmark);
+            log.logMessage("WARN: ", msg, send, benchmark);
         }
     },
 
     info: function(msg, send, benchmark) {
         if(log.enabled && log.level > 1) {
-            log.logMessage("INFO: ", this.caller, msg, send, benchmark);
+            log.logMessage("INFO: ", msg, send, benchmark);
         }
     },
 
     debug: function(msg, send, benchmark) {
         if(log.enabled && log.level > 2) {
-            log.logMessage("DEBUG: ", this.caller, msg, send, benchmark);
+            log.logMessage("DEBUG: ", msg, send, benchmark);
         }
     },
 
@@ -47,6 +47,6 @@ var log = {
     },
 
     throwToServer: function(error) {
-        io.sendServerMessage(error);
+        sendServerMessage(error);
     },
 };

@@ -25,7 +25,7 @@ ConnectionEngineIO.prototype.connect = function(connectCallback, closeCallback, 
 
 	var hoststr = this.host + ":" + this.port; // + "/" + protocol;
 
-	log.info("Connecting to " + hoststr);
+	console.info("ConnectionEngineIO Connecting to ", hoststr);
 
 	this.socket = eio.Socket(
 			{ host: this.host, port: this.port },

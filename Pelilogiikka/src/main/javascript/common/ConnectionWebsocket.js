@@ -21,40 +21,40 @@ function ConnectionWebsocket(host, port, protocol, persistent) {
     //this.onMessage = null;
 }
 
-ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback, onMessage) {
-    var that = this;
+ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback, onMessage, onPlayerDisconnect) {
+    var self = this;
     this.closeCallback = closeCallback;
     //this.onMessage = onMessage;
 
     var hoststr = "ws://" + this.host + ":" + this.port; // + "/" + this.protocol;
 
-    log.info("Connecting to " + hoststr);
+    console.info("ConnectionWebsocket::connect - connecting to: ", hoststr);
 
     this.connection = new WebSocket(hoststr);
 
     this.connection.onopen = function() {
-        that.connected = true;
+        self.connected = true;
         log.info("ConnectionWebsocket::connect - connection opened " + hoststr);
         connectCallback(null, true);
     };
 
     this.connection.onclose = function() {
-        that.connected = false;
+        self.connected = false;
         log.info("ConnectionWebsocket::connect - disconnected " + hoststr);
-        if (typeof that.closCallback == "function") {
-            that.closeCallback(true);
-            that.closeCallback = null;
+        if (typeof self.closCallback == "function") {
+            self.closeCallback(true);
+            self.closeCallback = null;
         }
     };
 
     this.connection.onerror = function(error) {
-        that.connected = false;
+        self.connected = false;
         log.info("ConnectionWebsocket::connect - connection error " + hoststr);
-        that.close();
+        self.close();
 
-        if (typeof connectionCallback == "function") {
+        if (typeof self.connectionCallback == "function") {
             //callback({"code": E_NO_CONNECTION_CODE, "message": E_NO_CONNECTION + host + ":" + port + ", protocol: " +  protocol}, null);
-            that.connectionCallback(error, null);
+            self.connectionCallback(error, null);
         }
     };
 
@@ -66,8 +66,8 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
             onMessage(e.data);
         }
 
-        if (!that.persistent) {
-            that.socket.close();
+        if (!self.persistent) {
+            self.socket.close();
         }
     };
 };

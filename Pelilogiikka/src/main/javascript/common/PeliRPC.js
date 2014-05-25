@@ -13,14 +13,7 @@ function PeliRPC(connection) {
     this.benchmarkLog = [];
 }
 
-PeliRPC.prototype.resetBenchmarking = function(isOn) {
-    if (isOn) {
-        this.benchmarLog = [];
-    }
-    this.benchmarking = isOn;
-};
-
-PeliRPC.prototype.connect = function(callback) {
+PeliRPC.prototype.getOnMessage = function() {
     var that = this;
     var closeCallback = function() {
         that.callbacks = {};
@@ -28,13 +21,13 @@ PeliRPC.prototype.connect = function(callback) {
     };
 
     var onMessage = function(message) {
-        log.info("PeliRPC::onMessage() . Received message: " + message);
+        console.debug("PeliRPC::onMessage() . Received message: ", message);
         var rpc = JSON.parse(message);
 
         if (rpc.method) {
             if (!rpc.jsonrpc || rpc.jsonrpc != "2.0" || !rpc.method) {
                 // Invalid JSON-RPC
-                log.error("PeliRPC::onMessage() . Received invalid JSON-RPC message: " + message);
+                console.error("PeliRPC::onMessage() . Received invalid JSON-RPC message: " + message);
                 that.connection.sendMessage({
                     "jsonrpc": "2.0",
                     "error": {
@@ -48,7 +41,7 @@ PeliRPC.prototype.connect = function(callback) {
 
             if (!that.rpcMethods.hasOwnProperty(rpc.method)) {
                 // Unknown function
-                log.error("PeliRPC::onMessage() . Received a call to an unknown JSON-RPC method: " + rpc.method);
+                console.error("PeliRPC::onMessage() . Received a call to an unknown JSON-RPC method: " + rpc.method);
                 if (rpc.id !== null) {
                     that.connection.sendMessage({
                         "jsonrpc": "2.0",
@@ -77,7 +70,7 @@ PeliRPC.prototype.connect = function(callback) {
             } catch (err) {
                 var code = (err.code ? err.code : "");
                 var message = (err.message ? err.message : "");
-                log.error("An exeption got raised when executing a RPC method . Code: " + code + ", message: " + message);
+                console.error("An exeption got raised when executing a RPC method . Code: " + code + ", message: " + message);
                 if (rpc.id !== null) {
                     that.connection.sendMessage({
                         "jsonrpc": "2.0",
@@ -97,14 +90,14 @@ PeliRPC.prototype.connect = function(callback) {
                 }
 
                 if (typeof rpc.result != "undefined") {
-                    log.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
+                    console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
                     that.callbacks[rpc.id].listener.apply(that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
                 } else if (typeof rpc.error != "undefined") {
-                    log.debug("PeliRPC::onMessage() - returning an error to callback: " + rcp.error);
+                    console.warn("PeliRPC::onMessage() - returning an error to callback: ", rcp.error);
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
                 } else {
-                    log.debug("PeliRPC::onMessage() - calling callbac with no return value");
+                    console.debug("PeliRPC::onMessage() - calling callbac with no return value");
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, null, null]);
                 }
@@ -117,45 +110,37 @@ PeliRPC.prototype.connect = function(callback) {
         }
     };
 
-    //this.onMessage = onMessage;
-    this.connection.connect(callback, closeCallback, onMessage);
-};
-
-PeliRPC.prototype.close = function() {
-    //this.closeEventCallback = null;
-    this.connection.close();
+    return onMessage;
 };
 
 PeliRPC.prototype.callRpc = function(method, params, object, listener) {
-    if (this.connection.isOpen()) {
-        var callObject;
+    var callObject;
 
-        if (typeof listener == "function") {
-            callObject = {
-                "jsonrpc": "2.0",
-                "method": method,
-                "params": params,
-                "id": this.callSequence
-            };
+    if (typeof listener == "function") {
+        callObject = {
+            "jsonrpc": "2.0",
+            "method": method,
+            "params": params,
+            "id": this.callSequence
+        };
 
-            this.callbacks[this.callSequence] = {
-                "object": object,
-                "listener": listener
-            };
-            this.callSequence++;
-        } else {
-            // notification: doesn't expect response object
-            callObject = {
-                "jsonrpc": "2.0",
-                "method": method,
-                "params": params,
-                "id": null
-            };
-        }
-
-        this.connection.sendMessage(callObject);
-        return callObject.id;
+        this.callbacks[this.callSequence] = {
+            "object": object,
+            "listener": listener
+        };
+        this.callSequence++;
+    } else {
+        // notification: doesn't expect response object
+        callObject = {
+            "jsonrpc": "2.0",
+            "method": method,
+            "params": params,
+            "id": null
+        };
     }
+
+    this.connection.sendMessage(callObject);
+    return callObject.id;
 };
 
 PeliRPC.prototype.exposeRpcMethod = function(name, object_, method_) {
@@ -164,8 +149,3 @@ PeliRPC.prototype.exposeRpcMethod = function(name, object_, method_) {
         method: method_
     };
 };
-
-PeliRPC.prototype.setCloseEventListener = function(callback) {
-    closeEventCallback = (typeof callback == "function" ? callback : null);
-};
-

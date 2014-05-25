@@ -13,7 +13,8 @@ client.coms.open = function(callback) {
         client.coms._rpc = rpc;
 
         client.coms._isOpened = true;
-        rpc.connect(callback);
+
+        connection.connect(callback, null, rpc.getOnMessage());
     }
 };
 

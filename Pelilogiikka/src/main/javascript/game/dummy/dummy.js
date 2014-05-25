@@ -56,13 +56,18 @@ function setupCanvas() {
 function connectToServer() {
     var players = this.players;
 
-    controllers = new ControllerHub(function(player) {
-        //onConnect
-        log.info("New player connected to dummy game");
-        var crosshair = new Crosshair(0, 0, 20, "#0000FF");
-        player.setCrosshair(crosshair);
-        players.push(player);
-    }, 100);
+    log.info("Opening controllerHub");
+    game.controllerHub.openHub(
+            function(player) { // onPlayerJoined
+                log.info("New player connected to dummy game");
+                var crosshair = new Crosshair(0, 0, 20, "#0000FF");
+                player.setCrosshair(crosshair);
+                players.push(player);
+            },
+            function(player) { // onPlayerLeft
+            },
+            100 // maxPlayers
+            );
 
     //controllers.open();
 }
@@ -151,8 +156,8 @@ function drawRectangle(ctx) {
    */
 
 $(document).ready(function() {
-    log.debug("entering dummy onload");
-
+    log.info("initializing dummy UI");
     initializeUI();
+    log.info("connecting dummy to server");
     connectToServer();
 });

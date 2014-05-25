@@ -1,10 +1,8 @@
-var io = io || {};
-
 /**
  * Sends messages to server
  */
-io.sendServerMessage = function(msg) {
-    if (io.sendServerMessage._socket === undefined) {
+sendServerMessage = function(msg) {
+    if (sendServerMessage._socket === undefined) {
         var socket = eio.Socket(
                 { host: location.hostname, port: 1340 }, // TODO hardcoded port here!
                 { transports: ['websocket','polling'] });
@@ -19,7 +17,7 @@ io.sendServerMessage = function(msg) {
             peli.common.sendServerMessage._socket = null;
         });
 
-        io.sendServerMessage._socket = socket;
+        sendServerMessage._socket = socket;
     }
-    io.sendServerMessage._socket.send(msg);
+    sendServerMessage._socket.send(msg);
 };
