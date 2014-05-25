@@ -113,6 +113,7 @@
 </script>
 
    
+
 <script id="pixel_Shader" type="x-shader/x-fragment">
     precision mediump float;
 
@@ -152,13 +153,14 @@
               
               
               // Now we have the vector, lets multiply it with weights
-               float weight    = 1.0;
+               float weight    = 50.0;
                vec2   shift    = vec2( eyeToPixel.x, eyeToPixel.y) * texture2D( dispSampler, texCoords ).r * weight;
                       shift.x  /= 512.0;
                       shift.y  /= 512.0; // Divide by map dimensions to get get texel units.
             
-      //          texCoords     += shift;
-       
+              //   texCoords     += shift;
+              // Not working properly. Disable for now
+              
          // Grab the per fragment normal from the associated map
           vec4 fragVector     = texture2D( normalSampler, texCoords );    // This should hopefully contain the normal [x,y,z,0] in its own space
                fragVector    *= 2.0;
@@ -166,7 +168,11 @@
             
           vec3 tNormal        = fragVector.x * surfaceTangent + fragVector.y * surfaceBinormal + fragVector.z * surfaceNormal;
         
-          float total         = 0.0;                     // ATTENTION. Colored lights require component wise operation! This is for white light only!
+          float total_R       = 0.0;                     // ATTENTION. Colored lights require component wise operation! This is for white light only!
+          float total_G       = 0.0;
+          float total_B       = 0.0;
+        
+          vec3 rgb;
        
         // Generate the illumination for each light. Highest scalars win.
         for( int i = 0; i < 16; i++ )  // Arbitrarily large index to scam the shader into "infinite" loop. Thx glsl for being flexible.
@@ -174,6 +180,8 @@
             if( i == lightCnt ) break;
             
             vec3 light                = lights[i];
+            vec3 color                = lColors[i];
+            
             vec3 pixelToLight         = light - fragPos;    // Vector from pixel to light source
             vec3 lightVector          = normalize( pixelToLight );
             float dist2Light          = length( pixelToLight );         // Could be optimized....
@@ -186,16 +194,25 @@
             float quadratic_Term      = 0.00005;
             float attenuation         = 1.0 / ( constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term );
             
-            float multiplier          = cosAngle * attenuation;
-            total                     = max( multiplier, total );
+            float multiplier_R          = ( cosAngle * attenuation );
+            float multiplier_G          = ( cosAngle * attenuation );
+            float multiplier_B          = ( cosAngle * attenuation );
+            
+            total_R                     = max( multiplier_R, total_R );
+            total_G                     = max( multiplier_G, total_G );
+            total_B                     = max( multiplier_B, total_B );
+            
+            rgb                         = color;
         }
-      
+        
+            
+           
       
         vec4 color    = texture2D( texSampler, texCoords );   // Diffuse
         
-             color.r = clamp( ( color.r * total ), 0.01, 1.0 ); ;
-             color.g = clamp( ( color.g * total ), 0.02, 1.0 ); ;
-             color.b = clamp( ( color.b * total ), 0.04, 1.0 ); ;
+             color.r = clamp( ( color.r * ( total_R )  ), 0.0, 1.0 ); ;
+             color.g = clamp( ( color.g * ( total_G )  ), 0.0, 1.0 ); ;
+             color.b = clamp( ( color.b * ( total_B )  ), 0.0, 1.0 ); ;
         
     gl_FragColor  = color;
     }
@@ -290,42 +307,59 @@
     var haxLight   = new Light( new Vector3(-64.297035 , -34.088657 , -117.10157), 100.0, 0, 0, 0, 0, 0, 0 );
     
     
+    
+    // Define these
+    KEY_W = 87;
+    KEY_S = 83;
+      
+    KEY_Q = 81;
+    KEY_E = 69;
+    
+    KEY_UP   = 38;
+    KEY_DOWN = 40;
+     
+    KEY_LEFT = 37;
+    KEY_RIGHT = 39;
+    
+    KEY_PAGEUP   = 33;
+    KEY_PAGEDOWN = 34;
+     
+      
       
     function tick() 
     {   
-        requestAnimFrame(tick);
+        requestAnimFrame( tick );
           
-      
          
-        if(  key_Down( 87 ) )   myCamera.pitch( 0.008 );        // W to pitch up
-        if(  key_Down( 83 ) )   myCamera.pitch( -0.008 );      // S to pitch down
+        if(  key_Down( KEY_W ) )   myCamera.pitch( 0.008 );        // W to pitch up
+        if(  key_Down( KEY_S ) )   myCamera.pitch( -0.008 );      // S to pitch down
          
-        if(  key_Down( 81 ) )   myCamera.roll( 0.008 );       // Q to roll left
-        if(  key_Down( 69 ) )   myCamera.roll( -0.008 );      // E to roll right
+        if(  key_Down( KEY_Q ) )   myCamera.roll( 0.008 );       // Q to roll left
+        if(  key_Down( KEY_E ) )   myCamera.roll( -0.008 );      // E to roll right
          
             
         if( key_Down( 16) ) // Shift
         {
-            if( key_Down( 38 ) )   haxLight.forward(  1.0 );
-            if( key_Down( 40 ) )   haxLight.backward( 1.0 );
+            if( key_Down( KEY_UP   ) )   haxLight.forward(  1.0 );
+            if( key_Down( KEY_DOWN ) )   haxLight.backward( 1.0 );
 
-            if( key_Down( 33 ) )   haxLight.move([0,1,0]);
-            if( key_Down( 34 ) )   haxLight.move([0,-1,0]);
+            if( key_Down( KEY_PAGEUP ) )   haxLight.move([0,1,0]);
+            if( key_Down( KEY_PAGEDOWN ) )   haxLight.move([0,-1,0]);
              
-            if( key_Down( 37 ) )   haxLight.move([1,0,0]);
+            if( key_Down( KEY_LEFT ) )   haxLight.move([1,0,0]);
             if( key_Down( 39 ) )   haxLight.move([-1,0,0]);
             
         }
         else
             {
-                if( key_Down( 38 ) )   myCamera.forward(  1.0 );
-                if( key_Down( 40 ) )   myCamera.backward( 1.0 );
+                if( key_Down( KEY_UP   ) )   myCamera.forward(  1.0 );
+                if( key_Down( KEY_DOWN ) )   myCamera.backward( 1.0 );
 
-                if( key_Down( 33 ) )   myCamera.move([0,1,0]);
-                if( key_Down( 34 ) )   myCamera.move([0,-1,0]);
+                if( key_Down( KEY_PAGEUP ) )   myCamera.move([0,1,0]);
+                if( key_Down( KEY_PAGEDOWN ) )   myCamera.move([0,-1,0]);
                 
-                if( key_Down( 37 ) )   myCamera.yaw( -0.05  );
-                if( key_Down( 39 ) )   myCamera.yaw(  0.05 );
+                if( key_Down( KEY_LEFT ) )   myCamera.yaw( -0.05  );
+                if( key_Down( KEY_RIGHT ) )   myCamera.yaw(  0.05 );
    
             }
          
@@ -360,6 +394,14 @@
         document.onkeyup   = kbUp_Event; 
     }
        
+    
+    
+    function resize( canvas )
+    {
+        // 1080p
+        canvas.width  = 1920;//window.outerWidth;
+        canvas.height = 1080;//window.outerHeight;
+    }
 
     
  
@@ -367,6 +409,9 @@
     {
         
        var canvas          = document.getElementById("Canvas");
+       
+        resize( canvas );
+       
        renderer            = new Renderer( canvas );
        var assman          = new Assetmanager( renderer );
        myScene             = new Scene( renderer, assman, "Showcase" ); 
@@ -383,7 +428,10 @@
     
        myScene.insert( haxLight, "LIGHT" );
     
-       renderer.set_BgrColor( [0.0,0.0,0.0,1.0] );
+       renderer.set_BgrColor( [0.0,
+                               0.4,
+                               0.7,
+                               1.0] );
        
        
     tick();   
