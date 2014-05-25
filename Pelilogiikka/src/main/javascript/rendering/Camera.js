@@ -55,4 +55,8 @@
     }
   
    
-
+    Camera.prototype.get_Position = function( point )
+    {
+      return this.orientation.get_Position();
+    }
+	
