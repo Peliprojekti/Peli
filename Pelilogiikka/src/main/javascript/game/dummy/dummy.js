@@ -30,6 +30,8 @@ function initializeUI() {
     c_height = canvas.height;
 
     this.updateables.push(dummy.fpsDisplay.createFancy(context));
+    this.updateables.push(dummy.rpsDisplay.createFancy(context));
+    //this.updateables.push(dummy.playerPerformance.create(context));
 
     requestAnimationFrame(animate);
 
@@ -53,18 +55,40 @@ function setupCanvas() {
     return canvas;
 }
 
+
+
 function connectToServer() {
     var players = this.players;
 
-    controllers = new ControllerHub(function(player) {
-        //onConnect
-        log.info("New player joined dummy game");
-        var crosshair = new Crosshair(0, 0, 20, "#0000FF");
-        player.setCrosshair(crosshair);
-        players.push(player);
-        //return 'mouseMove';
-        //
-    }, 100);
+    log.info("Opening controllerHub");
+
+    /*
+    game.controllerHub.addCustomRpcMethod(
+        'playerPerformanceReport',
+        dummy.playerPerformance,
+        dummy.playerPerformance.playerPerformanceReport);
+        */
+
+    game.controllerHub.openHub(
+        function(player) { // onPlayerJoined
+            log.info("New player connected to dummy game");
+            var crosshair = new Crosshair(0, 0, 20);
+            player.setCrosshair(crosshair);
+            players.push(player);
+            //playerPerformance.addPlayer(player);
+        },
+        function(player) { // onPlayerLeft
+            //playerPerformance.removePlayer(player);
+            var i = 0;
+            for (; i < players.length; i++) {
+                if (players[i] == player) {
+                    break;
+                }
+            }
+            players.splice(i, 1);
+        },
+        100 // maxPlayers
+    );
 
     //controllers.open();
 }
@@ -90,11 +114,12 @@ function draw(time) {
     ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, c_width, c_height);
 
+    drawRectangle(ctx);
+
     updateables.forEach(function(updatable) {
         updatable.draw(ctx, time);
     });
 
-    drawRectangle(ctx);
 
     players.forEach(function(player) {
         player.draw(ctx, time);
@@ -114,7 +139,7 @@ var testRect = {
 
 function drawRectangle(ctx) {
     ctx.save();
-    ctx.fillStyle = "rgb(200,0,0)";
+    ctx.fillStyle = "rgb(200, 0, 0)";
     testRect.x += testRect.xm;
     testRect.y += testRect.ym;
     ctx.fillRect(testRect.x, testRect.y, 100, 100);
@@ -153,8 +178,8 @@ function drawRectangle(ctx) {
    */
 
 $(document).ready(function() {
-    log.debug("entering dummy onload");
-
+    log.info("initializing dummy UI");
     initializeUI();
+    log.info("connecting dummy to server");
     connectToServer();
 });

@@ -2,6 +2,7 @@ var client = client || {};
 
 client.phone = {
     controllerDisabler: null,
+    controllers: {},
     isOrienting: false,
     isResizing: false,
     rc: 0,
@@ -19,9 +20,6 @@ client.phone = {
         self.container = $('#container');
 
         var ctx = canvas.getContext("2d");
-
-        var rc = 0; // resize counter
-        var oc = 0; // orientiation counter
 
         log.info("trying to open connection");
         client.coms.open(self.onConnectionOpened);
@@ -58,10 +56,6 @@ client.phone = {
                     $("#container").height($(window).height() + 60);
                 }
 
-                // set canvas width and height
-                //self._canvas.widht = self._container.width();
-                //self._canvas.height = self._container.height();
-
                 $("#canvas").attr('width', $("#container").width());
                 $("#canvas").attr('height', $("#container").height());
 
@@ -76,36 +70,39 @@ client.phone = {
                 self.drawText('Resize events: ' + self.rc++, 1);
             }, 100);
             self.isResizing = false;
+            self.draw();
         }
     },
 
     onConnectionOpened: function() {
         var self = client.phone;
-        client.coms.call('joinGame', [USERID], self, 
-                function(rpc_id, rpc_error, retval) {
-                    self.loadController(retval);
-                });
+        client.coms.call('joinGame', [USERID], self,
+            function(rpc_id, rpc_error, retval) {
+                self.loadController(retval);
+            });
     },
 
 
 
     drawText: function(text, textID) {
         var self = client.phone;
+        if (DEBUG) {
 
-        if (typeof textID === 'undefined') {
-            throw "peli.client.phone.drawText - needs a textID";
+            if (typeof textID === 'undefined') {
+                throw "peli.client.phone.drawText - needs a textID";
+            }
+
+
+            if (self.textIndexes[textID] === undefined) {
+                self.textIndexes[textID] = self.textLines++;
+                self.texts.push(null);
+            }
+
+            if (self.texts[self.textIndexes[textID]] != text) {
+                self.texts[self.textIndexes[textID]] = text;
+            }
         }
-
-
-        if (self.textIndexes[textID] === undefined) {
-            self.textIndexes[textID] = self.textLines++;
-            self.texts.push(null);
-        }
-
-        if (self.texts[self.textIndexes[textID]] != text) {
-            self.texts[self.textIndexes[textID]] = text;
-            self.draw();
-        }
+        self.draw();
     },
 
     draw: function() {
@@ -118,12 +115,14 @@ client.phone = {
         var ctx = self.canvas.getContext("2d");
         drawBackground(ctx);
 
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
+        if (DEBUG) {
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
 
-        for (var i = 0; i < self.texts.length; i++) {
-            ctx.fillText(self.texts[i],
+            for (var i = 0; i < self.texts.length; i++) {
+                ctx.fillText(self.texts[i],
                     width / 2, (height / 2) + (i * 10));
+            }
         }
 
         function drawBackground(ctx) {
@@ -132,47 +131,27 @@ client.phone = {
             ctx.fillStyle = 'black';
             ctx.fillRect(10, 10, width - 20, height - 20);
         }
+    },
 
-        /*
-        //Test code
-        function updateCoordinatesText(x, y) {
-        var canvasDimensions = getCanvasDimensions();
+    /**
+     * @param {string} type - a generic name for the controller
+     * @param {function} enabler - function that will be called to enable controller
+     */
+    registerController: function(type, enabler) {
+        var self = client.phone;
 
-        drawText("Coordinates: (" + x + ", " + y + ")", 2);
-        drawText("Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1], 3);
+        if (!self.controllers[type]) {
+            self.controllers[type] = enabler;
+        } else {
+            throw new Error("Trying to register multiple controllers of type: " + type);
         }
-
-        //Test code
-        function updateStartTimeText(time) {
-        drawText("Start time: " + time, 4);
-        }
-
-        //Test code
-        function updateCurrentTimeText(time) {
-        drawText("Current time: " + time, 5);
-        }
-
-        //Test code
-        function updateStartCoordinatesText(x, y) {
-        var canvasDimensions = getCanvasDimensions();
-
-        drawText("Start coordinates: (" + x + ", " + y + ")", 6);
-        }
-
-        //Test code
-        function updateSendTimeText(time) {
-        drawText("Sent time: " + time, 7);
-        }
-        */
     },
 
     loadController: function(type) {
-        log.debug("and here we are " + type);
-        log.debug(this);
         var self = client.phone;
 
-        if (typeof type === undefined) {
-            type = CONTROLLER;
+        if (!self.controllers[type]) {
+            throw new Error("trying to enable unregistered controller type: " + type);
         }
 
         if (typeof self.controllerDisabler === 'function') {
@@ -180,83 +159,28 @@ client.phone = {
             self.controllerDisabler = null;
         }
 
-        self.canvas.drawText = self.drawText;
-
-        switch (type) {
-            case 'mouseMove':
-                self.controllerDisabler = controller.mouseMove(self.container, self.canvas);
-                break;
-            case 'speedTest':
-                self.controllerDisabler = controller.speedTest(self.container, self.canvas);
-                break;
-            default:
-                throw new Error("Trying to load unknown controller: '" + type + "'");
-
-                /*
-                   case 'touchDrag':
-                   var touchDragx = new TouchDrag();
-                   touchDragx.enable(coms, canvas);
-                   currentController = touchDragx;
-                   break;
-                   case 'swipe':
-                   var swipe = new Swipe();
-                   swipe.enable(coms, canvas);
-                   currentController = swipe;
-                   break;
-                   case 'ThumbStick':
-                   var thumbStick = new ThumbStick();
-                   thumbStick.enable(coms, canvas);
-                   currentController = thumbStick;
-                   break;
-                   case 'motion':
-                   var motion = new MotionController();
-                   motion.enable(coms, window);
-                   currentController = motion;
-                   break;
-                   */
-        }
+        self.controllerDisabler = self.controllers[type](
+            self.container,
+            self.canvas,
+            self.drawText);
     }
 };
 
 $(document).ready(client.phone.onDocumentReady);
 
+/*
 
+   function getFingerCoords(id) {
+   var canvas_x = event.targetTouches[id].pageX;
+   var canvas_y = event.targetTouches[id].pageY;
+   return [canvas_x, canvas_y];
+   }
 
-    /*
-
-       function getFingerCoords(id) {
-       var canvas_x = event.targetTouches[id].pageX;
-       var canvas_y = event.targetTouches[id].pageY;
-       return [canvas_x, canvas_y];
-       }
-
-       function getRelativeCoords(id) {
-       var coords = getFingerCoords(id);
-       var canvasDimensions = getCanvasDimensions();
-       var relativeX = coords[0] / canvasDimensions[0];
-       var relativeY = coords[1] / canvasDimensions[1];
-       return [relativeX, relativeY];
-       }
-
-
-
-    //Test code
-    var texts = [];
-
-    function drawCircle(x, y, r) {
-//drawText();
-
-var canvas = document.getElementById("canvas");
-var context = canvas.getContext("2d");
-
-context.strokeStyle = "#FF0000";
-context.fillStyle = "#FFFF00";
-context.beginPath();
-context.arc(x, y, r, 0, Math.PI * 2, true);
-context.closePath();
-context.stroke();
-context.fill();
-}
-
-*/
-
+   function getRelativeCoords(id) {
+   var coords = getFingerCoords(id);
+   var canvasDimensions = getCanvasDimensions();
+   var relativeX = coords[0] / canvasDimensions[0];
+   var relativeY = coords[1] / canvasDimensions[1];
+   return [relativeX, relativeY];
+   }
+   */

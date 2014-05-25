@@ -29,8 +29,10 @@ module.exports = new function() {
                         gameSocket.send(data);
                     }
                     else {
-                        require('util').log("engine.io/controller - gameScoket closed, disconnecting client");
+                        socket.send('noFreeSlots');
+                        require('util').error("engine.io/controller - gameScoket closed", gameSocket.readyState);
                         socket.close();
+                        //gameSocket.close();
                     }
 				});
 
@@ -40,7 +42,6 @@ module.exports = new function() {
                     if (gameSocket.readyState == WebSocket.OPEN) {
                         gameSocket.send('playerDisconnected');
                     }
-                    game.freeGameSocket(gameSocket);
                 });
 
 				socket.on('error', function() {
@@ -49,6 +50,7 @@ module.exports = new function() {
 			}
 			else {
                 require('util').log("engine.io/controller - client trying to connect, no free slots, disconnecting");
+                socket.send('gameFull');
 				socket.close();
 			}
 		});

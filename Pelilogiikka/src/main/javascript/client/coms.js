@@ -13,7 +13,8 @@ client.coms.open = function(callback) {
         client.coms._rpc = rpc;
 
         client.coms._isOpened = true;
-        rpc.connect(callback);
+
+        connection.connect(callback, null, rpc.getOnMessage());
     }
 };
 
@@ -75,8 +76,8 @@ client.coms.position = function(params, object, callback) {
 };
 
 client.coms.swipe = function(x, y, sincePreviousTime) {
-    client.coms.call('position', [x,y,xincePreviousTime], null, null);
-    //this.rpc.callRpc('swipe', [null, x, y, sincePreviousTime], this, null);
+    //client.coms.call('position', [x,y,sincePreviousTime], null, null);
+    //this.rpc.callRpc('swipe', [x, y, sincePreviousTime], this, null);
 };
 
 client.coms.orientation = function(tiltLR, tiltFB, dir) {

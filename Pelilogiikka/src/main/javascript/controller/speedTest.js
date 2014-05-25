@@ -1,36 +1,35 @@
 var controller = controller || {};
 
-controller.speedTest = function(container, canvas) {
+controller.speedTest = function(container, canvas, drawText) {
+    var self = this;
     var coms = client.coms;
     var autoFireInterval = 1;
     var reportInterval = 1000;
 
-    var bi = {
+    this.bi = {
         startTime: Date.now(),
         lastTime: Date.now(),
         sequence: 0,
         //callTimes: [],
-        callsMade: 0,
         returnTimes: []
     };
 
     var y = Math.random();
 
     var autoFire = function() {
-        this.callsMade++;
+        //this.callsMade++;
         //canvas.drawText('yay', 'autoFireYAYA');
 
         var sendTime = Date.now();
-        bi.callsMade++;
 
-        coms.call('position', [ ((bi.sequence % 200) / 200), y],
+        coms.call('position', [ ((self.bi.sequence % 200) / 200), y],
                 this,
                 function() {
                     var duration = Date.now() - sendTime;
-                    bi.returnTimes.push(duration);
+                    self.bi.returnTimes.push(duration);
                 });
 
-        bi.sequence++;
+        self.bi.sequence++;
     };
 
     log.info("starting autoFie", true);
@@ -39,10 +38,10 @@ controller.speedTest = function(container, canvas) {
     var inter_reporter = setInterval(function() {
         // this is not entirely accurate...
 
-        var msgSec = bi.callsMade;
+        var msgSec = self.bi.callsMade;
         var retTime = 0;
-        var myReturnTimes = bi.returnTimes;
-        bi.returnTimes = [];
+        var myReturnTimes = self.bi.returnTimes;
+        self.bi.returnTimes = [];
         
         myReturnTimes.forEach(function(time) {
             retTime += time;
@@ -50,10 +49,17 @@ controller.speedTest = function(container, canvas) {
 
         var avgResTime = retTime/msgSec;
 
-        canvas.drawText("messages sent: " + msgSec, "msgSent");
-        canvas.drawText("repsonse time: " + avgResTime, "restime");
+        drawText("messages sent: " + msgSec, "msgSent");
+        drawText("repsonse time: " + avgResTime, "restime");
 
-        bi.callsMade -= msgSec;
+        /*
+        peli.coms.call('playerPerformanceReport', [USERID, {
+            msgs: msgSec,
+            resTime: avgResTime,
+        }], null, null);
+        */
+
+        self.bi.callsMade -= msgSec;
     }, reportInterval);
 
     // return disabler function
@@ -64,3 +70,7 @@ controller.speedTest = function(container, canvas) {
         canvas = null;
     };
 };
+
+$(document).ready(function() {
+    client.phone.registerController('speedTest', controller.speedTest);
+});

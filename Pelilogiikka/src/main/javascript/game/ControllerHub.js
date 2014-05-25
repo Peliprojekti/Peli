@@ -1,74 +1,79 @@
-/**
- * ControllerHub
- * @constructor
- * @param {function} onJoinPlyaer - onJoinPlayer(player)
- * @param {number} maxPlayers
- */
-function ControllerHub(onJoinPlayer, maxPlayers) {
-    var that = this;
+var game = game || {};
 
-    this.onJoinPlayer = onJoinPlayer;
-    this.maxPlayers = (maxPlayers === undefined ? 100 : maxPlayers);
-    this.controllerCount = 0;
+game.controllerHub = {
+    ws_protocol: undefined, //JSONRPC_RPOTOCOL,
+    ws_port: SCREEN_PORT,
+    onPlayerJoined: null,
+    onPlayerLeft: null,
+    maxControllers: 100,
+    minFreeControllers: 2,
 
-    this.addNewController();
-}
+    controllerType: CONTROLLER,
+    controllerCount: 0,
+    controllers: [],
+    controllersFree: 0,
 
-/*
-ControllerHub.prototype.moveSwipe = function(data) {
-    var userID = data[0];
-    var swipeData = data[1];
-    var position = [swipeData[0], swipeData[1]];
-    var sincePrevious = swipeData[2];
-    
-    log.debug(userID + "swipe position: (" + position[0] + ", " + position[1] + "), Time since previous: " + sincePrevious + "ms");
-    
-    this.players[userID].pushSwipe(position, sincePrevious);
-};
-*/
+    customRpcs: [],
 
-ControllerHub.prototype.setOnMessage = function(callback) {
-    this.onMessage = callback;
-};
 
-ControllerHub.prototype.addNewController = function() {
-    var that = this;
-    if (this.controllerCount < this.maxPlayers) {
-        log.info("Trying to connect new Controller to server");
-        this.controllerCount++;
-        var controller = new Controller(function() {
-            //onConnect
-            log.info("Controller connected to server");
-        }, function() {
-            //onDisconnect
-            log.info("Controller lost connection to server");
-            that.controllerCount--;
-            that.addNewController();
-        }, function(newPlayer) {
-            // onJoinPlayer
-            log.info("Player joined game: " + newPlayer);
-            that.onJoinPlayer(newPlayer);
-            that.addNewController();
-        });
+    addCustomRpcMethod: function(methodName, methodContext, method) {
+        this.customRpcs.push([methodName, methodContext, method]);
+    },
 
-        return true;
-    } else {
-        log.info("reached max players count: " + this.maxPlayers);
-        return false;
+    openHub: function(onPlayerJoined, onPlayerLeft, maxPlayers) {
+        var self = this;
+        if (onPlayerJoined === undefined) throw new Error("Need to supply at least a onPlayerJoined callback");
+        self.onPlayerJoined = onPlayerJoined;
+        self.onPlayerLeft = onPlayerLeft;
+        self.max = maxPlayers;
+        createNewController();
+
+        function createNewController() {
+            if ((self.controllersFree >= self.minFreeControllers) || self.controllerCount == self.max) {
+                return;
+            }
+
+            log.info("Creating and connecting new Controller");
+            var connection = new ConnectionWebsocket(location.hostname, self.ws_port, self.ws_protocol, true);
+
+            var rpc = new PeliRPC(connection);
+            var controller = game.controller.create(rpc);
+
+            self.customRpcs.forEach(function(rpcMethod) {
+                rpc.exposeRpcMethod(rpcMethod[0], rpcMethod[1], rpcMethod[2]);
+            });
+
+            rpc.exposeRpcMethod('joinGame', this, function(userID) {
+                console.info("Player joined with userID ", userID);
+
+                self.controllersFree--;
+                var player = playerFactory.getPlayer(userID);
+                controller.setPlayer(player, self.controllerType);
+                self.onPlayerJoined(player);
+
+                createNewController();
+                return self.controllerType;
+            });
+
+            var onMessage = rpc.getOnMessage();
+
+            connection.connect(function() {
+                    // onConnection
+                    self.controllerCount++;
+                    self.controllersFree++;
+                    console.log("Controller successfully connected ", self.controllerCount);
+                    createNewController();
+                }, 
+                function() { // onClose
+                    self.controllerCount--;
+                    // TODO check if was connected to player, and create update freeControllers ccordingly
+                    console.log("Controller disconnected, now have a total of ", self.controllerCount);
+                }, 
+                rpc.getOnMessage(),// onMessage
+                function() { // onPlayerDisconnected
+                    self.controllersFree++;
+                    self.onPlayerLeft(controller.clearPlayer());
+                });
+        }
     }
-};
-
-/**
- * close connection
- */
-ControllerHub.prototype.close = function() {
-    // TODO disconnect controllers
-};
-
-/**
- * This will send messages directly to the server
- * @param {function} msg
- */
-Controller.prototype.serverMsg = function(msg) {
-    window.alert("serverMsg not implemented");
 };

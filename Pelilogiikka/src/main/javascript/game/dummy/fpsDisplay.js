@@ -6,6 +6,11 @@ dummy.fpsDisplay = {
     },
 
     FpsDisplay: function(ctx, fancy) {
+        log.info("creating FpsDisplay");
+        
+        this.x = ctx.canvas.width - 5;
+        this.y = 45;
+
         this.fancy = fancy;
         //this.width = ctx.width;
         this.frameCount = 0;
@@ -14,9 +19,14 @@ dummy.fpsDisplay = {
         this.fps = 0;
 
         if (this.fancy) {
-            this.thingy = dummy.chartThingy.create(ctx);
-            this.thingy.color = '#90AA90';
+            this.thingy = dummy.chartThingy.create(ctx, 
+                    0,
+                    0,
+                    ctx.canvas.width,
+                    ctx.canvas.height/8) ;
+            this.thingy.color = '#309030';
         }
+
     }
 };
 
@@ -51,9 +61,9 @@ dummy.fpsDisplay.FpsDisplay.prototype.draw = function(ctx) {
     ctx.fillStyle = '#30BB30';
     ctx.strokeStyle = '#209020';
 
-    ctx.textAlign = 'left';
-    ctx.fillText(this.fps, 5, 45);
-    ctx.strokeText(this.fps, 5, 45);
+    ctx.textAlign = 'right';
+    ctx.fillText(this.fps, this.x, this.y);
+    ctx.strokeText(this.fps, this.x, this.y);
 
     ctx.restore();
 };

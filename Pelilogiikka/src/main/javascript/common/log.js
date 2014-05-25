@@ -14,13 +14,13 @@ var log = {
         }
         
         if (send) {
-            peli.common.sendServerMessage(message);
+            sendServerMessage(message);
         }
     },
 
     error: function(msg, send, benchmark) {
         if(log.enabled) {
-            log.logMessage("Error: ", msg, send, benchmark);
+            log.logMessage("ERROR: ", msg, send, benchmark);
         }
     },
 
@@ -46,27 +46,16 @@ var log = {
         log.level = level;
     },
 
-    socket: null,
-
-    sendServerMessage:  function(msg) {
-        if (this.socket === undefined) {
-            var socket = eio.Socket(
-                    { host: location.hostname, port: 1340 }, // TODO hardcoded port here!
-                    { transports: ['websocket','polling'] });
-
-            socket.on('close', function() {
-                log.warn("sendServerMessage disconnected");
-                this.socket = null;
-            });
-
-            socket.on('error', function() {
-                log.errorr("sendServerMessage connection error");
-                this.socket = null;
-            });
-
-            this.socket = socket;
-        }
-
-        this.socket.send(msg);
-    }
+    throwToServer: function(error) {
+        sendServerMessage(error);
+    },
 };
+
+$(document).ready(function() {
+    if (!DEBUG) {
+        console.info("disabling all console log/info/debug messages");
+        console.info = function() {};
+        console.log = function() {};
+        console.debug = function() {};
+    }
+});
