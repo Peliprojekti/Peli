@@ -44,11 +44,7 @@
                 else
                     if( type === "CAM") this.entries_Cameras.push( entity );
                     else
-                        if( type === "LIGHT" ) 
-                        {
-                            this.entries_Lights.push( entity );
-                            alert("Lights in scene " + this.entries_Lights.length );
-                       }
+                        if( type === "LIGHT" ) this.entries_Lights.push( entity );
                         else
                             alert("Undefined entity type: " + type);  
                  

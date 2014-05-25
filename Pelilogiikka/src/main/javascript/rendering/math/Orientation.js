@@ -23,6 +23,12 @@
     }
     
     
+    Orientation.prototype.get_Position = function()
+    {
+        return this.position_V;
+    }
+    
+    
     
     Orientation.prototype.displace = function( displacement ) 
     {
