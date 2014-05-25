@@ -20,7 +20,7 @@
                  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( itemList ), gl.STATIC_DRAW);
                  this.itemType = gl.UNSIGNED_SHORT;
            }
-           else
+           else 
               { 
                  this.itemType = "UNKNOWN";
                  throw ("Unrecognized buffer format " + item_Type);
