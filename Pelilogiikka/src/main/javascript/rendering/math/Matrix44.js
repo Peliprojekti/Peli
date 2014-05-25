@@ -94,14 +94,7 @@
         return;
         }
         
-        
-        
-        
-        
-        
-        
-        
-        
+       
     }
 
 
@@ -153,4 +146,42 @@
               "[ "+this.m21 +" , "+ this.m22 + " , " +this.m23+" , " +this.m24+" ] \n" +
               "[ "+this.m31 +" , "+ this.m32 + " , " +this.m33+" , " +this.m34+" ] \n" +
               "[ "+this.m41 +" , "+ this.m42 + " , " +this.m43+" , " +this.m44+" ] \n" );
+    }
+
+
+
+
+    Matrix44.prototype.perspective = function( canvas, nearPlane, farPlane ) 
+    {
+      // REWRITE
+      var ratio  = canvas.clientWidth / canvas.clientHeight;
+      var left   = -ratio;
+      var right  = ratio;
+      var bottom = -1.0;
+      var top    = 1.0;
+      var near   = nearPlane;
+      var far    = farPlane;
+      
+        var rl = (right - left);
+        var tb = (top - bottom);
+        var fn = (far - near);
+        
+      var retMatrix = new Matrix44();
+        
+          retMatrix.m11 = (near*2) / rl;       retMatrix.m12 =           0.0;       retMatrix.m13 = 0.0;                retMatrix.m14 =  0.0;
+          retMatrix.m21 =  0.0;                retMatrix.m22 = (near*2) / tb;       retMatrix.m23 = 0.0;                retMatrix.m24 =  0.0;
+          retMatrix.m31 = (right + left) / rl; retMatrix.m32 = (top + bottom) / tb; retMatrix.m33 = -(far + near) / fn; retMatrix.m34 = -1.0;
+          retMatrix.m41 = 0.0;                 retMatrix.m42 = 0.0;                 retMatrix.m43 = -(far*near*2) / fn; retMatrix.m44 = 0.0;
+        
+    return retMatrix;
+    }
+   
+    
+    Matrix44.prototype.toGLMatrix = function()
+    {
+        var retArray = [ this.m11, this.m12, this.m13, this.m14,
+                         this.m21, this.m22, this.m23, this.m24,
+                         this.m31, this.m32, this.m33, this.m34,
+                         this.m41, this.m42, this.m43, this.m44 ];
+    return retArray;
     }
