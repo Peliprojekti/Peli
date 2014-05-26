@@ -1,6 +1,6 @@
 var controller = controller || {};
 
-controller.speedTest = function(container, canvas, drawText) {
+controller.speedTest = function(container, canvas, phone) {
     var self = this;
     var coms = client.coms;
     var autoFireInterval = 1;
@@ -18,16 +18,15 @@ controller.speedTest = function(container, canvas, drawText) {
 
     var autoFire = function() {
         //this.callsMade++;
-        //canvas.drawText('yay', 'autoFireYAYA');
 
         var sendTime = Date.now();
 
-        coms.call('position', [ ((self.bi.sequence % 200) / 200), y],
-                this,
-                function() {
-                    var duration = Date.now() - sendTime;
-                    self.bi.returnTimes.push(duration);
-                });
+        coms.call('position', [((self.bi.sequence % 200) / 200), y],
+            this,
+            function() {
+                var duration = Date.now() - sendTime;
+                self.bi.returnTimes.push(duration);
+            });
 
         self.bi.sequence++;
     };
@@ -42,15 +41,17 @@ controller.speedTest = function(container, canvas, drawText) {
         var retTime = 0;
         var myReturnTimes = self.bi.returnTimes;
         self.bi.returnTimes = [];
-        
+
         myReturnTimes.forEach(function(time) {
             retTime += time;
         });
 
-        var avgResTime = retTime/msgSec;
+        var avgResTime = retTime / msgSec;
 
-        drawText("messages sent: " + msgSec, "msgSent");
-        drawText("repsonse time: " + avgResTime, "restime");
+        phone.setControllerInfo(
+            "messages sent: " + msgSec, "msgSent",
+            "repsonse time: " + avgResTime, "restime"
+        );
 
         /*
         peli.coms.call('playerPerformanceReport', [USERID, {

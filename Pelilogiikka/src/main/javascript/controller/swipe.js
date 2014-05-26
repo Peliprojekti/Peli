@@ -1,6 +1,6 @@
 var controller = controller || {};
 
-controller.swipe = function(container, canvas, drawText) {
+controller.swipe = function(container, canvas, phone) {
     function Swipe() {
         this.updatePeriod = 20; //time in ms
         this.sincePrevious = 0;
@@ -85,8 +85,10 @@ controller.swipe = function(container, canvas, drawText) {
     function updateCoordinatesText(x, y) {
         var canvasDimensions = getCanvasDimensions();
 
-        drawText("Coordinates: (" + x + ", " + y + ")", 2);
-        drawText("Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1], 3);
+        phone.setControllerInfo(
+            "Coordinates: (" + x + ", " + y + ")",
+            "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
+        );
     }
 
     var swipeObj = new Swipe();

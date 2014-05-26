@@ -1,11 +1,11 @@
 var controller = controller || {};
 
-controller.mouseMove = function(container, canvas, drawText) {
+controller.mouseMove = function(container, canvas, phone) {
     var coms = client.coms;
 
     // forward all events through coms
     var listener = function(event) {
-        drawText(event.clientX + " x " + event.clientY, 'position');
+        setControllerInfo(event.clientX + " x " + event.clientY 0 + 'position');
         coms.call('position', [
                 event.clientX / canvas.width,
                 event.clientY / canvas.height

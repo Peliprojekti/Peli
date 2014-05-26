@@ -13,6 +13,9 @@ client.phone = {
     textIndexes: {},
     textLines: 0,
 
+    drawables: [],
+    circles: [],
+
     onDocumentReady: function() {
         var self = client.phone;
 
@@ -82,6 +85,13 @@ client.phone = {
             });
     },
 
+    addDrawable: function(drawable) {
+        this.drawables.push(drawable);
+    },
+
+    setControllerInfo: function(lines) {
+        this.controllerLines = lines;
+    },
 
 
     drawText: function(text, textID) {
@@ -162,7 +172,8 @@ client.phone = {
         self.controllerDisabler = self.controllers[type](
             self.container,
             self.canvas,
-            self.drawText);
+            self);
+            //self.drawText);
     }
 };
 

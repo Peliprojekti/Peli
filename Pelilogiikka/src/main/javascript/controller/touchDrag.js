@@ -1,6 +1,6 @@
 var controller = controller || {};
 
-controller.touchDrag = function(container, canvas, drawText) {
+controller.touchDrag = function(container, canvas, phone) {
     function TouchDrag() {
         this.previousSendTime = 0;
         this.interval = 20;
@@ -20,7 +20,7 @@ controller.touchDrag = function(container, canvas, drawText) {
         this.currentTime = new Date().getTime();
 
         if (this.currentTime - this.previousSendTime >= this.interval) {
-            client.coms.call('position', [x,y], null, null);
+            client.coms.call('position', [x, y], null, null);
 
             this.previousSendTime = this.currentTime;
 
@@ -28,7 +28,7 @@ controller.touchDrag = function(container, canvas, drawText) {
             this.moveCounter = 0;
         }
 
-        this.updateCoordinatesText(x,y);
+        this.updateCoordinatesText(x, y);
     };
 
     TouchDrag.prototype.enable = function(canvas) {
@@ -40,9 +40,11 @@ controller.touchDrag = function(container, canvas, drawText) {
         return canvas;
     };
 
-    TouchDrag.prototype.updateCoordinatesText = function(x,y) {
-        drawText("Coordinates: (" + x + ", " + y + ")", 2);
-        drawText("Canvas dimension: " + canvas.width + "x" + canvas.height, 3);
+    TouchDrag.prototype.updateCoordinatesText = function(x, y) {
+        phone.setControllerInfo(
+            "Coordinates: (" + x + ", " + y + ")",
+            "Canvas dimension: " + canvas.width + "x" + canvas.height
+        );
     };
 
     var tdObj = new TouchDrag();

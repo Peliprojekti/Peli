@@ -1,19 +1,21 @@
 var controller = controller || {};
 
-controller.click = function(container, canvas, drawText) {
+controller.click = function(container, canvas, phone) {
     var listener = function(event) {
         var x = event.x / canvas.width;
         var y = event.y / canvas.width;
 
         client.coms.call('position', [x, y], null, null);
 
-        drawText("Coordinates: (" + x + ", " + y + ")", 'coords');
-        drawText("Canvas: (" + canvas.width + ", " + canvas.height + ")", 'canvas');
+        phone.setControllerInfo(
+            "Coordinates: (" + x + ", " + y + ")",
+            "Canvas: (" + canvas.width + ", " + canvas.height + ")"
+        );
     };
 
     canvas.addEventListener("click", listener);
 
-    return  function() {
+    return function() {
         canvas.removeEventListener("click", listener);
     };
 };
