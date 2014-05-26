@@ -1,15 +1,15 @@
 var dummy = dummy || {};
 
 dummy.chartThingy = {
-    create: function(ctx, x, y, width, height, scale, flip) {
-        return new dummy.chartThingy.ChartThingy(ctx, x, y, width, height, scale, flip);
+    create: function(canvas, x, y, width, height, scale, flip) {
+        return new dummy.chartThingy.ChartThingy(canvas, x, y, width, height, scale, flip);
     },
 
-    ChartThingy: function(ctx, x, y, width, height, scale, flip) {
+    ChartThingy: function(canvas, x, y, width, height, scale, flip) {
         this.x = x || 0;
         this.y = y || 0;
-        this.width = width || (ctx.canvas.width - this.x);
-        this.height = height || (ctx.canvas.height - this.y);
+        this.width = width || (canvas.width - this.x);
+        this.height = height || (canvas.height - this.y);
         this.scale = Math.abs(scale) || 1000;
 
         console.info("creating ChartThingy", this.x, this.y, this.width, this.height, this.scale);

@@ -24,13 +24,13 @@ function showMessage(msg) {
 function initializeUI() {
     canvas = setupCanvas();
 
-    context = canvas.getContext('2d');
+    //context = canvas.getContext('2d');
 
     c_width = canvas.width;
     c_height = canvas.height;
 
-    this.updateables.push(dummy.fpsDisplay.createFancy(context));
-    this.updateables.push(dummy.rpsDisplay.createFancy(context));
+    this.updateables.push(dummy.fpsDisplay.createFancy(canvas));
+    this.updateables.push(dummy.rpsDisplay.createFancy(canvas));
     //this.updateables.push(dummy.playerPerformance.create(context));
 
     requestAnimationFrame(animate);

@@ -11,17 +11,13 @@ client.phone = {
     canvas: null,
     container: null,
 
-    //texts: [],
-    //textIndexes: {},
-    //textLines: 0,
-
     controllerLines: [],
     drawables: [],
+    updatables: [], 
     circles: [],
 
     onDocumentReady: function() {
         var self = client.phone;
-
 
         self.canvas = document.getElementById('canvas'); //$('#canvas');
         self.container = $('#container');
@@ -31,6 +27,8 @@ client.phone = {
 
         $(window).on("orientationchange", self.onOrientationChange);
         $(window).resize(self.onResize);
+
+        self.updatables.push( new dummy.fpsDisplay.create(self.canvas));
 
         self.onResize();
         self.startAnimation();
@@ -202,8 +200,10 @@ client.phone = {
         requestAnimationFrame(animate);
     },
 
-    update: function() {
-
+    update: function(time) {
+        this.updatables.forEach(function(d) {
+            d.update(time);
+        });
     },
 
     draw: function(time) {
@@ -221,6 +221,10 @@ client.phone = {
         }
 
         this.drawables.forEach(function(d) {
+            d.draw(ctx);
+        });
+
+        this.updatables.forEach(function(d) {
             d.draw(ctx);
         });
 

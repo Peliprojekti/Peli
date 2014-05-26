@@ -1,15 +1,15 @@
 var dummy = dummy || {};
 
 dummy.rpsDisplay = {
-    createFancy: function(ctx) {
-        return new dummy.rpsDisplay.RpsDisplay(ctx, true);
+    createFancy: function(canvas) {
+        return new dummy.rpsDisplay.RpsDisplay(canvas, true);
     },
 
-    RpsDisplay: function(ctx, fancy) {
+    RpsDisplay: function(canvas, fancy) {
         log.info("creating RpsDisplay");
 
-        this.x = ctx.canvas.width - 5;
-        this.y = (ctx.canvas.height / 8) + 45;
+        this.x = canvas.width - 5;
+        this.y = (canvas.height / 8) + 45;
 
         this.fancy = fancy;
         this.lastTime = Date.now();
@@ -18,11 +18,11 @@ dummy.rpsDisplay = {
         this.rps = 0;
 
         if (this.fancy) {
-            this.thingy = dummy.chartThingy.create(ctx,
+            this.thingy = dummy.chartThingy.create(canvas,
                 0,
-                ctx.canvas.height / 8,
-                ctx.canvas.width,
-                ctx.canvas.height / 8);
+                canvas.height / 8,
+                canvas.width,
+                canvas.height / 8);
             this.thingy.color = '#903030';
         }
     }
