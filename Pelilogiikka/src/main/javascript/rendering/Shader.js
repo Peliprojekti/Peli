@@ -103,10 +103,10 @@ To do this we make sure we declare a varying variable of the same type and name 
                                                        gl.enableVertexAttribArray(this.shaderProgram.vertexBinormalAttribute);                
       
        // Won't accept it... Too bad. But two perpendiculars are enough for basis.
-       /*   
+         
         this.shaderProgram.vertexTangentAttribute    = gl.getAttribLocation( this.shaderProgram, "vertexTangent");
                                                        gl.enableVertexAttribArray(this.shaderProgram.vertexTangentAttribute);                
-        
+      /*  
      */
         
         
