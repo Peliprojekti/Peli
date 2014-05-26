@@ -19,7 +19,8 @@ game.controller = {
     },
 };
 
-game.Controller = function() {};
+game.Controller = function() {
+};
 
 game.Controller.prototype.setPlayer = function(player, controllerType) {
     console.debug("controller setting player", player, controllerType);
@@ -81,7 +82,7 @@ game.Controller.prototype.setControlTypeUpdater = function() {
                     self.calcNewDirection(self.startCoords, coords);
                     self.startCoords = coords;
                 }
-            } 
+            }
             else {
                 self.calcNewPosition(time);
             }
@@ -93,11 +94,11 @@ game.Controller.prototype.setControlTypeUpdater = function() {
 
 game.Controller.prototype.setPosition = function(x, y) {
     //console.debug("setPosition ", x, y);
-    this.player.setPosition(x,y);
+    this.player.setPosition(x, y);
 };
 
-game.Controller.prototype.pushSwipe = function(x,y, sincePrevious) {
-    this.lastSwipe = [[x,y], sincePrevious];
+game.Controller.prototype.pushSwipe = function(x, y, sincePrevious) {
+    this.lastSwipe = [[x, y], sincePrevious];
     log.info("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
 };
 
@@ -153,8 +154,26 @@ game.Controller.prototype.calcNewDirection = function(beginning, end) {
 
 game.Controller.prototype.orientation = function(tiltLR, tiltFB, dir) {
     log.debug("Orientation changed, new orientation:\n" +
-        "tiltLR (gamma): " + tiltLR + "\n" +
-        "tiltFB (beta): " + tiltFB + "\n" +
-        "dir (alpha): " + dir);
+            "tiltLR (gamma): " + tiltLR + "\n" +
+            "tiltFB (beta): " + tiltFB + "\n" +
+            "dir (alpha): " + dir);
 };
+
+game.Controller.prototype.motion = function(accelerationData) {
+    var acceleration = accelerationData.acceleration;
+    var accelerationIncludingGravity = accelerationData.accelerationIncludingGravity;
+    var rotation = accelerationData.rotationRate;
+    log.info("Acceleration: \n" +
+            "x: " + acceleration.x + "\n" +
+            "y: " + acceleration.y + "\n" +
+            "z: " + acceleration.z + "\n" +
+            "Acceleration including gravity \n" +
+            "x: " + accelerationIncludingGravity.x + "\n" +
+            "y: " + accelerationIncludingGravity.y + "\n" +
+            "z: " + accelerationIncludingGravity.z + "\n" +
+            "Rotation:\n" +
+            "x: " + rotation.x + "\n" +
+            "y: " + rotation.y + "\n" +
+            "z: " + rotation.z);
+}
 

@@ -84,3 +84,15 @@ client.coms.orientation = function(tiltLR, tiltFB, dir) {
     client.coms.call('orientation', [titleLR, titleFB, dir], null, null);
     //this.rpc.callRpc('orientation', [null, tiltLR, tiltFB, dir], this, null);
 };
+
+/**
+ * Sends the device's motion data to the server if the device supports motion data
+ * 
+ * @param {type} accelerationData Acceleration data consists of three maps: 
+ * accelerationData.acceleration.(x-z), accelerationData.accelerationIncludingGravity
+ * and accelerationData.rotationRate.(x-z). See motionController.deviceMotionHandler
+ * for detailed use example.
+ */
+client.coms.motion = function(accelerationData){
+    client.coms.call('motion', accelerationData, null, null);
+};

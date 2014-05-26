@@ -25,6 +25,32 @@ MotionController.prototype.deviceOrientationHandler = function(eventData) {
     }
 }
 
+//motion integration with server not tested yet
+MotionController.prototype.deviceMotionHandler = function(eventData) {
+    // Grab the acceleration from the results
+    var acceleration = eventData.acceleration;
+    var accelerationIncludingGravity = eventData.accelerationIncludingGravity;
+    var rotation = eventData.rotationRate;
+
+    if (DEBUG) {
+        log.info("Acceleration: \n" +
+                "x: " + acceleration.x + "\n" +
+                "y: " + acceleration.y + "\n" +
+                "z: " + acceleration.z + "\n" +
+                "Acceleration including gravity \n" +
+                "x: " + accelerationIncludingGravity.x + "\n" +
+                "y: " + accelerationIncludingGravity.y + "\n" +
+                "z: " + accelerationIncludingGravity.z + "\n" +
+                "Rotation:\n" +
+                "x: " + rotation.x + "\n" +
+                "y: " + rotation.y + "\n" +
+                "z: " + rotation.z);
+    }
+    
+    //lähetä data serverille
+
+}
+
 MotionController.prototype.toInteger = function(num) {
     return parseFloat(num).toFixed(0);
 }
@@ -41,6 +67,12 @@ MotionController.prototype.enable = function(coms, window) {
 
     } else {
         log.warn("Device orientation event not supported", true, false);
+    }
+
+    if (window.DeviceMotionEvent) {
+        window.addEventListener('devicemotion', deviceMotionHandler, false);
+    } else {
+        log.warn("Device motion event not supported");
     }
 }
 
