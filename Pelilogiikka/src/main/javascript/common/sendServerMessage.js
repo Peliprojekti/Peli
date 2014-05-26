@@ -2,7 +2,6 @@
  * Sends messages to server
  */
 sendServerMessage = function(msg) {
-    /*
     if (sendServerMessage._socket === undefined) {
         var socket = eio.Socket(
                 { host: location.hostname, port: 1340 }, // TODO hardcoded port here!
@@ -21,5 +20,4 @@ sendServerMessage = function(msg) {
         sendServerMessage._socket = socket;
     }
     sendServerMessage._socket.send(msg);
-    */
 };
