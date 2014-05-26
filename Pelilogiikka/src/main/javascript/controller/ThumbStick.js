@@ -1,10 +1,9 @@
 var controller = controller || {};
 
-controller.touchDrag = function(container, canvas, phone) {
+controller.thumbStick = function(container, canvas, phone) {
     function drawCircle(x, y, r) {
         phone.addDrawable({
             draw: function() {
-                var canvas = document.getElementById("canvas");
                 var context = canvas.getContext("2d");
 
                 context.strokeStyle = "#FF0000";
@@ -18,14 +17,12 @@ controller.touchDrag = function(container, canvas, phone) {
         });
     }
 
-    function ThumbStick() {
-        //this.coms;
-    }
+    function ThumbStick() {}
 
     ThumbStick.prototype.doTouchStart = function(event) {
         event.preventDefault();
         for (var i = 0; i < event.targetTouches.length; i++) {
-            if (getRelativeCoords(i)[0] < 0.5) {
+            if (phone.getRelativeCoords(i, event)[0] < 0.5) {
                 var coords = getFingerCoords(i);
                 drawCircle(coords[0], coords[1], 10);
             } else {
@@ -36,11 +33,11 @@ controller.touchDrag = function(container, canvas, phone) {
 
     };
 
-    // En tajuu yhtään mitään, mut mä kopy pastaan juttui :D t: Tuomas
+    // En tajuu yhtï¿½ï¿½n mitï¿½ï¿½n, mut mï¿½ kopy pastaan juttui :D t: Tuomas
     ThumbStick.prototype.doTouchMove = function(event) {
         event.preventDefault();
         for (var i = 0; i < event.targetTouches.length; i++) {
-            if (getRelativeCoords(i)[0] < 0.5) {
+            if (phone.getRelativeCoords(i, event)[0] < 0.5) {
                 var coords = getFingerCoords(i);
                 drawCircle(coords[0], coords[1], 10);
             }
@@ -48,12 +45,10 @@ controller.touchDrag = function(container, canvas, phone) {
     };
 
     // Ps. var tarkottaa muuttujaa?
-    // Jos toi on noin, niin mitä i sitten meinaa? t: Tuomas
+    // Jos toi on noin, niin mitï¿½ i sitten meinaa? t: Tuomas
 
     ThumbStick.prototype.enable = function(canvas) {
         var thisObject = this;
-        log.coms = coms;
-        this.coms = coms;
 
         canvas.addEventListener("touchstart", function(event) {
             thisObject.doTouchStart(event);
@@ -73,5 +68,5 @@ controller.touchDrag = function(container, canvas, phone) {
 };
 
 $(document).ready(function() {
-    client.phone.registerController('ThumbStick', controller.touchDrag);
+    client.phone.registerController('ThumbStick', controller.thumbStick);
 });
