@@ -14,7 +14,7 @@ game.controller = {
         rpc.exposeRpcMethod('swipe', controller, controller.pushSwipe);
         rpc.exposeRpcMethod('moveSwipe', controller, controller.pushSwipe);
         rpc.exposeRpcMethod('orientation', controller, controller.orientation);
-        rpc.exposeRpcMethod('motion', controller, controller.orientation);
+        rpc.exposeRpcMethod('motion', controller, controller.motion);
 
         return controller;
     },
@@ -56,9 +56,12 @@ game.Controller.prototype.reset = function() {
     this.time = 0;
     this.previousTime = 0;
 
+    
     this.tiltLR = null;
     this.tiltFB = null;
     this.dir = null;
+    
+    this.speed = 0.1; //proportion of screen height
 };
 
 /*
@@ -154,6 +157,13 @@ game.Controller.prototype.calcNewDirection = function(beginning, end) {
 };
 
 game.Controller.prototype.orientation = function(tiltLR, tiltFB, dir) {
+    if(dir > 0 && dir < 180){
+        this.setPosition(this.x + speed, this.y);
+        // move right
+    }else{
+        this.setPosition(this.x - speed, this.y);
+        //move left
+    }
     log.debug("Orientation changed, new orientation:\n" +
             "tiltLR (gamma): " + tiltLR + "\n" +
             "tiltFB (beta): " + tiltFB + "\n" +
