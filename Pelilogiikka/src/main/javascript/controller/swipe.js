@@ -43,7 +43,7 @@ controller.swipe = function(container, canvas, phone) {
         }
 
         if (DEBUG) {
-            var coords = getRelativeCoords(0, event);
+            var coords = phone.getRelativeCoords(0, event);
             updateCoordinatesText(coords[0], coords[1]);
         }
     };
@@ -58,12 +58,6 @@ controller.swipe = function(container, canvas, phone) {
             thisObject.doTouchMove(event);
         }, false);
     };
-
-    function getFingerCoords(id, event) {
-        var canvas_x = event.targetTouches[id].pageX;
-        var canvas_y = event.targetTouches[id].pageY;
-        return [canvas_x, canvas_y];
-    }
 
     function getRelativeCoords(id, event) {
         var coords = getFingerCoords(id, event);

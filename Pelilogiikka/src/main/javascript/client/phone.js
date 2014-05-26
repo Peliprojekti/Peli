@@ -159,7 +159,7 @@ client.phone = {
     },
 
     getRelativeCoords: function(id, event) {
-        var coords = phone.getFingerCoords(id, event);
+        var coords = this.getFingerCoords(id, event);
         var canvasDimensions = this.getCanvasDimensions();
         var relativeX = coords[0] / canvasDimensions[0];
         var relativeY = coords[1] / canvasDimensions[1];
