@@ -53,12 +53,14 @@ controller.speedTest = function(container, canvas, phone) {
             "repsonse time: " + avgResTime, "restime"
         );
 
-        /*
-        peli.coms.call('playerPerformanceReport', [USERID, {
-            msgs: msgSec,
-            resTime: avgResTime,
-        }], null, null);
-        */
+        console.info("speedTest", msgSec, avgResTime);
+
+        client.coms.call('playerPerformanceReport', [
+            USERID, {
+                msgs: msgSec,
+                resTime: avgResTime,
+            }
+        ], null, null);
 
         self.bi.callsMade -= msgSec;
     }, reportInterval);
