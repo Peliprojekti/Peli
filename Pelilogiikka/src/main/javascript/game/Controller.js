@@ -14,6 +14,7 @@ game.controller = {
         rpc.exposeRpcMethod('swipe', controller, controller.pushSwipe);
         rpc.exposeRpcMethod('moveSwipe', controller, controller.pushSwipe);
         rpc.exposeRpcMethod('orientation', controller, controller.orientation);
+        rpc.exposeRpcMethod('motion', controller, controller.motion);
 
         return controller;
     },
@@ -55,10 +56,37 @@ game.Controller.prototype.reset = function() {
     this.time = 0;
     this.previousTime = 0;
 
+    
     this.tiltLR = null;
     this.tiltFB = null;
     this.dir = null;
+    
+    this.speed = 0.1; //proportion of screen height
 };
+
+game.Controller.prototype.update = function(time) {
+    
+    if (this.lastSwipe != null) {
+        //console.debug("Controller update");
+        var coords = this.lastSwipe[0];
+        //Swipe start
+        if (this.lastSwipe[1] == 0) {
+            this.startCoords = coords;
+            //this.previousDirection = null;
+            this.previousTime = 0;
+            this.calcNewPosition(time);
+        }
+        else {    
+            if (this.startCoords != null) {
+                this.calcNewDirection(this.startCoords, coords);
+            }
+            this.startCoords = coords;
+        }
+    }
+    else {
+        this.calcNewPosition(time);
+    }
+ }
 
 /*
  * Sets needed update callback for player, will be called
@@ -94,12 +122,16 @@ game.Controller.prototype.setControlTypeUpdater = function() {
 
 game.Controller.prototype.setPosition = function(x, y) {
     //console.debug("setPosition ", x, y);
-    this.player.setPosition(x, y);
+        if (!(x > 1 || x < 0 || y > 1 || y < 0)) {
+        this.x = x;
+        this.y = y;
+        this.player.setPosition(x, y);
+    }
 };
 
 game.Controller.prototype.pushSwipe = function(x, y, sincePrevious) {
     this.lastSwipe = [[x, y], sincePrevious];
-    log.info("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
+    //log.info("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
 };
 
 
@@ -116,10 +148,13 @@ game.Controller.prototype.calcNewPosition = function(timestamp) {
             this.previousTime = timestamp;
             var speedMultiplier = this.interpolator.interpolate(this.time);
             //log.debug(this.time + " " + speedMultiplier);
-            this.currentDirection = this.currentDirection.mul(speedMultiplier);
+            this.currentDirection = this.currentDirection.mul(speedMultiplier);    
+            var newX = this.x + this.currentDirection.x * this.posChangeMul;
+            var newY = this.y + this.currentDirection.y * this.posChangeMul;
             this.setPosition(
-                    this.x + this.currentDirection.x * this.posChangeMul,
-                    this.y + this.currentDirection.y * this.posChangeMul);
+                    newX,
+                    newY);
+            //console.debug("New pos: (" + newX + ", " + newY + ")");
         }
     }
 };
@@ -147,12 +182,20 @@ game.Controller.prototype.calcNewDirection = function(beginning, end) {
 
         this.setPosition(newX, newY);
         //log.info("Vector: (" + newVec.x + ", " + newVec.y + ")");
+        //console.debug("New position: " + newX + ", " + newY + ")");
     }
 
     this.lastSwipe = null;
 };
 
 game.Controller.prototype.orientation = function(tiltLR, tiltFB, dir) {
+    if(dir > 0 && dir < 180){
+        this.setPosition(this.x + speed, this.y);
+        // move right
+    }else{
+        this.setPosition(this.x - speed, this.y);
+        //move left
+    }
     log.debug("Orientation changed, new orientation:\n" +
             "tiltLR (gamma): " + tiltLR + "\n" +
             "tiltFB (beta): " + tiltFB + "\n" +
