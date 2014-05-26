@@ -6,6 +6,8 @@
     {
         var fullPath = "data/"+path+"/"+path+".irr";
         
+         alert( fullPath );
+        
         this.name              = path;
         this.renderer          = renderer;  // Throw a wild guess what this is...
        

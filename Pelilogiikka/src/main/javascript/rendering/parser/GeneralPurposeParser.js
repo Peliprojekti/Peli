@@ -1,6 +1,6 @@
 
     function relative_Path( full_Path )
-    {
+    { 
         var clip = full_Path.indexOf( "data" );
         if( clip == -1 ) return "NULL";
         return  full_Path.substring( clip, full_Path.length );
@@ -24,13 +24,14 @@
 
     function Parser( fileName )
     {
+        console.log("Accesssing " + fileName );
         // Grab the file contents.
         var request = new XMLHttpRequest();
             request.open("GET", fileName, false);
-            request.send(null);
-        this.the_Document = new Field( request.responseText );
-    
-    };
+            request.send( null);
+
+       this.the_Document = new Field( request.responseText );
+    }
     
        
     
@@ -187,6 +188,8 @@
                   
                    textureList[2] = ( assetManager.get( haxPath , function( renderer , path )
                    {
+                      // alert( path );
+                       
                        return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
                    }));
             }
