@@ -14,6 +14,7 @@ game.controller = {
         rpc.exposeRpcMethod('swipe', controller, controller.pushSwipe);
         rpc.exposeRpcMethod('moveSwipe', controller, controller.pushSwipe);
         rpc.exposeRpcMethod('orientation', controller, controller.orientation);
+        rpc.exposeRpcMethod('motion', controller, controller.orientation);
 
         return controller;
     },
