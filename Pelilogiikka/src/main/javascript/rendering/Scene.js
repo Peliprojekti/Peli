@@ -4,8 +4,10 @@
 
     function Scene( renderer , assetManager, path )
     {
+        var fullPath = "data/"+path+"/"+path+".irr";
+        
+        this.name              = path;
         this.renderer          = renderer;  // Throw a wild guess what this is...
-  
        
         if (typeof path == 'undefined')          // Create an empty scene
         {
@@ -19,7 +21,7 @@
         }
         else
             {
-                var sceneParser     = new Parser( path  );
+                var sceneParser     = new Parser( fullPath  );
                 var dummy            = sceneParser.parse_Scene( renderer, assetManager );
                 
                 this.entries_Dynamic   = dummy.entries_Dynamic;         // Animated objects differing from actors. A spinning table fan perhaps?

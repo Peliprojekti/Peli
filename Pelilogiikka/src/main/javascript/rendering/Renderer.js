@@ -5,6 +5,7 @@
     {
         this.gl            = null;
         this.camera        = null;
+        this.canvas        = canvas;
         this.target_Width  = canvas.width;
         this.target_Height = canvas.height;
         
@@ -32,8 +33,13 @@
      this.view_Matrix       = mat4.create();
      mat4.identity( this.view_Matrix       );
       
-      
-     this.gl.enable(this.gl.DEPTH_TEST);                   /// ELSEWHERE!    
+   
+       
+       this.gl.enable(this.gl.DEPTH_TEST );                   /// ELSEWHERE!    
+       
+     this.gl.frontFace ( this.gl.CW         );
+     this.gl.enable    ( this.gl.CULL_FACE  );
+     this.gl.cullFace  ( this.gl.BACK       );
      }
 
 
@@ -43,7 +49,14 @@
         this.gl.clearColor( this.fillColor[0],this.fillColor[1],this.fillColor[2],this.fillColor[3] );
         this.gl.clear     ( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT                     );
         
-        mat4.perspective( this.camera.verticalFov, this.camera.aspectRatio, this.camera.nearPlane, this.camera.farPlane, this.projection_Matrix );
+        
+        var haxProj = new Matrix44();
+            haxProj = haxProj.perspective( this.canvas, 2.0, 500.0 );
+            
+          this.projection_Matrix = haxProj.toGLMatrix();
+    //    mat4.perspective( this.camera.verticalFov, this.camera.aspectRatio, this.camera.nearPlane, this.camera.farPlane, this.projection_Matrix );
+   
+  
     
         // POTENTIAL HAX. How it will affect future operations, remains to be seen.
         mat4.scale( this.projection_Matrix, [-1,1,1], this.projection_Matrix ); // Mirror the projection matrix across X
@@ -62,7 +75,7 @@
         
         var worldViewMatrix = mat4.multiply( viewMatrix , worldMatrix  );
      
-        myEntity.material.bind( this.gl, this.gl.TEXTURE0, lights );    // SLOT is OBSOLETE here!
+        myEntity.material.bind( this.gl, this.gl.TEXTURE0, lights, this.camera );    // SLOT is OBSOLETE here!
         
       
         this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix           );

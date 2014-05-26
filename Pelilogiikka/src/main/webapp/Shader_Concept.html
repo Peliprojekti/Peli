@@ -1,0 +1,45 @@
+<html>
+    <head>
+
+  Teh convention I shall be using in my own shaders
+
+<script id="vertexShader_Prototype" type="x-shader/x-vertex">
+    
+    uniform mat4 worldViewMatrix;       
+    uniform mat4 projMatrix;            // Declare basic matrices
+    
+    attribute vec3 vertexPos;
+    attribute vec2  vertexUV;           // Declare vertex attributes to be used.
+    varying vec2  fragmentUV;           // Pass on the running UV value.
+    
+    void main(void) 
+    {
+        fragmentUV    = vertexUV;
+        gl_Position   = projMatrix * worldViewMatrix * vec4(vertexPos, 1.0);
+        
+    }
+    
+</script>
+
+   
+<script id="pixel_Shader_Prototype" type="x-shader/x-fragment">
+   
+    precision mediump float;
+
+    varying vec2          fragmentUV;      // Declare the running UV scalars
+    uniform sampler2D     texSampler;      // Declare a sampling routine for generating texel indices.
+
+    void main(void) 
+    {
+        gl_FragColor = texture2D( texSampler, vec2(fragmentUV.s, fragmentUV.t));
+    }
+    
+</script>
+
+        
+        
+        
+        
+    </head>
+
+</html>
