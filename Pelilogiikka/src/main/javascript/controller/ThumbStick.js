@@ -17,7 +17,11 @@ controller.thumbStick = function(container, canvas, phone) {
         
     phone.addDrawable(thumbStickDot);
     
+    
+    var last = new Date().getTime();
     function drawCircle(x, y, r) {
+        log.debug("Time since last: " + (new Date().getTime() - last), true);
+        last = new Date().getTime();
         thumbStickDot.x = x;
         thumbStickDot.y = y;
         thumbStickDot.r = r;

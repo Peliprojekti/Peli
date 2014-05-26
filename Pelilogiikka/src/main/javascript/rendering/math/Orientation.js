@@ -89,6 +89,7 @@
         
        var matrix = mat4.create();
                     mat4.identity( matrix );
+     
         
         var iX = matrix[0]; // 0,1,2,3
         var iY = matrix[4]; // 4,5,6,7
@@ -114,7 +115,6 @@
     return matrix;
     }
     
-    
     // 0,1,2,3
     // 4,5,6,7
     // 8,9,A,B
@@ -126,9 +126,11 @@
         var           I = new Vector3( 1, 0, 0 );
         var matrix_rotI = new Matrix44( ["ROT_A", I , this.angles_V.x ]);
                   matrix = matrix.multiply( matrix_rotI );                        // Rotate around the models I-axis
+       
         var           J = new Vector3( matrix.m12, matrix.m22,  matrix.m32 );
         var matrix_rotJ = new Matrix44( ["ROT_A", J , this.angles_V.y  ]);
                   matrix = matrix.multiply( matrix_rotJ );                        // Rotate around the models new J-axis
+        
         var           K = new Vector3( matrix.m13, matrix.m23, matrix.m33 );
         var matrix_rotK = new Matrix44( ["ROT_A", K , this.angles_V.z  ]);
                   matrix = matrix.multiply( matrix_rotK );                        // Rotate around the models new K-axis         // Rotate around the models new K-axis
@@ -136,14 +138,7 @@
         
         // KUSEE. Tarkista!
         
-       /*
-      var matrix = mat4.create();
-                   mat4.identity( matrix );
-                   mat4.rotate(matrix, this.angles_V.x, [1, 0, 0] );
-                   mat4.rotate(matrix, this.angles_V.y, [0, 1, 0] );
-                   mat4.rotate(matrix, this.angles_V.z, [0, 0, 1] );
-        
-        */
+       
         if( label === "LOOK")
         {
             return new Vector3(  -matrix.m13, matrix.m23, matrix.m33 );
@@ -166,36 +161,3 @@
     
     
     
-    /*
-     * 
-     * 
-     // Legacy implementation of orientation
-    Orientation.prototype.get_Matrix = function() 
-    {
-        var matrix = mat4.create();
-                     mat4.identity( matrix  );
-                
-         mat4.translate( matrix, [  this.position[0], 
-                                    this.position[1], 
-                                    this.position[2] ] );
-     
-        mat4.rotate(matrix, this.angles[0], [1, 0, 0], matrix );
-       
-        var jX = matrix[1]; // 0,1,2,3
-        var jY = matrix[5]; // 4,5,6,7
-        var jZ = matrix[9]; // 8,9,a,b
-       
-        mat4.rotate(matrix, this.angles[1], [jX, jY, jZ], matrix );
-        
-        var kX = matrix[2];  // 0,1,2,3
-        var kY = matrix[6];  // 4,5,6,7
-        var kZ = matrix[10]; // 8,9,a,b
-        
-        
-        mat4.rotate(matrix, this.angles[2], [kX, kY, kZ], matrix );    
-  
-        mat4.scale( matrix, this.scales, matrix );
-        
-    return matrix;
-    }
-     */

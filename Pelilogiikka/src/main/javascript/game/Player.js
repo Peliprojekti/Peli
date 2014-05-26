@@ -1,9 +1,9 @@
 var playerFactory = {
     players: {},
 
-    getPlayer: function(userID) {
+    getPlayer: function(userID, controller) {
         if (this.players[userID] === undefined || this.players[userID] === null) {
-            this.players[userID] = new Player(userID);
+            this.players[userID] = new Player(userID, controller);
         }
         return this.players[userID];
     },
@@ -42,15 +42,22 @@ Player.prototype.draw = function(ctx) {
 };
 
 Player.prototype.update = function(time) {
+    if (this.controller != null) {
+        this.controller.update(time);
+    }
+    else {
+        console.debug("No controller!!!!!");
+    }
     if (this.onUpdate !== null) {
         this.onUpdate(time);
     }
 };
 
 Player.prototype.setPosition = function(x, y) {
-    if (x > 1 && x < 0 && y > 1 && y < 0) {
+    if (x > 1 || x < 0 || y > 1 || y < 0) {
         throw new Error("setPosition recieved incorrect values " + x + "," + y);
     }
+    console.debug(this.userID, x, y);
     this.x = x;
     this.y = y;
 };

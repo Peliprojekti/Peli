@@ -28,6 +28,7 @@
 
     function Texture( gl, fileName, flags )
     {
+      
         try
         {
             var myTexture          = gl.createTexture();
