@@ -174,6 +174,33 @@ client.phone = {
             self.canvas,
             self);
             //self.drawText);
+    },
+
+    getRelativeCoords: function(id, event) {
+        var coords = getFingerCoords(id, event);
+        var canvasDimensions = this.getCanvasDimensions();
+        var relativeX = coords[0] / canvasDimensions[0];
+        var relativeY = coords[1] / canvasDimensions[1];
+        return [relativeX, relativeY];
+
+    },
+
+    getCanvasDimensions: function () {
+        canvas = document.getElementById("canvas");
+        ctx = canvas.getContext("2d");
+        width = canvas.width;
+        height = canvas.height;
+
+        return [width, height];
+    },
+
+    updateCoordinatesText: function(x, y) {
+        var canvasDimensions = getCanvasDimensions();
+
+        phone.setControllerInfo(
+            "Coordinates: (" + x + ", " + y + ")",
+            "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
+        );
     }
 };
 
