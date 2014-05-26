@@ -28,10 +28,12 @@ function ShaderInput( type, key, value ) // <int> <lol> (=) <0>;
 
 
 
+
 Shader2.prototype.declare_Variable = function( label ) 
 {
     return new ShaderRef( this.gl, label, this.dataSegment[ this.dataPointer++ ] );
 }
+
 
 
 Shader2.prototype.declare_Terms = function( uniforms, attributes, variables, samplers )
@@ -63,6 +65,101 @@ Shader2.prototype.declare_Terms = function( uniforms, attributes, variables, sam
 }
 
 
+
+Shader2.prototype.assign_Term = function( type, sInput )
+{
+    if( !sInput )
+        throw "Shader null input exception!";
+    
+    switch( type ) 
+    {
+        case "UNIFORM":  
+                            var index = this.uniforms.indexOf( sInput.label );
+                            if( index == -1 ) throw ("Shader term not declared: " + sInput.label );
+                            var term = this.uniforms[ index ];
+                                term.check_Type();
+                                            
+                            switch( term.type )             // NOT YET IMPLEMENTED
+                            {
+                                case "VEC3"    :    break;
+                                case "VEC4"    :    break;
+                                case "INT"     :    break;
+                                case "FLOAT"   :    break;
+                                case "MATRIX44":    break;
+                                case "TEXTURE" :    break;
+                            }
+        break;
+        case "ATTRIBUTE":   
+                            var index = this.attributes.indexOf( sInput.label );
+                            var term = this.attributes[ index ];
+                                term.check_Type();
+                           
+                            switch( term.type )             // NOT YET IMPLEMENTED
+                            {
+                                case "VEC3"    :    break;
+                                case "VEC4"    :    break;
+                                case "INT"     :    break;
+                                case "FLOAT"   :    break;
+                                case "MATRIX44":    break;
+                                case "TEXTURE" :    break;
+                            }
+            
+        break;
+        case "VARIABLE" :   
+                            var index = this.variables.indexOf( sInput.label );
+                            if( index == -1 ) throw ("Shader term not declared: " + sInput.label );
+                                 term = this.variables[ index ];
+                                 term.check_Type();
+                             
+                            switch( term.type )             // NOT YET IMPLEMENTED
+                            {
+                                case "VEC3"    :    break;
+                                case "VEC4"    :    break;
+                                case "INT"     :    break;
+                                case "FLOAT"   :    break;
+                                case "MATRIX44":    break;
+                                case "TEXTURE" :    break;
+                            }
+                                 
+        break; 
+        case "SAMPLER" : 
+                            var index = this.samplers.indexOf( sInput.label );
+                            if( index == -1 ) throw ("Shader term not declared: " + sInput.label );
+                            var  term   = this.samplers[ index ];
+                                 term.check_Type();
+                            
+                            switch( term.type )             // NOT YET IMPLEMENTED
+                            {
+                                case "VEC3"    :    break;
+                                case "VEC4"    :    break;
+                                case "INT"     :    break;
+                                case "FLOAT"   :    break;
+                                case "MATRIX44":    break;
+                                case "TEXTURE" :    break;
+                            }
+                            
+        break;
+    
+    default: throw ("Ambiguous Shader Term: " + type );
+    }
+   
+}
+
+
+Shader2.prototype.bind = function( uniform_Values, attribute_Values, variable_Values, map_References)
+{
+
+      uniform_Values.forEach( function( value )
+      {
+           assign_Term( "UNIFORM" , value );
+      });
+   
+}
+
+
+
+
+
 function Shader2( renderer, label_VS, label_PS, shader_Terms  )
 { 
     // Declare external references
@@ -85,106 +182,6 @@ function Shader2( renderer, label_VS, label_PS, shader_Terms  )
 
     declare_Terms( shader_Terms[0], shader_Terms[1], shader_Terms[2] , shader_Terms[3] );
 }
-
-
-Shader2.prototype.assign_Term = function( type, sInput )
-{
-    if( !sInput )
-    {
-        throw "Shader null input exception!";
-    }
-    
-    switch( type ) 
-    {
-        case "UNIFORM":  
-                            var index = this.uniforms.indexOf( sInput.label );
-                            if( index == -1 ) throw ("Shader term not declared: " + sInput.label );
-                            var term = this.uniforms[ index ];
-                                term.check_Type();
-                                            
-                            switch( term.type )             // NOT YET IMPLEMENTED
-                            {
-                                case "VEC3"    :    break;
-                                case "INT"     :    break;
-                                case "FLOAT"   :    break;
-                                case "MATRIX44":    break;
-                            }
-        break;
-        case "ATTRIBUTE":   
-                            var index = this.attributes.indexOf( sInput.label );
-                            var term = this.attributes[ index ];
-                                term.check_Type();
-                           
-                            switch( term.type )             // NOT YET IMPLEMENTED
-                            {
-                                case "VEC3"    :    break;
-                                case "INT"     :    break;
-                                case "FLOAT"   :    break;
-                                case "MATRIX44":    break;
-                            }
-            
-        break;
-        case "VARIABLE" :   
-                            var index = this.variables.indexOf( sInput.label );
-                            if( index == -1 ) throw ("Shader term not declared: " + sInput.label );
-                                 term = this.variables[ index ];
-                                 term.check_Type();
-                             
-                            switch( term.type )             // NOT YET IMPLEMENTED
-                            {
-                                case "VEC3"    :    break;
-                                case "INT"     :    break;
-                                case "FLOAT"   :    break;
-                                case "MATRIX44":    break;
-                            }
-                                 
-        break; 
-        case "SAMPLER" : 
-                            var index = this.samplers.indexOf( sInput.label );
-                            if( index == -1 ) throw ("Shader term not declared: " + sInput.label );
-                            var  term   = this.samplers[ index ];
-                                 term.check_Type();
-                            
-                            switch( term.type )             // NOT YET IMPLEMENTED
-                            {
-                                case "VEC3"    :    break;
-                                case "INT"     :    break;
-                                case "FLOAT"   :    break;
-                                case "MATRIX44":    break;
-                            }
-                            
-        break;
-    
-    default: throw ("Ambiguous Shader Term: " + type );
-    }
-   
-  
-
-}
-
-
-
-
-
-Shader2.prototype.bind = function( uniform_Values, attribute_Values, variable_Values, map_References)
-{
-
-      uniform_Values.forEach( function( value )
-      {
-           assign_Term( "UNIFORM" , value );
-      });
-       
-       
-  
-    
-    
-    
-}
-
-
-
-
-
 
 
 
