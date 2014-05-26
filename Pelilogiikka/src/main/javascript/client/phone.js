@@ -1,6 +1,7 @@
 var client = client || {};
 
 client.phone = {
+    stopped: false,
     controllerDisabler: null,
     controllers: {},
     isOrienting: false,
@@ -19,6 +20,7 @@ client.phone = {
     onDocumentReady: function() {
         var self = client.phone;
 
+
         self.canvas = document.getElementById('canvas'); //$('#canvas');
         self.container = $('#container');
 
@@ -31,6 +33,7 @@ client.phone = {
         $(window).resize(self.onResize);
 
         self.onResize();
+        self.startAnimation();
     },
 
     onOrientationChange: function() {
@@ -115,33 +118,6 @@ client.phone = {
         self.draw();
     },
 
-    draw: function() {
-        var self = client.phone;
-
-        var width = self.canvas.width;
-        var height = self.canvas.height;
-        var canvasDimensions = [width, height];
-
-        var ctx = self.canvas.getContext("2d");
-        drawBackground(ctx);
-
-        if (DEBUG) {
-            ctx.fillStyle = 'white';
-            ctx.textAlign = 'center';
-
-            for (var i = 0; i < self.texts.length; i++) {
-                ctx.fillText(self.texts[i],
-                    width / 2, (height / 2) + (i * 10));
-            }
-        }
-
-        function drawBackground(ctx) {
-            ctx.fillStyle = 'green';
-            ctx.fillRect(0, 0, width, height);
-            ctx.fillStyle = 'black';
-            ctx.fillRect(10, 10, width - 20, height - 20);
-        }
-    },
 
     /**
      * @param {string} type - a generic name for the controller
@@ -173,7 +149,7 @@ client.phone = {
             self.container,
             self.canvas,
             self);
-            //self.drawText);
+        //self.drawText);
     },
 
     getRelativeCoords: function(id, event) {
@@ -185,7 +161,7 @@ client.phone = {
 
     },
 
-    getCanvasDimensions: function () {
+    getCanvasDimensions: function() {
         canvas = document.getElementById("canvas");
         ctx = canvas.getContext("2d");
         width = canvas.width;
@@ -201,6 +177,57 @@ client.phone = {
             "Coordinates: (" + x + ", " + y + ")",
             "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
         );
+    },
+
+    startAnimation: function() {
+        var self = this;
+
+        function animate(time) {
+            self.update(time);
+            self.draw(time);
+
+            if (!self.stopped) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        requestAnimationFrame(animate);
+    },
+
+    update: function() {
+
+    },
+
+    draw: function() {
+        var self = client.phone;
+
+        var width = self.canvas.width;
+        var height = self.canvas.height;
+        var canvasDimensions = [width, height];
+
+        var ctx = self.canvas.getContext("2d");
+        drawBackground(ctx);
+
+        if (DEBUG) {
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+
+            for (var i = 0; i < self.texts.length; i++) {
+                ctx.fillText(self.texts[i],
+                    width / 2, (height / 2) + (i * 10));
+            }
+        }
+
+        self.drawables.forEach(function(drawable) {
+            drawable.draw(ctx);
+        });
+
+        function drawBackground(ctx) {
+            ctx.fillStyle = 'green';
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = 'black';
+            ctx.fillRect(10, 10, width - 20, height - 20);
+        }
     }
 };
 
