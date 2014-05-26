@@ -16,7 +16,6 @@ module.exports = new function() {
     this.start = function(nconf_,  comServer_) {
         nconf = nconf_;
         comServer = comServer_;
-        var winston = require('winston');
         var express = require('express');
 
         server = express();
