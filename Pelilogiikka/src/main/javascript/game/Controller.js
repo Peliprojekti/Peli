@@ -64,6 +64,30 @@ game.Controller.prototype.reset = function() {
     this.speed = 0.1; //proportion of screen height
 };
 
+game.Controller.prototype.update = function(time) {
+    
+    if (this.lastSwipe != null) {
+        //console.debug("Controller update");
+        var coords = this.lastSwipe[0];
+        //Swipe start
+        if (this.lastSwipe[1] == 0) {
+            this.startCoords = coords;
+            //this.previousDirection = null;
+            this.previousTime = 0;
+            this.calcNewPosition(time);
+        }
+        else {    
+            if (this.startCoords != null) {
+                this.calcNewDirection(this.startCoords, coords);
+            }
+            this.startCoords = coords;
+        }
+    }
+    else {
+        this.calcNewPosition(time);
+    }
+ }
+
 /*
  * Sets needed update callback for player, will be called
  * once per frame (or whenever Player.update() is called)
@@ -98,12 +122,16 @@ game.Controller.prototype.setControlTypeUpdater = function() {
 
 game.Controller.prototype.setPosition = function(x, y) {
     //console.debug("setPosition ", x, y);
-    this.player.setPosition(x, y);
+        if (!(x > 1 || x < 0 || y > 1 || y < 0)) {
+        this.x = x;
+        this.y = y;
+        this.player.setPosition(x, y);
+    }
 };
 
 game.Controller.prototype.pushSwipe = function(x, y, sincePrevious) {
     this.lastSwipe = [[x, y], sincePrevious];
-    log.info("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
+    //log.info("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
 };
 
 
@@ -120,10 +148,13 @@ game.Controller.prototype.calcNewPosition = function(timestamp) {
             this.previousTime = timestamp;
             var speedMultiplier = this.interpolator.interpolate(this.time);
             //log.debug(this.time + " " + speedMultiplier);
-            this.currentDirection = this.currentDirection.mul(speedMultiplier);
+            this.currentDirection = this.currentDirection.mul(speedMultiplier);    
+            var newX = this.x + this.currentDirection.x * this.posChangeMul;
+            var newY = this.y + this.currentDirection.y * this.posChangeMul;
             this.setPosition(
-                    this.x + this.currentDirection.x * this.posChangeMul,
-                    this.y + this.currentDirection.y * this.posChangeMul);
+                    newX,
+                    newY);
+            //console.debug("New pos: (" + newX + ", " + newY + ")");
         }
     }
 };
@@ -151,6 +182,7 @@ game.Controller.prototype.calcNewDirection = function(beginning, end) {
 
         this.setPosition(newX, newY);
         //log.info("Vector: (" + newVec.x + ", " + newVec.y + ")");
+        //console.debug("New position: " + newX + ", " + newY + ")");
     }
 
     this.lastSwipe = null;

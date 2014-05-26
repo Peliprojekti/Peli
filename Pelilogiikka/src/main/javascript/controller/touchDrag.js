@@ -24,7 +24,7 @@ controller.touchDrag = function(container, canvas, phone) {
 
             this.previousSendTime = this.currentTime;
 
-            //log.info("touchmove events: " + this.moveCounter + ", interval: " + this.interval + "ms", true);
+            log.info("touchmove events: " + this.moveCounter + ", interval: " + this.interval + "ms", true);
             this.moveCounter = 0;
         }
 

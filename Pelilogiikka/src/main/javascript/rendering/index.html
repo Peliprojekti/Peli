@@ -243,20 +243,11 @@
 
 <script id="HAX_VS" type="x-shader/x-vertex">
       
-    uniform mat4 worldViewMatrix;
-    uniform mat4 projMatrix;
     uniform mat4 worldMatrix;
         
-    uniform vec3 lights[12];     
-    uniform  int lightCnt;
-        
-        
-    attribute vec3  vertexPos;
-    attribute vec3  vertexNormal;
-    attribute vec2   vertexUV;
-    
-    varying vec2      fragmentUV;
-    varying vec3  fragmentNormal;
+    attribute vec3     vertexPos;
+    attribute vec2      vertexUV;
+    varying   vec2    fragmentUV;
      
     void main(void) 
     {
@@ -272,10 +263,8 @@
     precision mediump           float;
     
     varying vec2           fragmentUV;
-    varying vec3       fragmentNormal;
-
     uniform sampler2D      texSampler;
-    uniform  vec4              vColor;
+    uniform vec4               vColor;
     
     
     
@@ -285,7 +274,7 @@
       
         if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 ) discard;
      
-        gl_FragColor = vColor;//vec4( 1.0,0.0,0.0,1.0);
+        gl_FragColor = vColor;
     }
 </script>
 
@@ -404,38 +393,33 @@
     }
 
     
+    
+    
  
     function Start() 
     {
-        
        var canvas          = document.getElementById("Canvas");
        
-        resize( canvas );
-       
+       resize( canvas );
+        
        renderer            = new Renderer( canvas );
        var assman          = new Assetmanager( renderer );
+        
        myScene             = new Scene( renderer, assman, "Showcase" ); 
         
        register_Inputs();      // Erillinen luokka tälle!
-      
     
        myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
        
-       myCamera.set_Position(  [-2.750824,0.444516,-24.011581] );
+       myCamera.set_Position ( [-2.750824,0.444516,-24.011581]  );
+       myScene.insert        ( myCamera      , "CAM"            );
+       myScene.insert        ( haxLight      , "LIGHT"          );
+       renderer.set_BgrColor ( [0.0,0.4,0.7,1.0]                );
        
-       myScene.insert( myCamera      , "CAM"       );
-   //    myScene.insert( gob1          , "GUI"       );
-    
-       myScene.insert( haxLight, "LIGHT" );
-    
-       renderer.set_BgrColor( [0.0,
-                               0.4,
-                               0.7,
-                               1.0] );
        
+       var myGui          = new Guiobject( renderer, new Texture(renderer.gl, "data/crosshair1.png", "FILTER_PLAIN"), new Vector2(0,0), new Vector2(0.25,0.25) );       
        
     tick();   
-    
     }
 
     
