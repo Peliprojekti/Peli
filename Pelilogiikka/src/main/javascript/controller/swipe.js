@@ -1,6 +1,7 @@
 var controller = controller || {};
 
 controller.swipe = function(container, canvas, phone) {
+    
     function Swipe() {
         this.updatePeriod = 20; //time in ms
         this.sincePrevious = 0;
@@ -19,7 +20,7 @@ controller.swipe = function(container, canvas, phone) {
     Swipe.prototype.sendCoords = function(event) {
         event.preventDefault();
 
-        var coords = getRelativeCoords(0, event);
+        var coords = phone.getRelativeCoords(0, event);
 
         if (this.sincePrevious === 0) {
             this.sincePrevious = new Date().getTime() - this.startTime;
@@ -59,25 +60,8 @@ controller.swipe = function(container, canvas, phone) {
         }, false);
     };
 
-    function getRelativeCoords(id, event) {
-        var coords = getFingerCoords(id, event);
-        var canvasDimensions = getCanvasDimensions();
-        var relativeX = coords[0] / canvasDimensions[0];
-        var relativeY = coords[1] / canvasDimensions[1];
-        return [relativeX, relativeY];
-    }
-
-    function getCanvasDimensions() {
-        canvas = document.getElementById("canvas");
-        ctx = canvas.getContext("2d");
-        width = canvas.width;
-        height = canvas.height;
-
-        return [width, height];
-    }
-
     function updateCoordinatesText(x, y) {
-        var canvasDimensions = getCanvasDimensions();
+        var canvasDimensions = phone.getCanvasDimensions();
 
         phone.setControllerInfo(
             "Coordinates: (" + x + ", " + y + ")",
