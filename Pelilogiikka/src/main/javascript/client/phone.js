@@ -152,13 +152,18 @@ client.phone = {
         //self.drawText);
     },
 
+    getFingerCoords: function(id, event) {
+        var canvas_x = event.targetTouches[id].pageX;
+        var canvas_y = event.targetTouches[id].pageY;
+        return [canvas_x, canvas_y];
+    },
+
     getRelativeCoords: function(id, event) {
-        var coords = getFingerCoords(id, event);
+        var coords = phone.getFingerCoords(id, event);
         var canvasDimensions = this.getCanvasDimensions();
         var relativeX = coords[0] / canvasDimensions[0];
         var relativeY = coords[1] / canvasDimensions[1];
         return [relativeX, relativeY];
-
     },
 
     getCanvasDimensions: function() {
@@ -174,9 +179,9 @@ client.phone = {
         var canvasDimensions = getCanvasDimensions();
 
         phone.setControllerInfo(
-            "Coordinates: (" + x + ", " + y + ")",
-            "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
-        );
+                "Coordinates: (" + x + ", " + y + ")",
+                "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
+                );
     },
 
     startAnimation: function() {
@@ -214,7 +219,7 @@ client.phone = {
 
             for (var i = 0; i < self.texts.length; i++) {
                 ctx.fillText(self.texts[i],
-                    width / 2, (height / 2) + (i * 10));
+                        width / 2, (height / 2) + (i * 10));
             }
         }
 
@@ -232,20 +237,3 @@ client.phone = {
 };
 
 $(document).ready(client.phone.onDocumentReady);
-
-/*
-
-   function getFingerCoords(id) {
-   var canvas_x = event.targetTouches[id].pageX;
-   var canvas_y = event.targetTouches[id].pageY;
-   return [canvas_x, canvas_y];
-   }
-
-   function getRelativeCoords(id) {
-   var coords = getFingerCoords(id);
-   var canvasDimensions = getCanvasDimensions();
-   var relativeX = coords[0] / canvasDimensions[0];
-   var relativeY = coords[1] / canvasDimensions[1];
-   return [relativeX, relativeY];
-   }
-   */
