@@ -68,9 +68,6 @@ To do this we make sure we declare a varying variable of the same type and name 
     
     
 
-    // MAPPING_TEXTURE
-    // MAPPING_NORMAL
-    // MAPPING_NORMAL_PARALLAX
    
 
     function Shader( gl, vs_Program, ps_Program, features )
@@ -102,12 +99,10 @@ To do this we make sure we declare a varying variable of the same type and name 
         this.shaderProgram.vertexBinormalAttribute   = gl.getAttribLocation( this.shaderProgram, "vertexBinormal");
                                                        gl.enableVertexAttribArray(this.shaderProgram.vertexBinormalAttribute);                
       
-       // Won't accept it... Too bad. But two perpendiculars are enough for basis.
-         
+      
         this.shaderProgram.vertexTangentAttribute    = gl.getAttribLocation( this.shaderProgram, "vertexTangent");
                                                        gl.enableVertexAttribArray(this.shaderProgram.vertexTangentAttribute);                
-      /*  
-     */
+   
         
         
         this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram,  "vertexUV");
@@ -144,10 +139,6 @@ To do this we make sure we declare a varying variable of the same type and name 
         gl.uniform4f( this.shaderProgram.vColor, 1.0,1.0,1.0,1.0 ); // Upload various values to the shader
         
         
-        // Texture 1 is always active! 
-      //  gl.activeTexture( gl.TEXTURE0 );
-       //   gl.bindTexture( gl.TEXTURE_2D, tex1.data );
-   
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, tex1.data );
         gl.uniform1i( gl.getUniformLocation(this.shaderProgram, "texSampler"), 0);

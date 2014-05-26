@@ -6,8 +6,6 @@
     {
         var fullPath = "data/"+path+"/"+path+".irr";
         
-         alert( fullPath );
-        
         this.name              = path;
         this.renderer          = renderer;  // Throw a wild guess what this is...
        
@@ -73,13 +71,14 @@
                 rnd.draw( entry , lights );   
             });
            
-           /*
+
+        
             this.entries_GUI.forEach(function( entry )
             {
-                entry.prepare( this.renderer );
-                  rnd.draw_SS( entry.entity );  
+                entry.draw( rnd.gl );
             });
-            */
+  
+       
            // Disable momentarily
            
         rnd.end();     // All drawing is to be done here.

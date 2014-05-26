@@ -2,6 +2,7 @@
 
 <head>
     <title>Pelumoottori<SIC> </title>
+    
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 <script type="text/javascript" src="glMatrix.js"               ></script>
@@ -24,11 +25,6 @@
 <script type="text/javascript" src="Guiobject.js"              ></script>
 <script type="text/javascript" src="Entity.js"                 ></script>
 <script type="text/javascript" src="Camera.js"                 ></script>
-<script type="text/javascript" src="parser/old/Importer.js"        ></script>
-<script type="text/javascript" src="parser/old/parser_Geometry.js" ></script>
-<script type="text/javascript" src="parser/old/Filereader.js"      ></script>
-
-
 
 <script type="text/javascript" src="parser/Parserobjects.js"         ></script>
 <script type="text/javascript" src="parser/GeneralPurposeParser.js"  ></script>
@@ -40,17 +36,15 @@
 <script type="text/javascript" src="math/Matrix44.js"          ></script>
 <script type="text/javascript" src="math/MatrixGL.js"          ></script>
 <script type="text/javascript" src="math/Orientation.js"       ></script>
-<script type="text/javascript" src="math/Interpolator.js"       ></script>
+<script type="text/javascript" src="math/Interpolator.js"      ></script>
 
-<script type="text/javascript" src="Assetmanager.js"      ></script>
-
-<script type="text/javascript" src="misc/Process.js"           ></script>
-
+<script type="text/javascript" src="Assetmanager.js"           ></script>
 <script type="text/javascript" src="testCube.js"               ></script>
 
-   
 
-
+// NEXT GENERATION HERE
+<script type="text/javascript" src="Refactored/Shaderutils2.js"                 ></script>
+<script type="text/javascript" src="Refactored/Shader2.js"                 ></script>
 
 
 
@@ -267,11 +261,9 @@
 <script id="COLOR_PS" type="x-shader/x-fragment">
     
     precision mediump           float;
-    
     varying vec2           fragmentUV;
     uniform sampler2D      texSampler;
-    uniform vec4               vColor;
-    
+    //uniform vec4               vColor;
     
     
     void main(void) 
@@ -280,7 +272,7 @@
       
         if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 ) discard;
      
-        gl_FragColor = vColor;
+        gl_FragColor = texture2D( texSampler, fragmentUV );   // Diffuse
     }
 </script>
 
@@ -412,7 +404,7 @@
        var assman          = new Assetmanager( renderer );
         
        myScene             = new Scene( renderer, assman, "Showcase" ); 
-        
+       
        register_Inputs();      // Erillinen luokka tälle!
     
        myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
@@ -422,8 +414,6 @@
        myScene.insert        ( haxLight      , "LIGHT"          );
        renderer.set_BgrColor ( [0.0,0.4,0.7,1.0]                );
        
-       
-       var myGui          = new Guiobject( renderer, new Texture(renderer.gl, "data/crosshair1.png", "FILTER_PLAIN"), new Vector2(0,0), new Vector2(0.25,0.25) );       
        
     tick();   
     }
