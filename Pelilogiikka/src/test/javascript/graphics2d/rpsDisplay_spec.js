@@ -1,4 +1,4 @@
-describe('the click object', function() {
+describe('the RpsDisplay object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the click object', function() {
     });
 
     //Specs
-    describe('click tests', function() {
+    describe('RpsDisplay tests', function() {
 
 //        it('initializes the canvas', function() {   
 //            expect(click.initCanvas()).toBe(0);

@@ -1,4 +1,4 @@
-describe('the camera object', function() {
+describe('the Camera object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the camera object', function() {
     });
 
     //Specs
-//    describe('camera tests', function() {
+//    describe('Camera tests', function() {
 //
 //    });
 

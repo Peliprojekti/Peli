@@ -1,4 +1,4 @@
-describe('the matrix44 object', function() {
+describe('the Matrix44 object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the matrix44 object', function() {
     });
 
     //Specs
-//    describe('matrix44 tests', function() {
+//    describe('Matrix44 tests', function() {
 //
 //    });
 

@@ -1,4 +1,4 @@
-describe('the mesh object', function() {
+describe('the Mesh object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the mesh object', function() {
     });
 
     //Specs
-//    describe('mesh tests', function() {
+//    describe('Mesh tests', function() {
 //
 //    });
 

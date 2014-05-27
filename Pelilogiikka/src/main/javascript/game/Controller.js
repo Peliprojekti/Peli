@@ -10,6 +10,8 @@ game.controller = {
     create: function(rpc) {
         var controller = new game.Controller();
 
+        rpc.exposeRpcMethod('playerPerformanceReport', controller, controller.playerPerformanceReport);
+
         rpc.exposeRpcMethod('position', controller, controller.setPosition);
         rpc.exposeRpcMethod('swipe', controller, controller.pushSwipe);
         rpc.exposeRpcMethod('moveSwipe', controller, controller.pushSwipe);
@@ -64,6 +66,24 @@ game.Controller.prototype.reset = function() {
     this.speed = 0.1;
 };
 
+game.Controller.prototype.playerPerformanceReport = function(data) {
+    if (data.length > 0) {
+    var count = 0;
+    var totalTime = 0;
+
+    data.forEach(function(d) {
+        count++;
+        totalTime += (d[1] - d[0]);
+    });
+
+        console.debug(totalTime/count);
+        this.player.addResponseTime(totalTime/count, count);
+    }
+    else {
+        this.player.addResponseTime(0, 0);
+    }
+};
+
 game.Controller.prototype.update = function(time) {
     
     if (this.lastSwipe != null) {
@@ -86,7 +106,7 @@ game.Controller.prototype.update = function(time) {
     else {
         this.calcNewPosition(time);
     }
- }
+ };
 
 /*
  * Sets needed update callback for player, will be called

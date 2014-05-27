@@ -1,4 +1,4 @@
-//describe('the vector2 object', function() {
+//describe('the Vector2 object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,7 +9,7 @@
 //    });
 //
 //    //Specs
-//    describe('vector2 tests', function() {
+//    describe('Vector2 tests', function() {
 //        it('sets the vector', function() {
 //            var testVector = new Vector2(1, 1);
 //            testVector.set(3, 3);

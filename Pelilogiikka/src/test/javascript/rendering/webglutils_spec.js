@@ -1,4 +1,4 @@
-describe('the importer object', function() {
+describe('the WebGLUtils object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the importer object', function() {
     });
 
     //Specs
-//    describe('importer tests', function() {
+//    describe('WebGLUtils tests', function() {
 //
 //    });
 

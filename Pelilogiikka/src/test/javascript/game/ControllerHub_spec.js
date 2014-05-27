@@ -1,4 +1,4 @@
-describe('the controllerHub object', function() {
+describe('the ControllerHub object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,11 +9,11 @@ describe('the controllerHub object', function() {
     });
     
     
-//Testit kommenteissa, koska ControllerHub vaatii io:ta, joka rikkoo Jasminen.
+//    Testit kommenteissa, koska luokan Controller lataaminen rikkoo testiympäristön.
     
 
     //Specs
-//    describe('controllerHub tests', function() {
+//    describe('ControllerHub tests', function() {
 //        it('adds a new player', function() {
 //            var testHub = new ControllerHub();
 //            expect(testHub.addNewPlayer(1)).toBe(true);
