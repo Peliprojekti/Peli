@@ -2,34 +2,42 @@ var client = client || {};
 
 client.phone = {
     stopped: false,
+
+    ios: false,
+
     controllerDisabler: null,
     controllers: {},
+
     isOrienting: false,
     isResizing: false,
     rc: 0,
     oc: 0,
-    canvas: null,
-    container: null,
 
-    controllerLines: [],
-    drawables: [],
-    updatables: [], 
-    circles: [],
+    controllerView: null,
 
     onDocumentReady: function() {
         var self = client.phone;
 
-        self.canvas = document.getElementById('canvas'); //$('#canvas');
-        self.container = $('#container');
+        // initalize UI properties
+        self.io = navigator.userAgent.match(/(iPhone)|(iPod)/); // is iPhone
 
+        // create controller view and add needed elements
+        self.controllerView = client.controllerView.create(
+            document.getElementById('container'),
+            document.getElementById('canvas')
+        );
+
+        self.controllerView.add(new graphics2d.fpsDisplay.create(self.canvas));
+
+        // open connection to server
         log.info("trying to open connection");
         client.coms.open(self.onConnectionOpened);
 
+        // set orientation/resize listeners
         $(window).on("orientationchange", self.onOrientationChange);
         $(window).resize(self.onResize);
 
-        self.updatables.push( new graphics2d.fpsDisplay.create(self.canvas));
-
+        // start animations
         self.onResize();
         self.startAnimation();
     },
@@ -41,6 +49,7 @@ client.phone = {
             self.isOrienting = true;
             setTimeout(function() {
                 self._oc++;
+                self.controllerView.onOrientationChange();
             }, 50);
         }
         self.isOrienting = false;
@@ -60,8 +69,7 @@ client.phone = {
                     $("#container").height($(window).height() + 60);
                 }
 
-                $("#canvas").attr('width', $("#container").width());
-                $("#canvas").attr('height', $("#container").height());
+                self.controllerView.onResize();
 
                 // hides the WebKit url bar
                 if (ios) {
@@ -69,14 +77,9 @@ client.phone = {
                         window.scrollTo(0, 1);
                     }, 100);
                 }
-
-                /*
-                self.drawText('Orientiation changes: ' + self.oc++, 0);
-                self.drawText('Resize events: ' + self.rc++, 1);
-                */
             }, 100);
             self.isResizing = false;
-            self.draw();
+            //self.draw();
         }
     },
 
@@ -89,37 +92,12 @@ client.phone = {
     },
 
     addDrawable: function(drawable) {
-        this.drawables.push(drawable);
+        this.controllerView.add(drawable);
     },
 
     setControllerInfo: function(lines) {
         this.controllerLines = lines;
     },
-
-
-    /*
-    drawText: function(text, textID) {
-        var self = client.phone;
-        if (DEBUG) {
-
-            if (typeof textID === 'undefined') {
-                throw "peli.client.phone.drawText - needs a textID";
-            }
-
-
-            if (self.textIndexes[textID] === undefined) {
-                self.textIndexes[textID] = self.textLines++;
-                self.texts.push(null);
-            }
-
-            if (self.texts[self.textIndexes[textID]] != text) {
-                self.texts[self.textIndexes[textID]] = text;
-            }
-        }
-        self.draw();
-    },
-    */
-
 
     /**
      * @param {string} type - a generic name for the controller
@@ -142,16 +120,17 @@ client.phone = {
             throw new Error("trying to enable unregistered controller type: " + type);
         }
 
+        self.controllerView.add(self.controllers[type]);
+
         if (typeof self.controllerDisabler === 'function') {
             self.controllerDisabler();
             self.controllerDisabler = null;
         }
 
         self.controllerDisabler = self.controllers[type](
-            self.container,
-            self.canvas,
+            document.getElementById('container'),
+            document.getElementById('canvas'),
             self);
-        //self.drawText);
     },
 
     getFingerCoords: function(id, event) {
@@ -189,8 +168,10 @@ client.phone = {
         var self = this;
 
         function animate(time) {
-            self.update(time);
-            self.draw(time);
+            self.controllerView.update(time);
+            self.controllerView.draw(time);
+            //self.update(time);
+            //self.draw(time);
 
             if (!self.stopped) {
                 requestAnimationFrame(animate);
@@ -200,16 +181,10 @@ client.phone = {
         requestAnimationFrame(animate);
     },
 
-    update: function(time) {
-        this.updatables.forEach(function(d) {
-            d.update(time);
-        });
-    },
-
+    /*
     draw: function(time) {
         var self = client.phone;
 
-        var ctx = canvas.getContext('2d');
 
         var width = self.canvas.width;
         var height = self.canvas.height;
@@ -243,9 +218,8 @@ client.phone = {
 
             var offset = 0;
             texts.forEach(function(line) {
-                /* tää ei nyt haluu
-                ctx.fillText( line, xpos, ypos + (10 * offset++)); 
-                */
+                //tää ei nyt haluu
+                //ctx.fillText( line, xpos, ypos + (10 * offset++)); 
             });
         }
 
@@ -256,6 +230,7 @@ client.phone = {
             ctx.fillRect(10, 10, width - 20, height - 20);
         }
     }
+    */
 };
 
 $(document).ready(client.phone.onDocumentReady);
