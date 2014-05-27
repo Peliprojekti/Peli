@@ -9,8 +9,8 @@ describe('the mesh object', function() {
     });
 
     //Specs
-    describe('mesh', function() {
-
-    });
+//    describe('mesh tests', function() {
+//
+//    });
 
 });

@@ -9,8 +9,8 @@ describe('the entity object', function() {
     });
 
     //Specs
-    describe('entity', function() {
-
-    });
+//    describe('entity tests', function() {
+//
+//    });
 
 });

@@ -9,8 +9,8 @@ describe('the material object', function() {
     });
 
     //Specs
-    describe('material', function() {
-
-    });
+//    describe('material tests', function() {
+//
+//    });
 
 });

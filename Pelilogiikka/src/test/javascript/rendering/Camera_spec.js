@@ -9,8 +9,8 @@ describe('the camera object', function() {
     });
 
     //Specs
-    describe('camera', function() {
-
-    });
+//    describe('camera tests', function() {
+//
+//    });
 
 });

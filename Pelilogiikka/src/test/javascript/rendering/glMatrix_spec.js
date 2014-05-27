@@ -9,8 +9,8 @@ describe('the glMatrix object', function() {
     });
 
     //Specs
-    describe('glMatrix', function() {
-
-    });
+//    describe('glMatrix tests', function() {
+//
+//    });
 
 });
