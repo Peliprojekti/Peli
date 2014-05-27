@@ -190,10 +190,10 @@ game.Controller.prototype.calcNewDirection = function(beginning, end) {
 
 game.Controller.prototype.orientation = function(tiltLR, tiltFB, dir) {
     if(dir > 0 && dir < 180){
-        this.setPosition(this.x + speed, this.y);
+        this.setPosition(this.x + this.speed, this.y);
         // move right
     }else{
-        this.setPosition(this.x - speed, this.y);
+        this.setPosition(this.x - this.speed, this.y);
         //move left
     }
     log.debug("Orientation changed, new orientation:\n" +
@@ -218,5 +218,5 @@ game.Controller.prototype.motion = function(accelerationData) {
             "x: " + rotation.x + "\n" +
             "y: " + rotation.y + "\n" +
             "z: " + rotation.z);
-}
+};
 
