@@ -61,7 +61,7 @@ game.Controller.prototype.reset = function() {
     this.tiltFB = null;
     this.dir = null;
     
-    this.speed = 0.1; //proportion of screen height
+    this.speed = 0.1;
 };
 
 game.Controller.prototype.update = function(time) {
@@ -122,16 +122,26 @@ game.Controller.prototype.setControlTypeUpdater = function() {
 
 game.Controller.prototype.setPosition = function(x, y) {
     //console.debug("setPosition ", x, y);
-        if (!(x > 1 || x < 0 || y > 1 || y < 0)) {
+    
         this.x = x;
         this.y = y;
         this.player.setPosition(x, y);
-    }
 };
 
 game.Controller.prototype.pushSwipe = function(x, y, sincePrevious) {
     this.lastSwipe = [[x, y], sincePrevious];
     //log.info("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
+};
+
+game.Controller.prototype.setPositionSwipe = function(x, y) {
+        if (!(x > 1 || x < 0)) {
+            this.x = x;
+        }
+        if (!(y > 1 || y < 0)) {
+            this.y = y;
+        }
+        
+        this.setPosition(this.x, this.y);
 };
 
 
@@ -151,7 +161,7 @@ game.Controller.prototype.calcNewPosition = function(timestamp) {
             this.currentDirection = this.currentDirection.mul(speedMultiplier);    
             var newX = this.x + this.currentDirection.x * this.posChangeMul;
             var newY = this.y + this.currentDirection.y * this.posChangeMul;
-            this.setPosition(
+            this.setPositionSwipe(
                     newX,
                     newY);
             //console.debug("New pos: (" + newX + ", " + newY + ")");
@@ -180,7 +190,7 @@ game.Controller.prototype.calcNewDirection = function(beginning, end) {
         var newX = this.x + newVec.x * this.posChangeMul;
         var newY = this.y + newVec.x * this.posChangeMul;
 
-        this.setPosition(newX, newY);
+        this.setPositionSwipe(newX, newY);
         //log.info("Vector: (" + newVec.x + ", " + newVec.y + ")");
         //console.debug("New position: " + newX + ", " + newY + ")");
     }
@@ -189,17 +199,37 @@ game.Controller.prototype.calcNewDirection = function(beginning, end) {
 };
 
 game.Controller.prototype.orientation = function(tiltLR, tiltFB, dir) {
-    if(dir > 0 && dir < 180){
-        this.setPosition(this.x + speed, this.y);
-        // move right
-    }else{
-        this.setPosition(this.x - speed, this.y);
-        //move left
+    
+    var xPos = 0;
+    
+    if(dir <= 90.0 )
+    {
+       var rads  = (dir*Math.PI)     / 180.0;
+           xPos  = -Math.sin( rads ) / 2.0;
     }
-    log.debug("Orientation changed, new orientation:\n" +
-            "tiltLR (gamma): " + tiltLR + "\n" +
-            "tiltFB (beta): " + tiltFB + "\n" +
-            "dir (alpha): " + dir);
+    else if(dir >= 270.0 )
+    {
+       var rads  = ((360-dir)*Math.PI) / 180.0;
+           xPos  =   Math.sin( rads )  / 2.0;
+    }
+    
+       this.setPosition( 0.5+xPos, this.y);
+    
+//    if(dir < 180){
+//        this.setPosition(this.x - this.speed, this.y);
+//        
+//        // move left
+//    }else{
+//        this.setPosition(this.x + this.speed, this.y);
+//        //move right
+//    }
+    
+    log.debug("pos: (" +this.x + ", " + this.y + ")\n" + 
+            "dir: " + dir);
+//    log.debug("Orientation changed, new orientation:\n" +
+//            "tiltLR (gamma): " + tiltLR + "\n" +
+//            "tiltFB (beta): " + tiltFB + "\n" +
+//            "dir (alpha): " + dir);
 };
 
 game.Controller.prototype.motion = function(accelerationData) {
