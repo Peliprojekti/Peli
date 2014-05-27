@@ -10,11 +10,10 @@ client.phone = {
     oc: 0,
     canvas: null,
     container: null,
-    texts: [],
-    textIndexes: {},
-    textLines: 0,
 
+    controllerLines: [],
     drawables: [],
+    updatables: [], 
     circles: [],
 
     onDocumentReady: function() {
@@ -23,13 +22,13 @@ client.phone = {
         self.canvas = document.getElementById('canvas'); //$('#canvas');
         self.container = $('#container');
 
-        var ctx = canvas.getContext("2d");
-
         log.info("trying to open connection");
         client.coms.open(self.onConnectionOpened);
 
         $(window).on("orientationchange", self.onOrientationChange);
         $(window).resize(self.onResize);
+
+        self.updatables.push( new graphics2d.fpsDisplay.create(self.canvas));
 
         self.onResize();
         self.startAnimation();
@@ -71,8 +70,10 @@ client.phone = {
                     }, 100);
                 }
 
+                /*
                 self.drawText('Orientiation changes: ' + self.oc++, 0);
                 self.drawText('Resize events: ' + self.rc++, 1);
+                */
             }, 100);
             self.isResizing = false;
             self.draw();
@@ -96,6 +97,7 @@ client.phone = {
     },
 
 
+    /*
     drawText: function(text, textID) {
         var self = client.phone;
         if (DEBUG) {
@@ -116,6 +118,7 @@ client.phone = {
         }
         self.draw();
     },
+    */
 
 
     /**
@@ -167,7 +170,6 @@ client.phone = {
 
     getCanvasDimensions: function() {
         canvas = document.getElementById("canvas");
-        ctx = canvas.getContext("2d");
         width = canvas.width;
         height = canvas.height;
 
@@ -178,9 +180,9 @@ client.phone = {
         var canvasDimensions = getCanvasDimensions();
 
         phone.setControllerInfo(
-                "Coordinates: (" + x + ", " + y + ")",
-                "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
-                );
+            "Coordinates: (" + x + ", " + y + ")",
+            "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
+        );
     },
 
     startAnimation: function() {
@@ -198,33 +200,54 @@ client.phone = {
         requestAnimationFrame(animate);
     },
 
-    update: function() {
-
+    update: function(time) {
+        this.updatables.forEach(function(d) {
+            d.update(time);
+        });
     },
 
-    draw: function() {
+    draw: function(time) {
         var self = client.phone;
+
+        var ctx = canvas.getContext('2d');
 
         var width = self.canvas.width;
         var height = self.canvas.height;
-        var canvasDimensions = [width, height];
+        //var canvasDimensions = [width, height];
 
-        var ctx = self.canvas.getContext("2d");
         drawBackground(ctx);
-
         if (DEBUG) {
+            drawTexts(ctx, width / 2, height / 2);
+        }
+
+        this.drawables.forEach(function(d) {
+            d.draw(ctx);
+        });
+
+        this.updatables.forEach(function(d) {
+            d.draw(ctx);
+        });
+
+        function drawTexts(ctx, xpos, ypos) {
+            var texts = [
+                'Orientiation changes: ' + self.oc,
+                'Resize events: ' + self.rc++
+            ];
+
+            for (var k = 0; k < self.controllerLines.length; k++) {
+                texts.push(self.controllerLines[k]);
+            }
+
             ctx.fillStyle = 'white';
             ctx.textAlign = 'center';
 
-            for (var i = 0; i < self.texts.length; i++) {
-                ctx.fillText(self.texts[i],
-                        width / 2, (height / 2) + (i * 10));
-            }
+            var offset = 0;
+            texts.forEach(function(line) {
+                /* tää ei nyt haluu
+                ctx.fillText( line, xpos, ypos + (10 * offset++)); 
+                */
+            });
         }
-
-        self.drawables.forEach(function(drawable) {
-            drawable.draw(ctx);
-        });
 
         function drawBackground(ctx) {
             ctx.fillStyle = 'green';

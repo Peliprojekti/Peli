@@ -19,8 +19,8 @@ function Player(userID, controller) {
 
     this.onUpdate = null;
 
-    this.x = 0;
-    this.y = 0;
+    this.x = 0.5;
+    this.y = 0.5;
 }
 
 Player.prototype.setOnUpdate = function(func) {
@@ -57,7 +57,7 @@ Player.prototype.setPosition = function(x, y) {
     if (x > 1 || x < 0 || y > 1 || y < 0) {
         throw new Error("setPosition recieved incorrect values " + x + "," + y);
     }
-    console.debug(this.userID, x, y);
+    //console.debug(this.userID, x, y);
     this.x = x;
     this.y = y;
 };

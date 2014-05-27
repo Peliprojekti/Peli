@@ -94,14 +94,14 @@ PeliRPC.prototype.getOnMessage = function() {
                 }
 
                 if (typeof rpc.result != "undefined") {
-                    console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
+                    //console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
                     that.callbacks[rpc.id].listener.apply(that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
                 } else if (typeof rpc.error != "undefined") {
                     console.warn("PeliRPC::onMessage() - returning an error to callback: ", rpc.error);
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
                 } else {
-                    console.debug("PeliRPC::onMessage() - calling callbac with no return value");
+                    //console.debug("PeliRPC::onMessage() - calling callbac with no return value");
                     that.callbacks[rpc.id].listener.apply(
                         that.callbacks[rpc.id].object, [rpc.id, null, null]);
                 }

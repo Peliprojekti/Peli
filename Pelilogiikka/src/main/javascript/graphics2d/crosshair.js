@@ -8,10 +8,10 @@ graphics2d.crosshair = {
         var g = Math.floor(Math.random() * (strength - r));
         var b = Math.floor(Math.random() * (strength - r - g));
 
-        var color = [r, g, b];
+        var array = [r, g, b];
         
         var temporaryValue, randomIndex;
-        for (var i = color.length; i >= 0;) {
+        for (var i = array.length; i > 0;) {
             // Pick a remaining element...
             randomIndex = Math.floor(Math.random() * i);
             i -= 1;
@@ -22,8 +22,10 @@ graphics2d.crosshair = {
             array[randomIndex] = temporaryValue;
         }
 
+        console.debug("original values ", r,g,b);
+        console.debug("creating crosshair of color", array);
         return new graphics2d.crosshair.Crosshair(x, y, radius,
-            'rgb(' + [r, g, b].join() + ')'
+            'rgb(' + array.join() + ')'
         );
     },
 

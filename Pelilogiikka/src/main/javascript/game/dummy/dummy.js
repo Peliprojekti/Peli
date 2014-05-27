@@ -24,14 +24,14 @@ function showMessage(msg) {
 function initializeUI() {
     canvas = setupCanvas();
 
-    context = canvas.getContext('2d');
+    //context = canvas.getContext('2d');
 
     c_width = canvas.width;
     c_height = canvas.height;
 
-    this.updateables.push(graphics2d.fpsDisplay.createFancy(context));
-    this.updateables.push(graphics2d.rpsDisplay.createFancy(context));
-    //this.updateables.push(graphics2d.playerPerformance.create(context));
+    this.updateables.push(graphics2d.fpsDisplay.createFancy(canvas));
+    this.updateables.push(graphics2d.rpsDisplay.createFancy(canvas));
+    //this.updateables.push(graphics2d.playerPerformance.create(canvas));
 
     requestAnimationFrame(animate);
 
@@ -72,7 +72,7 @@ function connectToServer() {
     game.controllerHub.openHub(
         function(player) { // onPlayerJoined
             log.info("New player connected to dummy game");
-            var crosshair = new Crosshair(0, 0, 20);
+            var crosshair = new graphics2d.crosshair.createRandomColor(0.5,0.5,20);//Crosshair(0, 0, 20);
             player.setCrosshair(crosshair);
             players.push(player);
             //playerPerformance.addPlayer(player);
