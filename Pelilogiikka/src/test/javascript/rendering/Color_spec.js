@@ -1,4 +1,4 @@
-describe('the HUD item object', function() {
+describe('the Color object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the HUD item object', function() {
     });
 
     //Specs
-//    describe('HUD item tests', function() {
+//    describe('Color tests', function() {
 //
 //    });
 

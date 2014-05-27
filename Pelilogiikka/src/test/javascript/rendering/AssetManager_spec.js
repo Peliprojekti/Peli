@@ -1,4 +1,4 @@
-describe('the process object', function() {
+describe('the AssetManager object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the process object', function() {
     });
 
     //Specs
-//    describe('process tests', function() {
+//    describe('AssetManager tests', function() {
 //
 //    });
 

@@ -1,4 +1,4 @@
-describe('the entity object', function() {
+describe('the Entity object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the entity object', function() {
     });
 
     //Specs
-//    describe('entity tests', function() {
+//    describe('Entity tests', function() {
 //
 //    });
 

@@ -1,4 +1,4 @@
-describe('the orientation object', function() {
+describe('the Orientation object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the orientation object', function() {
     });
 
     //Specs
-    describe('orientation tests', function() {
+    describe('Orientation tests', function() {
 //        it('sets position', function() {
 //            var testOrientation = new Orientation([1, 1, 1], [1, 1, 1], [1, 1, 1]);
 //            testOrientation.set_Position()

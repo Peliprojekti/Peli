@@ -1,4 +1,4 @@
-describe('the shaderlib object', function() {
+describe('the Shader2 object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the shaderlib object', function() {
     });
 
     //Specs
-//    describe('shaderlib tests', function() {
+//    describe('Shader2 tests', function() {
 //
 //    });
 

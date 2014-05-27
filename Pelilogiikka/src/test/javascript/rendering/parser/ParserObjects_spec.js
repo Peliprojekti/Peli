@@ -1,4 +1,4 @@
-describe('the Angles object', function() {
+describe('the ParserObjects object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the Angles object', function() {
     });
 
     //Specs
-//    describe('Angles tests', function() {
+//    describe('ParserObjects tests', function() {
 //
 //    });
 

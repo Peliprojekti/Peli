@@ -1,4 +1,4 @@
-describe('the connection object', function() {
+describe('the Connection object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the connection object', function() {
     });
 
     //Specs
-//    describe('connection tests', function() {
+//    describe('Connection tests', function() {
 //
 //    });
 

@@ -1,4 +1,4 @@
-describe('the parser_Geometry object', function() {
+describe('the GuiObject object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the parser_Geometry object', function() {
     });
 
     //Specs
-//    describe('parser_Geometry tests', function() {
+//    describe('GuiObject tests', function() {
 //
 //    });
 

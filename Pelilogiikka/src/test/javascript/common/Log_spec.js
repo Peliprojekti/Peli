@@ -1,4 +1,4 @@
-//describe('the log object', function() {
+//describe('the Log object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,7 +9,7 @@
 //    });
 //
 //    //Specs
-//    describe('log', function() {
+//    describe('log tests', function() {
 //
 //    });
 //

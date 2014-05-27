@@ -1,4 +1,4 @@
-describe('the buffer object', function() {
+describe('the Buffer object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the buffer object', function() {
     });
 
     //Specs
-//    describe('buffer tests', function() {
+//    describe('Buffer tests', function() {
 //
 //    });
 

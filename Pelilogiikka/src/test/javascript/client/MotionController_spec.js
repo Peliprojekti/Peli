@@ -1,4 +1,4 @@
-describe('the mouseMove object', function() {
+describe('the MotionController object', function() {
 
 //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -7,7 +7,7 @@ describe('the mouseMove object', function() {
     afterEach(function() {
     });
     //Specs
-    describe('mouseMove tests', function() {
+    describe('MotionController tests', function() {
 
 //        it('updates mouse coordinates', function() {
 //            expect(mouseMove.update())

@@ -1,4 +1,4 @@
-describe('the inputs object', function() {
+describe('the Inputs object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the inputs object', function() {
     });
 
     //Specs
-//    describe('inputs tests', function() {
+//    describe('Inputs tests', function() {
 //
 //    });
 

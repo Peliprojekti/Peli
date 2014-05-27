@@ -1,4 +1,4 @@
-describe('the generalPurposeParser object', function() {
+describe('the GeneralPurposeParser object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the generalPurposeParser object', function() {
     });
 
     //Specs
-//    describe('generalPurposeParser tests', function() {
+//    describe('GeneralPurposeParser tests', function() {
 //
 //    });
 

@@ -1,4 +1,4 @@
-describe('the swipe object', function() {
+describe('the ControllerView object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -10,7 +10,7 @@ describe('the swipe object', function() {
     });
 
     //Specs
-//    describe('swipe tests', function() {
+//    describe('ControllerView tests', function() {
 //        it('do touch start', function() {
 //            var testSwipe = new Swipe();
 //            expect(testSwipe.doTouchStart()).not.toBe(null);

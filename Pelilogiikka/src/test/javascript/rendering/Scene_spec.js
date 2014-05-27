@@ -1,4 +1,4 @@
-describe('the scene object', function() {
+describe('the Scene object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -13,7 +13,7 @@ describe('the scene object', function() {
 
 
     //Specs
-//    describe('scene tests', function() {
+//    describe('Scene tests', function() {
 //        it('entities are inserted', function() {
 //            var testScene = new Scene(new Renderer(document.createElement('canvas')));
 //            var testEntity = new Entity(new Mesh, new Material);
