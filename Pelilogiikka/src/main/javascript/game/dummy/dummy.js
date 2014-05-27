@@ -62,13 +62,6 @@ function connectToServer() {
 
     log.info("Opening controllerHub");
 
-    /*
-    game.controllerHub.addCustomRpcMethod(
-        'playerPerformanceReport',
-        graphics2d.playerPerformance,
-        graphics2d.playerPerformance.playerPerformanceReport);
-        */
-
     game.controllerHub.openHub(
         function(player) { // onPlayerJoined
             log.info("New player connected to dummy game");

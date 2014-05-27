@@ -17,10 +17,11 @@ function Player(userID, controller) {
     this.userID = userID;
     this.controller = controller;
 
-    this.onUpdate = null;
-
+    //this.onUpdate = null;
+    this.gameOn = false;
     this.x = 0.5;
     this.y = 0.5;
+
     this.responseTime = null;
     this.messagesPerSecond = 0;
 }

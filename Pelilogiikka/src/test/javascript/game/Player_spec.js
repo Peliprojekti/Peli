@@ -1,16 +1,31 @@
 describe('the Player object', function() {
 
     //Create an easily-removed container for our tests to play in
-    beforeEach(function() {
-    });
+    beforeEach(function() {});
 
     //Clean it up after each spec
-    afterEach(function() {
+    afterEach(function() {});
+
+    describe('Player tests', function() {
+        it ('initializes the player correctly, gets id', function() {
+            var testPlayer = new Player(1234);
+            expect(testPlayer.getID()).toBe(1234);
+            expect(testPlayer.x).toBe(0.5);
+            expect(testPlayer.y).toBe(0.5);
+            expect(testPlayer.gameOn).toBe(false);
+            //expect(testPlayer.currentDirection).toEqual(new Vector2(0, 0));
+        });
+        it('gets a player from the listing', function() {
+            var testPlayer = playerFactory.getPlayer(1);
+            expect(testPlayer.getID()).toBe(1);
+        });
     });
-    
+});
+
+
 //    Testit kommenteissa, koska luokan Player lataaminen rikkoo testiympäristön.
 
-    //Specs
+//Specs
 //    describe('Player tests', function() {
 //        it('initializes the player correctly, gets id', function() {
 //            var testPlayer = new Player(1234);
@@ -68,4 +83,4 @@ describe('the Player object', function() {
 //            expect(testPlayer.currentDirection.y).toBe(0.9);
 //        });
 //    });
-});
+//});

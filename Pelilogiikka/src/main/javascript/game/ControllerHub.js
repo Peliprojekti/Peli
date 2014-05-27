@@ -1,79 +1,84 @@
 var game = game || {};
 
 game.controllerHub = {
+    controllerType: CONTROLLER,
     ws_protocol: undefined, //JSONRPC_RPOTOCOL,
     ws_port: SCREEN_PORT,
+
     onPlayerJoined: null,
     onPlayerLeft: null,
-    maxControllers: 100,
-    minFreeControllers: 2,
+    playerFactory: null,
 
-    controllerType: CONTROLLER,
-    controllerCount: 0,
+    maxPlayers: 100,
+    minimumFreeConnections: 2,
+    freeConnections: 2,
+    playerCount: 0,
+
+
+    sequence: 0,
     controllers: [],
-    controllersFree: 0,
 
-    customRpcs: [],
+    loadedControllerTypes: {},
 
-
-    addCustomRpcMethod: function(methodName, methodContext, method) {
-        this.customRpcs.push([methodName, methodContext, method]);
+    registerController: function(name, controllerObject) {
+        game.controller.loadedControllers[name] = controllerObject;
     },
 
-    openHub: function(onPlayerJoined, onPlayerLeft, maxPlayers) {
+    openHub: function(onPlayerJoined, onPlayerLeft, playerFactory, maxPlayers) {
         var self = this;
-        if (onPlayerJoined === undefined) throw new Error("Need to supply at least a onPlayerJoined callback");
+        if (onPlayerJoined === undefined) console.error("onPlayerJoined undefined");
+        if (onPlayerLeft === undefined) console.error("onPlayerLeft undefined");
+        if (playerFactory === undefined) console.error("playerFactory undefined");
+        if (!self.loadedControllers[self.controllerType]) { console.error("unregistered controller type: ", self.controllerType); }
+
         self.onPlayerJoined = onPlayerJoined;
         self.onPlayerLeft = onPlayerLeft;
-        self.max = maxPlayers;
-        createNewController();
+        self.playerFactory = playerFactory;
+        self.maxPlayers = maxPlayers;
 
-        function createNewController() {
-            if ((self.controllersFree >= self.minFreeControllers) || self.controllerCount == self.max) {
+        openConnection();
+
+        function openConnection() {
+            if ((self.freeConnections >= self.minimumFreeConnections) || self.playerCount == self.maxPlayers) {
                 return;
             }
 
-            log.info("Creating and connecting new Controller");
+            log.info("Opening new connection");
             var connection = new ConnectionWebsocket(location.hostname, self.ws_port, self.ws_protocol, true);
-
             var rpc = new PeliRPC(connection);
-            var controller = game.controller.create(rpc);
-
-            self.customRpcs.forEach(function(rpcMethod) {
-                rpc.exposeRpcMethod(rpcMethod[0], rpcMethod[1], rpcMethod[2]);
-            });
+            var sequence = self.sequence++;
 
             rpc.exposeRpcMethod('joinGame', this, function(userID) {
-                console.info("Player joined with userID ", userID);
+                console.info("Player joined game with userID ", userID);
+                var player = self.playerFactory.getPlayer(userID);
+                var controller = self.loadedControllers[controllerType].getController(player, rpc);
+                self.playerCount++;
+                self.freeConnections--;
+                self.controllers[sequence] = controller;
 
-                self.controllersFree--;
-                var player = playerFactory.getPlayer(userID, controller);
-                controller.setPlayer(player, self.controllerType);
-                self.onPlayerJoined(player);
-
-                createNewController();
+                openConnection();
                 return self.controllerType;
             });
 
-            var onMessage = rpc.getOnMessage();
-
             connection.connect(function() {
                     // onConnection
-                    self.controllerCount++;
-                    self.controllersFree++;
-                    console.log("Controller successfully connected ", self.controllerCount);
-                    createNewController();
-                }, 
+                    self.freeConnections++;
+                    console.log("New connection successfully opened, total connecitons: ", self.controllerCount + self.playerCount);
+                    openConnection();
+                },
                 function() { // onClose
-                    self.controllerCount--;
-                    // TODO check if was connected to player, and create update freeControllers ccordingly
-                    console.log("Controller disconnected, now have a total of ", self.controllerCount);
-                }, 
-                rpc.getOnMessage(),// onMessage
-                function() { // onPlayerDisconnected
-                    //self.controllersFree++;
-                    self.onPlayerLeft(controller.clearPlayer());
-                });
+                    if (controllers[sequence]) {
+                        console.info("player disconnected, closing connection");
+                        self.loadedControllers[controllerType].freeController(controllers[sequence], player);
+                        controllers[sequence] = null;
+                        self.playerCount--;
+                    }
+                    else {
+                        console.warn("connection unexpectedly closed");
+                    }
+                },
+                rpc.getOnMessage());
         }
-    }
+    },
+
 };

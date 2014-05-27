@@ -21,7 +21,7 @@ function ConnectionWebsocket(host, port, protocol, persistent) {
     //this.onMessage = null;
 }
 
-ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback, onMessage, onPlayerDisconnect) {
+ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback, onMessage) {
     var self = this;
     this.closeCallback = closeCallback;
     //this.onMessage = onMessage;
@@ -58,19 +58,11 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
         }
     };
 
-    this.connection.onmessage = function(e) {
-        if (e.data == 'playerDisconnected') {
-            log.info("Player has disconnected");
-            onPlayerDisconnect();
-        }
-        else {
-            onMessage(e.data);
-        }
+    onMessage(e.data);
 
-        if (!self.persistent) {
-            self.socket.close();
-        }
-    };
+    if (!self.persistent) {
+        self.socket.close();
+    }
 };
 
 ConnectionWebsocket.prototype.isOpen = function() {
@@ -90,8 +82,7 @@ ConnectionWebsocket.prototype.sendMessage = function(message) {
     if (this.connected === true) {
         //log.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
         this.connection.send(JSON.stringify(message));
-    }
-    else {
+    } else {
         log.warn("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
     }
 };
