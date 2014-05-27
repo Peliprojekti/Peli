@@ -71,7 +71,7 @@ game.controllerHub = {
                 }, 
                 rpc.getOnMessage(),// onMessage
                 function() { // onPlayerDisconnected
-                    self.controllersFree++;
+                    //self.controllersFree++;
                     self.onPlayerLeft(controller.clearPlayer());
                 });
         }
