@@ -1,4 +1,4 @@
-describe('the matrixGL object', function() {
+describe('the MatrixGL object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the matrixGL object', function() {
     });
 
     //Specs
-//    describe('matrixGL tests', function() {
+//    describe('MatrixGL tests', function() {
 //
 //    });
 

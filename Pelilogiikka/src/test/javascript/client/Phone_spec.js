@@ -1,4 +1,4 @@
-describe('the phone object', function() {
+describe('the Phone object', function() {
 
 //Create an easily-removed container for our tests to play in
 beforeEach(function() {
@@ -7,7 +7,7 @@ beforeEach(function() {
         afterEach(function() {
         });
         //Specs
-        describe('phone tests', function() {
+        describe('Phone tests', function() {
 //        it('initializes canvas', function() {
 //        spyOn(?, 'drawText');
 //                updateStartCoordinatesText(1, 1);

@@ -1,4 +1,4 @@
-describe('the filereader object', function() {
+describe('the Model object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the filereader object', function() {
     });
 
     //Specs
-//    describe('filereader tests', function() {
+//    describe('Model tests', function() {
 //
 //    });
 

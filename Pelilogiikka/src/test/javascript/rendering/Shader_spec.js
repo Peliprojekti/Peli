@@ -1,4 +1,4 @@
-describe('the texture object', function() {
+describe('the Shader object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the texture object', function() {
     });
 
     //Specs
-//    describe('texture tests', function() {
+//    describe('Shader tests', function() {
 //
 //    });
 
