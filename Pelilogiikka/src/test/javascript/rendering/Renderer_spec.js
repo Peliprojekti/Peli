@@ -1,4 +1,4 @@
-describe('the renderer object', function() {
+describe('the Renderer object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -13,7 +13,7 @@ describe('the renderer object', function() {
 
 
     //Specs
-//    describe('renderer tests', function() {
+//    describe('Renderer tests', function() {
 //        it('begins', function() {
 //            var testRenderer = new Renderer(document.createElement('canvas'));
 //            testRenderer.begin();

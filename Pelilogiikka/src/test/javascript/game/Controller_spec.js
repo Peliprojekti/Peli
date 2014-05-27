@@ -1,4 +1,4 @@
-describe('the controller object', function() {
+describe('the Controller object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,11 +9,11 @@ describe('the controller object', function() {
     });
 
 
-//Testit kommenteissa, koska Controller käyttää luokkia, jotka rikkovat Jasminen.
+//    Testit kommenteissa, koska luokan Controller lataaminen rikkoo testiympäristön.
 
 
     //Specs
-//    describe('controller tests', function() {
+//    describe('Controller tests', function() {
 //        it('closes the connection', function() {
 //            var testController = new Controller(function() {
 //                return 1;

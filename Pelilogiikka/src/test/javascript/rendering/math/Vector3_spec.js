@@ -1,4 +1,4 @@
-describe('the vector3 object', function() {
+describe('the Vector3 object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the vector3 object', function() {
     });
 
     //Specs
-//    describe('vector3 tests', function() {
+//    describe('Vector3 tests', function() {
 //
 //    });
 

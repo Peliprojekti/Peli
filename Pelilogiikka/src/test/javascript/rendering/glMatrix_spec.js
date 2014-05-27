@@ -1,4 +1,4 @@
-describe('the glMatrix object', function() {
+describe('the GlMatrix object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,7 +9,7 @@ describe('the glMatrix object', function() {
     });
 
     //Specs
-//    describe('glMatrix tests', function() {
+//    describe('GlMatrix tests', function() {
 //
 //    });
 

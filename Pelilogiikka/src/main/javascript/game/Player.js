@@ -21,6 +21,8 @@ function Player(userID, controller) {
 
     this.x = 0.5;
     this.y = 0.5;
+    this.responseTime = null;
+    this.messagesPerSecond = 0;
 }
 
 Player.prototype.setOnUpdate = function(func) {
@@ -36,16 +38,30 @@ Player.prototype.setGameOn = function(gameOn) {
     this.gameOn = gameOn;
 };
 
+Player.prototype.addResponseTime = function(time, msgs) {
+    this.responseTime = time;
+    this.messagesPerSecond = msgs;
+};
+
 
 Player.prototype.draw = function(ctx) {
     this.crosshair.draw(ctx, this.x, this.y);
+
+    if (this.responseTime !== null) {
+        ctx.save();
+        ctx.font = 'bold 40pt Calibri';
+        ctx.fillStyle = '#30BB30';
+        ctx.strokeStyle = '#209020';
+        ctx.fillText(this.messagesPerSecond, 45, this.y * ctx.canvas.height + 20);
+        ctx.fillText(Math.floor(this.responseTime), 200, this.y * ctx.canvas.height + 20);
+        ctx.restore();
+    }
 };
 
 Player.prototype.update = function(time) {
-    if (this.controller != null) {
+    if (this.controller !== null) {
         this.controller.update(time);
-    }
-    else {
+    } else {
         console.debug("No controller!!!!!");
     }
     if (this.onUpdate !== null) {

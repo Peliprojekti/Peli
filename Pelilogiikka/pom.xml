@@ -59,18 +59,18 @@
                     <sourceIncludes>
                         <include>jquery-2.1.0.min.js</include>
                         <include>*.js</include>
-                        <include>client/controllerComs.js</include>
-                        <include>client/touchDrag.js</include>
-                        <include>client/mouseMove.js</include>
-                        <include>client/swipe.js</include>
-                        <include>client/test.js</include>
-                        <include>client/touch.js</include>
-                        <include>game/player.js</include>                     
+                        <include>common/ConnectionEngineIO.js</include>
+                        <include>common/ConnectionWebsocket.js</include>
+                        <include>common/PeliRPC.js</include>
+                        <include>common/SendServerMessage.js</include>
                         <include>rendering/*.js</include>
                         <include>rendering/math/*.js</include>
                         <include>rendering/misc/*.js</include>
                         <include>rendering/parser/*.js</include>
-                        <!--                        <include>client/phone.js</include>-->
+                        <!--    <include>graphics2d/*.js</include>  -->
+                        <!--    <include>game/*.js</include>    -->
+                        <!--    <include>controller/*.js</include>    -->
+                        <!--    <include>client/phone.js</include>  -->
                     </sourceIncludes>
                 </configuration>
             </plugin>

@@ -1,4 +1,4 @@
-describe('the webglutils object', function() {
+describe('the Light object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -9,8 +9,8 @@ describe('the webglutils object', function() {
     });
 
     //Specs
-    describe('webglutils', function() {
-
-    });
+//    describe('Light tests', function() {
+//
+//    });
 
 });

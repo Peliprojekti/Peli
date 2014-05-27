@@ -5,29 +5,30 @@ controller.speedTest = function(container, canvas, phone) {
     var coms = client.coms;
     var autoFireInterval = 1;
     var reportInterval = 1000;
-    var sequenct = 0;
+    var sequence = 0;
     var startTime = Date.now();
     var lastTime = Date.now();
 
-    var sendTimes = [];
+    //var sendTimes = [];
     var report = [];
 
     var y = Math.random();
 
     var autoFire = function() {
-        console.log("nay");
+        //console.log("nay");
         var sendTime = Date.now();
 
-        var id = coms.call('position', [((self.sequence % 200) / 200), y],
+        var id = coms.call('position', [
+                ((sequence % 200) / 200), y],
+                null,
                 function(id) {
-                    console.debug("yay");
-                    report.push( [
-                        sendTimes[id], 
-                        Date.now() ]);
+                    var returnTime = Date.now();
+                    //console.debug("filing report", sendTime, returnTime);
+                    report.push( [sendTime, returnTime]);
                 });
 
-        sendTimes[id] = sendTime;
-        self.sequence++;
+        //self.sendTimes[id] = sendTime;
+        sequence++;
     };
     var inter_autoFire = setInterval(autoFire, autoFireInterval);
 
@@ -59,7 +60,7 @@ controller.speedTest = function(container, canvas, phone) {
         //console.info("speedTest calling playerPerformanceReport", msgSec, avgResponseTime);
 
         client.coms.call('playerPerformanceReport', 
-                [ USERID, report ], null, null);
+                [ partReport ], null, null);
 
     }, reportInterval);
 

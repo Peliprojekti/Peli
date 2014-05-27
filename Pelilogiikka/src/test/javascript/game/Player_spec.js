@@ -1,4 +1,4 @@
-describe('the player object', function() {
+describe('the Player object', function() {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function() {
@@ -7,9 +7,11 @@ describe('the player object', function() {
     //Clean it up after each spec
     afterEach(function() {
     });
+    
+//    Testit kommenteissa, koska luokan Player lataaminen rikkoo testiympäristön.
 
     //Specs
-    describe('player tests', function() {
+//    describe('Player tests', function() {
 //        it('initializes the player correctly, gets id', function() {
 //            var testPlayer = new Player(1234);
 //            expect(testPlayer.getID()).toBe(1234);
@@ -65,5 +67,5 @@ describe('the player object', function() {
 //            expect(testPlayer.currentDirection.x).toBe(0.1);
 //            expect(testPlayer.currentDirection.y).toBe(0.9);
 //        });
-    });
+//    });
 });
