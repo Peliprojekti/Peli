@@ -6,38 +6,36 @@ var server;
 var free_sockets = [];
 
 module.exports = new function() {
-	this.start  = function(port) {
-		server = new WebSocket.Server({
-			'port': port
-		});
+    this.start = function(port) {
+
+        server = new WebSocket.Server({
+            'port': port
+        });
+        require('util').log("websocket/game - listening " + port);
 
         server.on('error', function(err) {
             require('util').error("websocket/game - Websokcet server errror: " + err);
         });
-
-
-        require('util').log("websocket/game - listening " + port);
 
         server.on('connection', function(ws) {
             require('util').log("websocket/game - gameSocket connected");
             free_sockets.push(ws);
 
             ws.on('close', function() {
+                require('util').info("websocket/game - closing connection");
                 // TODO handle this gracefully
             });
 
             ws.on('error', function(err) {
                 require('util').error("websocket/game - Websokcet connection errror: " + err);
             });
-
-            //ws.on('error', functiohn
         });
 
-            server.on('close', function() {
-                require('util').error("websocket/game - server connection closed");
-                process.exit(0);
-            });
-            };
+        server.on('close', function() {
+            require('util').error("websocket/game - server closed");
+            process.exit(0);
+        });
+    };
 
     this.close = function() {
 
@@ -50,6 +48,9 @@ module.exports = new function() {
         gameSocket.on('message', function(data, flags) {
             if (gameSocket.socket && gameSocket.socket.readyState == 'open') {
                 gameSocket.socket.send(data);
+            }
+            else {
+                require('util').warn("trying to forward to closed client socket");
             }
         });
     };

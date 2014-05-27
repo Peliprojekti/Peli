@@ -12,7 +12,6 @@ module.exports = new function() {
         require('util').log('engine.io/controller - listening on ' + client_port);
 
 		server.on('connection', function(socket) {
-            require('util').log("engine.io/controller - connection opened");
 			var gameSocket = game.getGameSocket();
 
 			if (gameSocket !== undefined && gameSocket !== null) {
@@ -29,19 +28,15 @@ module.exports = new function() {
                         gameSocket.send(data);
                     }
                     else {
-                        socket.send('noFreeSlots');
-                        require('util').error("engine.io/controller - gameScoket closed", gameSocket.readyState);
+                        require('util').error("engine.io/controller - client trying to forward to closed screen socket");
+                        gameSocket.close();
                         socket.close();
-                        //gameSocket.close();
                     }
 				});
 
 				socket.on('close', function() {
                     require('util').log("engine.io/controller - client disconnected");
-                    game.unJoin(gameSocket, socket);
-                    if (gameSocket.readyState == WebSocket.OPEN) {
-                        gameSocket.send('playerDisconnected');
-                    }
+                    gameSocket.close();
                 });
 
 				socket.on('error', function() {
@@ -49,8 +44,8 @@ module.exports = new function() {
 				});
 			}
 			else {
-                require('util').log("engine.io/controller - client trying to connect, no free slots, disconnecting");
-                socket.send('gameFull');
+                require('util').log("engine.io/controller - client diconnected due to no available screen connections");
+                //socket.send('gameFull');
 				socket.close();
 			}
 		});
