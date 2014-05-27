@@ -9,8 +9,8 @@ describe('the connection object', function() {
     });
 
     //Specs
-    describe('connection', function() {
-
-    });
+//    describe('connection tests', function() {
+//
+//    });
 
 });

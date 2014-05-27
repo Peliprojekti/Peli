@@ -11,17 +11,17 @@ describe('the click object', function() {
     //Specs
     describe('click tests', function() {
 
-        it('initializes the canvas', function() {   
+//        it('initializes the canvas', function() {   
 //            expect(click.initCanvas()).toBe(0);
-        });
-
-        it('gets coordinates', function() {
+//        });
+//
+//        it('gets coordinates', function() {
 //            expect(click.getRelativeClickCoords()).toBe(0);
-        });
-
-        it('clicking works', function() {
+//        });
+//
+//        it('clicking works', function() {
 //            expect(click.doClick()).toBe(0);
-        });
+//        });
 
 
     });

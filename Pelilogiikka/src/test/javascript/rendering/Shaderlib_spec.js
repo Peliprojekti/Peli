@@ -9,8 +9,8 @@ describe('the shaderlib object', function() {
     });
 
     //Specs
-    describe('shaderlib', function() {
-
-    });
+//    describe('shaderlib tests', function() {
+//
+//    });
 
 });

@@ -9,8 +9,8 @@ describe('the texture object', function() {
     });
 
     //Specs
-    describe('texture', function() {
-
-    });
+//    describe('texture tests', function() {
+//
+//    });
 
 });

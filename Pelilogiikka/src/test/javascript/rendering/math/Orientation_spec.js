@@ -25,30 +25,30 @@ describe('the orientation object', function() {
 //            testOrientation.set_Scale()
 //            expect(testOrientation.scales_V).not.toBe(null);
 //        });
-        it('displaces', function() {
-
-        });
-        it('pitches', function() {
-
-        });
-        it('yaws', function() {
-
-        });
-        it('sets rolls', function() {
-
-        });
-        it('sets scales', function() {
-
-        });
-        it('gets a matrix', function() {
-
-        });
-        it('gets an inverted matrix', function() {
-
-        });
-        it('gets a vector', function() {
-
-        });
+//        it('displaces', function() {
+//
+//        });
+//        it('pitches', function() {
+//
+//        });
+//        it('yaws', function() {
+//
+//        });
+//        it('sets rolls', function() {
+//
+//        });
+//        it('sets scales', function() {
+//
+//        });
+//        it('gets a matrix', function() {
+//
+//        });
+//        it('gets an inverted matrix', function() {
+//
+//        });
+//        it('gets a vector', function() {
+//
+//        });
     });
 
 });

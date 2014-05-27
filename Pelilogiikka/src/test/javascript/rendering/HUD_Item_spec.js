@@ -9,8 +9,8 @@ describe('the HUD item object', function() {
     });
 
     //Specs
-    describe('HUD item', function() {
-
-    });
+//    describe('HUD item tests', function() {
+//
+//    });
 
 });

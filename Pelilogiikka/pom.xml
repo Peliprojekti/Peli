@@ -64,9 +64,8 @@
                         <include>client/mouseMove.js</include>
                         <include>client/swipe.js</include>
                         <include>client/test.js</include>
-                        <include>client/touch.js</include>    
-                        <include>common/*.js</include>
-                        <include>game/*.js</include>
+                        <include>client/touch.js</include>
+                        <include>game/player.js</include>                     
                         <include>rendering/*.js</include>
                         <include>rendering/math/*.js</include>
                         <include>rendering/misc/*.js</include>

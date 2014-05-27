@@ -9,8 +9,8 @@ describe('the inputs object', function() {
     });
 
     //Specs
-    describe('inputs', function() {
-
-    });
+//    describe('inputs tests', function() {
+//
+//    });
 
 });

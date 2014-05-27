@@ -9,8 +9,8 @@ describe('the buffer object', function() {
     });
 
     //Specs
-    describe('buffer', function() {
-
-    });
+//    describe('buffer tests', function() {
+//
+//    });
 
 });

@@ -9,8 +9,20 @@ describe('the touchDrag object', function() {
     });
 
     //Specs
-    describe('touchDrag tests', function() {
-
-    });
+//    describe('touchDrag tests', function() {
+//        it('do touch move', function() {
+//            var event = new Event('build');
+//            var mockTouchDrag = new TouchDrag();
+//            spyOn(mockTouchDrag, "doTouchDrag");
+//            mockTouchDrag.doTouchDrag(event);
+//            expect(mockTouchDrag.doTouchDrag).toHaveBeenCalled();
+//        });
+//        it('enable', function() {
+//            expect(sendCoords()).not.toBe(null);
+//        });
+//        it('disable', function() {
+//            expect(doTouchMove()).not.toBe(null);
+//        });
+//    });
 
 });
