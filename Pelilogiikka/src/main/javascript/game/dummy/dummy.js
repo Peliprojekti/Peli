@@ -65,7 +65,7 @@ function connectToServer() {
     game.controllerHub.openHub(
         function(player) { // onPlayerJoined
             log.info("New player connected to dummy game");
-            var crosshair = new graphics2d.crosshair.createRandomColor(0.5,0.5,20);//Crosshair(0, 0, 20);
+            var crosshair = new graphics2d.crosshair.createRandomColor(player.x, player.y, 20); //Crosshair(0, 0, 20);
             player.setCrosshair(crosshair);
             players.push(player);
             //playerPerformance.addPlayer(player);
@@ -79,6 +79,17 @@ function connectToServer() {
                 }
             }
             players.splice(i, 1);
+        },
+        { // playerFactory
+            getPlayer: function(userID) {
+                return new Player(userID);
+            },
+            freePlayer: function(player) {
+                player.crosshair = null;
+                player = null; 
+                // remove from could do some object recycling, or something
+
+            }
         },
         100 // maxPlayers
     );
@@ -94,6 +105,7 @@ function animate(time) {
 }
 
 function update(time) {
+    game.controllerHub.update(time);
     players.forEach(function(player) {
         player.update(time);
     });

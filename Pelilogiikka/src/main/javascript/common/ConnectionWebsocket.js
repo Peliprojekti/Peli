@@ -58,11 +58,10 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
         }
     };
 
-    onMessage(e.data);
+    this.connection.onmessage = function(e) {
+        onMessage(e.data);
+    };
 
-    if (!self.persistent) {
-        self.socket.close();
-    }
 };
 
 ConnectionWebsocket.prototype.isOpen = function() {

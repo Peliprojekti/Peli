@@ -5,7 +5,7 @@ controller.mouseMove = function(container, canvas, phone) {
 
     // forward all events through coms
     var listener = function(event) {
-        phone.setControllerInfo(event.clientX + " x " + event.clientY)
+        phone.setControllerInfo(event.clientX + " x " + event.clientY);
         coms.call('position', [
                 event.clientX / canvas.width,
                 event.clientY / canvas.height

@@ -1,3 +1,4 @@
+/*
 var playerFactory = {
     players: {},
 
@@ -12,10 +13,11 @@ var playerFactory = {
         // TODO
     }
 };
+*/
 
-function Player(userID, controller) {
+function Player(userID) {
     this.userID = userID;
-    this.controller = controller;
+    //this.controller = controller;
 
     //this.onUpdate = null;
     this.gameOn = false;
@@ -60,14 +62,18 @@ Player.prototype.draw = function(ctx) {
 };
 
 Player.prototype.update = function(time) {
+    /*
     if (this.controller !== null) {
         this.controller.update(time);
     } else {
         console.debug("No controller!!!!!");
     }
+    */
+    /*
     if (this.onUpdate !== null) {
         this.onUpdate(time);
     }
+    */
 };
 
 Player.prototype.setPosition = function(x, y) {

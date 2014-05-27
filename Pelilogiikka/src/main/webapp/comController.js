@@ -17,8 +17,6 @@ module.exports = new function() {
 			if (gameSocket !== undefined && gameSocket !== null) {
                 require('util').log("engine.io/controller - connecting client to game");
 
-                game.join(gameSocket, socket);
-
 				gameSocket.on('message', function(data, flags) {
 					socket.send(data);
 				});
@@ -41,11 +39,11 @@ module.exports = new function() {
 
 				socket.on('error', function() {
                     require('util').error("engine.io/controller - connection error!");
+                    gameSocket.close();
 				});
 			}
 			else {
                 require('util').log("engine.io/controller - client diconnected due to no available screen connections");
-                //socket.send('gameFull');
 				socket.close();
 			}
 		});

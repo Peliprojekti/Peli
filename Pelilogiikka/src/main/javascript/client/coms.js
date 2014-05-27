@@ -18,8 +18,8 @@ client.coms.open = function(callback) {
                 function() {
                     setTimeout(function() {
                         client.coms.open(callback);
-                        console.debug("connection error, trying to reconnect");
-                    }, 100 )
+                        console.warn("connection error, trying to reconnect");
+                    }, 100 );
                 },
                 rpc.getOnMessage());
     }
