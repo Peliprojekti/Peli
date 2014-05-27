@@ -1,8 +1,8 @@
-var dummy = dummy || {};
+var graphics2d = graphics2d || {};
 
-dummy.fpsDisplay = {
+graphics2d.fpsDisplay = {
     createFancy: function(ctx) {
-        return new dummy.fpsDisplay.FpsDisplay(ctx, true);
+        return new graphics2d.fpsDisplay.FpsDisplay(ctx, true);
     },
 
     FpsDisplay: function(ctx, fancy) {
@@ -19,7 +19,7 @@ dummy.fpsDisplay = {
         this.fps = 0;
 
         if (this.fancy) {
-            this.thingy = dummy.chartThingy.create(ctx, 
+            this.thingy = graphics2d.chartThingy.create(ctx, 
                     0,
                     0,
                     ctx.canvas.width,
@@ -30,7 +30,7 @@ dummy.fpsDisplay = {
     }
 };
 
-dummy.fpsDisplay.FpsDisplay.prototype.update = function(time) {
+graphics2d.fpsDisplay.FpsDisplay.prototype.update = function(time) {
     this.frameCount++;
     var timeDif = Date.now() - this.lastTime;
 
@@ -45,7 +45,7 @@ dummy.fpsDisplay.FpsDisplay.prototype.update = function(time) {
     }
 };
 
-dummy.fpsDisplay.FpsDisplay.prototype.draw = function(ctx) {
+graphics2d.fpsDisplay.FpsDisplay.prototype.draw = function(ctx) {
     ctx.save();
 
     if (this.fancy) {

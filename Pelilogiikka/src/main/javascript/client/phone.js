@@ -18,9 +18,7 @@ client.phone = {
     circles: [],
 
     onDocumentReady: function() {
-        sendServerMessage("joo, nyt toimii, tosi varmasti")
         var self = client.phone;
-
 
         self.canvas = document.getElementById('canvas'); //$('#canvas');
         self.container = $('#container');

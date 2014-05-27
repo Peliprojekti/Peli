@@ -1,8 +1,8 @@
-var dummy = dummy || {};
+var graphics2d = graphics2d || {};
 
-dummy.rpsDisplay = {
+graphics2d.rpsDisplay = {
     createFancy: function(ctx) {
-        return new dummy.rpsDisplay.RpsDisplay(ctx, true);
+        return new graphics2d.rpsDisplay.RpsDisplay(ctx, true);
     },
 
     RpsDisplay: function(ctx, fancy) {
@@ -18,7 +18,7 @@ dummy.rpsDisplay = {
         this.rps = 0;
 
         if (this.fancy) {
-            this.thingy = dummy.chartThingy.create(ctx,
+            this.thingy = graphics2d.chartThingy.create(ctx,
                 0,
                 ctx.canvas.height / 8,
                 ctx.canvas.width,
@@ -28,7 +28,7 @@ dummy.rpsDisplay = {
     }
 };
 
-dummy.rpsDisplay.RpsDisplay.prototype.update = function(time) {
+graphics2d.rpsDisplay.RpsDisplay.prototype.update = function(time) {
     this.frameCount++;
     var timeDif = Date.now() - this.lastTime;
 
@@ -45,7 +45,7 @@ dummy.rpsDisplay.RpsDisplay.prototype.update = function(time) {
     }
 };
 
-dummy.rpsDisplay.RpsDisplay.prototype.draw = function(ctx) {
+graphics2d.rpsDisplay.RpsDisplay.prototype.draw = function(ctx) {
     ctx.save();
 
     if (this.fancy) {

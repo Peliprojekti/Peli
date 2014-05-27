@@ -1,8 +1,8 @@
-var dummy = dummy || {};
+var graphics2d = graphics2d || {};
 
-dummy.chartThingy = {
+graphics2d.chartThingy = {
     create: function(ctx, x, y, width, height, scale, flip) {
-        return new dummy.chartThingy.ChartThingy(ctx, x, y, width, height, scale, flip);
+        return new graphics2d.chartThingy.ChartThingy(ctx, x, y, width, height, scale, flip);
     },
 
     ChartThingy: function(ctx, x, y, width, height, scale, flip) {
@@ -23,7 +23,7 @@ dummy.chartThingy = {
     }
 };
 
-dummy.chartThingy.ChartThingy.prototype.addValue = function(value) {
+graphics2d.chartThingy.ChartThingy.prototype.addValue = function(value) {
     while (Math.abs(value * this.scale) > this.height) {
         this.scale = this.scale * 0.8;
     }
@@ -34,10 +34,10 @@ dummy.chartThingy.ChartThingy.prototype.addValue = function(value) {
     }
 };
 
-dummy.chartThingy.ChartThingy.prototype.update = function(time) {
+graphics2d.chartThingy.ChartThingy.prototype.update = function(time) {
 };
 
-dummy.chartThingy.ChartThingy.prototype.draw = function(ctx) {
+graphics2d.chartThingy.ChartThingy.prototype.draw = function(ctx) {
     ctx.save();
 
     ctx.strokeStyle = this.color;

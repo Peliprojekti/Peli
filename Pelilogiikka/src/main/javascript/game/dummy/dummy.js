@@ -29,9 +29,9 @@ function initializeUI() {
     c_width = canvas.width;
     c_height = canvas.height;
 
-    this.updateables.push(dummy.fpsDisplay.createFancy(context));
-    this.updateables.push(dummy.rpsDisplay.createFancy(context));
-    //this.updateables.push(dummy.playerPerformance.create(context));
+    this.updateables.push(graphics2d.fpsDisplay.createFancy(context));
+    this.updateables.push(graphics2d.rpsDisplay.createFancy(context));
+    //this.updateables.push(graphics2d.playerPerformance.create(context));
 
     requestAnimationFrame(animate);
 
@@ -65,8 +65,8 @@ function connectToServer() {
     /*
     game.controllerHub.addCustomRpcMethod(
         'playerPerformanceReport',
-        dummy.playerPerformance,
-        dummy.playerPerformance.playerPerformanceReport);
+        graphics2d.playerPerformance,
+        graphics2d.playerPerformance.playerPerformanceReport);
         */
 
     game.controllerHub.openHub(

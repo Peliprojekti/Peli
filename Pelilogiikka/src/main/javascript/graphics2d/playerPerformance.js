@@ -1,6 +1,6 @@
-var dummy = dummy || {};
+var graphics2d = graphics2d || {};
 
-dummy.playerPerformance = {
+graphics2d.playerPerformance = {
     playerQueue: [],
     reportQueue: [],
     chartThingies: [],
