@@ -88,10 +88,10 @@ ConnectionWebsocket.prototype.close = function() {
 
 ConnectionWebsocket.prototype.sendMessage = function(message) {
     if (this.connected === true) {
-        log.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
+        //log.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
         this.connection.send(JSON.stringify(message));
     }
     else {
-        log.info("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
+        log.warn("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
     }
 };
