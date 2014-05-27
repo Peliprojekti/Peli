@@ -53,7 +53,7 @@ Player.prototype.draw = function(ctx) {
         ctx.fillStyle = '#30BB30';
         ctx.strokeStyle = '#209020';
         ctx.fillText(this.messagesPerSecond, 45, this.y * ctx.canvas.height + 20);
-        ctx.fillText(this.responseTime, 200, this.y * ctx.canvas.height + 20);
+        ctx.fillText(Math.floor(this.responseTime), 200, this.y * ctx.canvas.height + 20);
         ctx.restore();
     }
 };
