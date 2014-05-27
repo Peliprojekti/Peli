@@ -2,6 +2,7 @@
 
 <head>
     <title>Pelumoottori<SIC> </title>
+    
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 <script type="text/javascript" src="glMatrix.js"               ></script>
@@ -24,11 +25,6 @@
 <script type="text/javascript" src="Guiobject.js"              ></script>
 <script type="text/javascript" src="Entity.js"                 ></script>
 <script type="text/javascript" src="Camera.js"                 ></script>
-<script type="text/javascript" src="parser/old/Importer.js"        ></script>
-<script type="text/javascript" src="parser/old/parser_Geometry.js" ></script>
-<script type="text/javascript" src="parser/old/Filereader.js"      ></script>
-
-
 
 <script type="text/javascript" src="parser/Parserobjects.js"         ></script>
 <script type="text/javascript" src="parser/GeneralPurposeParser.js"  ></script>
@@ -40,17 +36,15 @@
 <script type="text/javascript" src="math/Matrix44.js"          ></script>
 <script type="text/javascript" src="math/MatrixGL.js"          ></script>
 <script type="text/javascript" src="math/Orientation.js"       ></script>
-<script type="text/javascript" src="math/Interpolator.js"       ></script>
+<script type="text/javascript" src="math/Interpolator.js"      ></script>
 
-<script type="text/javascript" src="Assetmanager.js"      ></script>
-
-<script type="text/javascript" src="misc/Process.js"           ></script>
-
+<script type="text/javascript" src="Assetmanager.js"           ></script>
 <script type="text/javascript" src="testCube.js"               ></script>
 
-   
 
-
+// NEXT GENERATION HERE
+<script type="text/javascript" src="Refactored/Shaderutils2.js"                 ></script>
+<script type="text/javascript" src="Refactored/Shader2.js"                 ></script>
 
 
 
@@ -95,15 +89,22 @@
         fragmentUV      = vertexUV;
         fragmentPos     = worldMatrix * vec4( vertexPos , 1.0 );                   // Needs to be taken from model space to world space.
         
-        
         // These seem correct
-        vec4 sN4        = normalize( worldMatrix * vec4( vertexNormal   , 0.0 ) );  // Inverse transpose required if nonuniform scale.
-        surfaceNormal   = vec3( sN4.x, sN4.y, sN4.z );
-      
-        vec4 sB4        = normalize( worldMatrix * vec4( vertexBinormal  , 0.0 ) ); 
-        surfaceBinormal = vec3( -sB4.x, -sB4.y, -sB4.z );
+        vec4      sN4   = normalize( worldMatrix * vec4( vertexNormal   , 0.0 ) );  // Inverse transpose required if nonuniform scale.
+        vec4      sB4   = normalize( worldMatrix * vec4( vertexBinormal , 0.0 ) ); 
+        vec4      sT4   = normalize( worldMatrix * vec4( vertexTangent  , 0.0 ) ); 
         
-        surfaceTangent  = cross( surfaceNormal ,  surfaceBinormal );
+        surfaceTangent  = vec3( sT4.x, sT4.y, sT4.z );
+        surfaceBinormal = vec3( sB4.x, sB4.y, sB4.z );
+        surfaceNormal   = vec3( sN4.x, sN4.y, sN4.z );
+        
+        
+      //  surfaceTangent  = vec3(1.0,0.0,0.0);
+      //  surfaceBinormal = vec3(0.0,1.0,0.0);
+        //surfaceNormal   = vec3(0.0,0.0,-1.0);
+        
+        
+        //surfaceTangent  = cross( surfaceNormal ,  surfaceBinormal );
         // These seem correct
         // BUT WHY?! How the hell is the handedness going here anyhow?
         
@@ -142,25 +143,24 @@
     {
           vec2 texCoords      = vec2(fragmentUV.s, fragmentUV.t);
           vec3 fragPos        = vec3(fragmentPos);
-          vec3 eyeToPixel     = fragPos - eyePosition;
+        /*  
+        vec3 eyeToPixel     = fragPos - eyePosition;
              eyeToPixel       = normalize( eyeToPixel );
          // Get the displacement here
    
-              eyeToPixel      = vec3( dot(eyeToPixel,surfaceTangent) , dot(eyeToPixel,surfaceBinormal) , dot(eyeToPixel,surfaceNormal) );
+              eyeToPixel      = eyeToPixel.x * surfaceTangent + eyeToPixel.y * surfaceBinormal + eyeToPixel.z * surfaceNormal;
               eyeToPixel.x   /= eyeToPixel.z;
               eyeToPixel.y   /= eyeToPixel.z;
               
               
               // Now we have the vector, lets multiply it with weights
-              float weight    = 50.0;
-              vec2   shift    = vec2( eyeToPixel.x, eyeToPixel.y) * texture2D( dispSampler, texCoords ).r * weight;
-                     shift.x  /= 512.0;
-                     shift.y  /= 512.0; // Divide by map dimensions to get get texel units.
-            
-              //   texCoords     += shift;
-              // Not working properly. Disable for now
-              
+              float weight    = 10.0;
+              vec2   shift    = vec2( eyeToPixel.x, eyeToPixel.y) * texture2D( dispSampler, vec2(texCoords.x, texCoords.y*-1.0) ).r * weight;
+                     shift   *= 1.0/512.0;
+             //    texCoords     += shift;
+          */    
          // Grab the per fragment normal from the associated map
+              // Not working properly. Disable for now
           vec4 fragVector     = texture2D( normalSampler, texCoords );    // This should hopefully contain the normal [x,y,z,0] in its own space
                fragVector    *= 2.0;
                fragVector    -= vec4( 1.0,1.0,1.0,0.0);                   // Convert the encoded normal [0,1] to [-1,-1]
@@ -193,15 +193,15 @@
             float quadratic_Term      = 0.00005;
             float attenuation         = 1.0 / ( constant_Term + dist2Light*linear_Term + dist2Light*dist2Light*quadratic_Term );
             
-            float multiplier_R          = ( cosAngle * attenuation );
-            float multiplier_G          = ( cosAngle * attenuation );
-            float multiplier_B          = ( cosAngle * attenuation );
+            float multiplier_R        = ( cosAngle * attenuation );
+            float multiplier_G        = ( cosAngle * attenuation );
+            float multiplier_B        = ( cosAngle * attenuation );
             
-            total_R                     = max( multiplier_R, total_R );
-            total_G                     = max( multiplier_G, total_G );
-            total_B                     = max( multiplier_B, total_B );
+            total_R                   = max( multiplier_R, total_R );
+            total_G                   = max( multiplier_G, total_G );
+            total_B                   = max( multiplier_B, total_B );
             
-            rgb                         = color;
+            rgb                       = color;
         }
         
             
@@ -252,7 +252,7 @@
     void main(void) 
     {
         fragmentUV    = vertexUV;
-        gl_Position   = worldViewMatrix * vec4(vertexPos, 1.0);
+        gl_Position   = worldMatrix * vec4(vertexPos, 1.0);
        
     }
 </script>
@@ -261,11 +261,9 @@
 <script id="COLOR_PS" type="x-shader/x-fragment">
     
     precision mediump           float;
-    
     varying vec2           fragmentUV;
     uniform sampler2D      texSampler;
-    uniform vec4               vColor;
-    
+    //uniform vec4               vColor;
     
     
     void main(void) 
@@ -274,7 +272,7 @@
       
         if( texel.r == 1.0 && texel.g == 0.0 && texel.b == 1.0 ) discard;
      
-        gl_FragColor = vColor;
+        gl_FragColor = texture2D( texSampler, fragmentUV );   // Diffuse
     }
 </script>
 
@@ -406,7 +404,7 @@
        var assman          = new Assetmanager( renderer );
         
        myScene             = new Scene( renderer, assman, "Showcase" ); 
-        
+       
        register_Inputs();      // Erillinen luokka tälle!
     
        myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
@@ -416,8 +414,6 @@
        myScene.insert        ( haxLight      , "LIGHT"          );
        renderer.set_BgrColor ( [0.0,0.4,0.7,1.0]                );
        
-       
-       var myGui          = new Guiobject( renderer, new Texture(renderer.gl, "data/crosshair1.png", "FILTER_PLAIN"), new Vector2(0,0), new Vector2(0.25,0.25) );       
        
     tick();   
     }

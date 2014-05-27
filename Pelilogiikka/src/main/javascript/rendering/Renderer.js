@@ -93,7 +93,6 @@
         var shaderProgram   = myEntity.material.shader.shaderProgram;
         var worldViewMatrix = myEntity.orientation.get_Matrix();  
      
-     
         
         myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
       
@@ -120,6 +119,20 @@
          this.enable_ZBuffer();
          this.gl.disable(this.gl.BLEND);
      }
+     
+     
+     
+     Renderer.prototype.begin_GUI = function()
+     {
+          this.disable_ZBuffer();
+     }
+     
+     
+     Renderer.prototype.end_GUI = function()
+     {
+          this.enable_ZBuffer();
+     }
+     
      
      
      Renderer.prototype.enable_ZBuffer = function()

@@ -20,7 +20,9 @@
       {
           this.tangents   = new Buffer( gl, "FLOAT", tangent_List   ,  3  ); 
       }
-   
+  
+  
+        
     }
 
 
@@ -36,7 +38,11 @@
    
     if (typeof this.tangents  != 'undefined')
        this.tangents.bind ( gl, material.shader.shaderProgram.vertexTangentAttribute  );
-        
+    
+    //#!#
+    if (typeof this.binormals  != 'undefined')
+       this.binormals.bind ( gl, material.shader.shaderProgram.vertexBinormalAttribute  );
+    
          
         gl.bindBuffer  (gl.ELEMENT_ARRAY_BUFFER, this.indices.data                      );    
         gl.drawElements(gl.TRIANGLES, this.indices.data.numItems, gl.UNSIGNED_SHORT, 0  );
