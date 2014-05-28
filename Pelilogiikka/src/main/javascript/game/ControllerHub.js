@@ -91,7 +91,7 @@ game.controllerHub = {
                         console.info("player disconnected, closing connection");
                         var player = self.players[sequence];
 
-                        self.loadedControllerTypes[controllerType].freeController(controllers[sequence]);
+                        self.loadedControllerTypes[self.controllerType].freeController(self.controllers[sequence]);
                         self.playerFactory.freePlayer(player);
 
                         delete self.controllers[sequence];

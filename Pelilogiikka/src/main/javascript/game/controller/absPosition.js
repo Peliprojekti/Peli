@@ -11,7 +11,7 @@ controller.absPosition = {
     },
 
     freeController: function(controller) {
-        controller.absPosition.freeControllers.push(controller);
+        //controller.absPosition.freeControllers.push(controller);
     },
 
     AbsPosition: function(player, rpc) {
