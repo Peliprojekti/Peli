@@ -18,7 +18,12 @@ module.exports = new function() {
                 require('util').log("engine.io/controller - connecting client to game");
 
 				gameSocket.on('message', function(data, flags) {
-					socket.send(data);
+                    if (socket.readyState === 'open') {
+                        socket.send(data);
+                    } else {
+                        require('util').warn("engine.io/controller - trying to forward to closed client");
+                        //gameSocket.requestClose();
+                    }
 				});
 
 				socket.on('message', function(data) {
@@ -27,14 +32,15 @@ module.exports = new function() {
                     }
                     else {
                         require('util').error("engine.io/controller - client trying to forward to closed screen socket");
-                        gameSocket.close();
-                        socket.close();
+                        gameSocket.requestClose();
                     }
 				});
 
 				socket.on('close', function() {
                     require('util').log("engine.io/controller - client disconnected");
-                    gameSocket.close();
+                    if (gameSocket.readyState == WebSocket.OPEN) {
+                        gameSocket.requestClose();
+                    }
                 });
 
 				socket.on('error', function() {

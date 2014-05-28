@@ -24,10 +24,15 @@ module.exports = new function() {
 
         server.on('connection', function(ws) {
             require('util').log("websocket/game - gameSocket connected");
+            ws.requestClose = function() {
+                if (ws.readyState == WebSocket.OPEN) {
+                    ws.send("-1");
+                }
+            };
             free_sockets.push(ws);
 
             ws.on('close', function() {
-                require('util').log("websocket/game - closing connection");
+                require('util').log("websocket/game - connection closed");
                 // TODO handle this gracefully
             });
 

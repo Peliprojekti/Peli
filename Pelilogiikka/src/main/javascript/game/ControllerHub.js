@@ -75,14 +75,19 @@ game.controllerHub = {
                 return self.controllerType;
             });
 
-            connection.connect(function() {
+            connection.connect(function(error, ok) {
                     // onConnection
-                    self.freeConnections++;
-                    console.log("New connection successfully opened, total connecitons: ", self.freeConnections + self.playerCount);
-                    openConnection();
+                    if (error === null) {
+                        self.freeConnections++;
+                        console.log("New connection successfully opened, total connecitons: ", self.freeConnections + self.playerCount);
+                        openConnection();
+                    }
+                    else {
+                        console.warn("Connection error", error);
+                    }
                 },
                 function() { // onClose
-                    if (controllers[sequence]) {
+                    if (self.controllers[sequence]) {
                         console.info("player disconnected, closing connection");
                         var player = self.players[sequence];
 
