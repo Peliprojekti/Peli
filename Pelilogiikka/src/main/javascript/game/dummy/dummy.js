@@ -15,10 +15,16 @@ var context = null;
 
 var updateables = [];
 
+/*
 function showMessage(msg) {
     log.info("displaying message: " + msg);
     messages.push(msg);
     message_timer.push(MESSAGE_TIME);
+}
+*/
+
+function dummyUnshift(e) {
+    updateables.unshift(e);
 }
 
 function initializeUI() {
@@ -34,8 +40,6 @@ function initializeUI() {
     //this.updateables.push(graphics2d.playerPerformance.create(canvas));
 
     requestAnimationFrame(animate);
-
-    showMessage("starting anmiations");
 }
 
 function setupCanvas() {
@@ -48,7 +52,6 @@ function setupCanvas() {
     c_height = height;
     c_width = width;
 
-    log.info("setting canvas dimensions to " + c_width + "x" + c_height);
     canvas.width = c_width;
     canvas.height = c_height;
 
@@ -59,8 +62,6 @@ function setupCanvas() {
 
 function connectToServer() {
     var players = this.players;
-
-    log.info("Opening controllerHub");
 
     game.controllerHub.openHub(
         function(player) { // onPlayerJoined
@@ -82,6 +83,9 @@ function connectToServer() {
         },
         { // playerFactory
             getPlayer: function(userID) {
+                var player = new Player(userID);
+
+                console.error("and here");
                 return new Player(userID);
             },
             freePlayer: function(player) {
@@ -119,12 +123,11 @@ function draw(time) {
     ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, c_width, c_height);
 
-    drawRectangle(ctx);
-
     updateables.forEach(function(updatable) {
         updatable.draw(ctx, time);
     });
 
+    drawRectangle(ctx);
 
     players.forEach(function(player) {
         player.draw(ctx, time);
@@ -183,8 +186,6 @@ function drawRectangle(ctx) {
    */
 
 $(document).ready(function() {
-    log.info("initializing dummy UI");
     initializeUI();
-    log.info("connecting dummy to server");
     connectToServer();
 });

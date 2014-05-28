@@ -12,7 +12,7 @@ graphics2d.chartThingy = {
         this.height = height || (canvas.height - this.y);
         this.scale = Math.abs(scale) || 1000;
 
-        console.info("creating ChartThingy", this.x, this.y, this.width, this.height, this.scale);
+        //console.info("creating ChartThingy", this.x, this.y, this.width, this.height, this.scale);
 
         if (flip) {
             this.scale = this.scale * -1;

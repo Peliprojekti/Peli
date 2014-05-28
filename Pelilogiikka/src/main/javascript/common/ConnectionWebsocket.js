@@ -28,19 +28,19 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
 
     var hoststr = "ws://" + this.host + ":" + this.port; // + "/" + this.protocol;
 
-    console.info("ConnectionWebsocket::connect - connecting to: ", hoststr);
+    //console.info("ConnectionWebsocket::connect - connecting to: ", hoststr);
 
     this.connection = new WebSocket(hoststr);
 
     this.connection.onopen = function() {
         self.connected = true;
-        console.info("ConnectionWebsocket::connect - connection opened ", hoststr);
+        //console.info("ConnectionWebsocket::connect - connection opened ", hoststr);
         connectCallback(null, true);
     };
 
     this.connection.onclose = function() {
         self.connected = false;
-        console.info("ConnectionWebsocket::connect - disconnected ",  hoststr);
+        //console.info("ConnectionWebsocket::connect - disconnected ",  hoststr);
         if (typeof self.closCallback == "function") {
             self.closeCallback(true);
             self.clear();

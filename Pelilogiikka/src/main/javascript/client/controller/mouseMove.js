@@ -5,7 +5,7 @@ controller.mouseMove = function(container, canvas, phone) {
 
     // forward all events through coms
     var listener = function(event) {
-        phone.setControllerInfo(event.clientX + " x " + event.clientY);
+        //phone.setControllerInfo(event.clientX + " x " + event.clientY);
         coms.call('position', [
                 event.clientX / canvas.width,
                 event.clientY / canvas.height
@@ -13,13 +13,20 @@ controller.mouseMove = function(container, canvas, phone) {
             null, null);
     };
 
+    var clickListener = function(event) {
+        coms.call('shoot', [], null, null);
+    };
+
     $('#canvas').mousemove(listener);
+    $('#canvas').click(clickListener);
 
     // return disabler function
     return function() {
         canvas.unbind('mousemove', listener);
         listener = null;
         canvas = null;
+
+        //TODO
     };
 };
 

@@ -27,12 +27,17 @@ controller.absPosition.AbsPosition.prototype.clear = function() {
 controller.absPosition.AbsPosition.prototype.reset = function(player, rpc) {
     this.player = player;
     rpc.exposeRpcMethod('position', this, this.position);
+    rpc.exposeRpcMethod('shoot', this, this.shoot);
 };
 
 controller.absPosition.AbsPosition.prototype.update = function() {};
 
 controller.absPosition.AbsPosition.prototype.position = function(x,y) {
     this.player.setPosition(x,y);
+};
+
+controller.absPosition.AbsPosition.prototype.shoot = function(x,y) {
+    this.player.shoot();
 };
 
 $(document).ready(function() {

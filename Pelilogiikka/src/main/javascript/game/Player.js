@@ -21,6 +21,7 @@ function Player(userID) {
 
     //this.onUpdate = null;
     this.gameOn = false;
+    this.bullets = [];
     this.x = 0.5;
     this.y = 0.5;
 
@@ -50,6 +51,10 @@ Player.prototype.addResponseTime = function(time, msgs) {
 Player.prototype.draw = function(ctx) {
     this.crosshair.draw(ctx, this.x, this.y);
 
+    this.bullets.forEach(function(b) {
+        b.draw(ctx);
+    });
+
     if (this.responseTime !== null) {
         ctx.save();
         ctx.font = 'bold 40pt Calibri';
@@ -61,26 +66,17 @@ Player.prototype.draw = function(ctx) {
     }
 };
 
-Player.prototype.update = function(time) {
-    /*
-    if (this.controller !== null) {
-        this.controller.update(time);
-    } else {
-        console.debug("No controller!!!!!");
-    }
-    */
-    /*
-    if (this.onUpdate !== null) {
-        this.onUpdate(time);
-    }
-    */
+Player.prototype.update = function(time) {};
+
+Player.prototype.shoot = function() {
+    console.info("shooting", this.x, this.y);
+    dummyUnshift(graphics2d.bulletHole.create(canvas, this.x, this.y));
 };
 
 Player.prototype.setPosition = function(x, y) {
     if (x > 1 || x < 0 || y > 1 || y < 0) {
         throw new Error("setPosition recieved incorrect values " + x + "," + y);
     }
-    //console.debug(this.userID, x, y);
     this.x = x;
     this.y = y;
 };
