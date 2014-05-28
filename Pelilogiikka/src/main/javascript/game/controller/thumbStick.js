@@ -42,7 +42,7 @@ controller.thumbStick.ThumbStick.prototype.update = function() {
 };
 
 controller.thumbStick.ThumbStick.prototype.buttonPushed = function() {
-    console.info("Button pressed!!!");
+    this.player.shoot();
 };
 
 controller.thumbStick.ThumbStick.prototype.thumbStickPosition = function(x,y) {

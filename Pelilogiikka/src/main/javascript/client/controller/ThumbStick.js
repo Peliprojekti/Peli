@@ -1,6 +1,10 @@
 var controller = controller || {};
 
+//controller.thumbStick.sound = new Audio("/data/gun.ogg");
+
 controller.thumbStick = function(container, canvas, phone) {
+    var sound = new Audio("/data/gun.ogg");
+    
     var thumbStickDot = {
                 x: 0,
                 y: 0,
@@ -40,6 +44,7 @@ controller.thumbStick = function(container, canvas, phone) {
                 client.coms.call('thumbStickPosition', [coordsNormalized[0] * 2, coordsNormalized[1] * 2], null, null);
             } else {
                 client.coms.call('buttonPushed', null, null);
+                sound.play();
             }
         }
 
