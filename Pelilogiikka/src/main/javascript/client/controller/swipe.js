@@ -25,11 +25,11 @@ controller.swipe = function(container, canvas, phone) {
         if (this.sincePrevious === 0) {
             this.sincePrevious = new Date().getTime() - this.startTime;
             client.coms.call('swipe', [coords[0], coords[1], 0], null, null);
-            log.info("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", 0", true);
+            //log.debug("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", 0", true);
         } else {
             this.sincePrevious = new Date().getTime() - this.previousSendTime;
             client.coms.call('swipe', [coords[0], coords[1], this.sincePrevious], null, null);
-            log.info("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", " + this.sincePrevious, true);
+            //log.debug("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", " + this.sincePrevious, true);
         }
 
     };

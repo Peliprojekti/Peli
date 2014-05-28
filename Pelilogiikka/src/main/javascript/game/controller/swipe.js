@@ -1,31 +1,46 @@
-
-
 var controller = controller || {};
-        controller.swipe = {
-        create: function(player) {
-        return new controller.swipe.Swipe(player);
-        },
-                Swipe: function(player) {
-                        this.player = player;
-                        this.x = 0.5;
-                        this.y = 0.5;
-                        this.lastSwipe = null;
-                        this.startCoords = null;
-                        this.previousDirection = null;
-                        this.posChangeMul = 0.01;
-                        this.currentDirection = new Vector2(0, 0);
-                        this.interpolator = new Interpolator(1, 0);
-                        this.time = 0;
-                        this.previousTime = 0;
-                }
-        }
-    /*
+controller.swipe = {
+    getController: function(player, rpc) {
+        return new controller.swipe.Swipe(player, rpc);
+    },
+
+    freeController: function(controller) {
+
+    },
+
+    Swipe: function(player, rpc) {
+        this.reset(player, rpc);
+    }
+};
+/*
  * This will be called on player change or controller style change
  */
 
+controller.swipe.Swipe.prototype.clear = function() {
+    this.player = null;
+};
+
+
+controller.swipe.Swipe.prototype.reset = function(player, rpc) {
+    rpc.exposeRpcMethod('swipe', this, this.pushSwipe);
+
+    this.player = player;
+    this.x = 0.5;
+    this.y = 0.5;
+    this.lastSwipe = null;
+    this.startCoords = null;
+    this.previousDirection = null;
+    this.posChangeMul = 0.01;
+    this.currentDirection = new Vector2(0, 0);
+    this.interpolator = new Interpolator(1, 0);
+    this.time = 0;
+    this.previousTime = 0;
+};
+
 
 controller.swipe.Swipe.prototype.update = function(time) {
-    
+    //console.debug("updating swipe");
+
     if (this.lastSwipe != null) {
         //console.debug("Controller update");
         var coords = this.lastSwipe[0];
@@ -35,33 +50,33 @@ controller.swipe.Swipe.prototype.update = function(time) {
             //this.previousDirection = null;
             this.previousTime = 0;
             this.calcNewPosition(time);
-        }
-        else {    
+        } else {
             if (this.startCoords != null) {
                 this.calcNewDirection(this.startCoords, coords);
             }
             this.startCoords = coords;
         }
-    }
-    else {
+    } else {
         this.calcNewPosition(time);
     }
- };
- 
+};
+
 controller.swipe.Swipe.prototype.pushSwipe = function(x, y, sincePrevious) {
-    this.lastSwipe = [[x, y], sincePrevious];
-    log.info("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
+    this.lastSwipe = [
+        [x, y], sincePrevious
+    ];
+    //log.debug("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
 };
 
 controller.swipe.Swipe.prototype.setPosition = function(x, y) {
-        if (!(x > 1 || x < 0)) {
-            this.x = x;
-        }
-        if (!(y > 1 || y < 0)) {
-            this.y = y;
-        }
-        
-        this.player.setPosition(this.x, this.y);
+    if (!(x > 1 || x < 0)) {
+        this.x = x;
+    }
+    if (!(y > 1 || y < 0)) {
+        this.y = y;
+    }
+
+    this.player.setPosition(this.x, this.y);
 };
 
 controller.swipe.Swipe.prototype.calcNewPosition = function(timestamp) {
@@ -77,12 +92,12 @@ controller.swipe.Swipe.prototype.calcNewPosition = function(timestamp) {
             this.previousTime = timestamp;
             var speedMultiplier = this.interpolator.interpolate(this.time);
             //log.debug(this.time + " " + speedMultiplier);
-            this.currentDirection = this.currentDirection.mul(speedMultiplier);    
+            this.currentDirection = this.currentDirection.mul(speedMultiplier);
             var newX = this.x + this.currentDirection.x * this.posChangeMul;
             var newY = this.y + this.currentDirection.y * this.posChangeMul;
             this.setPosition(
-                    newX,
-                    newY);
+                newX,
+                newY);
             //console.debug("New pos: (" + newX + ", " + newY + ")");
         }
     }
@@ -116,8 +131,8 @@ controller.swipe.Swipe.prototype.calcNewDirection = function(beginning, end) {
 
     this.lastSwipe = null;
 };
- 
+
 
 $(document).ready(function() {
-    game.controller.registerController('swipe', controller.swipe.create);
+    game.controllerHub.registerController('swipe', controller.swipe);
 });

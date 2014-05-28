@@ -26,6 +26,7 @@ game.controllerHub = {
     },
 
     update: function(time) {
+        var self = game.controllerHub;
         for (var key in self.controllers) {
             self.controllers[key].update(time);
         }
