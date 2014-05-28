@@ -5,8 +5,8 @@ var controller = controller || {};
 controller.thumbStick = function(container, canvas, phone) {
     var sounds = [] ;;
 
-    for (var i = 0; i < 10; i++) {
-        sounds[i] = new Audio("/data/gun.ogg");
+    for (var i = 0; i < 20; i++) {
+        sounds[i] = new Audio("/data/gun.wav");
     }
 
 
@@ -52,6 +52,7 @@ controller.thumbStick = function(container, canvas, phone) {
                 client.coms.call('buttonPushed', null, null);
 
                 var sound = sounds.pop();
+                sound.play();
                 sounds.unshift(sound);
             }
         }
