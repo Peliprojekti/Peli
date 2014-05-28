@@ -18,10 +18,10 @@ controller.thumbStick = function(container, canvas, phone) {
     phone.addDrawable(thumbStickDot);
     
     
-    var last = new Date().getTime();
+    //var last = new Date().getTime();
     function drawCircle(x, y, r) {
-        log.debug("Time since last: " + (new Date().getTime() - last), true);
-        last = new Date().getTime();
+        //log.debug("Time since last: " + (new Date().getTime() - last), true);
+        //last = new Date().getTime();
         thumbStickDot.x = x;
         thumbStickDot.y = y;
         thumbStickDot.r = r;
@@ -36,8 +36,10 @@ controller.thumbStick = function(container, canvas, phone) {
             if (phone.getRelativeCoords(i, event)[0] < 0.5) {
                 var coords = phone.getFingerCoords(i, event);
                 drawCircle(coords[0], coords[1], 10);
+                var coordsNormalized = phone.getRelativeCoords(i, event);
+                client.coms.call('thumbStickPosition', [coordsNormalized[0] * 2, coordsNormalized[1] * 2], null, null);
             } else {
-                //Napin painallus
+                client.coms.call('buttonPushed', null, null);
             }
         }
 
@@ -52,9 +54,16 @@ controller.thumbStick = function(container, canvas, phone) {
                 
                 var coords = phone.getFingerCoords(i, event);
                 drawCircle(coords[0], coords[1], 10);
+                var coordsNormalized = phone.getRelativeCoords(i, event);
+                client.coms.call('thumbStickPosition', [coordsNormalized[0] * 2, coordsNormalized[1] * 2], null, null);
             }
         }
     };
+    
+    ThumbStick.prototype.doTouchEnd = function(event) {
+        event.preventDefault();
+        client.coms.call('thumbStickPosition', [0.5, 1], null, null);
+    }
 
     // Ps. var tarkottaa muuttujaa?
     // Jos toi on noin, niin mit� i sitten meinaa? t: Tuomas
@@ -68,6 +77,10 @@ controller.thumbStick = function(container, canvas, phone) {
 
         canvas.addEventListener("touchmove", function(event) {
             thisObject.doTouchMove(event);
+        }, false);
+        
+        canvas.addEventListener("touchend", function(event) {
+            thisObject.doTouchEnd(event);
         }, false);
 
     };
