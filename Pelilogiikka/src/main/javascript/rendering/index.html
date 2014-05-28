@@ -5,24 +5,25 @@
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 
-<script type="text/javascript" src="External/webglutils.js">                    </script>
+<script type="text/javascript" src="External/webglutils.js"                     ></script>
 
 
 
-<script type="text/javascript" src="Refactored/Resources/Shader.js"   >         </script>
-<script type="text/javascript" src="Refactored/Resources/Mesh.js"     >         </script>
-<script type="text/javascript" src="Refactored/Resources/Texture.js"  >         </script>
+<script type="text/javascript" src="Refactored/Resources/Shader.js"             ></script>
+<script type="text/javascript" src="Refactored/Resources/Mesh.js"               ></script>
+<script type="text/javascript" src="Refactored/Resources/Texture.js"            ></script>
 
 
 
+<script type="text/javascript" src="Refactored/Systems/Exception.js"            ></script>
+<script type="text/javascript" src="Refactored/Systems/Renderer.js"             ></script>
+<script type="text/javascript" src="Refactored/Systems/Reference.js"            ></script>
+<script type="text/javascript" src="Refactored/Systems/Timer.js"                ></script>
 
-<script type="text/javascript" src="Refactored/Systems/Exception.js">           </script>
-<script type="text/javascript" src="Refactored/Systems/Renderer.js">            </script>
-<script type="text/javascript" src="Refactored/Systems/Reference.js">           </script>
-<script type="text/javascript" src="Refactored/Systems/Timer.js">               </script>
 
+<script type="text/javascript" src="data/Shaders/Test_VertexShader.js"          ></script>
+<script type="text/javascript" src="data/Shaders/Test_PixelShader.js"           ></script>
 
-<script src="data/Test_Vertexshader.js" type="VERTEX_SHADER">                   </script>
 
 
 
@@ -35,19 +36,13 @@
   
     function draw_Frame( renderer ) 
     {   
-       // requestAnimFrame( function() { draw_Frame( renderer ); });
+        requestAnimFrame( function() { draw_Frame( renderer ); });
     
-        while( true )
-        {
-            renderer.begin();
+        renderer.begin();
        
-            renderer.end();
+        renderer.end();
         
             console.info( renderer.fps );
-        }   
-        
-    
-           
     }
 
 
@@ -58,24 +53,25 @@
        var renderer = new Renderer( 800,600 );
        
        
-       var vertices = [ 0,0,0, 1,1,1 , 2,2,2 ];
+       var vertices    = [ 0,0,0, 1,1,1 , 2,2,2 ];
+       var attributes  = [ new VertexAttribute( "VEC3", "POSITION", vertices ) ];
        
-       var attributes = [];
-           attributes.push( new VertexAttribute( "VEC3", "POSITION", vertices ) );
-        
+       var mesh        = new Mesh( renderer, attributes );
        
-       var mesh      = new Mesh( renderer, attributes );
-        
-        
+       var shaderTerms = new ShaderTerms( hax_VertexShader                     ,  // vs_Label
+                                          hax_PixelShader                      ,  // ps_Label
+                                         [ new Reference( "VEC3" , "Test" )  ] ,  // uniforms
+                                         [                                   ] ,  // attributes
+                                         [                                   ] ,  // variables
+                                         [                                   ] ); // samplers                   
+     
+       
+       var shader     = new Shader( renderer, shaderTerms );
     
-      
        
-      
        
         
        draw_Frame( renderer );
-       
-       
     }
 
     

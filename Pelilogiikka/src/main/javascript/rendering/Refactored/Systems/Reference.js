@@ -1,3 +1,10 @@
+function VALID( value )
+{
+    if (typeof value != 'undefined') return true;
+    else
+        return false;
+}
+
 
 function Reference( type, label  )
 {   
@@ -10,21 +17,5 @@ function Reference( type, label  )
         this.label = label;
     
     this.reference = null;
-}
-
-
-Reference.prototype.set = function( initializer )
-{
-    if( !VALID( initializer ) ) throw new Exception( "NULL" , "Atttempted to set reference with undefined initializer" );
-    
-}
-
-
-
-function VALID( value )
-{
-    if (typeof value != 'undefined') return true;
-    else
-        return false;
 }
 

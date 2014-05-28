@@ -17,8 +17,12 @@ function Root_Exception_Handler()
    }
    catch( exception )
    {
-       alert("Vituix meni: " + exception.type + " -> " + exception.message  );
-       
+       alert("Root exception: ( " + exception.type + " ) : " + exception.message  );
    }
+    
+    // Logging?
+    // Cleaning up?
+    // Diagnostics?
+    // Attempt restart?
     
 }

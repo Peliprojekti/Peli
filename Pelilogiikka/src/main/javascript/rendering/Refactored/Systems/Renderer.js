@@ -46,7 +46,7 @@ function Renderer( screen_Width, screen_Height )
     this.frameCounter = 0;
     this.fps          = 0;
     
-    console.info("Renderer initialized");
+    console.info("Renderer initialized" );
 }
 
 

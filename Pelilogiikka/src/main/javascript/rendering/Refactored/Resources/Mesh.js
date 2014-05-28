@@ -61,16 +61,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 function VertexAttribute( type, label, data )
 {
     if( !VALID( type        ) ) throw new Exception("NULL", "Vertex attribute initialized with an undefined type");
@@ -92,36 +82,52 @@ this.data = data;
 
 
 
-function Mesh( renderer, vertex_Attributes ) 
-{
-    this.attribute_Buffers = [];
-   
-    this.attribute_Buffers.push( vertex_Attributes.forEach( function( token )
+    function Mesh( renderer, vertex_Attributes ) 
     {
-        var attribute = new Reference( token.type , token.label );
+        this.attribute_Buffers = [];
+ 
+        // This... "THING" refuses to work properly with forEach idiom. GOD I HATE THIS TYPELESS BULLSHIT
+        for( var i = 0; i < vertex_Attributes.length; i++ )     
+        {
+            var token     = vertex_Attributes[i];
+            var attribute = new Reference( token.type , token.label );
+            
+            try
+            {
+                attribute.reference = new Buffer( renderer.gl, token );
+            }  
+            catch( exception )
+            {
+                // What to do here... Stuff is already kinda ruined if this block is reached... :/
+                // Bad type? Not labeled? Empty?
+                
+            throw new Exception( "FATAL" , "Unimplemented exception handler at Mesh constructor - Default policy is to pass exceptions.");
+            }
         
-        try
-        {
-            attribute.reference = new Buffer( renderer.gl, token );
+        this.attribute_Buffers.push(  attribute );
         }
-        catch( exception )
-        {
-            // What to do here... Stuff is already kinda ruined if this block is reached... :/
-            // Bad type?
-            // Not labeled?
-            // Empty?
-        }
-   
-    return attribute;
-    }));
-  
-}
+        
+    }
 
 
-Mesh.prototype.bind = function()
-{
-    this.attribute_Buffers.forEach( function( attribute )
+    Mesh.prototype.bind = function()
     {
-        attribute.bind();
-    });
-}
+        this.attribute_Buffers.forEach( function( attribute )
+        {
+            attribute.bind();
+        });
+    }
+
+
+    Mesh.prototype.report = function()
+    {
+        console.info( "- Begin Mesh Report -" );
+        console.info( this.attribute_Buffers.length + " vertex attributes: ");
+    
+        this.attribute_Buffers.forEach( function( buffer )
+        {
+            console.info( buffer.label );
+        });
+        
+    console.info( "- End Report -" );
+    }
