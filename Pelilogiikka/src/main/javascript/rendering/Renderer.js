@@ -8,6 +8,9 @@
         this.canvas        = canvas;
         this.target_Width  = canvas.width;
         this.target_Height = canvas.height;
+
+        
+        
         
         try 
         {
@@ -44,7 +47,7 @@
 
 
     Renderer.prototype.begin = function()
-    {
+    { 
         this.gl.viewport  ( 0, 0, this.gl.viewportWidth, this.gl.viewportHeight                     );
         this.gl.clearColor( this.fillColor[0],this.fillColor[1],this.fillColor[2],this.fillColor[3] );
         this.gl.clear     ( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT                     );
@@ -65,6 +68,10 @@
     Renderer.prototype.end = function()
     {
         // Postprocessing here
+        
+        
+        
+        
     }
 
     Renderer.prototype.draw = function(  myEntity , lights  )
