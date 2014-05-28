@@ -22,7 +22,7 @@ CrosshairManager.prototype.requestCrosshair = function(playerName) {
             return i;
         }
     }
-    return null;
+    return new graphics2d.crosshair.createRandomColor(player.x, player.y, 20);;
 };
 
 CrosshairManager.prototype.freeCrosshair = function(playerName) {
@@ -35,4 +35,9 @@ CrosshairManager.prototype.freeCrosshair = function(playerName) {
     return null;
 };
 
+//
+//var c = new CrosshairManager(5);
+//alert(c.requestCrosshair("matti"));
+//alert(c.requestCrosshair("pekka"));
+//alert(c.freeCrosshair("matti"));
 
