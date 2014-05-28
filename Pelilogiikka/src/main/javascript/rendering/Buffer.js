@@ -28,6 +28,7 @@
     }   
     
     
+    
     Buffer.prototype.bind = function( gl, target ) 
     {
         gl.bindBuffer( gl.ARRAY_BUFFER, this.data );
