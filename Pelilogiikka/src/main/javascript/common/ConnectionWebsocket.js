@@ -70,7 +70,6 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
             onMessage(e.data);
         }
     };
-
 };
 
 ConnectionWebsocket.prototype.isOpen = function() {

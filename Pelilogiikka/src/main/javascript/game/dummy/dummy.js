@@ -64,7 +64,7 @@ function connectToServer() {
 
     game.controllerHub.openHub(
         function(player) { // onPlayerJoined
-            log.info("New player connected to dummy game");
+            //log.info("New player connected to dummy game");
             var crosshair = new graphics2d.crosshair.createRandomColor(player.x, player.y, 20); //Crosshair(0, 0, 20);
             player.setCrosshair(crosshair);
             players.push(player);

@@ -14,7 +14,6 @@ game.controllerHub = {
     freeConnections: 0,
     playerCount: 0,
 
-
     sequence: 0,
     players: {},
     controllers: {},
@@ -37,6 +36,7 @@ game.controllerHub = {
         if (onPlayerJoined === undefined) console.error("onPlayerJoined undefined");
         if (onPlayerLeft === undefined) console.error("onPlayerLeft undefined");
         if (playerFactory === undefined) console.error("playerFactory undefined");
+        if (!(playerFactory.getPlayer && playerFactory.freePlayer))  console.error("malformed playerFactory");
         if (!self.loadedControllerTypes[self.controllerType]) {
             console.error("unregistered controller type: ", self.controllerType);
         }
@@ -50,6 +50,7 @@ game.controllerHub = {
 
         function openConnection() {
             if ((self.freeConnections >= self.minimumFreeConnections) || self.playerCount == self.maxPlayers) {
+                console.warn("unable to open connecitons, for reasons", self.freeConnections, self.minimumFreeConnections, self.playerCount, self.maxPlayers);
                 return false;
             }
 
@@ -60,9 +61,9 @@ game.controllerHub = {
             var sequence = self.sequence++;
 
             rpc.exposeRpcMethod('joinGame', this, function(userID) {
-                console.info("Player joined game with userID ", userID);
+                //console.info("Player joined game with userID ", userID);
                 var player = self.playerFactory.getPlayer(userID);
-                console.deub("creating controller");
+                //console.debug("creating controller");
                 var controller = self.loadedControllerTypes[self.controllerType].getController(player, rpc);
                 self.playerCount++;
                 self.freeConnections--;
@@ -70,7 +71,6 @@ game.controllerHub = {
                 self.players[sequence] = player;
 
                 openConnection();
-                console.debug("player creation done");
 
                 self.onPlayerJoined(player);
                 return self.controllerType;
@@ -82,8 +82,7 @@ game.controllerHub = {
                         self.freeConnections++;
                         console.log("New connection successfully opened, total connecitons: ", self.freeConnections + self.playerCount);
                         openConnection();
-                    }
-                    else {
+                    } else {
                         console.warn("Connection error", error);
                     }
                 },
@@ -105,7 +104,9 @@ game.controllerHub = {
                         console.warn("connection unexpectedly closed");
                     }
                 },
-                rpc.getOnMessage());
+                rpc.getOnMessage()
+            );
+            return true;
         }
     },
 
