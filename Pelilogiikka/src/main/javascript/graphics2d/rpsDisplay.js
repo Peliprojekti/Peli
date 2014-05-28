@@ -6,8 +6,6 @@ graphics2d.rpsDisplay = {
     },
 
     RpsDisplay: function(canvas, fancy) {
-        log.info("creating RpsDisplay");
-
         this.x = canvas.width - 5;
         this.y = (canvas.height / 8) + 45;
 

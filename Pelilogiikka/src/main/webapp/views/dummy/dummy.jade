@@ -10,6 +10,8 @@ html(lang='en')
     #container
       canvas#canvas HTML5 Canvas not supported.
 
+    img#bulletHole(src="/data/bulletHole.png", style="display: hidden")
+
     script(type="text/javascript").
       var SCREEN_PORT = #{screen_port};
       var DEBUG = #{jsdebug};
@@ -29,10 +31,12 @@ html(lang='en')
     script(type="text/javascript" src="/javascript/game/controller/absPosition.js")
     script(type="text/javascript" src="/javascript/game/controller/swipe.js")
     script(type="text/javascript" src="/javascript/game/controller/motionController.js")
+    script(type="text/javascript" src="/javascript/game/controller/thumbStick.js")
 
     script(type="text/javascript" src="/javascript/common/ConnectionWebsocket.js")
     script(type="text/javascript" src="/javascript/common/PeliRPC.js")
 
+    script(type="text/javascript" src="/javascript/graphics2d/bulletHole.js")
     script(type="text/javascript" src="/javascript/graphics2d/crosshair.js")
     script(type="text/javascript" src="/javascript/graphics2d/fpsDisplay.js")
     script(type="text/javascript" src="/javascript/graphics2d/rpsDisplay.js")
