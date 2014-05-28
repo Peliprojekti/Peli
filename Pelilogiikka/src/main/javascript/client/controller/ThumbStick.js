@@ -3,7 +3,13 @@ var controller = controller || {};
 //controller.thumbStick.sound = new Audio("/data/gun.ogg");
 
 controller.thumbStick = function(container, canvas, phone) {
-    var sound = new Audio("/data/gun.ogg");
+    var sounds = [] ;;
+
+    for (var i = 0; i < 10; i++) {
+        sounds[i] = new Audio("/data/gun.ogg");
+    }
+
+
     
     var thumbStickDot = {
                 x: 0,
@@ -44,7 +50,9 @@ controller.thumbStick = function(container, canvas, phone) {
                 client.coms.call('thumbStickPosition', [coordsNormalized[0] * 2, coordsNormalized[1] * 2], null, null);
             } else {
                 client.coms.call('buttonPushed', null, null);
-                sound.play();
+
+                var sound = sounds.pop();
+                sounds.unshift(sound);
             }
         }
 
