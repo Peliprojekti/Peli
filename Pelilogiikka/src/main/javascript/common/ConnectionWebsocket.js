@@ -60,9 +60,9 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
     };
 
     this.connection.onmessage = function(e) {
-        console.debug("ConnectionWebsocket::connect - Recieved data---------", e);
+        //console.debug("ConnectionWebsocket::connect - Recieved data---------", e);
         if (e.data == '-1') {
-            console.debug("Client disconnected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            //console.debug("Client disconnected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             self.closeCallback(true);
             //self.clear();
         }
