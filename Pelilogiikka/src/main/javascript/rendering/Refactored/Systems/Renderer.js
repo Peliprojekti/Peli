@@ -10,7 +10,9 @@ function Renderer( screen_Width, screen_Height )
     this.canvas.height   = screen_Height;
     this.viewport_Width  = this.canvas.width;
     this.viewport_Height = this.canvas.height;
-    
+            
+
+       
     
     // Attempt to initialize the WebGL context
     try 
@@ -38,6 +40,12 @@ function Renderer( screen_Width, screen_Height )
     // Set a default blank color
     this.gl.clearColor( 0.0,1.0,1.0,1.0 );
     
+    
+    // FPS observation variables
+    this.timer        = new Timer();
+    this.frameCounter = 0;
+    this.fps          = 0;
+    
     console.info("Renderer initialized");
 }
 
@@ -54,4 +62,11 @@ Renderer.prototype.begin = function()
 Renderer.prototype.end = function()
 {
     
+        if( this.timer.elapsed_Milliseconds() < 500 ) this.frameCounter++;
+        else
+            {
+                this.fps = 2*this.frameCounter;
+                this.frameCounter = 0;
+                this.timer.reset();
+            }
 }

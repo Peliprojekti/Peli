@@ -17,7 +17,7 @@ function Root_Exception_Handler()
    }
    catch( exception )
    {
-       alert("Vituix meni: " + exception.type + " -> " + exception.message );
+       alert("Vituix meni: " + exception.type + " -> " + exception.message  );
        
    }
     

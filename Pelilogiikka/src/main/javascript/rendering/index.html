@@ -19,6 +19,7 @@
 <script type="text/javascript" src="Refactored/Systems/Exception.js">           </script>
 <script type="text/javascript" src="Refactored/Systems/Renderer.js">            </script>
 <script type="text/javascript" src="Refactored/Systems/Reference.js">           </script>
+<script type="text/javascript" src="Refactored/Systems/Timer.js">               </script>
 
 
 <script src="data/Test_Vertexshader.js" type="VERTEX_SHADER">                   </script>
@@ -28,21 +29,30 @@
 <script type="text/javascript">
 
   
+   
     
-  
+    
   
     function draw_Frame( renderer ) 
     {   
-        requestAnimFrame( function() { draw_Frame( renderer ); });
+       // requestAnimFrame( function() { draw_Frame( renderer ); });
     
+        while( true )
+        {
+            renderer.begin();
+       
+            renderer.end();
         
-        renderer.begin();
+            console.info( renderer.fps );
+        }   
+        
     
-     
-        renderer.end();
+           
     }
 
+
     
+       
     function main() 
     {
        var renderer = new Renderer( 800,600 );
@@ -57,6 +67,11 @@
        var mesh      = new Mesh( renderer, attributes );
         
         
+    
+      
+       
+      
+       
         
        draw_Frame( renderer );
        
