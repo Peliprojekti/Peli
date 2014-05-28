@@ -11,125 +11,6 @@ function ShaderTerms( vs_Label, ps_Label, uniforms, attributes, variables, sampl
 
 
 
-function Shader( renderer, shdTerms  )
-{ 
-    // Declare external references
-    this.gl               = renderer.gl;
-
-    // Declare space for shader terms.
-    this.uniform_Terms    = [];         // Uniform constants
-    this.attribute_Terms  = [];         // Vertex attributes
-    this.variable_Terms   = [];         // Pixel shader variables
-    this.sampler_Terms    = [];         // Samplers associated with the shader. Index implies texture slot as well!
-   
-   
-    // Begin the initialization
-    this.program = build_Shader( this.gl, shdTerms.vs_Label, shdTerms.ps_Label );       // Here we shall attempt to create a shader program from the user supplied parameters
-   
-    this.gl.useProgram( this.program );       
-
-    this.uniform_Terms.push( shdTerms.uniforms.forEach( function( uniform )     
-    {
-        uniform.value =  this.gl.getUniformLocation(this.program, uniform.label );
-    
-    return uniform;
-    }));
-  
-    this.attribute_Terms.push( shdTerms.attributes.forEach( function( attribute )     
-    {
-        attribute.value =  this.gl.getAttribLocation      ( this.program, attribute.label      );
-                           this.gl.enableVertexAttribArray( attribute.value                    );   
-    return attribute;
-    }));
-  
-  
-    this.variable_Terms.push( shdTerms.variables.forEach( function( variable )     
-    {
-        variable.value =  this.gl.getUniformLocation( this.shaderProgram, variable.label ); 
-    
-    return variable;
-    }));
-  
-  
-    this.sampler_Terms.push( shdTerms.samplers.forEach( function( sampler )      
-    {
-        sampler.value = this.gl.getUniformLocation(this.shaderProgram, sampler.label );
-    
-    return sampler;
-    }));
-    
-}
-
-
-
-
-
-Shader.prototype.bind = function( uniform_Values, attribute_Values, variable_Values, map_References)
-{
-    // By now, we have a several lists of terms.
-    // These terms will be assigned here.
-    
-
-}
-
-
-
-
-
-
-
-
-
-
-
-/// Filthy util functions that are not part of the object instance.
-
- function getShaderBy_ID(gl, shaderScript, type  ) 
- {
-       // var shaderScript = document.getElementById(id);
-       
-        if (!shaderScript) 
-        {
-            throw new Exception( "NULL" + "Failed to load " + type + " shader asset!");
-        }
-        
-       
-        
-        
-        var str = "";
-        var k = shaderScript.firstChild;
-        while (k) 
-        {
-            if (k.nodeType == 3) 
-            {
-                str += k.textContent;
-            }
-            k = k.nextSibling;
-        }
-
-        var shader;
-          
-           
-        if ( type == "PIXEL_SHADER")    shader = gl.createShader(gl.FRAGMENT_SHADER);
-        else 
-            if ( type == "VERTEX_SHADER")  shader = gl.createShader(gl.VERTEX_SHADER);
-            else 
-                 throw new Exception( "UNSUPPORTED" + "Shader type " + type + " is invalid or unsupported.");
-               
-         
-        gl.shaderSource(shader, str);
-        gl.compileShader(shader);
-
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) 
-        {
-            alert( gl.getShaderInfoLog(shader) );
-            return null;
-        }
-
-    return shader;
-    }
-    
-    
 
 
 function build_Shader( gl , source_VS , source_PS )
@@ -165,7 +46,6 @@ function build_Shader( gl , source_VS , source_PS )
             
         alert( stateString );
         }
-   
     }
     catch( exception )
     {
@@ -179,3 +59,69 @@ function build_Shader( gl , source_VS , source_PS )
     
 return shaderProgram;
 }
+
+
+
+
+function Shader( renderer, shdTerms  )
+{ 
+    // Declare external references
+    this.gl               = renderer.gl;
+
+    // Declare space for shader terms.
+    this.uniform_Terms    = [];         // Uniform constants
+    this.attribute_Terms  = [];         // Vertex attributes
+    this.variable_Terms   = [];         // Pixel shader variables
+    this.sampler_Terms    = [];         // Samplers associated with the shader. Index implies texture slot as well!
+   
+    // Begin the initialization
+    this.program          = build_Shader( this.gl, shdTerms.vs_Label, shdTerms.ps_Label );       // Here we shall attempt to create a shader program from the user supplied parameters
+    
+    this.gl.useProgram( this.program );       
+ 
+    for( var i = 0; i < shdTerms.uniforms.length; i++ )
+    {
+        var uniform       = shdTerms.uniforms[i];
+            uniform.value =  this.gl.getUniformLocation(this.program, uniform.label );
+   
+    this.uniform_Terms.push( uniform );
+    }
+ 
+    for( var i = 0; i < shdTerms.attributes.length; i++ )
+    {
+        var attribute       = shdTerms.attributes[i];
+            attribute.value =  this.gl.getUniformLocation(this.program, attribute.label );
+   
+    this.attribute_Terms.push( attribute );
+    }
+ 
+    for( var i = 0; i < shdTerms.variables.length; i++ )
+    {
+         var variable       = shdTerms.variables[i];
+             variable.value =  this.gl.getUniformLocation(this.program, variable.label );
+   
+    this.variable_Terms.push( attribute );
+    }
+ 
+    for( var i = 0; i < shdTerms.samplers.length; i++ )
+    {
+         var sampler       = shdTerms.samplers[i];
+             sampler.value =  this.gl.getUniformLocation(this.program, sampler.label );
+   
+    this.sampler_Terms.push( sampler  );
+    }
+}
+
+
+
+
+
+Shader.prototype.bind = function( uniforms, attributes, variables, maps )   
+{
+    // By now, we have a several lists of terms.
+    // These terms will be assigned here.
+}
+
+
+
+
