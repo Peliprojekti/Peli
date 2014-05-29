@@ -14,5 +14,32 @@ That way multiple projects can share the same settings (useful for formatting ru
 Any value defined here will override the pom.xml file value but is only applicable to the current project.
 -->
         <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.5</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
+        <org-netbeans-modules-editor-indent.CodeStyle.usedProfile>project</org-netbeans-modules-editor-indent.CodeStyle.usedProfile>
+        <org-netbeans-modules-editor-indent.CodeStyle.project.spaces-per-tab>4</org-netbeans-modules-editor-indent.CodeStyle.project.spaces-per-tab>
+        <org-netbeans-modules-editor-indent.CodeStyle.project.tab-size>8</org-netbeans-modules-editor-indent.CodeStyle.project.tab-size>
+        <org-netbeans-modules-editor-indent.CodeStyle.project.indent-shift-width>4</org-netbeans-modules-editor-indent.CodeStyle.project.indent-shift-width>
+        <org-netbeans-modules-editor-indent.CodeStyle.project.expand-tabs>true</org-netbeans-modules-editor-indent.CodeStyle.project.expand-tabs>
+        <org-netbeans-modules-editor-indent.CodeStyle.project.text-limit-width>80</org-netbeans-modules-editor-indent.CodeStyle.project.text-limit-width>
+        <org-netbeans-modules-editor-indent.CodeStyle.project.text-line-wrap>chars</org-netbeans-modules-editor-indent.CodeStyle.project.text-line-wrap>
+        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.spaces-per-tab>4</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.spaces-per-tab>
+        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.tab-size>4</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.tab-size>
+        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.indent-shift-width>4</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.indent-shift-width>
+        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.expand-tabs>true</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.expand-tabs>
+        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.text-limit-width>80</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.text-limit-width>
+        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.text-line-wrap>chars</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.text-line-wrap>
+        <org-netbeans-modules-css-prep.sass_2e_compiler_2e_options/>
+        <org-netbeans-modules-css-prep.less_2e_mappings>/less:/css</org-netbeans-modules-css-prep.less_2e_mappings>
+        <org-netbeans-modules-css-prep.less_2e_enabled>false</org-netbeans-modules-css-prep.less_2e_enabled>
+        <org-netbeans-modules-css-prep.sass_2e_mappings>/scss:/css</org-netbeans-modules-css-prep.sass_2e_mappings>
+        <org-netbeans-modules-css-prep.sass_2e_enabled>false</org-netbeans-modules-css-prep.sass_2e_enabled>
+        <org-netbeans-modules-css-prep.less_2e_compiler_2e_options/>
+        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.continuationIndentSize>4</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.continuationIndentSize>
+        <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.spaces-per-tab>4</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.spaces-per-tab>
+        <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.tab-size>4</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.tab-size>
+        <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.indent-shift-width>4</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.indent-shift-width>
+        <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.continuationIndentSize>4</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.continuationIndentSize>
+        <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.expand-tabs>true</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.expand-tabs>
+        <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.text-limit-width>80</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.text-limit-width>
+        <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.text-line-wrap>chars</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.text-line-wrap>
     </properties>
 </project-shared-configuration>
