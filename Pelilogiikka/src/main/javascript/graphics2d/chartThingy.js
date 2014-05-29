@@ -1,11 +1,16 @@
+/*global console: false*/
+/*global graphics2d: false*/
+/*jslint browser: true*/
+
 var graphics2d = graphics2d || {};
 
 graphics2d.chartThingy = {
-    create: function(canvas, x, y, width, height, scale, flip) {
+    create: function (canvas, x, y, width, height, scale, flip) {
+        "use strict";
         return new graphics2d.chartThingy.ChartThingy(canvas, x, y, width, height, scale, flip);
     },
-
-    ChartThingy: function(canvas, x, y, width, height, scale, flip) {
+    ChartThingy: function (canvas, x, y, width, height, scale, flip) {
+        "use strict";
         this.x = x || 0;
         this.y = y || 0;
         this.width = width || (canvas.width - this.x);
@@ -23,7 +28,8 @@ graphics2d.chartThingy = {
     }
 };
 
-graphics2d.chartThingy.ChartThingy.prototype.addValue = function(value) {
+graphics2d.chartThingy.ChartThingy.prototype.addValue = function (value) {
+    "use strict";
     while (Math.abs(value * this.scale) > this.height) {
         this.scale = this.scale * 0.8;
     }
@@ -34,20 +40,22 @@ graphics2d.chartThingy.ChartThingy.prototype.addValue = function(value) {
     }
 };
 
-graphics2d.chartThingy.ChartThingy.prototype.update = function(time) {
-};
+graphics2d.chartThingy.ChartThingy.prototype.update = function () {};
 
-graphics2d.chartThingy.ChartThingy.prototype.draw = function(ctx) {
+graphics2d.chartThingy.ChartThingy.prototype.draw = function (ctx) {
+    "use strict";
+    var i;
     ctx.save();
 
     ctx.strokeStyle = this.color;
 
     ctx.beginPath();
-    var previous = 0;
-    for (var i = 0; i < this.values.length; i++) {
-        ctx.moveTo(i + this.x, this.height + this.y);
+    ctx.moveTo(this.x, this.y + this.height);
+    for (i = 0; i < this.values.length; i += 1) {
+        //ctx.moveTo(i + this.x, this.height + this.y);
         ctx.lineTo(i + this.x, this.y + this.height - (this.scale * this.values[i]));
     }
+    ctx.lineTo(i + this.x, this.y + this.height);
     ctx.closePath();
     ctx.stroke();
 
