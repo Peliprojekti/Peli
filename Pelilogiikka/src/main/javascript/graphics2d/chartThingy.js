@@ -17,8 +17,6 @@ graphics2d.chartThingy = {
         this.height = height || (canvas.height - this.y);
         this.scale = Math.abs(scale) || 1000;
 
-        //console.info("creating ChartThingy", this.x, this.y, this.width, this.height, this.scale);
-
         if (flip) {
             this.scale = this.scale * -1;
             this.y = this.y + this.height;
@@ -33,6 +31,7 @@ graphics2d.chartThingy.ChartThingy.prototype.addValue = function (value) {
     while (Math.abs(value * this.scale) > this.height) {
         this.scale = this.scale * 0.8;
     }
+
     this.values.unshift(value);
 
     if (this.values.length > this.width) {
@@ -47,17 +46,20 @@ graphics2d.chartThingy.ChartThingy.prototype.draw = function (ctx) {
     var i;
     ctx.save();
 
-    ctx.strokeStyle = this.color;
+    ctx.strokeStyle = "black"; //this.color;
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = 0.5;
 
     ctx.beginPath();
     ctx.moveTo(this.x, this.y + this.height);
+
     for (i = 0; i < this.values.length; i += 1) {
-        //ctx.moveTo(i + this.x, this.height + this.y);
-        ctx.lineTo(i + this.x, this.y + this.height - (this.scale * this.values[i]));
+        ctx.lineTo(i + this.x, this.y + this.height - this.values[i]);
     }
+
     ctx.lineTo(i + this.x, this.y + this.height);
-    ctx.closePath();
     ctx.stroke();
+    ctx.fill();
 
     ctx.restore();
 };
