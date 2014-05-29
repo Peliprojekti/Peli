@@ -8,12 +8,16 @@ var dummy = dummy || {};
 dummy.game = {
     start: function () {
         "use strict";
+        var canvas = document.getElementById("canvas"),
+            container = document.getElementById("container");
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
 
         //this.updateables.push(graphics2d.fpsDisplay.createFancy(canvas));
         //this.updateables.push(graphics2d.rpsDisplay.createFancy(canvas));
         //this.updateables.push(graphics2d.playerPerformance.create(canvas));
 
-        //this.connectToServer();
+        this.connectToServer();
 
         dummy.screen.start(document.getElementById("canvas"));
     },
