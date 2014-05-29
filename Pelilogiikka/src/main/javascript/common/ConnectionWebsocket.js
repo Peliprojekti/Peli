@@ -21,36 +21,37 @@ function ConnectionWebsocket(host, port, protocol, persistent) {
     //this.onMessage = null;
 }
 
-ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback, onMessage, onPlayerDisconnect) {
+ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback, onMessage) {
     var self = this;
     this.closeCallback = closeCallback;
     //this.onMessage = onMessage;
 
     var hoststr = "ws://" + this.host + ":" + this.port; // + "/" + this.protocol;
 
-    console.info("ConnectionWebsocket::connect - connecting to: ", hoststr);
+    //console.info("ConnectionWebsocket::connect - connecting to: ", hoststr);
 
     this.connection = new WebSocket(hoststr);
 
     this.connection.onopen = function() {
         self.connected = true;
-        log.info("ConnectionWebsocket::connect - connection opened " + hoststr);
+        //console.info("ConnectionWebsocket::connect - connection opened ", hoststr);
         connectCallback(null, true);
     };
 
     this.connection.onclose = function() {
         self.connected = false;
-        log.info("ConnectionWebsocket::connect - disconnected " + hoststr);
+        //console.info("ConnectionWebsocket::connect - disconnected ",  hoststr);
         if (typeof self.closCallback == "function") {
             self.closeCallback(true);
-            self.closeCallback = null;
+            self.clear();
+            //self.closeCallback = null;
         }
     };
 
     this.connection.onerror = function(error) {
         self.connected = false;
-        log.info("ConnectionWebsocket::connect - connection error " + hoststr);
-        self.close();
+        console.info("ConnectionWebsocket::connect - connection error ", hoststr);
+        self.clear();
 
         if (typeof self.connectionCallback == "function") {
             //callback({"code": E_NO_CONNECTION_CODE, "message": E_NO_CONNECTION + host + ":" + port + ", protocol: " +  protocol}, null);
@@ -59,16 +60,14 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
     };
 
     this.connection.onmessage = function(e) {
-        if (e.data == 'playerDisconnected') {
-            log.info("Player has disconnected");
-            onPlayerDisconnect();
+        //console.debug("ConnectionWebsocket::connect - Recieved data---------", e);
+        if (e.data == '-1') {
+            //console.debug("Client disconnected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            self.closeCallback(true);
+            //self.clear();
         }
         else {
             onMessage(e.data);
-        }
-
-        if (!self.persistent) {
-            self.socket.close();
         }
     };
 };
@@ -78,20 +77,22 @@ ConnectionWebsocket.prototype.isOpen = function() {
 };
 
 ConnectionWebsocket.prototype.close = function() {
-    log.info("ConnectionWebsocket::close - closing connection");
+    console.info("ConnectionWebsocket::close - closing connection");
+    if (self.connection !== null) self.connection.close();
+    self.clear();
+};
+
+ConnectionWebsocket.prototype.clear = function() {
     this.closeEventCallback = null; // do this to disable redundant calls to this
-    if (this.connected === true) {
-        this.connected = false;
-        this.connection.close();
-    }
+    this.connected = false;
+    this.connection = null;
 };
 
 ConnectionWebsocket.prototype.sendMessage = function(message) {
     if (this.connected === true) {
-        //log.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
+        //console.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
         this.connection.send(JSON.stringify(message));
-    }
-    else {
-        log.warn("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
+    } else {
+        console.warn("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
     }
 };

@@ -40,7 +40,7 @@ nconf.defaults({
     com_benchmark_file: __dirname + '/log/benchmark.log',
 
     static_javascript: __dirname + '/../javascript',
-    static_data: __dirname + "/../javascript/renderind/data",
+    static_data: __dirname + "/../data",
 
     jade_views: __dirname + '/views',
     client_jade: 'controller.jade',

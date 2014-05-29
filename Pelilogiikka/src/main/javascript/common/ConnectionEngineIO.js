@@ -21,22 +21,24 @@ function ConnectionEngineIO(host, port, protocol, persistent) {
 ConnectionEngineIO.prototype.connect = function(connectCallback, closeCallback, onMessage) {
 	var that = this;
 	this.closeCallback = closeCallback;
+    if (onMessage === null || onMessage === undefined) console.error("no onMessage supplied");
 	this.onMessage = onMessage;
 
 	var hoststr = this.host + ":" + this.port; // + "/" + protocol;
 
-	console.info("ConnectionEngineIO Connecting to ", hoststr);
+	console.info("ConnectionEngineIO connecting to ", hoststr);
 
 	this.socket = eio.Socket(
 			{ host: this.host, port: this.port },
 			{ transports: ['websocket','polling'] });
 
 	this.socket.on('open', function()						{
+        console.info("ConnectionEngineIO connection opened");
 		connectCallback(null, true);
 	});
 
 	this.socket.on('close', function() {
-		log.info("Disconnected from " + hoststr);
+		log.info("ConnectionEngineIO disconnected from " + hoststr);
 
 		if(typeof that.closCallback == "function") {
 			that.closeCallback(true);

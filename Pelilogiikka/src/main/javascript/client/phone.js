@@ -117,6 +117,7 @@ client.phone = {
         var self = client.phone;
 
         if (!self.controllers[type]) {
+            console.error("trying to enable unregistered controller type ", type);
             throw new Error("trying to enable unregistered controller type: " + type);
         }
 

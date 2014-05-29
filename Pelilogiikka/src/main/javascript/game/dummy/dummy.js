@@ -39,7 +39,20 @@ dummy.game = {
     },
     connectToServer: function () {
         "use strict";
-        game.controllerHub.openHub(this.onPlayerJoined, this.onPlayerLeft, 100);
+        game.controllerHub.openHub(this.onPlayerJoined, this.onPlayerLeft,
+                {// playerFactory
+                    getPlayer: function (userID) {
+                        var player = new Player(userID);
+                        console.error("and here");
+                        return new Player(userID);
+                    },
+                    freePlayer: function (player) {
+                        player.crosshair = null;
+                        player = null;
+                        // remove from could do some object recycling, or something
+
+                    }
+                }, 100 /* maxPlayers */);
     }
 };
 
@@ -47,7 +60,6 @@ $(document).ready(function () {
     "use strict";
     dummy.game.start();
 });
-
 /*
  function animate (time) {
  update(time);
@@ -112,4 +124,3 @@ $(document).ready(function () {
  ctx.restore();
  }
  */
-
