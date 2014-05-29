@@ -33,14 +33,17 @@ module.exports = new function() {
 
         server.get('/jquery/jquery.min.js', function(request, response) {
             response.setHeader('content-type', 'text/javascript');
-            //response.sendfile(__dirnamse + "/lib/jquery.min.js");
             response.sendfile(__dirname + "/lib/jquery-2.1.1.min.js");
         });
 
         server.get('/jquery/jquery.mobile.min.js', function(request, response) {
             response.setHeader('content-type', 'text/javascript');
-            //response.sendfile(__dirnamse + "/lib/jquery.min.js");
             response.sendfile(__dirname + "/lib/jquery.mobile-1.4.2.min.js");
+        });
+
+        server.get('/Box2dWeb/Box2dWeb.min.js', function(request, response) {
+            response.setHeader('content-type', 'text/javascript');
+            response.sendfile(__dirname + "/lib/Box2dWeb-2.1.a.3.min.js");
         });
 
         // send client stuff to 

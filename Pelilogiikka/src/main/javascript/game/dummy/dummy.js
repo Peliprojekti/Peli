@@ -4,35 +4,18 @@
 /*global graphics2d: false*/
 /*jslint browser: true*/
 
-/*
-var MESSAGE_TIME = 10000;
-
-var canvas = null;
-var c_witdth = 0;
-var c_height = 0;
-
-var controllers = null;
-
-var players = [];
-var messages = [];
-var message_timer = [];
-var context = null;
-
-var updateables = [];
-*/
-
-var dummy = {
+var dummy = dummy || {};
+dummy.game = {
     start: function () {
         "use strict";
-        dummy.screen.load(document.getElementById("canvas"));
 
         //this.updateables.push(graphics2d.fpsDisplay.createFancy(canvas));
         //this.updateables.push(graphics2d.rpsDisplay.createFancy(canvas));
         //this.updateables.push(graphics2d.playerPerformance.create(canvas));
 
-        this.connectToServer();
+        //this.connectToServer();
 
-        //window.requestAnimationFrame(animate);
+        dummy.screen.start(document.getElementById("canvas"));
     },
     onPlayerJoined: function (player) {
         "use strict";
@@ -56,13 +39,13 @@ var dummy = {
     },
     connectToServer: function () {
         "use strict";
-        game.controllerHub.openHub(dummy.onPlayerJoined, dummy.onPlayerLeft, 100);
+        game.controllerHub.openHub(this.onPlayerJoined, this.onPlayerLeft, 100);
     }
 };
 
 $(document).ready(function () {
     "use strict";
-    dummy.start();
+    dummy.game.start();
 });
 
 /*
