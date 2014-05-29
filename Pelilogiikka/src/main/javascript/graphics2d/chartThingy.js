@@ -29,10 +29,13 @@ graphics2d.chartThingy = {
 graphics2d.chartThingy.ChartThingy.prototype.addValue = function (value) {
     "use strict";
     while (Math.abs(value * this.scale) > this.height) {
-        this.scale = this.scale * 0.8;
+        this.scale *= 0.8;
+        for (var i = 0; i < this.values.length; i++) {
+            this.values[i] *= 0.8;
+        }
     }
 
-    this.values.unshift(value);
+    this.values.unshift(value *= this.scale);
 
     if (this.values.length > this.width) {
         this.values.pop();
