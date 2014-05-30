@@ -73,9 +73,9 @@ game.controllerHub = {
 
                 openConnection();
 
-                self.onPlayerJoined(player, controller);
+                var playerData = self.onPlayerJoined(player, controller);
                 console.info("Player joined game with userID ", userID, "controllerType is ", self.controllerType);
-                return self.controllerType;
+                return [self.controllerType, playerData];
             });
 
             connection.connect(function(error, ok) {

@@ -37,6 +37,7 @@ dummy.game = {
         });
         self.screen.addController(controller);
         self.screen.addPlayer(player);
+        return crosshair.id;
     },
     onPlayerLeft: function (player, controller) {
         "use strict";

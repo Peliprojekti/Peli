@@ -87,7 +87,7 @@ client.phone = {
         var self = client.phone;
         client.coms.call('joinGame', [USERID], self,
             function(rpc_id, rpc_error, retval) {
-                self.loadController(retval);
+                self.loadController(retval[0], retval[1]);
             });
     },
 
@@ -113,7 +113,7 @@ client.phone = {
         }
     },
 
-    loadController: function(type) {
+    loadController: function(type, crosshair) {
         var self = client.phone;
 
         if (!controller.loadedTypes[type]) {
@@ -132,7 +132,8 @@ client.phone = {
             document.getElementById('container'),
             document.getElementById('canvas'),
             self,
-            client.coms);
+            client.coms,
+            crosshair);
     },
 
     getFingerCoords: function(id, event) {
