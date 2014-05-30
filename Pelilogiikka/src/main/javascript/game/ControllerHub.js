@@ -70,10 +70,9 @@ game.controllerHub = {
                     console.error("Error while loading controller", self.controllerType);
                 }
 
-
                 openConnection();
 
-                self.onPlayerJoined(player);
+                self.onPlayerJoined(player, controller);
                 console.info("Player joined game with userID ", userID, "controllerType is ", self.controllerType);
                 return self.controllerType;
             });
@@ -98,7 +97,7 @@ game.controllerHub = {
 
                         delete self.controllers[sequence];
                         delete self.players[sequence];
-                        self.onPlayerLeft(player);
+                        self.onPlayerLeft(player, controller);
                         // TODO recycle PeliRPC object
                         self.playerCount--;
 

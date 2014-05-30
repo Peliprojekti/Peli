@@ -19,14 +19,14 @@ html(lang='en')
       var CONTROLLER = '#{controller}';
 
 
-    script(type="text/javascript" src="/jquery/jquery.min.js")
+    script(type="text/javascript" src="/javascript/lib/jquery.js")
+    script(type="text/javascript" src="/javascript/lib/engine.io.js")
+    script(type="text/javascript" src="/javascript/lib/Box2dWeb.js")
 
     script(type="text/javascript" src="/javascript/common/log.js")
     script(type="text/javascript" src="/javascript/common/sendServerMessage.js")
-    script(type="text/javascript" src="/engine.io/engine.io.js")
 
     script(type="text/javascript" src="/javascript/game/Player.js")
-    script(type="text/javascript" src="/javascript/game/Controller.js")
     script(type="text/javascript" src="/javascript/game/ControllerHub.js")
     script(type="text/javascript" src="/javascript/game/controller/absPosition.js")
     script(type="text/javascript" src="/javascript/game/controller/swipe.js")
@@ -43,6 +43,9 @@ html(lang='en')
     script(type="text/javascript" src="/javascript/graphics2d/playerPerformance.js")
     script(type="text/javascript" src="/javascript/graphics2d/chartThingy.js")
 
+    script(type="text/javascript" src="/javascript/game/dummy/box2d.js")
+    script(type="text/javascript" src="/javascript/game/dummy/entities.js")
+    script(type="text/javascript" src="/javascript/game/dummy/gameScreen.js")
     script(type="text/javascript" src="/javascript/game/dummy/dummy.js")
 
     script(type="text/javascript" src="/javascript/rendering/math/Interpolator.js")

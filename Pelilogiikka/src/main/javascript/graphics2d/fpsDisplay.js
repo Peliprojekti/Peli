@@ -13,6 +13,7 @@ graphics2d.fpsDisplay = {
         this.x = x;
         this.y = y;
 
+        this.ctx = canvas.getContext("2d");
         this.fancy = fancy;
         this.frameCount = 0;
         this.lastTime = Date.now();
@@ -46,26 +47,26 @@ graphics2d.fpsDisplay.FpsDisplay.prototype.update = function(time) {
     }
 };
 
-graphics2d.fpsDisplay.FpsDisplay.prototype.draw = function(ctx) {
-    //console.debug("drawing fps");
-    ctx.save();
+graphics2d.fpsDisplay.FpsDisplay.prototype.draw = function() {
+    "use strict";
+    this.ctx.save();
 
     if (this.fancy) {
-        this.thingy.draw(ctx);
+        this.thingy.draw(this.ctx);
 
-        ctx.shadowColor = '#00FF00';
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.shadowBlur = 10;
+        this.ctx.shadowColor = '#00FF00';
+        this.ctx.shadowOffsetX = 0;
+        this.ctx.shadowOffsetY = 0;
+        this.ctx.shadowBlur = 10;
     }
 
-    ctx.font = 'bold 40pt Calibri';
-    ctx.fillStyle = '#30BB30';
-    ctx.strokeStyle = '#209020';
+    this.ctx.font = 'bold 40pt Calibri';
+    this.ctx.fillStyle = '#30BB30';
+    this.ctx.strokeStyle = '#209020';
 
-    ctx.textAlign = 'right';
-    ctx.fillText(this.fps, this.x, this.y);
-    ctx.strokeText(this.fps, this.x, this.y);
+    this.ctx.textAlign = 'right';
+    this.ctx.fillText(this.fps, this.x, this.y);
+    this.ctx.strokeText(this.fps, this.x, this.y);
 
-    ctx.restore();
+    this.ctx.restore();
 };

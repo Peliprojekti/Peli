@@ -27,7 +27,7 @@ client.phone = {
             document.getElementById('canvas')
         );
 
-        self.controllerView.add(new graphics2d.fpsDisplay.create(self.canvas));
+        self.controllerView.add(new graphics2d.fpsDisplay.create(document.getElementById("canvas")));
 
         // open connection to server
         log.info("trying to open connection");

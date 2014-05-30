@@ -1,25 +1,6 @@
-/*
-var playerFactory = {
-    players: {},
-
-    getPlayer: function(userID, controller) {
-        if (this.players[userID] === undefined || this.players[userID] === null) {
-            this.players[userID] = new Player(userID, controller);
-        }
-        return this.players[userID];
-    },
-
-    removePlayer: function(userID) {
-        // TODO
-    }
-};
-*/
-
 function Player(userID) {
     this.userID = userID;
-    //this.controller = controller;
 
-    //this.onUpdate = null;
     this.gameOn = false;
     this.bullets = [];
     this.x = 0.5;
@@ -29,13 +10,14 @@ function Player(userID) {
     this.messagesPerSecond = 0;
 }
 
-Player.prototype.setOnUpdate = function(func) {
-    this.onUpdate = func;
-};
-
 Player.prototype.getID = function() {
     return this.userID;
 };
+
+Player.prototype.setOnShoot = function(onShoot) {
+    "use strict";
+    this.onShoot = onShoot;
+}
 
 Player.prototype.setGameOn = function(gameOn) {
     log.error("is this even doing anything?");
@@ -46,7 +28,6 @@ Player.prototype.addResponseTime = function(time, msgs) {
     this.responseTime = time;
     this.messagesPerSecond = msgs;
 };
-
 
 Player.prototype.draw = function(ctx) {
     this.crosshair.draw(ctx, this.x, this.y);
@@ -69,8 +50,7 @@ Player.prototype.draw = function(ctx) {
 Player.prototype.update = function(time) {};
 
 Player.prototype.shoot = function() {
-    console.info("shooting", this.x, this.y);
-    dummyUnshift(graphics2d.bulletHole.create(canvas, this.x, this.y));
+    this.onShoot(this.x, this.y);
 };
 
 Player.prototype.setPosition = function(x, y) {
