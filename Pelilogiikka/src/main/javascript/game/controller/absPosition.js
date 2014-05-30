@@ -1,45 +1,41 @@
 var controller = controller || {};
 
-controller.absPosition = {
+controller.loadedTypes = controller.loadedTypes || [];
+controller.loadedTypes['absPosition'] = {
     freeControllers: [],
 
     getController: function(player, rpc) {
-        return (controller.absPosition.freeControllers.length > 0 ?
-                controller.absPosition.freeControllers.pop().reset(player, rpc) :
-                new controller.absPosition.AbsPosition(player, rpc)
+        return (this.freeControllers.length > 0 ?
+                this.freeControllers.pop().reset(player, rpc) :
+                new controller.AbsPosition(player, rpc)
                );
     },
 
     freeController: function(controller) {
         //controller.absPosition.freeControllers.push(controller);
-    },
-
-    AbsPosition: function(player, rpc) {
-        this.reset(player, rpc);
-    },
+    }
 };
 
+    controller.AbsPosition = function(player, rpc) {
+        this.reset(player, rpc);
+    };
 
-controller.absPosition.AbsPosition.prototype.clear = function() {
+controller.AbsPosition.prototype.clear = function() {
     this.player = null;
 };
 
-controller.absPosition.AbsPosition.prototype.reset = function(player, rpc) {
+controller.AbsPosition.prototype.reset = function(player, rpc) {
     this.player = player;
     rpc.exposeRpcMethod('position', this, this.position);
     rpc.exposeRpcMethod('shoot', this, this.shoot);
 };
 
-controller.absPosition.AbsPosition.prototype.update = function() {};
+controller.AbsPosition.prototype.update = function() {};
 
-controller.absPosition.AbsPosition.prototype.position = function(x,y) {
+controller.AbsPosition.prototype.position = function(x,y) {
     this.player.setPosition(x,y);
 };
 
-controller.absPosition.AbsPosition.prototype.shoot = function(x,y) {
+controller.AbsPosition.prototype.shoot = function(x,y) {
     this.player.shoot();
 };
-
-$(document).ready(function() {
-    game.controllerHub.registerController('absPosition', controller.absPosition);
-});

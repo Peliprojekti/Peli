@@ -1,8 +1,8 @@
 var controller = controller || {};
 
-controller.speedTest = function(container, canvas, phone) {
+controller.loadedTypes = controller.loadedTypes || [];
+controller.loadedTypes['speedTest'] = function(container, canvas, phone, coms) {
     var self = this;
-    var coms = client.coms;
     var autoFireInterval = 1;
     var reportInterval = 1000;
     var sequence = 0;
@@ -59,7 +59,7 @@ controller.speedTest = function(container, canvas, phone) {
 
         //console.info("speedTest calling playerPerformanceReport", msgSec, avgResponseTime);
 
-        client.coms.call('playerPerformanceReport', 
+        coms.call('playerPerformanceReport', 
                 [ partReport ], null, null);
 
     }, reportInterval);
@@ -72,7 +72,3 @@ controller.speedTest = function(container, canvas, phone) {
         canvas = null;
     };
 };
-
-$(document).ready(function() {
-    client.phone.registerController('speedTest', controller.speedTest);
-});

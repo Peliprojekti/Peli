@@ -23,11 +23,6 @@
             <version>2.1</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.cj.qunit.mojo</groupId>
-            <artifactId>qunit-maven-plugin</artifactId>
-            <version>2.0.8</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -55,23 +50,46 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
+                    <webDriverCapabilities>
+                        <capability>
+                            <name>phantomjs.binary.path</name>
+                            <value>${project.basedir}/phantomjs/phantomjs</value>
+                        </capability>
+                    </webDriverCapabilities>
                     <keepServerAlive>true</keepServerAlive>
                     <preloadSources>
 
+                        <source>${project.basedir}/src/main/javascript/lib/jquery.js</source>
                         <source>${project.basedir}/src/main/javascript/globalTestVariables.js</source>
-                    
+
                     </preloadSources>
                     <sourceIncludes>
-                        <include>jquery-2.1.0.min.js</include>
+                        <include>game/Player.js</include>
+                        <include>client/controller/*.js</include>
+                        <include>game/controller/*.js</include>
+                        <!--
+                        <include>client/controller/*.js</include>
+                        <include>client/controller/testiTesti.js</include>
+                        <include>lib/jquery.js</include>
+                        <include>lib/jquery.js</include>
+                        <include>client/phone.js</include>
+                        <include>common/PeliRPC.js</include>
+                        <include>rendering/*.js</include>
+                        <include>common/PeliRPC.js</include>
+                        <include>common/Peli*.js</include>
+                        <include>game/**/*.js</include>
+                        -->
+                            <!--
                         <include>*.js</include>
                         <include>common/ConnectionEngineIO.js</include>
                         <include>common/ConnectionWebsocket.js</include>
-                        <include>common/PeliRPC.js</include>
                         <include>common/SendServerMessage.js</include>
-                        <include>rendering/*.js</include>
                         <include>rendering/math/*.js</include>
+                        <include>rendering/*.js</include>
                         <include>rendering/misc/*.js</include>
                         <include>rendering/parser/*.js</include>
+                        -->
                         <!--    <include>graphics2d/*.js</include>  -->
                         <!--    <include>game/*.js</include>    -->
                         <!--    <include>controller/*.js</include>    -->
@@ -95,7 +113,7 @@
                     <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
                     <outputDir>target/saga_reports</outputDir>
                     <noInstrumentPatterns>
-                        <pattern>.*/spec/.*</pattern> <!-- Don't instrument specs -->
+                        <pattern>.*/spec/.*</pattern>
                     </noInstrumentPatterns>
                 </configuration>
             </plugin>

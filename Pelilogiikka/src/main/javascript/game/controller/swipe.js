@@ -1,27 +1,27 @@
 var controller = controller || {};
-controller.swipe = {
+
+controller.loadedTypes = controller.loadedTypes || [];
+controller.loadedTypes['swipe'] = {
     getController: function(player, rpc) {
-        return new controller.swipe.Swipe(player, rpc);
+        return new controller.Swipe(player, rpc);
     },
 
     freeController: function(controller) {
 
     },
 
-    Swipe: function(player, rpc) {
+};
+
+controller.Swipe = function(player, rpc) {
         this.reset(player, rpc);
     }
-};
-/*
- * This will be called on player change or controller style change
- */
 
-controller.swipe.Swipe.prototype.clear = function() {
+controller.Swipe.prototype.clear = function() {
     this.player = null;
 };
 
 
-controller.swipe.Swipe.prototype.reset = function(player, rpc) {
+controller.Swipe.prototype.reset = function(player, rpc) {
     rpc.exposeRpcMethod('swipe', this, this.pushSwipe);
 
     this.player = player;
@@ -38,7 +38,7 @@ controller.swipe.Swipe.prototype.reset = function(player, rpc) {
 };
 
 
-controller.swipe.Swipe.prototype.update = function(time) {
+controller.Swipe.prototype.update = function(time) {
     //console.debug("updating swipe");
 
     if (this.lastSwipe != null) {
@@ -61,14 +61,14 @@ controller.swipe.Swipe.prototype.update = function(time) {
     }
 };
 
-controller.swipe.Swipe.prototype.pushSwipe = function(x, y, sincePrevious) {
+controller.Swipe.prototype.pushSwipe = function(x, y, sincePrevious) {
     this.lastSwipe = [
         [x, y], sincePrevious
     ];
     //log.debug("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
 };
 
-controller.swipe.Swipe.prototype.setPosition = function(x, y) {
+controller.Swipe.prototype.setPosition = function(x, y) {
     if (!(x > 1 || x < 0)) {
         this.x = x;
     }
@@ -79,7 +79,7 @@ controller.swipe.Swipe.prototype.setPosition = function(x, y) {
     this.player.setPosition(this.x, this.y);
 };
 
-controller.swipe.Swipe.prototype.calcNewPosition = function(timestamp) {
+controller.Swipe.prototype.calcNewPosition = function(timestamp) {
     if (this.currentDirection.length() > 0.001) {
         if (this.time <= 1) {
             var addition = 0;
@@ -103,7 +103,7 @@ controller.swipe.Swipe.prototype.calcNewPosition = function(timestamp) {
     }
 };
 
-controller.swipe.Swipe.prototype.calcNewDirection = function(beginning, end) {
+controller.Swipe.prototype.calcNewDirection = function(beginning, end) {
     //log.debug("BEGINNING: " + beginning[0] + ", " + beginning[1] + " END: " + end[0] + ", " + end[1]);
     var startPos = new Vector2(beginning[0], beginning[1]);
     var endPos = new Vector2(end[0], end[1]);
@@ -131,8 +131,3 @@ controller.swipe.Swipe.prototype.calcNewDirection = function(beginning, end) {
 
     this.lastSwipe = null;
 };
-
-
-$(document).ready(function() {
-    game.controllerHub.registerController('swipe', controller.swipe);
-});

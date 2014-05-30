@@ -16,7 +16,7 @@ describe('the Player object', function() {
             //expect(testPlayer.currentDirection).toEqual(new Vector2(0, 0));
         });
         it('gets a player from the listing', function() {
-            var testPlayer = playerFactory.getPlayer(1);
+            var testPlayer = new Player(1);
             expect(testPlayer.getID()).toBe(1);
         });
     });
