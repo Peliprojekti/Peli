@@ -30,6 +30,9 @@ dummy.game = {
             crosshair = graphics2d.crosshair.createRandomColor(0.5, 0.5, 20);//Crosshair(0, 0, 20);
         console.info("New player connected ", player);
         player.setCrosshair(crosshair);
+        player.setOnShoot(function(x,y) {
+            self.screen.shoot(x,y);
+        });
         self.screen.addController(controller);
         self.screen.addPlayer(player);
     },

@@ -14,6 +14,11 @@ Player.prototype.getID = function() {
     return this.userID;
 };
 
+Player.prototype.setOnShoot = function(onShoot) {
+    "use strict";
+    this.onShoot = onShoot;
+}
+
 Player.prototype.setGameOn = function(gameOn) {
     log.error("is this even doing anything?");
     this.gameOn = gameOn;
@@ -45,8 +50,7 @@ Player.prototype.draw = function(ctx) {
 Player.prototype.update = function(time) {};
 
 Player.prototype.shoot = function() {
-    console.info("shooting", this.x, this.y);
-    dummyUnshift(graphics2d.bulletHole.create(canvas, this.x, this.y));
+    this.onShoot(this.x, this.y);
 };
 
 Player.prototype.setPosition = function(x, y) {

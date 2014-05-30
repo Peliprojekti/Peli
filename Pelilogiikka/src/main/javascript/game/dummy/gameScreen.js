@@ -109,5 +109,8 @@ dummy.screen = {
             "use strict";
             p.draw(self.context);
         });
+    },
+    shoot: function(x,y) {
+        this.background.push(graphics2d.bulletHole.create(this.canvas, x, y));
     }
 };
