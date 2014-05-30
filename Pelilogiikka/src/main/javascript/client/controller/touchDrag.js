@@ -1,6 +1,7 @@
 var controller = controller || {};
 
-controller.touchDrag = function(container, canvas, phone) {
+controller.loadedTypes = controller.loadedTypes || [];
+controller.loadedTypes['touchDrag'] = function(container, canvas, phone, coms) {
     function TouchDrag() {
         this.previousSendTime = 0;
         this.interval = 20;
@@ -20,7 +21,7 @@ controller.touchDrag = function(container, canvas, phone) {
         this.currentTime = new Date().getTime();
 
         if (this.currentTime - this.previousSendTime >= this.interval) {
-            client.coms.call('position', [x, y], null, null);
+            coms.call('position', [x, y], null, null);
 
             this.previousSendTime = this.currentTime;
 
@@ -53,7 +54,3 @@ controller.touchDrag = function(container, canvas, phone) {
         canvas.removeEventListener("touchmove", tdObj.doTouchMove);
     };
 };
-
-$(document).ready(function() {
-    client.phone.registerController('touchDrag', controller.touchDrag);
-});

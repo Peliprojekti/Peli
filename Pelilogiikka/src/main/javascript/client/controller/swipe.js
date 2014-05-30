@@ -1,6 +1,7 @@
 var controller = controller || {};
 
-controller.swipe = function(container, canvas, phone) {
+controller.loadedTypes = controller.loadedTypes || [];
+controller.loadedTypes['swipe'] = function(container, canvas, phone, coms) {
     
     function Swipe() {
         this.updatePeriod = 20; //time in ms
@@ -24,11 +25,11 @@ controller.swipe = function(container, canvas, phone) {
 
         if (this.sincePrevious === 0) {
             this.sincePrevious = new Date().getTime() - this.startTime;
-            client.coms.call('swipe', [coords[0], coords[1], 0], null, null);
+            coms.call('swipe', [coords[0], coords[1], 0], null, null);
             //log.debug("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", 0", true);
         } else {
             this.sincePrevious = new Date().getTime() - this.previousSendTime;
-            client.coms.call('swipe', [coords[0], coords[1], this.sincePrevious], null, null);
+            coms.call('swipe', [coords[0], coords[1], this.sincePrevious], null, null);
             //log.debug("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", " + this.sincePrevious, true);
         }
 
@@ -72,7 +73,3 @@ controller.swipe = function(container, canvas, phone) {
     var swipeObj = new Swipe();
     swipeObj.enable(canvas);
 };
-
-$(document).ready(function() {
-    client.phone.registerController('swipe', controller.swipe);
-});

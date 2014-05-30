@@ -1,7 +1,7 @@
 var controller = controller || {};
 
-controller.mouseMove = function(container, canvas, phone) {
-    var coms = client.coms;
+controller.loadedTypes = controller.loadedTypes || [];
+controller.loadedTypes['mouseMove'] = function(container, canvas, phone, coms) {
 
     // forward all events through coms
     var listener = function(event) {
@@ -29,7 +29,3 @@ controller.mouseMove = function(container, canvas, phone) {
         //TODO
     };
 };
-
-$(document).ready(function() {
-    client.phone.registerController('mouseMove', controller.mouseMove);
-});
