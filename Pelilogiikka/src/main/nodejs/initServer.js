@@ -26,24 +26,9 @@ module.exports = new function() {
         server.use("/javascript", express.static(nconf.get('static_javascript')));
         server.use("/data", express.static(nconf.get('static_data')));
 
-        server.get('/engine.io/engine.io.js', function(request, response) {
+        server.get('/javascript/lib/engine.io.js', function(request, response) {
             response.setHeader('content-type', 'text/javascript');
             response.sendfile(__dirname + "/node_modules/engine.io-client/engine.io.js");
-        });
-
-        server.get('/jquery/jquery.min.js', function(request, response) {
-            response.setHeader('content-type', 'text/javascript');
-            response.sendfile(__dirname + "/lib/jquery-2.1.1.min.js");
-        });
-
-        server.get('/jquery/jquery.mobile.min.js', function(request, response) {
-            response.setHeader('content-type', 'text/javascript');
-            response.sendfile(__dirname + "/lib/jquery.mobile-1.4.2.min.js");
-        });
-
-        server.get('/Box2dWeb/Box2dWeb.min.js', function(request, response) {
-            response.setHeader('content-type', 'text/javascript');
-            response.sendfile(__dirname + "/lib/Box2dWeb-2.1.a.3.min.js");
         });
 
         // send client stuff to 
