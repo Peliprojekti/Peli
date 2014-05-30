@@ -23,7 +23,7 @@ dummy.entities = {
         companionSquare: {
             density: 1,
             friction: 0.3,
-            restitution: 1
+            restitution: 0.99
         }
     },
     init: function (canvas) {

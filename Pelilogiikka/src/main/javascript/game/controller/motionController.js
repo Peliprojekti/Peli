@@ -12,12 +12,12 @@ controller.motionController = {
     },
 
     freeController: function(controller) {
-        controller.motionController.freeControllers.push(controller);
+        //controller.motionController.freeControllers.push(controller);
     },
 
     MotionController: function(player, rpc) {
         this.reset(player, rpc);
-    },
+    }
 };
 
 
@@ -27,6 +27,8 @@ controller.motionController.MotionController.prototype.clear = function() {
 
 controller.motionController.MotionController.prototype.reset = function(player, rpc) {
     this.player = player;
+    this.x = player.x;
+    this.y = player.y;
     rpc.exposeRpcMethod('orientation', this, this.orientation);
     rpc.exposeRpcMethod('motion', this, this.motion);
 };

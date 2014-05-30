@@ -27,6 +27,8 @@ Any value defined here will override the pom.xml file value but is only applicab
         <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.expand-tabs>true</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.expand-tabs>
         <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.text-limit-width>80</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.text-limit-width>
         <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.text-line-wrap>chars</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.text-line-wrap>
+        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.spaceBeforeMethodDeclParen>true</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.spaceBeforeMethodDeclParen>
+        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.continuationIndentSize>4</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.continuationIndentSize>
         <org-netbeans-modules-css-prep.sass_2e_compiler_2e_options/>
         <org-netbeans-modules-css-prep.less_2e_mappings>/less:/css</org-netbeans-modules-css-prep.less_2e_mappings>
         <org-netbeans-modules-css-prep.less_2e_enabled>false</org-netbeans-modules-css-prep.less_2e_enabled>
@@ -40,8 +42,6 @@ Any value defined here will override the pom.xml file value but is only applicab
         <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.expand-tabs>true</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.expand-tabs>
         <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.text-limit-width>80</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.text-limit-width>
         <org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.text-line-wrap>chars</org-netbeans-modules-editor-indent.text.x-json.CodeStyle.project.text-line-wrap>
-        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.spaceBeforeMethodDeclParen>true</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.spaceBeforeMethodDeclParen>
-        <org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.continuationIndentSize>4</org-netbeans-modules-editor-indent.text.javascript.CodeStyle.project.continuationIndentSize>
         <org-netbeans-modules-editor-indent.text.plain.CodeStyle.project.spaces-per-tab>4</org-netbeans-modules-editor-indent.text.plain.CodeStyle.project.spaces-per-tab>
         <org-netbeans-modules-editor-indent.text.plain.CodeStyle.project.tab-size>4</org-netbeans-modules-editor-indent.text.plain.CodeStyle.project.tab-size>
         <org-netbeans-modules-editor-indent.text.plain.CodeStyle.project.indent-shift-width>4</org-netbeans-modules-editor-indent.text.plain.CodeStyle.project.indent-shift-width>

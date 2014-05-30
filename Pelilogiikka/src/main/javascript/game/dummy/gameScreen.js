@@ -25,6 +25,8 @@ dummy.screen = {
     box2d: dummy.box2d,
     entities: dummy.entities,
     background: [],
+    players: [],
+    controllers: [],
     start: function (canvas) {
         "use strict";
         this.canvas = canvas;
@@ -47,18 +49,43 @@ dummy.screen = {
 
         window.requestAnimationFrame(this.animate);
     },
+    addController: function (controller) {
+        "use strict";
+        this.controllers.push(controller);
+    },
+    removeController: function (controller) {
+        "use strict";
+        this.controllers = this.controllers.filter(function (c) {
+            return (c === controller ? false : true);
+        });
+    },
+    addPlayer: function (player) {
+        "use strict";
+        this.players.push(player);
+    },
+    removePlayer: function (player) {
+        "use strict";
+        this.players = this.players.filter(function (p) {
+            return (p === player ? false : true);
+        });
+    },
     animate: function (time) {
         "use strict";
         var self = dummy.screen;
         self.clear();
         self.drawBackground(time);
 
+        self.updateControllers(time);
         self.box2d.update(time);
+
         self.entities.drawAll();
+
+        self.drawPlayers(self.context);
 
         window.requestAnimationFrame(self.animate);
     },
-    clear: function() {
+    clear: function () {
+        "use strict";
         this.context.fillStyle = 'white';
         this.context.fillRect(0, 0, this.width, this.height);
     },
@@ -68,5 +95,19 @@ dummy.screen = {
             this.background[i].update(time);
             this.background[i].draw();
         }
+    },
+    updateControllers: function (time) {
+        "use strict";
+        this.controllers.forEach(function (c) {
+            c.update(time);
+        });
+    },
+    drawPlayers: function () {
+        "use strict";
+        var self = this;
+        this.players.forEach(function (p) {
+            "use strict";
+            p.draw(self.context);
+        });
     }
 };
