@@ -1,6 +1,6 @@
 function CrosshairImg(id) {
-    this.width = 128;
-    this.height = 128;
+    this.width = 64;
+    this.height = 64;
     this.img = new Image();
     this.img.src = "/data/crosshairs/crosshair" + id + ".png";
     this.counter = 0;
