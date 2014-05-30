@@ -38,6 +38,7 @@
                 </configuration>
             </plugin>
 
+            <!--
             <plugin>
                 <groupId>com.github.klieber</groupId>
                 <artifactId>phantomjs-maven-plugin</artifactId>
@@ -53,6 +54,7 @@
                     <version>1.9.2</version>
                 </configuration>
             </plugin>
+            -->
 
             <plugin>
                 <groupId>com.github.searls</groupId>
@@ -70,7 +72,7 @@
                     <webDriverCapabilities>
                         <capability>
                             <name>phantomjs.binary.path</name>
-                            <value>${phantomjs.binary}</value>
+                            <value>${project.basedir}/phantomjs/phantomjs</value>
                         </capability>
                     </webDriverCapabilities>
                     <keepServerAlive>true</keepServerAlive>
