@@ -92,6 +92,7 @@
                         <include>client/controller/ThumbStick.js</include>
                         <include>client/controller/swipe.js</include>
                         <include>client/controller/touchDrag.js</include>
+                        <include>game/controller/*.js</include>
                         <!--
                         <include>client/controller/*.js</include>
                         <include>client/controller/testiTesti.js</include>

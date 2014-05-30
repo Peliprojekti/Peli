@@ -18,11 +18,13 @@ game.controllerHub = {
     players: {},
     controllers: {},
 
-    loadedControllerTypes: {},
+    //loadedControllerTypes: {},
 
+/*
     registerController: function(name, controllerObject) {
         game.controllerHub.loadedControllerTypes[name] = controllerObject;
     },
+    */
 
     update: function(time) {
         var self = game.controllerHub;
@@ -37,9 +39,8 @@ game.controllerHub = {
         if (onPlayerLeft === undefined) console.error("onPlayerLeft undefined");
         if (playerFactory === undefined) console.error("playerFactory undefined");
         if (!(playerFactory.getPlayer && playerFactory.freePlayer)) console.error("malformed playerFactory");
-        if (!self.loadedControllerTypes[self.controllerType]) {
-            console.error("unregistered controller type: ", self.controllerType);
-        }
+        if (!controller.loadedTypes[self.controllerType]) console.error("Controller not loaded", self.controllerType);
+        self.controllerLoader = controller.loadedTypes[self.controllerType];
 
         self.onPlayerJoined = onPlayerJoined;
         self.onPlayerLeft = onPlayerLeft;
@@ -61,7 +62,7 @@ game.controllerHub = {
             rpc.exposeRpcMethod('joinGame', this, function(userID) {
                 var player = self.playerFactory.getPlayer(userID);
                 try {
-                    var controller = self.loadedControllerTypes[self.controllerType].getController(player, rpc);
+                    var controller = self.controllerLoader.getController(player, rpc);
                     self.playerCount++;
                     self.freeConnections--;
                     self.controllers[sequence] = controller;
@@ -109,6 +110,5 @@ game.controllerHub = {
             );
             return true;
         }
-    },
-
+    }
 };

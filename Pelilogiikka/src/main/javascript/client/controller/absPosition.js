@@ -7,7 +7,7 @@ controller.loadedTypes['absPosition'] = function(container, canvas, phone, coms)
     var touchDisabler = controller.loadedTypes['touchDrag'](container, canvas, phone, coms);
 
     return function() {
-        mousdeDisabler();
+        mouseDisabler();
         touchDisabler();
     };
 };
