@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -68,32 +67,21 @@
                         <include>game/Player.js</include>
                         <include>client/controller/*.js</include>
                         <include>game/controller/*.js</include>
-                        <!--
-                        <include>client/controller/*.js</include>
-                        <include>client/controller/testiTesti.js</include>
-                        <include>lib/jquery.js</include>
-                        <include>lib/jquery.js</include>
+                        <include>game/graphics2d/*.js</include>
+                        <include>common/*.js</include>
+                        <include>game/*.js</include>
+                        <include>rendering/*.js</include>
+                        <include>rendering/**/*.js</include>
+                        <!-- nää ei vielä skulaa, täytyy tunettaa...
+                        <include>game/dummy/dummy.js</include>
                         <include>client/phone.js</include>
-                        <include>common/PeliRPC.js</include>
-                        <include>rendering/*.js</include>
-                        <include>common/PeliRPC.js</include>
-                        <include>common/Peli*.js</include>
-                        <include>game/**/*.js</include>
                         -->
-                            <!--
-                        <include>*.js</include>
-                        <include>common/ConnectionEngineIO.js</include>
+                        <include>client/coms.js</include>
+                        <include>client/controllerView.js</include>
+                        <include>game/dummy/box2d.js</include>
+                        <include>game/dummy/entities.js</include>
+                        <include>game/dummy/gameScreen.js</include>
                         <include>common/ConnectionWebsocket.js</include>
-                        <include>common/SendServerMessage.js</include>
-                        <include>rendering/math/*.js</include>
-                        <include>rendering/*.js</include>
-                        <include>rendering/misc/*.js</include>
-                        <include>rendering/parser/*.js</include>
-                        -->
-                        <!--    <include>graphics2d/*.js</include>  -->
-                        <!--    <include>game/*.js</include>    -->
-                        <!--    <include>controller/*.js</include>    -->
-                        <!--    <include>client/phone.js</include>  -->
                     </sourceIncludes>
                 </configuration>
             </plugin>
