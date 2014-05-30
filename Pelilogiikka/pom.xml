@@ -120,7 +120,6 @@
                 </configuration>
             </plugin>
 
-            <!--
             <plugin>
                 <groupId>com.github.timurstrekalov</groupId>
                 <artifactId>saga-maven-plugin</artifactId>
@@ -140,7 +139,6 @@
                     </noInstrumentPatterns>
                 </configuration>
             </plugin>
-            -->
 
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
