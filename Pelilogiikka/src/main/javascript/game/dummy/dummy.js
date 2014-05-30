@@ -7,6 +7,7 @@
 var dummy = dummy || {};
 dummy.game = {
     players: [],
+    crosshairManager: new CrosshairManager(0),
     screen: null,
     start: function () {
         "use strict";
@@ -14,6 +15,7 @@ dummy.game = {
             container = document.getElementById("container");
         canvas.width = container.offsetWidth;
         canvas.height = container.offsetHeight;
+
 
         //this.updateables.push(graphics2d.fpsDisplay.createFancy(canvas));
         //this.updateables.push(graphics2d.rpsDisplay.createFancy(canvas));
@@ -27,11 +29,11 @@ dummy.game = {
     onPlayerJoined: function (player, controller) {
         "use strict";
         var self = dummy.game,
-            crosshair = graphics2d.crosshair.createRandomColor(0.5, 0.5, 20);//Crosshair(0, 0, 20);
+            crosshair = dummy.game.crosshairManager.requestCrosshair(player);
         console.info("New player connected ", player);
         player.setCrosshair(crosshair);
-        player.setOnShoot(function(x,y) {
-            self.screen.shoot(x,y);
+        player.setOnShoot(function (x, y) {
+            self.screen.shoot(x, y);
         });
         self.screen.addController(controller);
         self.screen.addPlayer(player);
@@ -41,24 +43,28 @@ dummy.game = {
         var self = dummy.game;
         console.info("Player disconnected ", player);
         self.screen.removeController(controller);
+        if (typeof player.crossh.id !== 'undefined') {
+            dummy.game.crosshairManager.freeCrosshair(player.crossh.id);
+        }
         self.screen.removePlayer(player);
+
     },
     connectToServer: function () {
         "use strict";
         game.controllerHub.openHub(this.onPlayerJoined, this.onPlayerLeft,
-                {// playerFactory
-                    getPlayer: function (userID) {
-                        var player = new Player(userID);
-                        console.error("and here");
-                        return new Player(userID);
-                    },
-                    freePlayer: function (player) {
-                        player.crosshair = null;
-                        player = null;
-                        // remove from could do some object recycling, or something
+            {// playerFactory
+                getPlayer: function (userID) {
+                    var player = new Player(userID);
+                    console.error("and here");
+                    return new Player(userID);
+                },
+                freePlayer: function (player) {
+                    player.crosshair = null;
+                    player = null;
+                    // remove from could do some object recycling, or something
 
-                    }
-                }, 100 /* maxPlayers */);
+                }
+            }, 100 /* maxPlayers */);
     }
 };
 

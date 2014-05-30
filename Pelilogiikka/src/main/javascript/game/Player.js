@@ -1,10 +1,10 @@
 function Player(userID) {
     this.userID = userID;
-
     this.gameOn = false;
     this.bullets = [];
     this.x = 0.5;
     this.y = 0.5;
+    this.crossh = null;
 
     this.responseTime = null;
     this.messagesPerSecond = 0;
@@ -30,7 +30,7 @@ Player.prototype.addResponseTime = function(time, msgs) {
 };
 
 Player.prototype.draw = function(ctx) {
-    this.crosshair.draw(ctx, this.x, this.y);
+    this.crossh.draw(ctx, this.x, this.y);
 
     this.bullets.forEach(function(b) {
         b.draw(ctx);
@@ -62,5 +62,5 @@ Player.prototype.setPosition = function(x, y) {
 };
 
 Player.prototype.setCrosshair = function(crosshair) {
-    this.crosshair = crosshair;
+    this.crossh = crosshair;
 };
