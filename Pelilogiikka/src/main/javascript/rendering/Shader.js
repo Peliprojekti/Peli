@@ -64,8 +64,11 @@
             alert(" NULL script shader! - ABORT - ");
             return null;
         }
+        
+        
+        alert( shaderText );
 
-        var shader = null;
+        var shader;
         
         if( type == "VERTEX_SHADER" ) gl.createShader(gl.VERTEX_SHADER);
         else
@@ -76,7 +79,7 @@
 
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) 
         {
-            alert( gl.getShaderInfoLog(shader) );
+            alert( gl.getShaderInfoLog("ERROR " + shader) );
             return null;
         }
 
@@ -107,11 +110,9 @@
     function Shader( gl, vs_Program, ps_Program, features, template )
     {
         this.features       = features;
-        
        
 	var fragmentShader  = this.getShader( gl, ps_Program      );	
 	var vertexShader    = this.getShader( gl, vs_Program      );
-        
         
         this.shaderProgram  = gl.createProgram();
 	

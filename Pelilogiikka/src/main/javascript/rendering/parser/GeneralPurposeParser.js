@@ -289,8 +289,8 @@
                 
               var shdTemplate = new ShaderTemplate( fInit, fBind ); 
                 
-              var vertex_Shader = "vertex_Shader";//1.VERTEX_SHADER;
-              var pixel_Shader  = "pixel_Shader";//1.PIXEL_SHADER;
+              var vertex_Shader = "vertex_Shader"; //1.VERTEX_SHADER;
+              var pixel_Shader  = "pixel_Shader"; //1.PIXEL_SHADER;
                
                 
             return new Shader( renderer.gl  , vertex_Shader, pixel_Shader , features, shdTemplate  );                // Dummy shaders as well
