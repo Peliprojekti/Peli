@@ -23,11 +23,6 @@
             <version>2.1</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.cj.qunit.mojo</groupId>
-            <artifactId>qunit-maven-plugin</artifactId>
-            <version>2.0.8</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -44,6 +39,22 @@
             </plugin>
 
             <plugin>
+                <groupId>com.github.klieber</groupId>
+                <artifactId>phantomjs-maven-plugin</artifactId>
+                <version>0.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <version>1.9.2</version>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>com.github.searls</groupId>
                 <artifactId>jasmine-maven-plugin</artifactId>
                 <version>1.3.1.4</version>
@@ -55,23 +66,49 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
+                    <webDriverCapabilities>
+                        <capability>
+                            <name>phantomjs.binary.path</name>
+                            <value>${phantomjs.binary}</value>
+                        </capability>
+                    </webDriverCapabilities>
                     <keepServerAlive>true</keepServerAlive>
                     <preloadSources>
 
+                        <!--
+                        <source>${project.basedir}/src/main/javascript/lib/jasmine-jquery.js</source>
+                        -->
+                        <source>${project.basedir}/src/main/javascript/lib/jquery.js</source>
                         <source>${project.basedir}/src/main/javascript/globalTestVariables.js</source>
-                    
+
                     </preloadSources>
                     <sourceIncludes>
-                        <include>jquery-2.1.0.min.js</include>
+                        <include>game/Player.js</include>
+                        <include>client/controller/mouseMove.js</include>
+                        <include>client/controller/absPosition.js</include>
+                        <!--
+                        <include>client/controller/*.js</include>
+                        <include>client/controller/testiTesti.js</include>
+                        <include>lib/jquery.js</include>
+                        <include>lib/jquery.js</include>
+                        <include>client/phone.js</include>
+                        <include>common/PeliRPC.js</include>
+                        <include>rendering/*.js</include>
+                        <include>common/PeliRPC.js</include>
+                        <include>common/Peli*.js</include>
+                        <include>game/**/*.js</include>
+                        -->
+                            <!--
                         <include>*.js</include>
                         <include>common/ConnectionEngineIO.js</include>
                         <include>common/ConnectionWebsocket.js</include>
-                        <include>common/PeliRPC.js</include>
                         <include>common/SendServerMessage.js</include>
-                        <include>rendering/*.js</include>
                         <include>rendering/math/*.js</include>
+                        <include>rendering/*.js</include>
                         <include>rendering/misc/*.js</include>
                         <include>rendering/parser/*.js</include>
+                        -->
                         <!--    <include>graphics2d/*.js</include>  -->
                         <!--    <include>game/*.js</include>    -->
                         <!--    <include>controller/*.js</include>    -->
@@ -80,6 +117,7 @@
                 </configuration>
             </plugin>
 
+            <!--
             <plugin>
                 <groupId>com.github.timurstrekalov</groupId>
                 <artifactId>saga-maven-plugin</artifactId>
@@ -95,10 +133,11 @@
                     <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
                     <outputDir>target/saga_reports</outputDir>
                     <noInstrumentPatterns>
-                        <pattern>.*/spec/.*</pattern> <!-- Don't instrument specs -->
+                        <pattern>.*/spec/.*</pattern>
                     </noInstrumentPatterns>
                 </configuration>
             </plugin>
+            -->
 
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>

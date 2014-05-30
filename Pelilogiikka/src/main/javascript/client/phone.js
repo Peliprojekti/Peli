@@ -116,22 +116,23 @@ client.phone = {
     loadController: function(type) {
         var self = client.phone;
 
-        if (!self.controllers[type]) {
+        if (!controller.loadedTypes[type]) {
             console.error("trying to enable unregistered controller type ", type);
             throw new Error("trying to enable unregistered controller type: " + type);
         }
 
-        self.controllerView.add(self.controllers[type]);
+        self.controllerView.add(controller.loadedTypes[type]);
 
         if (typeof self.controllerDisabler === 'function') {
             self.controllerDisabler();
             self.controllerDisabler = null;
         }
 
-        self.controllerDisabler = self.controllers[type](
+        self.controllerDisabler = controller.loadedTypes[type](
             document.getElementById('container'),
             document.getElementById('canvas'),
-            self);
+            self,
+            client.coms);
     },
 
     getFingerCoords: function(id, event) {
