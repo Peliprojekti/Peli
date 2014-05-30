@@ -38,24 +38,6 @@
                 </configuration>
             </plugin>
 
-            <!--
-            <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <version>0.4</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>1.9.2</version>
-                </configuration>
-            </plugin>
-            -->
-
             <plugin>
                 <groupId>com.github.searls</groupId>
                 <artifactId>jasmine-maven-plugin</artifactId>
@@ -78,20 +60,13 @@
                     <keepServerAlive>true</keepServerAlive>
                     <preloadSources>
 
-                        <!--
-                        <source>${project.basedir}/src/main/javascript/lib/jasmine-jquery.js</source>
-                        -->
                         <source>${project.basedir}/src/main/javascript/lib/jquery.js</source>
                         <source>${project.basedir}/src/main/javascript/globalTestVariables.js</source>
 
                     </preloadSources>
                     <sourceIncludes>
                         <include>game/Player.js</include>
-                        <include>client/controller/mouseMove.js</include>
-                        <include>client/controller/absPosition.js</include>
-                        <include>client/controller/ThumbStick.js</include>
-                        <include>client/controller/swipe.js</include>
-                        <include>client/controller/touchDrag.js</include>
+                        <include>client/controller/*.js</include>
                         <include>game/controller/*.js</include>
                         <!--
                         <include>client/controller/*.js</include>

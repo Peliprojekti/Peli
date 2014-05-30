@@ -1,6 +1,6 @@
 var controller = controller || {};
 
-controller.motionController = function(container, canvas, phone) {
+controller.motionController = function(container, canvas, phone, coms) {
 	function MotionController() {
 		//this.coms = null;
 	}
@@ -20,7 +20,7 @@ controller.motionController = function(container, canvas, phone) {
 
 		//  send data to server
                 sendServerMessage("sending");
-		client.coms.call('orientation', [tiltLR, tiltFB, dir], null, null);
+		coms.call('orientation', [tiltLR, tiltFB, dir], null, null);
                 sendserverMessage("done sending");
 
 		if (DEBUG) {
@@ -98,9 +98,4 @@ controller.motionController = function(container, canvas, phone) {
     return function() {
 	// TODO Tähän funktio joka disabloi
     };
-     
 };
-
-$(document).ready(function() {
-    client.phone.registerController('motionController', controller.motionController);
-});
