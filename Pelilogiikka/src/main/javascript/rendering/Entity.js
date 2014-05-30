@@ -10,6 +10,11 @@
     }
     
    
+   
+   
+   
+   
+   
     Entity.prototype.set_Position = function( point )
     {
         this.orientation.set_Position( point );
