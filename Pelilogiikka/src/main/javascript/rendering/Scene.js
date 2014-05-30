@@ -4,10 +4,9 @@
 
     function Scene( renderer , assetManager, path )
     {
-        var fullPath = "data/"+path+"/"+path+".irr";
-        
-        this.name              = path;
-        this.renderer          = renderer;  // Throw a wild guess what this is...
+        var fullPath               = "data/"+path+"/"+path+".irr";
+        this.name                  = path;
+        this.renderer              = renderer;  // Throw a wild guess what this is...
        
         if (typeof path == 'undefined')          // Create an empty scene
         {
@@ -18,6 +17,8 @@
             this.entries_Lights    = [];        // Lights treated as ... durr? lights?
             this.entries_Actors    = [];        // Animated things that are treated as actors.
             this.entries_Particles = [];        // Active particles living in the scene.
+        
+        console.info("Empty scene created - No path paremeter delivered");
         }
         else
             {

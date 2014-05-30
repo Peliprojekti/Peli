@@ -7,7 +7,7 @@
 
 
 <script type="text/javascript" src="External/webglutils.js"    ></script>
-<script type="text/javascript" src="glMatrix.js"               ></script>
+<script type="text/javascript" src="External/glMatrix.js"      ></script>
 
 
 <script type="text/javascript" src="Renderer.js"               ></script>
@@ -41,14 +41,6 @@
 
 <script type="text/javascript" src="Assetmanager.js"           ></script>
 <script type="text/javascript" src="testCube.js"               ></script>
-
-<script type="text/javascript" src="Refactored/Shaderutils2.js"                 ></script>
-<script type="text/javascript" src="Refactored/Shader2.js"                 ></script>
-
-
-
-
-<script src="data/Test_Vertexshader.js" type="VERTEX_SHADER"></script>
 
 
 
@@ -127,13 +119,11 @@
     uniform vec3   lAtten[32];   // Constant term, Linear term, Quadratic term
     uniform  int     lightCnt;
 
-    uniform vec3  eyePosition;   // This is where the camera is located
-
+    uniform vec3           eyePosition;   // This is where the camera is located
 
     uniform sampler2D       texSampler;
     uniform sampler2D    normalSampler;
     uniform sampler2D      dispSampler;
-    
     
     varying   vec4         fragmentPos;       // Contains the fragment world position in VIEW_SPACE
     varying   vec2          fragmentUV;
@@ -141,29 +131,11 @@
     varying   vec3     surfaceBinormal;
     varying   vec3      surfaceTangent;
     
-    
     void main(void) 
     {
           vec2 texCoords      = vec2(fragmentUV.s, fragmentUV.t);
           vec3 fragPos        = vec3(fragmentPos);
-        /*  
-        vec3 eyeToPixel     = fragPos - eyePosition;
-             eyeToPixel       = normalize( eyeToPixel );
-         // Get the displacement here
    
-              eyeToPixel      = eyeToPixel.x * surfaceTangent + eyeToPixel.y * surfaceBinormal + eyeToPixel.z * surfaceNormal;
-              eyeToPixel.x   /= eyeToPixel.z;
-              eyeToPixel.y   /= eyeToPixel.z;
-              
-              
-              // Now we have the vector, lets multiply it with weights
-              float weight    = 10.0;
-              vec2   shift    = vec2( eyeToPixel.x, eyeToPixel.y) * texture2D( dispSampler, vec2(texCoords.x, texCoords.y*-1.0) ).r * weight;
-                     shift   *= 1.0/512.0;
-             //    texCoords     += shift;
-          */    
-         // Grab the per fragment normal from the associated map
-              // Not working properly. Disable for now
           vec4 fragVector     = texture2D( normalSampler, texCoords );    // This should hopefully contain the normal [x,y,z,0] in its own space
                fragVector    *= 2.0;
                fragVector    -= vec4( 1.0,1.0,1.0,0.0);                   // Convert the encoded normal [0,1] to [-1,-1]
@@ -366,20 +338,16 @@
     }
        
     
-    
     function resize( canvas )
     {
-        // 1080p
-        canvas.width  = 1920;//window.outerWidth;
-        canvas.height = 1080;//window.outerHeight;
+        canvas.width  = 800;//1920;//window.outerWidth;
+        canvas.height = 600;//1080;//window.outerHeight;
     }
 
     
-    
-    
  
     function Start() 
-    {
+    { 
        var canvas          = document.getElementById("Canvas");
        
        resize( canvas );
@@ -391,16 +359,18 @@
        
        register_Inputs();      // Erillinen luokka tälle!
     
-       myCamera            = new   Camera( renderer, 0.1, 1000, 65        );
+       myCamera            = new Camera( renderer, 0.1, 1000, 65     );
        
-       myCamera.set_Position ( [-2.750824,0.444516,-24.011581]  );
-       myScene.insert        ( myCamera      , "CAM"            );
-       myScene.insert        ( haxLight      , "LIGHT"          );
-       renderer.set_BgrColor ( [0.0,0.4,0.7,1.0]                );
-       
-       
-    tick();   
+       myCamera.set_Position ( [-2.750824,0.444516,-24.011581]       );
+       myScene.insert        ( myCamera      , "CAM"                 );
+       myScene.insert        ( haxLight      , "LIGHT"               );
+       renderer.set_BgrColor ( [0.0,0.4,0.7,1.0]                     );
+    
+    tick();
     }
+
+
+    
 
     
 </script>

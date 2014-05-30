@@ -1,14 +1,4 @@
 
-// Reminder to self:
-/*
-Uniforms are sent to both vertex shaders and fragment shaders and contain values that stay the same across the entire frame being rendered.
-
-Attributes are values that are applied to individual vertices. Attributes are only available to the vertex shader. 1:1 mapping to vertice list
-
-Varyings are variables declared in the vertex shader that we want to share with the fragment shader. 
-To do this we make sure we declare a varying variable of the same type and name in both the vertex shader and the fragment shader.
-*/
-
 
     function ShaderFeatures( mappings )    
     {
@@ -67,6 +57,11 @@ To do this we make sure we declare a varying variable of the same type and name 
 
     
     
+    
+
+
+
+
 
    
 
@@ -89,7 +84,12 @@ To do this we make sure we declare a varying variable of the same type and name 
         
         gl.useProgram( this.shaderProgram );        // Make the shader active.
 
-
+            
+            
+            
+            
+            
+        
         this.shaderProgram.vertexPositionAttribute   = gl.getAttribLocation( this.shaderProgram, "vertexPos");
                                                        gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
 
@@ -104,20 +104,19 @@ To do this we make sure we declare a varying variable of the same type and name 
                                                        gl.enableVertexAttribArray(this.shaderProgram.vertexTangentAttribute);                
    
         
+        this.shaderProgram.textureCoordAttribute     = gl.getAttribLocation(this.shaderProgram,  "vertexUV");
+                                                       gl.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
         
-        this.shaderProgram.textureCoordAttribute   = gl.getAttribLocation(this.shaderProgram,  "vertexUV");
-                                                     gl.enableVertexAttribArray(this.shaderProgram.textureCoordAttribute);
-        
-        this.shaderProgram.samplerUniform          = gl.getUniformLocation(this.shaderProgram, "texSampler" );
-        
+        this.shaderProgram.samplerUniform            = gl.getUniformLocation(this.shaderProgram, "texSampler" );
         
         
         
-        this.shaderProgram.pMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "projMatrix"     );
+        
+        this.shaderProgram.pMatrixUniform            = gl.getUniformLocation(this.shaderProgram, "projMatrix"     );
 	
-        this.shaderProgram.mvMatrixUniform         = gl.getUniformLocation(this.shaderProgram, "worldViewMatrix");
+        this.shaderProgram.mvMatrixUniform           = gl.getUniformLocation(this.shaderProgram, "worldViewMatrix");
         
-        this.shaderProgram.mMatrixUniform          = gl.getUniformLocation(this.shaderProgram, "worldMatrix"    );
+        this.shaderProgram.mMatrixUniform            = gl.getUniformLocation(this.shaderProgram, "worldMatrix"    );
         
     
     
