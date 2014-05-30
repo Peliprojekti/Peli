@@ -195,7 +195,7 @@
             }
             
             
-            var shaderPath = "DEFAULT_SHADER";                                                      // This is a dummy "path" for now
+            var shaderPath = "Shader1";                                                      // This is a dummy "path" for now
             
             var shader     = assetManager.get( shaderPath , function( renderer , shaderPath )
             {
@@ -287,13 +287,13 @@
               
               
                 
-              var shdTemplate = new ShaderTemplate( fInit, fBind ); 
+            var shdTemplate = new ShaderTemplate( fInit, fBind ); 
                 
-              var vertex_Shader = "vertex_Shader"; //1.VERTEX_SHADER;
-              var pixel_Shader  = "pixel_Shader"; //1.PIXEL_SHADER;
+             // var vertex_Shader = Shader1.VERTEX_SHADER;
+             // var pixel_Shader  = Shader1.PIXEL_SHADER;
                
-                
-            return new Shader( renderer.gl  , vertex_Shader, pixel_Shader , features, shdTemplate  );                // Dummy shaders as well
+            return Shader1.load( renderer.gl, shaderPath, features, shdTemplate );  
+            //return new Shader( renderer.gl  , vertex_Shader, pixel_Shader , features, shdTemplate  );                // Dummy shaders as well
             });
                     
          // Now we have... A set of meshes, a set of textures and in the future, a set of shaders. For now one will have to do.

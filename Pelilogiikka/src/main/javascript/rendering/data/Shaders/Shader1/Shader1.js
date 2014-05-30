@@ -205,10 +205,14 @@ PIXEL_SHADER  : "                                                               
 
 
 
-    load : function() 
+    load : function( gl, shaderName, features, template ) 
     {   
-     console.info( Shader1.VERTEX_SHADER );
+         var path = "data/Shaders/"+shaderName;
+        
+         var p1 = new Parser(path+"/VertexShader.txt"); 
+         var p2 = new Parser(path+"/PixelShader.txt" ); 
    
+    return new Shader( gl, p1.the_Document.rawData, p2.the_Document.rawData, features, template )
     }
 
     
