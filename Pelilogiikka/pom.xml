@@ -87,6 +87,9 @@
                         <include>game/Player.js</include>
                         <include>client/controller/mouseMove.js</include>
                         <include>client/controller/absPosition.js</include>
+                        <include>client/controller/ThumbStick.js</include>
+                        <include>client/controller/swipe.js</include>
+                        <include>client/controller/touchDrag.js</include>
                         <!--
                         <include>client/controller/*.js</include>
                         <include>client/controller/testiTesti.js</include>

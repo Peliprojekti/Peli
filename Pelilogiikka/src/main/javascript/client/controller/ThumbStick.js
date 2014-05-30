@@ -1,15 +1,12 @@
 var controller = controller || {};
 
-//controller.thumbStick.sound = new Audio("/data/gun.ogg");
-
-controller.thumbStick = function(container, canvas, phone) {
+controller.loadedTypes = controller.loadedTypes || [];
+controller.loadedTypes['ThumbStick'] = function(container, canvas, phone, coms) {
     var sounds = [] ;;
 
     for (var i = 0; i < 20; i++) {
         sounds[i] = new Audio("/data/gun.wav");
     }
-
-
     
     var thumbStickDot = {
                 x: 0,
@@ -47,17 +44,15 @@ controller.thumbStick = function(container, canvas, phone) {
                 var coords = phone.getFingerCoords(i, event);
                 drawCircle(coords[0], coords[1], 10);
                 var coordsNormalized = phone.getRelativeCoords(i, event);
-                client.coms.call('thumbStickPosition', [coordsNormalized[0] * 2, coordsNormalized[1] * 2], null, null);
+                coms.call('thumbStickPosition', [coordsNormalized[0] * 2, coordsNormalized[1] * 2], null, null);
             } else {
-                client.coms.call('buttonPushed', null, null);
+                coms.call('buttonPushed', null, null);
 
                 var sound = sounds.pop();
                 sound.play();
                 sounds.unshift(sound);
             }
         }
-
-
     };
 
     // En tajuu yht��n mit��n, mut m� kopy pastaan juttui :D t: Tuomas
@@ -69,14 +64,14 @@ controller.thumbStick = function(container, canvas, phone) {
                 var coords = phone.getFingerCoords(i, event);
                 drawCircle(coords[0], coords[1], 10);
                 var coordsNormalized = phone.getRelativeCoords(i, event);
-                client.coms.call('thumbStickPosition', [coordsNormalized[0] * 2, coordsNormalized[1] * 2], null, null);
+                coms.call('thumbStickPosition', [coordsNormalized[0] * 2, coordsNormalized[1] * 2], null, null);
             }
         }
     };
     
     ThumbStick.prototype.doTouchEnd = function(event) {
         event.preventDefault();
-        client.coms.call('thumbStickPosition', [0.5, 1], null, null);
+        coms.call('thumbStickPosition', [0.5, 1], null, null);
     }
 
     // Ps. var tarkottaa muuttujaa?
@@ -105,7 +100,3 @@ controller.thumbStick = function(container, canvas, phone) {
         // TODO return a disabler
     };
 };
-
-$(document).ready(function() {
-    client.phone.registerController('ThumbStick', controller.thumbStick);
-});
