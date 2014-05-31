@@ -20,33 +20,31 @@ describe('the PeliRPC object', function() {
     });
 
     describe('exposeRpcMethod', function() {
-        it('correctly exposes only valid rpc methods', function() {
-            var rpc = new PeliRPC(connection);
-            expect( 
-                rpc.exposeRpcMethod("just a string")
-                ).toBe(false);
-            expect(
-                rpc.exposeRpcMethod('no function supplied', null, null)
-                ).toBe(false);
+        var rpc = new PeliRPC(connection);
+
+        it('throws errors on incorrect calls', function() {
+            expect(function() {
+                rpc.exposeRpcMethod("just a string");
+            }).toThrow();
+            expect(function() {
+                rpc.exposeRpcMethod('no function supplied', null, null);
+            }).toThrow();
+        });
+
+        it('accepts proper calls', function() {
             expect(
                 rpc.exposeRpcMethod('function, no context', null, function() {})
                 ).toBe(true);
             expect(
                 rpc.exposeRpcMethod('function, with context', null, function() {})
                 ).toBe(true);
-            expect(
-                rpc.exposeRpcMethod('function, with context', null, function() {})
-                ).toBe(false);
         });
 
-        it('calls RPC', function() {
-            var testPRPC = new PeliRPC(connection);
-            expect(true).toBeTruthy
-        });
-
-        it('exposes RPC method', function() {
-            var testPRPC = new PeliRPC(new Object());
-            expect(true).toBeTruthy
+        it('throws error on exposing same method name twice', function() {
+            rpc.exposeRpcMethod('myname', null, function() {});
+            expect(function() {
+                rpc.exposeRpcMethod('myname', null, function() {});
+            }).toThrow();
         });
     });
 });
