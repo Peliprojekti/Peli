@@ -11,6 +11,7 @@ graphics2d.chartThingy = {
     },
     ChartThingy: function (canvas, x, y, width, height, scale, flip) {
         "use strict";
+        this.maxWidth = 300;
         this.x = x || 0;
         this.y = y || 0;
         this.width = width || (canvas.width - this.x);
@@ -33,11 +34,6 @@ graphics2d.chartThingy.ChartThingy.prototype.addValue = function (value) {
         for (var i = 0; i < this.values.length; i++) {
             var oldValue = (this.y + this.height - this.values[i]) / this.scale;
             this.values[i] = (this.y + this.height) - (oldValue * 0.8 * this.scale);
-            /*
-            this.values[i] = (this.y + this.height) - 
-                (this.y + this.height) / this.scale
-            */
-            //this.values[i] *= 0.8;
         }
         this.scale *= 0.8;
     }
@@ -46,7 +42,7 @@ graphics2d.chartThingy.ChartThingy.prototype.addValue = function (value) {
         (this.y + this.height) - (value * this.scale)
         );
 
-    if (this.values.length > this.width) {
+    if (this.values.length > this.maxWidth) {
         this.values.pop();
     }
 };
