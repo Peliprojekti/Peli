@@ -18,6 +18,7 @@
 
 var dummy = dummy || {};
 dummy.screen = {
+    physicsEnabled: false,
     width: 0,
     height: 0,
     canvas: null,
@@ -33,7 +34,6 @@ dummy.screen = {
         this.height = canvas.height;
         this.width = canvas.width;
         this.context = canvas.getContext("2d");
-        this.background.push(graphics2d.fpsDisplay.createFancy(this.canvas));
         this.entities.init(canvas);
         this.box2d.init(canvas);
 
@@ -52,6 +52,10 @@ dummy.screen = {
     addController: function (controller) {
         "use strict";
         this.controllers.push(controller);
+    },
+    setPhysicsEnabled: function(enabled) {
+        "use strict";
+        this.physicsEnabled = enabled;
     },
     removeController: function (controller) {
         "use strict";
@@ -76,7 +80,10 @@ dummy.screen = {
         self.drawBackground(time);
 
         self.updateControllers(time);
-        //self.box2d.update(time);
+
+        if (self.physicsEnabled) {
+            self.box2d.update(time);
+        }
 
         self.entities.drawAll();
 
@@ -93,8 +100,11 @@ dummy.screen = {
         "use strict";
         for (var i = 0; i < this.background.length; i++) {
             this.background[i].update(time);
-            this.background[i].draw();
+            this.background[i].draw(this.context);
         }
+    },
+    addToBackground: function (object) {
+        this.background.push(object);
     },
     updateControllers: function (time) {
         "use strict";
@@ -104,10 +114,10 @@ dummy.screen = {
     },
     drawPlayers: function () {
         "use strict";
-        var self = this;
+        var context = this.context;
         this.players.forEach(function (p) {
             "use strict";
-            p.draw(self.context);
+            p.draw(context);
         });
     },
     shoot: function(x,y) {

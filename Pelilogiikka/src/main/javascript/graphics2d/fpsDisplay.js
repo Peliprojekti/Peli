@@ -49,15 +49,10 @@ graphics2d.fpsDisplay.FpsDisplay.prototype.update = function(time) {
 
 graphics2d.fpsDisplay.FpsDisplay.prototype.draw = function() {
     "use strict";
-    this.ctx.save();
+    //this.ctx.save();
 
     if (this.fancy) {
         this.thingy.draw(this.ctx);
-
-        this.ctx.shadowColor = '#00FF00';
-        this.ctx.shadowOffsetX = 0;
-        this.ctx.shadowOffsetY = 0;
-        this.ctx.shadowBlur = 10;
     }
 
     this.ctx.font = 'bold 40pt Calibri';
@@ -68,5 +63,5 @@ graphics2d.fpsDisplay.FpsDisplay.prototype.draw = function() {
     this.ctx.fillText(this.fps, this.x, this.y);
     this.ctx.strokeText(this.fps, this.x, this.y);
 
-    this.ctx.restore();
+    //this.ctx.restore();
 };
