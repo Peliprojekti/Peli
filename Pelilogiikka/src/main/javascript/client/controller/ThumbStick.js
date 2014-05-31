@@ -1,21 +1,18 @@
+/*jslint browser: true*/
+/*global peliAudio: true*/
+/*global controller: false*/
 var controller = controller || {};
 
 controller.loadedTypes = controller.loadedTypes || [];
 controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, crosshair) {
     "use strict";
     var drawDot = false,
-        x = canvas.width/2,
-        y = canvas.width/2,
-        r = 10,
-        sounds = [];
-
-    for (var i = 0; i < 20; i++) {
-        sounds[i] = new Audio("/data/gun.wav");
-    }
+        x = canvas.width / 2,
+        y = canvas.width / 2,
+        r = 10;
 
     controller.loadedTypes.ThumbStick.draw  = function (context) {
-        if (drawDot === true) {   
-            "use strict";
+        if (drawDot === true) {
             context.strokeStyle = "#FF0000";
             context.fillStyle = "#FFFF00";
             context.beginPath();
@@ -25,6 +22,8 @@ controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, cr
             context.fill();
         }
     };
+
+    peliAudio.loadSound('gun', true);
 
     var touchStartListener = function (event) {
         event.preventDefault();
@@ -42,10 +41,7 @@ controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, cr
             }
             else {
                 coms.call('buttonPushed', null, null);
-
-                var sound = sounds.pop();
-                sound.play();
-                sounds.unshift(sound);
+                peliAudio.play('gun');
             }
         }
     };
