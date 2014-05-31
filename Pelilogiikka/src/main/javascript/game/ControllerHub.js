@@ -4,111 +4,112 @@ game.controllerHub = {
     controllerType: CONTROLLER,
     ws_protocol: undefined, //JSONRPC_RPOTOCOL,
     ws_port: SCREEN_PORT,
-
     onPlayerJoined: null,
     onPlayerLeft: null,
     playerFactory: null,
-
     maxPlayers: 100,
     minimumFreeConnections: 2,
     freeConnections: 0,
     playerCount: 0,
-
     sequence: 0,
     players: {},
     controllers: {},
-
-    //loadedControllerTypes: {},
-
-/*
-    registerController: function(name, controllerObject) {
-        game.controllerHub.loadedControllerTypes[name] = controllerObject;
-    },
-    */
-
-    update: function(time) {
+    update: function (time) {
         var self = game.controllerHub;
         for (var key in self.controllers) {
             self.controllers[key].update(time);
         }
     },
+    openHub: function (onPlayerJoined, onPlayerLeft, playerFactory, maxPlayers) {
+        "use strict";
+        if (onPlayerJoined === undefined)
+            console.error("onPlayerJoined undefined");
+        if (onPlayerLeft === undefined)
+            console.error("onPlayerLeft undefined");
+        if (playerFactory === undefined)
+            console.error("playerFactory undefined");
+        if (!(playerFactory.getPlayer && playerFactory.freePlayer))
+            console.error("malformed playerFactory");
+        if (!controller.loadedTypes[this.controllerType])
+            console.error("Controller not loaded", this.controllerType);
 
-    openHub: function(onPlayerJoined, onPlayerLeft, playerFactory, maxPlayers) {
-        var self = this;
-        if (onPlayerJoined === undefined) console.error("onPlayerJoined undefined");
-        if (onPlayerLeft === undefined) console.error("onPlayerLeft undefined");
-        if (playerFactory === undefined) console.error("playerFactory undefined");
-        if (!(playerFactory.getPlayer && playerFactory.freePlayer)) console.error("malformed playerFactory");
-        if (!controller.loadedTypes[self.controllerType]) console.error("Controller not loaded", self.controllerType);
-        self.controllerLoader = controller.loadedTypes[self.controllerType];
+        this.controllerLoader = controller.loadedTypes[this.controllerType];
+        this.onPlayerJoined = onPlayerJoined;
+        this.onPlayerLeft = onPlayerLeft;
+        this.playerFactory = playerFactory;
+        this.maxPlayers = maxPlayers;
 
-        self.onPlayerJoined = onPlayerJoined;
-        self.onPlayerLeft = onPlayerLeft;
-        self.playerFactory = playerFactory;
-        self.maxPlayers = maxPlayers;
+        if (!this.openConnection())
+            console.error("unable to open first connection");
+    },
+    openConnection: function () {
+        "use strict";
+        if ((this.freeConnections >= this.minimumFreeConnections) || this.playerCount === this.maxPlayers) {
+            return false;
+        }
 
-        if (!openConnection()) console.error("unable to open first connection");
+        var connection = new ConnectionWebsocket(location.hostname, this.ws_port, this.ws_protocol, true);
+        var rpc = peliRPC.create(connection); //new PeliRPC(connection);
+        var sequence = this.sequence++;
 
-        function openConnection() {
-            if ((self.freeConnections >= self.minimumFreeConnections) || self.playerCount == self.maxPlayers) {
-                return false;
-            }
+        rpc.exposeRpcMethod('joinGame', null, this.rpcJoinGame.bind(this, sequence, rpc));
 
-            var connection = new ConnectionWebsocket(location.hostname, self.ws_port, self.ws_protocol, true);
-            // TODO recycle PeliRPC object
-            var rpc = new PeliRPC(connection);
-            var sequence = self.sequence++;
-
-            rpc.exposeRpcMethod('joinGame', this, function(userID) {
-                var player = self.playerFactory.getPlayer(userID);
-                try {
-                    var controller = self.controllerLoader.getController(player, rpc);
-                    self.playerCount++;
-                    self.freeConnections--;
-                    self.controllers[sequence] = controller;
-                    self.players[sequence] = player;
-                } catch (e) {
-                    console.error("Error while loading controller", self.controllerType);
-                }
-
-                openConnection();
-
-                var playerData = self.onPlayerJoined(player, controller);
-                console.info("Player joined game with userID ", userID, "controllerType is ", self.controllerType);
-                return [self.controllerType, playerData];
-            });
-
-            connection.connect(function(error, ok) {
-                    // onConnection
-                    if (error === null) {
-                        self.freeConnections++;
-                        console.log("New connection successfully opened, total connecitons: ", self.freeConnections + self.playerCount);
-                        openConnection();
-                    } else {
-                        console.warn("Connection error ", error);
-                    }
-                },
-                function() { // onClose
-                    if (self.controllers[sequence]) {
-                        console.info("player disconnected, closing connection ");
-                        var player = self.players[sequence];
-
-                        self.loadedControllerTypes[self.controllerType].freeController(self.controllers[sequence]);
-                        self.playerFactory.freePlayer(player);
-
-                        delete self.controllers[sequence];
-                        delete self.players[sequence];
-                        self.onPlayerLeft(player, controller);
-                        // TODO recycle PeliRPC object
-                        self.playerCount--;
-
-                    } else {
-                        console.warn("connection unexpectedly closed ");
-                    }
-                },
-                rpc.getOnMessage()
+        connection.connect(
+            this.onConnectionOpened.bind(this, sequence, rpc),
+            this.onConnectionClosed.bind(this, sequence, rpc),
+            rpc.getOnMessage()
             );
-            return true;
+        return true;
+    },
+    rpcJoinGame: function (sequence, rpc, userID) {
+        "use strict";
+        var player = this.playerFactory.getPlayer(userID);
+        var controller = this.controllerLoader.getController(player, rpc);
+
+        try {
+            this.playerCount++;
+            this.freeConnections--;
+            this.controllers[sequence] = controller;
+            this.players[sequence] = player;
+        } catch (e) {
+            console.error("Error while loading controller", this.controllerType);
+        }
+
+        this.openConnection();
+
+        var playerData = this.onPlayerJoined(player, controller);
+        console.info("Player joined game with userID ", userID, "controllerType is ", this.controllerType);
+        return [this.controllerType, playerData];
+
+    },
+    onConnectionOpened: function (sequence, rpc, error, ok) {
+        "use strict";
+        if (error === null) {
+            this.freeConnections++;
+            console.log("New connection successfully opened, total connecitons: ", this.freeConnections + this.playerCount);
+            this.openConnection();
+        } else {
+            console.warn("Connection error ", sequence, error);
+        }
+    },
+    onConnectionClosed: function (sequence, rpc) {
+        "use strict";
+        var controller = this.controllers[sequence],
+            player = this.players[sequence];
+
+        if (controller) {
+            console.info("player disconnected, closing connection ");
+
+            this.controllerLoader.freeController(controller);
+            this.playerFactory.freePlayer(player);
+
+            delete this.controllers[sequence];
+            delete this.players[sequence];
+            self.playerCount--;
+            this.onPlayerLeft(player, controller);
+            rpc.clear();
+        } else {
+            console.warn("connection unexpectedly closed ");
         }
     }
 };

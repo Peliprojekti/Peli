@@ -1,5 +1,11 @@
 var peliRPC = {
-    totalMessagesProcessed: 0
+    totalMessagesProcessed: 0,
+    freeRPCs: [],
+    create: function (connection) {
+        return (this.freeRPCs.length > 0 ?
+            this.freeRPCs.pop().attachConnection(connection) :
+            new PeliRPC(connection));
+    }
 };
 
 /**
@@ -13,19 +19,32 @@ function PeliRPC (connection) {
     this.callbacks = {};
     this.rpcMethods = {};
     this.callSequence = 0;
-
-    this.benchmarking = false;
-    this.benchmarkLog = [];
 }
 
+PeliRPC.prototype.clear = function () {
+    "use strict";
+    this.connection = null;
+    this.callbacks = {};
+    this.rpcMethods = {};
+    this.callSequence = 0;
+    peliRPC.freeRPCs.push(this);
+};
+
+PeliRPC.prototype.attachConnection = function(connection) {
+    "use strict";
+    this.connection = connection;
+    return this;
+};
 
 PeliRPC.prototype.getOnMessage = function () {
     "use strict";
     var that = this;
-    var closeCallback = function () {
-        that.callbacks = {};
-        that.rpcMethods = {};
-    };
+    /*
+     var closeCallback = function () {
+     that.callbacks = {};
+     that.rpcMethods = {};
+     };
+     */
 
     var onMessage = function (message) {
         "use strict";
@@ -121,9 +140,10 @@ PeliRPC.prototype.getOnMessage = function () {
 };
 
 PeliRPC.prototype.callRpc = function (method, params, object, listener) {
+    "use strict";
     var callObject;
 
-    if (typeof listener == "function") {
+    if (typeof listener === "function") {
         callObject = {
             "jsonrpc": "2.0",
             "method": method,
