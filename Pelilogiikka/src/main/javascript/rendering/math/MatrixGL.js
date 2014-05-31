@@ -1,6 +1,6 @@
 
 
-
+// To be intagrated later!
 function MatrixGL( mat )
 {
     this[0]  = mat.m11; this[1]  = mat.m12; this[2]   = mat.m13; this[3]  = mat.m14; 

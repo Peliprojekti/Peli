@@ -82,6 +82,43 @@
     }
     
     
+    
+    
+    
+    Orientation.prototype.get_Matrix44 = function() 
+    {
+        var       final = new Matrix44( ["TRANS",this.position_V] );           // Declare a fresh matrix and apply translation
+        var           I = new Vector3( 1, 0, 0 );
+        var matrix_rotI = new Matrix44( ["ROT_A", I , this.angles_V.x ]);
+                  final = final.multiply( matrix_rotI );                        // Rotate around the models I-axis
+        var           J = new Vector3( final.m12, final.m22,  final.m32 );
+        var matrix_rotJ = new Matrix44( ["ROT_A", J , this.angles_V.y  ]);
+                  final = final.multiply( matrix_rotJ );                        // Rotate around the models new J-axis
+        var           K = new Vector3( final.m13, final.m23, final.m33 );
+        var matrix_rotK = new Matrix44( ["ROT_A", K , this.angles_V.z  ]);
+                  final = final.multiply( matrix_rotK );                        // Rotate around the models new K-axis
+        var      scalez = new Matrix44( ["SCALE", this.scales_V] );             // Apply scale
+                  final = final.multiply( scalez );
+        
+        var m4          = new Matrix44();
+         
+        m4.m11 = final.m11; m4.m12  = final.m12;  m4.m13 = final.m13;  m4.m14 = final.m14; 
+        m4.m21 = final.m21; m4.m22  = final.m22;  m4.m23 = final.m23;  m4.m24 = final.m24;    
+        m4.m31 = final.m31; m4.m32  = final.m32;  m4.m33 = final.m33;  m4.m34 = final.m34;   
+        m4.m41 = final.m41; m4.m42  = final.m42;  m4.m43 = final.m43;  m4.m44 = final.m44;   
+          
+        return m4;//new MatrixGL( final );
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
  
     // KUSEE
     Orientation.prototype.get_InverseMatrix = function()

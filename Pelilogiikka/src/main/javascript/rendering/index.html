@@ -6,46 +6,54 @@
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 
-<script type="text/javascript" src="External/webglutils.js"    ></script>
-<script type="text/javascript" src="External/glMatrix.js"      ></script>
+<script type="text/javascript" src="External/webglutils.js"          ></script>
+<script type="text/javascript" src="External/glMatrix.js"            ></script>
 
+<script type="text/javascript" src="Renderer.js"                     ></script>
+<script type="text/javascript" src="Shader.js"                       ></script>
+<script type="text/javascript" src="Inputs.js"                       ></script>
+<script type="text/javascript" src="Scene.js"                        ></script>
 
-<script type="text/javascript" src="Renderer.js"               ></script>
-<script type="text/javascript" src="Shader.js"                 ></script>
-<script type="text/javascript" src="Inputs.js"                 ></script>
-<script type="text/javascript" src="Scene.js"                  ></script>
+<script type="text/javascript" src="Material.js"                     ></script>
+<script type="text/javascript" src="Texture.js"                      ></script>
 
-<script type="text/javascript" src="Material.js"               ></script>
-<script type="text/javascript" src="Texture.js"                ></script>
+<script type="text/javascript" src="Buffer.js"                       ></script>
+<script type="text/javascript" src="Model.js"                        ></script>
+<script type="text/javascript" src="Mesh.js"                         ></script>
+<script type="text/javascript" src="Light.js"                        ></script>
 
-<script type="text/javascript" src="Buffer.js"                 ></script>
-<script type="text/javascript" src="Model.js"                  ></script>
-<script type="text/javascript" src="Mesh.js"                   ></script>
-<script type="text/javascript" src="Light.js"                  ></script>
+<script type="text/javascript" src="GuiItem.js"                      ></script>
 
-<script type="text/javascript" src="GuiItem.js"                ></script>
-
-<script type="text/javascript" src="Entity.js"                 ></script>
-<script type="text/javascript" src="Camera.js"                 ></script>
+<script type="text/javascript" src="Entity.js"                       ></script>
+<script type="text/javascript" src="Camera.js"                       ></script>
 
 <script type="text/javascript" src="parser/Parserobjects.js"         ></script>
 <script type="text/javascript" src="parser/GeneralPurposeParser.js"  ></script>
-
-<script type="text/javascript" src="math/Angles.js"            ></script>
-<script type="text/javascript" src="math/Vector2.js"           ></script>
-<script type="text/javascript" src="math/Vector3.js"           ></script>
-<script type="text/javascript" src="math/Matrix33.js"          ></script>
-<script type="text/javascript" src="math/Matrix44.js"          ></script>
-<script type="text/javascript" src="math/MatrixGL.js"          ></script>
-<script type="text/javascript" src="math/Orientation.js"       ></script>
-<script type="text/javascript" src="math/Interpolator.js"      ></script>
-
-<script type="text/javascript" src="Assetmanager.js"           ></script>
-<script type="text/javascript" src="testCube.js"               ></script>
+<script type="text/javascript" src="parser/WorldBuilder.js"          ></script>
+<script type="text/javascript" src="parser/Partitioner.js"           ></script>
 
 
 
-<script type="text/javascript" src="data/Shaders/Shader1/Shader1.js"               ></script>
+<script type="text/javascript" src="math/Angles.js"                  ></script>
+
+<script type="text/javascript" src="math/Vector2.js"                 ></script>
+<script type="text/javascript" src="math/Vector3.js"                 ></script>
+<script type="text/javascript" src="math/Vector4.js"                 ></script>
+
+<script type="text/javascript" src="math/Matrix22.js"                ></script>
+<script type="text/javascript" src="math/Matrix33.js"                ></script>
+<script type="text/javascript" src="math/Matrix44.js"                ></script>
+<script type="text/javascript" src="math/MatrixGL.js"                ></script>
+
+<script type="text/javascript" src="math/Orientation.js"             ></script>
+<script type="text/javascript" src="math/Interpolator.js"            ></script>
+    
+<script type="text/javascript" src="Assetmanager.js"                 ></script>
+<script type="text/javascript" src="testCube.js"                     ></script>
+
+
+
+<script type="text/javascript" src="data/Shaders/Shader1/Shader1.js"  ></script>
 
 
 
@@ -59,19 +67,15 @@
     var haxLight   = new Light( new Vector3(-64.297035 , -34.088657 , -117.10157), 100.0, 0, 0, 0, 0, 0, 0 );
     
     
-    // Define these
+    // Define these ELSEWHERE
     KEY_W = 87;
     KEY_S = 83;
-      
     KEY_Q = 81;
     KEY_E = 69;
-    
     KEY_UP   = 38;
     KEY_DOWN = 40;
-     
     KEY_LEFT = 37;
     KEY_RIGHT = 39;
-    
     KEY_PAGEUP   = 33;
     KEY_PAGEDOWN = 34;
      

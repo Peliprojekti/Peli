@@ -439,14 +439,7 @@
     
    
    
-    function Triangle( v1, v2, v3, normal , material )
-    {
-        this.a        = v1;
-        this.b        = v2;
-        this.c        = v3;
-        this.normal   = normal;
-        this.material = material;
-    }
+   
    
    
    
@@ -455,30 +448,29 @@
         var the_Scene                    = new Scene( renderer ); 
         var nodes                        = this.the_Document.get_Subfields("node");
         
-        var mashList                     = [];  // This is where all the mashes will end up before being processed
-        var orientList                   = [];
-        var matList                      = [];
+        var rawMeshes_List               = [];  // This is where all the mashes will end up before being processed
+        var orientations_List            = [];
+       
       
-      
+
         // For each node, we need to extract the following data...
         nodes.forEach( function( node )
         {
             var type                     = node.get_Type();
-            
-            if( type == "path" )
-            {
-                alert( "path found!");
-                return;
-            }
-            
             var attributes               = node.get_Subfields("attributes");
             var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
             var node_Description         = read_Node( node_Variables );
                 
             var node_Position            = node_Description[0].casted();
-            var node_Rotation            = node_Description[1].casted();
             var node_Scale               = node_Description[2].casted();
-        
+            var node_Rotation            = node_Description[1].casted();
+            
+            // Convert the rotation into radians.
+            node_Rotation.x = DegToRad( node_Rotation.x );
+            node_Rotation.y = DegToRad( node_Rotation.y );
+            node_Rotation.z = DegToRad( node_Rotation.z );
+            
+
             // For a node that is of type "mesh"....
             if( type == "mesh")
             {
@@ -487,11 +479,11 @@
                 var material_Attributes  = node_Materials[0].get_Subfields("attributes");  // There should be exactly ONE <materials> tag per field! More -> assert fail here.
                 
                 var materials            = build_Materials( material_Attributes, assetManager, renderer );
-                var mashes               = get_Mash( meshPath );  
+                var rawMeshes            = build_Rawmeshes( meshPath, materials );
+                var orientation          = new Orientation( node_Position, node_Scale, node_Rotation );
                 
-                 matList.push   (  materials                                 );
-                 mashList.push  (  mashes                                    );
-                 orientList.push( [node_Position, node_Rotation, node_Scale] );
+                orientations_List.push( orientation );
+                   rawMeshes_List.push( rawMeshes   );
             }       
             else
                 if( type == "light" )    // For a node that is of type "light"....
@@ -505,143 +497,19 @@
         
         
         
-    console.log(" Scene extracted - baking a triangle mash ");    
+      console.log(" Scene extracted - baking a triangle mash ");    
     
-    compose_TriangleMash( mashList, matList, orientList );      // This should return a custom Worldmesh object
-        
+      compose_WorldMesh( rawMeshes_List , orientations_List )
+ 
     return the_Scene;
     }
     
    
    
    
-   function compose_TriangleMash( mashes, materials, orientations ) 
-   {
-       //alert("Mashes: " + mashes.length + " \n Materials: " + materials.length );
-       if( mashes.length != materials.length ) alert("Mash - Material mismatch");
-       
-       var triangleClumps = [];  // Decompose each mash into triangleClump
-       
-       for( var i = 0; i < mashes.length; i++ )
-       {
-           var orient = orientations[i]; // These are the components of transformation applied for each vertex.
-           var mat    =    materials[i]; // This material is associated for this particular mash
-           var mash   =       mashes[i]; // This particular mash is to be split up.
-           
-           
-       }
-       
-       
-   }
-   
   
    
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   function get_Indices( fields )
-   {
-        var indexData     = [];
-       
-        fields.forEach( function( field )           
-        {
-            var lines   = field.rawData.split("\n");
-            var indices = [];
-            
-            for( var t = 1; t < lines.length; t++ )     // Skip over the header [0]
-            {
-                var tokens  = lines[t].split(" ");
-                 
-                for( var i = 0; i < tokens.length; i++ )  // Skip the header 
-                {
-                    var index = parseInt( tokens[i] );
-                    indices.push( index );
-                }
-            }   
-           
-        indexData.push( indices );
-        });
-    
-   return indexData;
-   }
-   
-   
-   
-   
-    function get_Vertices( fields )
-    {
-        var vertexData = [];
-        
-        for( var f = 0; f < fields.length; f++ )
-        {
-            var field     = fields[f];
-            var lines     = field.rawData.split("\n");
-            
-            var positions = [];
-            var texCoords = [];
-            var normals   = [];
-            var binormals = [];
-            
-            for( var i = 1; i < lines.length; i++ )     // Skip the header at 0
-            {
-                var line   = lines[i];
-                var tokens = line.split(" ");
-                
-                var x = parseFloat( tokens[0]);
-                var y = parseFloat( tokens[1]);
-                var z = parseFloat( tokens[2]);
-                  
-                var nX = parseFloat( tokens[3]);
-                var nY = parseFloat( tokens[4]);
-                var nZ = parseFloat( tokens[5]);
-                             
-                var u  = parseFloat( tokens[7]);
-                var v  = parseFloat( tokens[8]);
-                
-                var bX = parseFloat( tokens[9]);
-                var bY = parseFloat( tokens[10]);
-                var bZ = parseFloat( tokens[11]);
-                  
-                positions.push( x );
-                positions.push( y );
-                positions.push( z );
-                
-                texCoords.push( u );
-                texCoords.push( -v );       // Negate V to accomodate handedness shift
-                
-                normals.push( nX );
-                normals.push( nY );
-                normals.push( nZ );
-               
-                binormals.push( bX );
-                binormals.push( bY );
-                binormals.push( bZ );  // Flip the binormal attribute or not?
-            }
-        vertexData.push( [positions, texCoords, normals, binormals] );   // For each mesh, store these critical values
-        }
-        
-    return vertexData;
-    }
-   
-   
-   
-    function get_Mash( meshPath )
-    {           
-        var meshParser    = new Parser( meshPath );
-        var indexData     = get_Indices(  meshParser.the_Document.get_Subfields( "indices" ) );     // For each mesh, the array contains a list of indices
-        var vertexData    = get_Vertices( meshParser.the_Document.get_Subfields( "vertices" ) );     // For each mesh, the array contains a list of vertices
-    
-    return [ vertexData, indexData ];
-    }
    
    
    
