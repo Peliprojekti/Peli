@@ -3,39 +3,45 @@ var controller = controller || {};
 controller.loadedTypes = controller.loadedTypes || [];
 controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, crosshair) {
     "use strict";
-    var x,
-        y,
-        r,
+    var drawDot = false,
+        x = canvas.width/2,
+        y = canvas.width/2,
+        r = 10,
         sounds = [];
 
     for (var i = 0; i < 20; i++) {
         sounds[i] = new Audio("/data/gun.wav");
     }
 
-    this.draw = function(context) {
-        "use strict";
-        context.strokeStyle = "#FF0000";
-        context.fillStyle = "#FFFF00";
-        context.beginPath();
-        context.arc(x, y, r, 0, Math.PI * 2, true);
-        context.closePath();
-        context.stroke();
-        context.fill();
+    controller.loadedTypes.ThumbStick.draw  = function (context) {
+        if (drawDot === true) {   
+            "use strict";
+            context.strokeStyle = "#FF0000";
+            context.fillStyle = "#FFFF00";
+            context.beginPath();
+            context.arc(x, y, r, 0, Math.PI * 2, true);
+            context.closePath();
+            context.stroke();
+            context.fill();
+        }
     };
 
     var touchStartListener = function (event) {
         event.preventDefault();
         for (var i = 0; i < event.targetTouches.length; i++) {
-            if (event.targetTouches[i].pageX < (canvas.width/2)) {
+            if (event.targetTouches[i].pageX < (canvas.width / 2)) {
+                drawDot = true;
+                /* Tää aiheuttaa nykimistä jostain syystä, en ymmärrä miksei tehnyt sitä aijemmassa versiossa...
                 x = event.targetTouches[i].pageX;
                 y = event.targetTouches[i].pageY;
-                coms.call('thumbStickPosition', [ 
-                    (x / canvas.width) * 2, 
+                coms.call('thumbStickPosition', [
+                    (x / canvas.width) * 2,
                     (y / canvas.heigth) * 2
                 ], null, null);
-            } 
+                */
+            }
             else {
-                coms.call('buttonPushed', null, null, null);
+                coms.call('buttonPushed', null, null);
 
                 var sound = sounds.pop();
                 sound.play();
@@ -47,20 +53,21 @@ controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, cr
     var touchMoveListener = function (event) {
         event.preventDefault();
         for (var i = 0; i < event.targetTouches.length; i++) {
-            if (event.targetTouches[i].pageX < (canvas.width/2)) {
+            if (event.targetTouches[i].pageX < (canvas.width / 2)) {
                 x = event.targetTouches[i].pageX;
                 y = event.targetTouches[i].pageY;
-                coms.call('thumbStickPosition', [ 
-                    (x / canvas.width) * 2, 
+                coms.call('thumbStickPosition', [
+                    (x / canvas.width) * 2,
                     (y / canvas.height) * 2
                 ], null, null);
-            } 
+            }
         }
     };
 
     var touchEndListener = function (event) {
         event.preventDefault();
-        //coms.call('thumbStickPosition', [0.5, 1], null, null);
+        drawDot = false;
+        coms.call('thumbStickPosition', [0.5, 1], null, null);
     };
 
 
