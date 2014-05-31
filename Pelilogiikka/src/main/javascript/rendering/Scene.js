@@ -22,8 +22,11 @@
         }
         else
             {
-                var sceneParser     = new Parser( fullPath  );
-                var dummy            = sceneParser.parse_Scene( renderer, assetManager );
+                var sceneParser        = new Parser( fullPath  );
+                //var dummy              = sceneParser.parse_Scene( renderer, assetManager );
+                var dummy             = sceneParser.parse_Scene_Advanced( renderer, assetManager );
+                
+                
                 
                 this.entries_Dynamic   = dummy.entries_Dynamic;         // Animated objects differing from actors. A spinning table fan perhaps?
                 this.entries_Static    = dummy.entries_Static;          // Chunks of inanimate geometry. Mostly terrain.

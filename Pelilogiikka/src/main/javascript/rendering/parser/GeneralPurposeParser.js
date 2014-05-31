@@ -351,11 +351,9 @@
             
             if( type == "path" )
             {
-            
-            alert( "path found!");
-            return;
+                alert( "path found!");
+                return;
             }
-            
             
             
             var attributes               = node.get_Subfields("attributes");
@@ -368,7 +366,6 @@
             var node_Scale               = node_Description[2].casted();
         
             
-        
             // For a node that is of type "mesh"....
             if( type == "mesh")
             {
@@ -421,11 +418,8 @@
                         
                         the_Scene.insert( light , "LIGHT" );
                 }
-           
                 
         });
-        
-        
         
         
         
@@ -439,5 +433,234 @@
     
     
     
+  ///////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////PROTOTYPE PARSER STARTS HERE ////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////  
     
+   
+   
+    function Triangle( v1, v2, v3, normal , material )
+    {
+        this.a        = v1;
+        this.b        = v2;
+        this.c        = v3;
+        this.normal   = normal;
+        this.material = material;
+    }
+   
+   
+   
+    Parser.prototype.parse_Scene_Advanced = function( renderer, assetManager ) 
+    { 
+        var the_Scene                    = new Scene( renderer ); 
+        var nodes                        = this.the_Document.get_Subfields("node");
+        
+        var mashList                     = [];  // This is where all the mashes will end up before being processed
+        var orientList                   = [];
+        var matList                      = [];
+      
+      
+        // For each node, we need to extract the following data...
+        nodes.forEach( function( node )
+        {
+            var type                     = node.get_Type();
+            
+            if( type == "path" )
+            {
+                alert( "path found!");
+                return;
+            }
+            
+            var attributes               = node.get_Subfields("attributes");
+            var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
+            var node_Description         = read_Node( node_Variables );
+                
+            var node_Position            = node_Description[0].casted();
+            var node_Rotation            = node_Description[1].casted();
+            var node_Scale               = node_Description[2].casted();
+        
+            // For a node that is of type "mesh"....
+            if( type == "mesh")
+            {
+                var meshPath             = relative_Path( node_Description[3].casted() );
+                var node_Materials       = node.get_Subfields("materials");                 
+                var material_Attributes  = node_Materials[0].get_Subfields("attributes");  // There should be exactly ONE <materials> tag per field! More -> assert fail here.
+                
+                var materials            = build_Materials( material_Attributes, assetManager, renderer );
+                var mashes               = get_Mash( meshPath );  
+                
+                 matList.push   (  materials                                 );
+                 mashList.push  (  mashes                                    );
+                 orientList.push( [node_Position, node_Rotation, node_Scale] );
+            }       
+            else
+                if( type == "light" )    // For a node that is of type "light"....
+                {
+                    var variables       = attributes[0].get_Variables();     // Plz god, let the light variables be in a fixed order...
+                    var light           = load_Light( variables );           
+                    the_Scene.insert( light , "LIGHT" );
+                }
+                
+        });
+        
+        
+        
+    console.log(" Scene extracted - baking a triangle mash ");    
+    
+    compose_TriangleMash( mashList, matList, orientList );      // This should return a custom Worldmesh object
+        
+    return the_Scene;
+    }
+    
+   
+   
+   
+   function compose_TriangleMash( mashes, materials, orientations ) 
+   {
+       //alert("Mashes: " + mashes.length + " \n Materials: " + materials.length );
+       if( mashes.length != materials.length ) alert("Mash - Material mismatch");
+       
+       var triangleClumps = [];  // Decompose each mash into triangleClump
+       
+       for( var i = 0; i < mashes.length; i++ )
+       {
+           var orient = orientations[i]; // These are the components of transformation applied for each vertex.
+           var mat    =    materials[i]; // This material is associated for this particular mash
+           var mash   =       mashes[i]; // This particular mash is to be split up.
+           
+           
+       }
+       
+       
+   }
+   
+  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   function get_Indices( fields )
+   {
+        var indexData     = [];
+       
+        fields.forEach( function( field )           
+        {
+            var lines   = field.rawData.split("\n");
+            var indices = [];
+            
+            for( var t = 1; t < lines.length; t++ )     // Skip over the header [0]
+            {
+                var tokens  = lines[t].split(" ");
+                 
+                for( var i = 0; i < tokens.length; i++ )  // Skip the header 
+                {
+                    var index = parseInt( tokens[i] );
+                    indices.push( index );
+                }
+            }   
+           
+        indexData.push( indices );
+        });
+    
+   return indexData;
+   }
+   
+   
+   
+   
+    function get_Vertices( fields )
+    {
+        var vertexData = [];
+        
+        for( var f = 0; f < fields.length; f++ )
+        {
+            var field     = fields[f];
+            var lines     = field.rawData.split("\n");
+            
+            var positions = [];
+            var texCoords = [];
+            var normals   = [];
+            var binormals = [];
+            
+            for( var i = 1; i < lines.length; i++ )     // Skip the header at 0
+            {
+                var line   = lines[i];
+                var tokens = line.split(" ");
+                
+                var x = parseFloat( tokens[0]);
+                var y = parseFloat( tokens[1]);
+                var z = parseFloat( tokens[2]);
+                  
+                var nX = parseFloat( tokens[3]);
+                var nY = parseFloat( tokens[4]);
+                var nZ = parseFloat( tokens[5]);
+                             
+                var u  = parseFloat( tokens[7]);
+                var v  = parseFloat( tokens[8]);
+                
+                var bX = parseFloat( tokens[9]);
+                var bY = parseFloat( tokens[10]);
+                var bZ = parseFloat( tokens[11]);
+                  
+                positions.push( x );
+                positions.push( y );
+                positions.push( z );
+                
+                texCoords.push( u );
+                texCoords.push( -v );       // Negate V to accomodate handedness shift
+                
+                normals.push( nX );
+                normals.push( nY );
+                normals.push( nZ );
+               
+                binormals.push( bX );
+                binormals.push( bY );
+                binormals.push( bZ );  // Flip the binormal attribute or not?
+            }
+        vertexData.push( [positions, texCoords, normals, binormals] );   // For each mesh, store these critical values
+        }
+        
+    return vertexData;
+    }
+   
+   
+   
+    function get_Mash( meshPath )
+    {           
+        var meshParser    = new Parser( meshPath );
+        var indexData     = get_Indices(  meshParser.the_Document.get_Subfields( "indices" ) );     // For each mesh, the array contains a list of indices
+        var vertexData    = get_Vertices( meshParser.the_Document.get_Subfields( "vertices" ) );     // For each mesh, the array contains a list of vertices
+    
+    return [ vertexData, indexData ];
+    }
+   
+   
+   
+   // IF not... Need to implement a retarded case - switch or if then else loop.
+    function load_Light( variables ) 
+    {
+          var lightName       = variables[0].casted();
+          var lightID         = variables[1].casted();
+          var lightPos        = variables[2].casted();
+          var lightRot        = variables[3].casted();
+          var lightScale      = variables[4].casted();
+                        
+          var color_Ambient   = variables[9].casted();
+          var color_Diffuse   = variables[10].casted();
+          var color_Specular  = variables[11].casted();
+                        
+          var attenuation     = variables[12].casted();
+          var radius          = variables[13].casted();
+  
+    return new Light( lightPos , radius, color_Ambient, color_Diffuse, color_Specular, attenuation.x, attenuation.y, attenuation.z );
+    }
    
