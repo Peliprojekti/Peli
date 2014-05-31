@@ -110,8 +110,8 @@
 
 
 
-    Matrix44.prototype.multiply = function( mat )
-    {
+Matrix44.prototype.multiply = function( mat )
+{
         var mtx = new Matrix44();
         
         mtx.m11 = mat.m11*this.m11 + mat.m12*this.m21 + mat.m13*this.m31 + mat.m14*this.m41;
@@ -134,8 +134,30 @@
         mtx.m43 = mat.m41*this.m13 + mat.m42*this.m32 + mat.m43*this.m33 + mat.m44*this.m43;
         mtx.m44 = mat.m41*this.m14 + mat.m42*this.m24 + mat.m43*this.m34 + mat.m44*this.m44;
     
-    return mtx;
-    }
+return mtx;
+}
+
+
+
+Matrix44.prototype.transform = function( vec4 )
+{
+    var x = vec4.x;
+    var y = vec4.y;
+    var z = vec4.z;
+    var w = vec4.w;
+        
+    var vOut = new Vector4( (x * this.m11 + y * this.m21 + z * this.m31 + w * this.m41 ),
+                            (x * this.m12 + y * this.m22 + z * this.m32 + w * this.m42 ),
+                            (x * this.m13 + y * this.m23 + z * this.m33 + w * this.m43 ),
+                            (x * this.m14 + y * this.m24 + z * this.m34 + w * this.m44 ) );
+return vOut;
+}
+
+
+
+
+
+
 
 
 
@@ -184,4 +206,24 @@
                          this.m31, this.m32, this.m33, this.m34,
                          this.m41, this.m42, this.m43, this.m44 ];
     return retArray;
+    }
+    
+    
+    Matrix44.prototype.toMatrix33 = function()
+    {
+        var ret = new Matrix33();
+            
+        ret.m11 = this.m11; 
+        ret.m12 = this.m12; 
+        ret.m13 = this.m13;
+            
+        ret.m21 = this.m21; 
+        ret.m22 = this.m22; 
+        ret.m23 = this.m23;
+            
+        ret.m31 = this.m31; 
+        ret.m32 = this.m32; 
+        ret.m33 = this.m33;
+        
+    return ret;
     }

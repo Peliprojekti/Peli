@@ -1,29 +1,32 @@
 // This is an example file that shows how shaders are described from now on.
 
 // Start by declaring namespace that has the same name as the filename.
+// This will be the label used to refer to the shader
 var Shader1 = 
 {
          
     initializer :  function( gl , shaderProgram )
     {
-        shaderProgram.vertexPositionAttribute   = gl.getAttribLocation( shaderProgram, "vertexPos");
-                                                  gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-        shaderProgram.vertexNormalAttribute     = gl.getAttribLocation(shaderProgram, "vertexNormal" );
-                                                  gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);                
-        shaderProgram.vertexBinormalAttribute   = gl.getAttribLocation( shaderProgram, "vertexBinormal");
-                                                  gl.enableVertexAttribArray(shaderProgram.vertexBinormalAttribute);                
-        shaderProgram.vertexTangentAttribute    = gl.getAttribLocation( shaderProgram, "vertexTangent");
-                                                  gl.enableVertexAttribArray(shaderProgram.vertexTangentAttribute);                
-        shaderProgram.textureCoordAttribute     = gl.getAttribLocation(shaderProgram,  "vertexUV");
-                                                  gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
-        shaderProgram.samplerUniform            = gl.getUniformLocation(shaderProgram, "texSampler" );
-        shaderProgram.pMatrixUniform            = gl.getUniformLocation(shaderProgram, "projMatrix"     );
-        shaderProgram.mvMatrixUniform           = gl.getUniformLocation(shaderProgram, "worldViewMatrix");
-        shaderProgram.mMatrixUniform            = gl.getUniformLocation(shaderProgram, "worldMatrix"    );
-        shaderProgram.lightsUniform             = gl.getUniformLocation( shaderProgram, "lights"); 
-        shaderProgram.lightCntUniform           = gl.getUniformLocation( shaderProgram, "lightCnt"); 
-        shaderProgram.lColorsUniform            = gl.getUniformLocation(shaderProgram, "lColors"    );
-        shaderProgram.eyePositionUniform        = gl.getUniformLocation( shaderProgram, "eyePosition"); 
+        shaderProgram.vertexPositionAttribute   = gl.getAttribLocation( shaderProgram, "vertexPos"      );
+        shaderProgram.vertexNormalAttribute     = gl.getAttribLocation( shaderProgram, "vertexNormal"   );
+        shaderProgram.vertexBinormalAttribute   = gl.getAttribLocation( shaderProgram, "vertexBinormal" );
+        shaderProgram.vertexTangentAttribute    = gl.getAttribLocation( shaderProgram, "vertexTangent"  );
+        shaderProgram.textureCoordAttribute     = gl.getAttribLocation( shaderProgram, "vertexUV"       );
+                                                  
+        gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+        gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute); 
+        gl.enableVertexAttribArray(shaderProgram.vertexBinormalAttribute);  
+        gl.enableVertexAttribArray(shaderProgram.vertexTangentAttribute);     
+        gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+        
+        shaderProgram.samplerUniform            = gl.getUniformLocation( shaderProgram, "texSampler"     );
+        shaderProgram.pMatrixUniform            = gl.getUniformLocation( shaderProgram, "projMatrix"     );
+        shaderProgram.mvMatrixUniform           = gl.getUniformLocation( shaderProgram, "worldViewMatrix");
+        shaderProgram.mMatrixUniform            = gl.getUniformLocation( shaderProgram, "worldMatrix"    );
+        shaderProgram.lightsUniform             = gl.getUniformLocation( shaderProgram, "lights"         ); 
+        shaderProgram.lightCntUniform           = gl.getUniformLocation( shaderProgram, "lightCnt"       ); 
+        shaderProgram.lColorsUniform            = gl.getUniformLocation( shaderProgram, "lColors"        );
+        shaderProgram.eyePositionUniform        = gl.getUniformLocation( shaderProgram, "eyePosition"    ); 
     },
 
 
@@ -48,34 +51,32 @@ var Shader1 =
             }
         }
        
-        var lightCnt = lights.length;
-       
-        if( lightCnt != 0 )  // Setup lights here.
+        if( lights.length != 0 )  // Setup lights here.
         {
             var posArray = [];
             var colArray = [];
             
-            for( var i = 0; i < lightCnt; i++ )   //"-64.297035 , -34.088657 , -117.10157"
+            for( var i = 0; i < lights.length; i++ )   //"-64.297035 , -34.088657 , -117.10157"
             {
                 var pos = lights[i].orientation.get_Position();
                 posArray.push( pos.x );
                 posArray.push( pos.y );
                 posArray.push( pos.z );
                 
-                var col = lights[i].colors[1];  // Diffuse
-                colArray.push(  1.0 );
-                colArray.push(  1.0 );
-                colArray.push(  1.0 );
+                var col = lights[i].colors[1];  
+                colArray.push( 1.0 );
+                colArray.push( 1.0 );
+                colArray.push( 1.0 );
             }
             
-        shaderProgram.lights        = gl.getUniformLocation(shaderProgram , "lights"           );  
-                                      gl.uniform3fv( shaderProgram.lightsUniform   , posArray  );
+        shaderProgram.lights        = gl.getUniformLocation(shaderProgram , "lights"                );  
+                                      gl.uniform3fv( shaderProgram.lightsUniform   , posArray       );
         
-        shaderProgram.lightCnt       = gl.getUniformLocation(shaderProgram, "lightCnt"          );
-                                       gl.uniform1i( shaderProgram.lightCntUniform , lightCnt   );    
+        shaderProgram.lightCnt      = gl.getUniformLocation(shaderProgram, "lightCnt"               );
+                                      gl.uniform1i( shaderProgram.lightCntUniform , lights.length   );    
                                            
-        shaderProgram.lColors        = gl.getUniformLocation(shaderProgram, "lColors"           );
-                                       gl.uniform3fv( shaderProgram.lColorsUniform , colArray   );    
+        shaderProgram.lColors       = gl.getUniformLocation(shaderProgram, "lColors"                );
+                                      gl.uniform3fv( shaderProgram.lColorsUniform , colArray        );    
         }
        
         var eyePos = camera.get_Position();
