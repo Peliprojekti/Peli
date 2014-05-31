@@ -40,7 +40,7 @@ dummy.screen = {
         this.entities.create({
             name: "companionSquare",
             type: "rectangleTarget",
-            x: 100,
+            x: canvas.width - 200,
             y: 100,
             angle: 50,
             width: 100,
@@ -76,7 +76,7 @@ dummy.screen = {
         self.drawBackground(time);
 
         self.updateControllers(time);
-        self.box2d.update(time);
+        //self.box2d.update(time);
 
         self.entities.drawAll();
 
