@@ -1,3 +1,4 @@
+/*
 describe('the MotionController object', function() {
 
 //Create an easily-removed container for our tests to play in
@@ -26,3 +27,4 @@ describe('the MotionController object', function() {
 //        });
     });
 });
+*/

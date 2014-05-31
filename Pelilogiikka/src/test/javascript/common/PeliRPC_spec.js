@@ -1,24 +1,50 @@
 describe('the PeliRPC object', function() {
+    var connection;
 
-//Create an easily-removed container for our tests to play in
     beforeEach(function() {
+        connection = {
+            connect: function() {},
+            sendMessage: function() {}
+        };
     });
-    //Clean it up after each spec
+
     afterEach(function() {
     });
+
     //Specs
-    describe('PeliRPC tests', function() {
-        it('gets onMessage', function() {
-            var testPRPC = new PeliRPC(new Object());
+    describe('constructor', function() {
+        it('works correctly', function() {
+            var testPRPC = new PeliRPC(connection);
             expect(testPRPC.getOnMessage()).not.toBeNull();
         });
-        it('calls RPC', function() {
-            var testPRPC = new PeliRPC(new Object());
-            expect(true).toBeTruthy
+    });
+
+    describe('exposeRpcMethod', function() {
+        var rpc = new PeliRPC(connection);
+
+        it('throws errors on incorrect calls', function() {
+            expect(function() {
+                rpc.exposeRpcMethod("just a string");
+            }).toThrow();
+            expect(function() {
+                rpc.exposeRpcMethod('no function supplied', null, null);
+            }).toThrow();
         });
-        it('exposes RPC method', function() {
-            var testPRPC = new PeliRPC(new Object());
-            expect(true).toBeTruthy
+
+        it('accepts proper calls', function() {
+            expect(
+                rpc.exposeRpcMethod('function, no context', null, function() {})
+                ).toBe(true);
+            expect(
+                rpc.exposeRpcMethod('function, with context', null, function() {})
+                ).toBe(true);
+        });
+
+        it('throws error on exposing same method name twice', function() {
+            rpc.exposeRpcMethod('myname', null, function() {});
+            expect(function() {
+                rpc.exposeRpcMethod('myname', null, function() {});
+            }).toThrow();
         });
     });
 });

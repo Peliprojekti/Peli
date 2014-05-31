@@ -1,3 +1,4 @@
+/*
 describe('the Phone object', function() {
 
 //Create an easily-removed container for our tests to play in
@@ -15,3 +16,4 @@ beforeEach(function() {
 //        });
         });
         });
+*/
