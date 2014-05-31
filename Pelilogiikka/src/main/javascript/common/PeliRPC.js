@@ -147,13 +147,15 @@ PeliRPC.prototype.callRpc = function(method, params, object, listener) {
 };
 
 PeliRPC.prototype.exposeRpcMethod = function(name, object_, method_) {
-    console.info("RPC exposing ", name);
+    console.info("PeliRPC exposing ", name);
     if (!this.rpcMethods[name]) {
         this.rpcMethods[name] = {
             object: object_,
             method: method_
         };
+        //return true;
     } else {
         throw new Error("Trying to expose rpcMethods with the same name: " + name);
+        //return false;
     }
 };

@@ -1,3 +1,4 @@
+/*
 describe('the Coms object', function() {
 
     //Create an easily-removed container for our tests to play in
@@ -28,3 +29,4 @@ describe('the Coms object', function() {
 
 
 });
+*/

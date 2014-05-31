@@ -1,21 +1,49 @@
 describe('the PeliRPC object', function() {
+    var connection;
 
-//Create an easily-removed container for our tests to play in
     beforeEach(function() {
+        connection = {
+            connect: function() {},
+            sendMessage: function() {}
+        };
     });
-    //Clean it up after each spec
+
     afterEach(function() {
     });
+
     //Specs
-    describe('PeliRPC tests', function() {
-        it('gets onMessage', function() {
-            var testPRPC = new PeliRPC(new Object());
+    describe('constructor', function() {
+        it('works correctly', function() {
+            var testPRPC = new PeliRPC(connection);
             expect(testPRPC.getOnMessage()).not.toBeNull();
         });
+    });
+
+    describe('exposeRpcMethod', function() {
+        it('correctly exposes only valid rpc methods', function() {
+            var rpc = new PeliRPC(connection);
+            expect( 
+                rpc.exposeRpcMethod("just a string")
+                ).toBe(false);
+            expect(
+                rpc.exposeRpcMethod('no function supplied', null, null)
+                ).toBe(false);
+            expect(
+                rpc.exposeRpcMethod('function, no context', null, function() {})
+                ).toBe(true);
+            expect(
+                rpc.exposeRpcMethod('function, with context', null, function() {})
+                ).toBe(true);
+            expect(
+                rpc.exposeRpcMethod('function, with context', null, function() {})
+                ).toBe(false);
+        });
+
         it('calls RPC', function() {
-            var testPRPC = new PeliRPC(new Object());
+            var testPRPC = new PeliRPC(connection);
             expect(true).toBeTruthy
         });
+
         it('exposes RPC method', function() {
             var testPRPC = new PeliRPC(new Object());
             expect(true).toBeTruthy
