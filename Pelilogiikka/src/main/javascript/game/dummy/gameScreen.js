@@ -109,7 +109,8 @@ dummy.screen = {
     updateControllers: function (time) {
         "use strict";
         this.controllers.forEach(function (c) {
-            c.update(time);
+            // TODO these need to be removed...
+            if (c) c.update(time);
         });
     },
     drawPlayers: function () {

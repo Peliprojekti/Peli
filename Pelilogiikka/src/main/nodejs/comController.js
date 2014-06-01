@@ -21,7 +21,7 @@ module.exports = new function() {
                     if (socket.readyState === 'open') {
                         socket.send(data);
                     } else {
-                        require('util').warn("engine.io/controller - trying to forward to closed client");
+                        require('util').log("engine.io/controller - trying to forward to closed client");
                         //gameSocket.requestClose();
                     }
 				});
