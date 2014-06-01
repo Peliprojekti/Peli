@@ -9,7 +9,10 @@ controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, cr
     var drawDot = false,
         x = canvas.width / 2,
         y = canvas.width / 2,
+        stickID = null,
         r = 10;
+
+    peliAudio.loadSound('gun', true);
 
     controller.loadedTypes.ThumbStick.draw  = function (context) {
         if (drawDot === true) {
@@ -23,21 +26,26 @@ controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, cr
         }
     };
 
-    peliAudio.loadSound('gun', true);
 
     var touchStartListener = function (event) {
         event.preventDefault();
         for (var i = 0; i < event.targetTouches.length; i++) {
-            if (event.targetTouches[i].pageX < (canvas.width / 2)) {
+            if (drawDot === false && event.targetTouches[i].pageX < (canvas.width / 2)) {
                 drawDot = true;
-                /* Tää aiheuttaa nykimistä jostain syystä, en ymmärrä miksei tehnyt sitä aijemmassa versiossa...
+                stickID = event.targetTouches[i].identifier;
                 x = event.targetTouches[i].pageX;
                 y = event.targetTouches[i].pageY;
-                coms.call('thumbStickPosition', [
-                    (x / canvas.width) * 2,
-                    (y / canvas.heigth) * 2
+                //sendServerMessage("START");
+                //sendServerMessage("xy",x,y);
+                //sendServerMessage("canvas", canvas.width, canvas.height);
+                var sendX = (x / canvas.width) * 2;
+                var sendY = (y / canvas.height) * 2;
+                //sendServerMessage("sendstuff", sendX, sendY);
+                coms.call('thumbStickPosition', [ 
+                    //sendX, sendY
+                    (x / canvas.width) * 2, 
+                    (y / canvas.height) * 2 
                 ], null, null);
-                */
             }
             else {
                 coms.call('buttonPushed', null, null);
@@ -49,7 +57,7 @@ controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, cr
     var touchMoveListener = function (event) {
         event.preventDefault();
         for (var i = 0; i < event.targetTouches.length; i++) {
-            if (event.targetTouches[i].pageX < (canvas.width / 2)) {
+            if (event.targetTouches[i].identifier === stickID) {
                 x = event.targetTouches[i].pageX;
                 y = event.targetTouches[i].pageY;
                 coms.call('thumbStickPosition', [
@@ -62,10 +70,14 @@ controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, cr
 
     var touchEndListener = function (event) {
         event.preventDefault();
-        drawDot = false;
-        coms.call('thumbStickPosition', [0.5, 1], null, null);
+        for (var i = 0; i < event.changedTouches.length; i++) {
+            if (event.changedTouches[i].identifier === stickID) {
+                drawDot = false;
+                stickID = null;
+                coms.call('thumbStickPosition', [0.5, 1], null, null);
+            }
+        }
     };
-
 
     canvas.addEventListener("touchstart", touchStartListener, false);
     canvas.addEventListener("touchmove", touchMoveListener, false);

@@ -1,7 +1,7 @@
 /*jslint browser: true*/
 /*global console: false*/
 /*global $: false*/
-/*global USERID: false*/
+/*global USERID: true*/
 /*global controller: false*/
 var client = client || {};
 
@@ -76,11 +76,10 @@ client.phone = {
     },
     onConnectionOpened: function () {
         "use strict";
-        var self = client.phone;
-        self.connectingDiv.style.display = 'none';
-        client.coms.call('joinGame', [USERID], self,
+        this.connectingDiv.style.display = 'none';
+        client.coms.call('joinGame', [USERID], this,
             function (rpc_id, rpc_error, retval) {
-                self.loadController(retval[0], retval[1]);
+                this.loadController(retval[0], retval[1]);
             });
     },
     onConnectionClosed: function() {
@@ -96,18 +95,6 @@ client.phone = {
         "use strict";
         this.controllerLines = lines;
     },
-    /*
-     registerController: function (type, enabler) {
-     "use strict";
-     var self = client.phone;
-     
-     if (!self.controllers[type]) {
-     self.controllers[type] = enabler;
-     } else {
-     throw new Error("Trying to register multiple controllers of type: " + type);
-     }
-     },
-     */
     loadController: function (type, crosshair) {
         "use strict";
 
@@ -157,7 +144,7 @@ client.phone = {
             "Coordinates: (" + x + ", " + y + ")",
             "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
             );
-    },
+    }
 };
 
 $(document).ready(client.phone.onDocumentReady.bind(client.phone));

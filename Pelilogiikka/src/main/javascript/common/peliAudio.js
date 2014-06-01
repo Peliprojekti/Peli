@@ -32,7 +32,6 @@ var peliAudio = {
 
         soundObj.audio[soundObj.index].play();
         soundObj.index = (soundObj.index + 1) % soundObj.audio.length;
-        sendServerMessage("playing sound " + soundObj.index);
     },
     filename: function (sound) {
         "use strict";
