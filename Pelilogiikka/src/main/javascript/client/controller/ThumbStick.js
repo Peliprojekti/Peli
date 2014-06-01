@@ -35,14 +35,7 @@ controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, cr
                 stickID = event.targetTouches[i].identifier;
                 x = event.targetTouches[i].pageX;
                 y = event.targetTouches[i].pageY;
-                //sendServerMessage("START");
-                //sendServerMessage("xy",x,y);
-                //sendServerMessage("canvas", canvas.width, canvas.height);
-                var sendX = (x / canvas.width) * 2;
-                var sendY = (y / canvas.height) * 2;
-                //sendServerMessage("sendstuff", sendX, sendY);
                 coms.call('thumbStickPosition', [ 
-                    //sendX, sendY
                     (x / canvas.width) * 2, 
                     (y / canvas.height) * 2 
                 ], null, null);

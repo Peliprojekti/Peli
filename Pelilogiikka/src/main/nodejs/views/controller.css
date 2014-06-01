@@ -33,5 +33,19 @@ body,html {
 #connecting h1 {
     text-align: center;
     text-decoration: blink;
+    font-size: 300%;
+}
+
+#connecting div {
+    text-align: center;
+}
+
+#connecting button {
+    width: 50%;
+    font-size: 250%;
+    background-color: #40AA40;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius:6px;
 }
     

@@ -1,7 +1,7 @@
 var controller = controller || {};
 
 controller.loadedTypes = controller.loadedTypes || [];
-controller.loadedTypes['speedTest'] = function(container, canvas, phone, coms) {
+controller.loadedTypes.speedTest = function(container, canvas, phone, coms) {
     var self = this;
     var autoFireInterval = 1;
     var reportInterval = 1000;

@@ -84,7 +84,6 @@ client.phone = {
     },
     onConnectionClosed: function() {
         "use strict";
-        /* coms automatically tries to reconnect */
         this.connectingDiv.style.display = '';
     },
     addDrawable: function (drawable) {

@@ -22,7 +22,7 @@ client.coms.open = function(callback, connectionClosedCallback) {
                     console.warn("connection error, trying to reconnect in 1s");
 
                     setTimeout(function() {
-                        client.coms.open(callback, connectionClosedCallback);
+                        //client.coms.open(callback, connectionClosedCallback);
                     }, 1000 );
                 },
                 rpc.getOnMessage());
