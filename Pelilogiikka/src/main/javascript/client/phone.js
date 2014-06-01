@@ -24,7 +24,7 @@ client.phone = {
         );
         this.onResize();
 
-        this.controllerView.add(new graphics2d.fpsDisplay.create(document.getElementById("canvas")));
+        this.controllerView.add(new fpsDisplay.create(document.getElementById("canvas")));
 
         client.coms.open(this.onConnectionOpened);
 

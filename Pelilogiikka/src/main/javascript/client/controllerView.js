@@ -82,11 +82,7 @@ client.controllerView = {
 
         this.entities.forEach(function (e) {
             if (e.draw) {
-                //console.debug("draw", e)
                 e.draw(ctx);
-            }
-            else {
-                console.debug("dont draw", e);
             }
         });
 

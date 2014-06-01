@@ -1,7 +1,8 @@
 /*global console: false*/
 /*global $: false*/
 /*global game: false*/
-/*global graphics2d: false*/
+/*global rpsDisplay: false*/
+/*global fpsDisplay: false*/
 /*jslint browser: true*/
 
 var dummy = dummy || {};
@@ -22,15 +23,11 @@ dummy.game = {
 
         this.initConfigMenu();
 
-        //this.updateables.push(graphics2d.fpsDisplay.createFancy(canvas));
-        //this.updateables.push(graphics2d.rpsDisplay.createFancy(canvas));
-        //this.updateables.push(graphics2d.playerPerformance.create(canvas));
-
         this.connectToServer();
         this.screen = dummy.screen;
         this.screen.setPhysicsEnabled(this.initialConfig.enablePhysics);
-        this.screen.addToBackground(graphics2d.fpsDisplay.createFancy(canvas));
-        this.screen.addToBackground(graphics2d.rpsDisplay.createFancy(canvas));
+        this.screen.addToBackground(fpsDisplay.createFancy(canvas));
+        this.screen.addToBackground(rpsDisplay.createFancy(canvas));
 
         this.screen.start(document.getElementById("canvas"));
     },

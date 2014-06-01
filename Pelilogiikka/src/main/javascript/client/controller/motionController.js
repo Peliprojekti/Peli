@@ -1,6 +1,10 @@
+/*jslint browser: true*/
+/*global peliAudio: true*/
+/*global controller: false*/
 var controller = controller || {};
 
-controller.motionController = function(container, canvas, phone, coms) {
+controller.loadedTypes = controller.loadedTypes || [];
+controller.loadedTypes.motionController = function(container, canvas, phone, coms) {
 	function MotionController() {
 		//this.coms = null;
 	}

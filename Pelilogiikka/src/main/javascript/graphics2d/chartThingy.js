@@ -1,13 +1,9 @@
-/*global console: false*/
-/*global graphics2d: false*/
 /*jslint browser: true*/
 
-var graphics2d = graphics2d || {};
-
-graphics2d.chartThingy = {
+chartThingy = {
     create: function (canvas, x, y, width, height, scale, flip) {
         "use strict";
-        return new graphics2d.chartThingy.ChartThingy(canvas, x, y, width, height, scale, flip);
+        return new chartThingy.ChartThingy(canvas, x, y, width, height, scale, flip);
     },
     ChartThingy: function (canvas, x, y, width, height, scale, flip) {
         "use strict";
@@ -27,7 +23,7 @@ graphics2d.chartThingy = {
     }
 };
 
-graphics2d.chartThingy.ChartThingy.prototype.addValue = function (value) {
+chartThingy.ChartThingy.prototype.addValue = function (value) {
     "use strict";
     while (Math.abs(value * this.scale) > this.height) {
         //this.scale *= 0.8;
@@ -47,9 +43,9 @@ graphics2d.chartThingy.ChartThingy.prototype.addValue = function (value) {
     }
 };
 
-graphics2d.chartThingy.ChartThingy.prototype.update = function () {};
+chartThingy.ChartThingy.prototype.update = function () {};
 
-graphics2d.chartThingy.ChartThingy.prototype.draw = function (ctx) {
+chartThingy.ChartThingy.prototype.draw = function (ctx) {
     "use strict";
     var i,
         max = this.values.length;
