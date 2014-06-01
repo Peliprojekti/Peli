@@ -2,7 +2,7 @@
  * Sends messages to server
  */
 sendServerMessage = function(msg) {
-    if (sendServerMessage._socket === undefined) {
+    if (sendServerMessage._socket === undefined || sendServerMessage._socket === null) {
         var socket = eio.Socket(
                 { host: location.hostname, port: 1340 }, // TODO hardcoded port here!
                 { transports: ['websocket','polling'] });

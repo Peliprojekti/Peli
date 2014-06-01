@@ -7,6 +7,7 @@ body,html {
 }
 
 #container {
+    z-index: 1;
 	width: 100%;
 	height: 100%;
 	overflow: auto;
@@ -18,3 +19,19 @@ body,html {
 	display: block;
 	overflow: auto;
 }
+
+#connecting {
+    z-index: 2;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: green;
+}
+
+#connecting h1 {
+    text-align: center;
+    text-decoration: blink;
+}
+    

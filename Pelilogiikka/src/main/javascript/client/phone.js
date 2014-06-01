@@ -10,12 +10,14 @@ client.phone = {
     controllerDisabler: null,
     isOrienting: false,
     isResizing: false,
+    connectingDiv: null,
     rc: 0,
     oc: 0,
     controllerView: null,
     onDocumentReady: function () {
         "use strict";
 
+        this.connectingDiv = document.getElementById("connecting");
         this.io = navigator.userAgent.match(/(iPhone)|(iPod)/);
 
         this.controllerView = client.controllerView.create(
@@ -26,7 +28,7 @@ client.phone = {
 
         this.controllerView.add(new fpsDisplay.create(document.getElementById("canvas")));
 
-        client.coms.open(this.onConnectionOpened);
+        client.coms.open(this.onConnectionOpened.bind(this), this.onConnectionClosed.bind(this));
 
         $(window).on("orientationchange", this.onOrientationChange.bind(this));
         $(window).resize(this.onResize.bind(this));
@@ -75,10 +77,16 @@ client.phone = {
     onConnectionOpened: function () {
         "use strict";
         var self = client.phone;
+        self.connectingDiv.style.display = 'none';
         client.coms.call('joinGame', [USERID], self,
             function (rpc_id, rpc_error, retval) {
                 self.loadController(retval[0], retval[1]);
             });
+    },
+    onConnectionClosed: function() {
+        "use strict";
+        /* coms automatically tries to reconnect */
+        this.connectingDiv.style.display = '';
     },
     addDrawable: function (drawable) {
         "use strict";
