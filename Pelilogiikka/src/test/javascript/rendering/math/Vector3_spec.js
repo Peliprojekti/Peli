@@ -67,5 +67,14 @@ describe('the Vector3 object', function() {
             expect(result.y).toBe(4);
             expect(result.z).toBe(4);
         });
+        it('crosses the vector with another vector', function() {
+           var vec1 = new Vector3(1, 2, 3);
+           var vec2 = new Vector3(4, 5, 6);
+           var result = vec1.cross(vec2);
+           
+            expect(result.x).toBe(-3);
+            expect(result.y).toBe(6);
+            expect(result.z).toBe(-3);
+        });
     });
 });

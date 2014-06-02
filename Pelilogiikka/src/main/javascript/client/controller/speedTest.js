@@ -6,31 +6,32 @@ var controller = controller || {};
 controller.loadedTypes = controller.loadedTypes || [];
 controller.loadedTypes.speedTest = function (container, canvas, phone, coms) {
     "use strict";
-    var autoFireInterval = 1,
-        sequence = 0,
-        report = [],
+    var sequence = 0,
+        stop = false,
         y = Math.random(),
-        inter_autoFire = null,
+        returnTime = null,
         autoFire = function () {
-            var sendTime = Date.now();
+            if (!stop) {
+                /* calls are made in sequence, so only last returnTime is needed */
 
-            coms.call('position', [
-                ((sequence % 200) / 200),
-                y,
-                report.pop()
-            ],
-                null,
-                function () {
-                    report.push([sendTime, Date.now()]);
-                });
-
-            sequence += 1;
+                coms.call('position', [
+                    ((sequence % 200) / 200),
+                    y,
+                    returnTime
+                ],
+                    null,
+                    function () {
+                        returnTime = Date.now();
+                        autoFire();
+                    });
+                sequence += 1;
+            }
         };
 
-    inter_autoFire = setInterval(autoFire, autoFireInterval);
+    autoFire();
 
     return function () {
-        clearInterval(inter_autoFire);
+        stop = true;
         autoFire = null;
         canvas = null;
     };
