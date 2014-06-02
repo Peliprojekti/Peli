@@ -15,7 +15,6 @@ describe('the ThumbStick object', function () {
             var canvas = document.createElement("canvas");
             var coms = {
                 call: function (method, params, object, callback) {
-
                 }
             };
 
@@ -23,10 +22,10 @@ describe('the ThumbStick object', function () {
 
             client.loadedTypes.ThumbStick(null, canvas, null, coms);
 
-            var evt = document.createEvent("TouchEvent")
+            var evt = document.createEvent("Events")
             //Aim: initialize it to be the event we want
             evt.initEvent('touchstart', true, true); //true for can bubble, true for cancelable
-            //evt.targetTouches = [{pageX: 12, pageY: 10}, {pageX: 12, pageY: 10}];
+            evt.targetTouches = [{pageX: 12, pageY: 10}, {pageX: 12, pageY: 10}];
             //FIRE!
             canvas.dispatchEvent(evt);
             

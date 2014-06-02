@@ -12,7 +12,7 @@ client.loadedTypes.ThumbStick = function (container, canvas, phone, coms, crossh
         stickID = null,
         r = 10;
 
-    peliAudio.loadSound('gun', true);
+    //peliAudio.loadSound('gun', true);
 
     client.loadedTypes.ThumbStick.draw  = function (context) {
         if (drawDot === true) {
@@ -42,7 +42,7 @@ client.loadedTypes.ThumbStick = function (container, canvas, phone, coms, crossh
             }
             else {
                 coms.call('buttonPushed', null, null);
-                peliAudio.play('gun');
+                //peliAudio.play('gun');
             }
         }
     };

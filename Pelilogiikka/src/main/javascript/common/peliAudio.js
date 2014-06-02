@@ -5,33 +5,38 @@ var peliAudio = {
     maxSame: 10,
     soundFolder: '/data/sounds/',
     supported: null,
+    enabled: true,
     sounds: {},
     loadSound: function (sound, doMany) {
         "use strict";
-        console.info("peliAudio::loadSound ", sound, doMany);
-        var filename = this.soundFolder + sound + this.supportedAudioType(),
-            count = (doMany === true ? this.maxSame : 1),
-            soundObj = {
-                index: 0,
-                audio: []
-            };
+        if (this.enabled) {
+            console.info("peliAudio::loadSound ", sound, doMany);
+            var filename = this.soundFolder + sound + this.supportedAudioType(),
+                count = (doMany === true ? this.maxSame : 1),
+                soundObj = {
+                    index: 0,
+                    audio: []
+                };
 
-        while (count > 0) {
-            soundObj.audio.push(new Audio(filename));
-            count -= 1;
+            while (count > 0) {
+                soundObj.audio.push(new Audio(filename));
+                count -= 1;
+            }
+
+            this.sounds[sound] = soundObj;
         }
-
-        this.sounds[sound] = soundObj;
     },
     play: function (sound) {
         "use strict";
-        if (!this.sounds[sound]) {
-            this.loadSound(sound);
-        }
-        var soundObj = this.sounds[sound];
+        if (this.enabled) {
+            if (!this.sounds[sound]) {
+                this.loadSound(sound);
+            }
+            var soundObj = this.sounds[sound];
 
-        soundObj.audio[soundObj.index].play();
-        soundObj.index = (soundObj.index + 1) % soundObj.audio.length;
+            soundObj.audio[soundObj.index].play();
+            soundObj.index = (soundObj.index + 1) % soundObj.audio.length;
+        }
     },
     filename: function (sound) {
         "use strict";
@@ -59,7 +64,7 @@ var peliAudio = {
              */
             else {
                 //sendServerMessage('Audio support for wav detected');
-                this.suported = '.wav';
+                this.enabled = false;
             }
         }
 
