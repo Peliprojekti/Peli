@@ -62,6 +62,39 @@ describe('the Vector2 object', function() {
             expect(result.x).toBe(4);
             expect(result.y).toBe(4);
         });
+        it('interpolates the vector', function() {
+            var vec = new Vector2(1, 1);
+            var target = new Vector2(2, 2);
+            
+            var result = vec.interpolate(target, 0);
+            expect(result.x).toBe(1);
+            expect(result.y).toBe(1);
+            
+            result = vec.interpolate(target, 0.3);
+            expect(result.x).toBeGreaterThan(1);
+            expect(result.x).toBeLessThan(1.5);
+            expect(result.y).toBeGreaterThan(1);
+            expect(result.y).toBeLessThan(1.5);
+            
+            result = vec.interpolate(target, 0.8);
+            expect(result.x).toBeGreaterThan(1.5);
+            expect(result.x).toBeLessThan(2);
+            expect(result.y).toBeGreaterThan(1.5);
+            expect(result.y).toBeLessThan(2);
+            
+            result = vec.interpolate(target, 1);
+            expect(result.x).toBe(2);
+            expect(result.y).toBe(2);
+        });
+        
+        it('returns the angle of the vector', function() {
+           var vec = new Vector2(5,5);
+           var baseVec = new Vector2(1, 0);
+           expect( vec.angleWith(baseVec).toFixed(5) ).toBe( (45).toFixed(5) );
+           
+           vec = new Vector2(-5,-5);
+           expect( vec.angleWith(baseVec).toFixed(5) ).toBe( (135).toFixed(5) );
+        });
     });
 
 });
