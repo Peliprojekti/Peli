@@ -6,12 +6,26 @@
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 
-<script type="text/javascript" src="external/webglutils.js"               ></script>
-<script type="text/javascript" src="external/glMatrix.js"                 ></script>
+<script type="text/javascript" src="external/webglutils.js"       ></script>
+
+<script type="text/javascript" src="Exception.js"                 ></script>
+<script type="text/javascript" src="Renderer.js"                  ></script>
+
+<script type="text/javascript" src="math/Dimension2.js"           ></script>
+<script type="text/javascript" src="math/Color.js"                ></script>
+<script type="text/javascript" src="math/Vector3.js"              ></script>
+<script type="text/javascript" src="math/Matrix33.js"             ></script>
 
 
 <script type="text/javascript">
      
+     
+     
+    function initializer()
+    {
+        new Renderer( new Dimension2( 800, 600 ) );
+        main();
+    }
      
      
      
@@ -19,14 +33,25 @@
     function tick() 
     {   
         requestAnimFrame( tick );
+        the_Renderer.begin();
         
+        
+        the_Renderer.end();
+    
     }
     
   
-    function Start() 
+    function main() 
     { 
+        
+        
+       
         tick();
     }
+
+
+
+
 
 
     
@@ -41,7 +66,7 @@
 
 
 
-<body onload="Start();">
+<body onload="Root_Exception_Handler( initializer );">
    
     <canvas id="Canvas" style="border: none;" width="1000" height="1000"></canvas>
 
