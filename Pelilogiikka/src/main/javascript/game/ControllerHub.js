@@ -65,6 +65,7 @@ game.controllerHub = {
     },
     rpcJoinGame: function (sequence, rpc, userID) {
         "use strict";
+        console.debug("here we are");
         var player = this.playerFactory.getPlayer(userID);
         var controller = this.controllerLoader.getController(player, rpc);
 

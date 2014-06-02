@@ -9,11 +9,12 @@
  */
 var peliRPC = {
     totalMessagesProcessed: 0,
+    maxCallbacks: 1000, /* should be more than enough on reasonable response times and load */
     freeRPCs: [],
     create: function (connection) {
         "use strict";
         return (peliRPC.freeRPCs.length > 0 ?
-                peliRPC.freeRPCs.pop().attachConnection(connection) :
+                this.freeRPCs.pop().attachConnection(connection) :
                 new peliRPC.PeliRPC(connection));
     },
     free: function (rpc) {
@@ -24,8 +25,8 @@ var peliRPC = {
     PeliRPC: function (connection) {
         "use strict";
         this.callObject = {};
-           this.clear();
-           this.connection = connection;
+        this.clear();
+        this.connection = connection;
     }
 };
 
@@ -88,14 +89,17 @@ peliRPC.PeliRPC.prototype.getOnMessage = function () {
 
                 try {
                     var rpcMethod = that.rpcMethods[rpc.method];
+                    //console.debug("PeliRPC::onMessage() . Applying method", rpcMethod.object, rpc.params);
                     var result = rpcMethod.method.apply(rpcMethod.object, rpc.params);
                     if (rpc.id !== null) {
+                        //console.debug("PeliRPC::onMessage() . Returning result to callback ", result, rpc.id);
                         that.connection.sendMessage({
                             "jsonrpc": "2.0",
                             "result": result,
                             "id": rpc.id
                         });
                     } else {
+
                     }
                 } catch (err) {
                     var code = (err.code ? err.code : "");
@@ -114,16 +118,16 @@ peliRPC.PeliRPC.prototype.getOnMessage = function () {
                 }
             } else {
                 //console.debug("PeliRPC::onMessage() - maybe a return value, for id ", rpc.id);
-                if (rpc.id !== undefined && (typeof that.callbacks[rpc.id] !== "undefined")) {
+                if (rpc.id !== undefined && (that.callbacks[rpc.id] !== "undefined")) {
                     if (that.callbacks[rpc.id] === 'undefined') {
                         //console.debug("PeliRPC::onMessage() - nope, no callback for id ", id);
                         return;
                     }
 
-                    if (typeof rpc.result !== "undefined") {
+                    if (rpc.result !== "undefined") {
                         //console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
                         that.callbacks[rpc.id].listener.apply(that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
-                    } else if (typeof rpc.error !== "undefined") {
+                    } else if (rpc.error !== "undefined") {
                         console.warn("PeliRPC::onMessage() - returning an error to callback: ", rpc.error);
                         that.callbacks[rpc.id].listener.apply(
                             that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
@@ -145,19 +149,20 @@ peliRPC.PeliRPC.prototype.getOnMessage = function () {
 
 peliRPC.PeliRPC.prototype.callRpc = function (method, params, object, listener) {
     "use strict";
-    this.callObject['method'] = method;
-    this.callObject['params'] = params;
+    this.callObject.method = method;
+    this.callObject.params = params;
     if (typeof listener === 'function') {
-        //console.debug("PeliRPC::callRpc - stroring callback for id ", this.callSequence);
-        this.callbacks[this.callSequence] = {
+        var realSeq = this.callSequence % peliRPC.maxCallbacks;
+        //console.debug("PeliRPC::callRpc - stroring callback for id ", this.callSequence, peliRPC.maxCallbacks, realSeq);
+        this.callbacks[realSeq] = {
             "object": object,
             "listener": listener
         };
-        this.callObject['id'] = this.callSequence;
+        this.callObject.id = realSeq;
         this.callSequence += 1;
     }
     else {
-        this.callObject['id'] = null;
+        this.callObject.id = null;
     }
 
     this.connection.sendMessage(this.callObject);
