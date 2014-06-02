@@ -65,10 +65,10 @@
                     </preloadSources>
                     <sourceIncludes>
                         <include>game/Player.js</include>
+                        <include>common/*.js</include>
                         <include>client/controller/*.js</include>
                         <include>game/controller/*.js</include>
                         <include>game/graphics2d/*.js</include>
-                        <include>common/*.js</include>
                         <include>game/*.js</include>
                         <include>rendering/*.js</include>
                         <include>rendering/**/*.js</include>

@@ -1,10 +1,10 @@
 /*jslint browser: true*/
 /*global peliAudio: true*/
-/*global controller: false*/
-var controller = controller || {};
+/*global client: false*/
+var client = client || {};
 
-controller.loadedTypes = controller.loadedTypes || [];
-controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, crosshair) {
+client.loadedTypes = client.loadedTypes || [];
+client.loadedTypes.ThumbStick = function (container, canvas, phone, coms, crosshair) {
     "use strict";
     var drawDot = false,
         x = canvas.width / 2,
@@ -14,7 +14,7 @@ controller.loadedTypes.ThumbStick = function (container, canvas, phone, coms, cr
 
     peliAudio.loadSound('gun', true);
 
-    controller.loadedTypes.ThumbStick.draw  = function (context) {
+    client.loadedTypes.ThumbStick.draw  = function (context) {
         if (drawDot === true) {
             context.strokeStyle = "#FF0000";
             context.fillStyle = "#FFFF00";
