@@ -18,29 +18,14 @@
 
     Exception.prototype.alert = function()
     {
-    alert("Root exception caught: " + this.type + " : " + this.message );
+        alert( "Exception caught: " + this.type + " : " + this.message );
     }
     
     Exception.prototype.log  = function()
     {
-       console.log( "Root exception caught: " + this.type + " : " + this.message  ); 
+       console.log( "Exception caught: " + this.type + " : " + this.message  ); 
     }
-
     
-    function Root_Exception_Handler( entryPoint )
-    {
-        console.log( "Exception handler set" );
-        try
-        {
-            entryPoint();
-        }
-        catch( exception )
-        {
-            ASSERT_TYPE( Exception, exception , "ULTIMATE FAILURE!");
-            exception.alert();
-        }
-        
-    }
     
     
     
@@ -70,10 +55,6 @@
             throw new Exception( Exception.Type.NULL , onFailMessage );
     }
         
-    function VALID( entry ) 
-    {
-        return ( typeof entry != 'undefined' ) && ( entry != null );
-    }
     
     function ASSERT_POSITIVE( entry , onFailMessage )
     {
@@ -83,13 +64,50 @@
         if( entry <= 0 )
             throw new Exception( Exception.Type.INVALID, onFailMessage );
     }
+    
   
     function ASSERT_TYPE( type , instance , onFailMessage )
     {
-       if( !(instance instanceof type) ) throw new Exception( Exception.Type.TYPE , onFailMessage );
+        if( !(instance instanceof type) ) 
+            throw new Exception( Exception.Type.TYPE , onFailMessage );
     }
+    
+    
+    function VALID( entry ) 
+    {
+        return ( typeof entry != 'undefined' ) && ( entry != null );
+    }
+    
     
     function IS_NUMERIC( value ) 
     {
-         return ( typeof value == 'number');
+        return ( typeof value == 'number' );
     }   
+    
+    
+    
+    function Root_Exception_Handler( entryPoint )
+    {
+        console.log( "Exception handler set" );
+        
+        try
+        {
+            entryPoint();
+        }
+        catch( exception )
+        {
+            try
+            {
+                ASSERT_TYPE( Exception, exception , "ULTIMATE FAILURE!");
+            }
+            catch( exception )
+            {
+                alert("This software has 3==>{DOG}(O_o)  Exception emitted was of uncatchable type. You suck and your program smells like a barnyard. ")
+            }
+         
+        exception.alert();
+        }
+        
+    console.log( "Application temrinated" );
+    }
+    

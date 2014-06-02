@@ -5,7 +5,7 @@ the_Renderer = null;
     
     function Renderer( resolution )
     {
-        ASSERT_SINGLETON( the_Renderer, "Global renderer can only be assigned once!" );
+        ASSERT_SINGLETON( the_Renderer, "Global renderer can only ever be assigned once!" );
         
         try
         {   
@@ -18,7 +18,7 @@ the_Renderer = null;
                 this.canvas.height = resolution.height;
             }
            
-            this.size   = new Dimension2( this.canvas.width, this.canvas.height );
+        this.size = new Dimension2( this.canvas.width, this.canvas.height );
         }
         catch( error )
         {
@@ -32,7 +32,10 @@ the_Renderer = null;
 
     Renderer.prototype.begin = function()
     {
-        this.gl.viewport  ( 0, 0, this.size.width,  this.size.height );
+        this.gl.viewport(   0                    ,      
+                            0                    ,
+                            this.size.width      ,  
+                            this.size.height     );
         
         this.gl.clearColor( this.fillColor.red   ,
                             this.fillColor.green ,
@@ -43,8 +46,26 @@ the_Renderer = null;
     }   
 
 
+
     Renderer.prototype.end = function()
     {
         
     }
-   
+
+
+
+    Renderer.prototype.draw_Batch = function( batch ) 
+    {
+        
+    }
+
+
+    function Batch()
+    {
+        // vertex sources
+        // index  sources   
+        // Vertex attributes
+        // Batch flags
+    };
+    
+    

@@ -54,8 +54,12 @@
         var ret    = new Matrix33();
 
         for( var i = 0; i < 3; i++ )
+        {  
             for( var j = 0; j < 3; j++ )
-                ret.data[(3*i)+j] = mat.data[3*i]*this.data[0] + mat.data[(3*i)+1]*this.data[3] + mat.data[(3*i)+2]*this.data[6];
+            {
+                ret.data[(3*i)+j] = mat.data[3*i]*this.data[0+j] + mat.data[(3*i)+1]*this.data[3+j] + mat.data[(3*i)+2]*this.data[6+j];
+            }
+        }
         
         /*
         ret.data[0] = mat.data[0]*this.data[0] + mat.data[1]*this.data[3] + mat.data[2]*this.data[6];
