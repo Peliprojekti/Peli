@@ -8,7 +8,7 @@ client.coms = client.coms || {};
 client.coms.open = function(callback, connectionClosedCallback) {
     if (!client.coms._isOpened) {
         var connection = new ConnectionEngineIO(location.hostname, CLIENT_PORT, JSONRPC_PROTOCOL, true);
-        var rpc = new PeliRPC(connection);
+        var rpc = new peliRPC.create(connection);
 
         client.coms._rpc = rpc;
 
@@ -16,7 +16,6 @@ client.coms.open = function(callback, connectionClosedCallback) {
 
         connection.connect(callback, 
                 function() {
-                    console.log("here we are");
                     client.coms._isOpened = false;
                     connectionClosedCallback();
                     console.warn("connection error, trying to reconnect in 1s");

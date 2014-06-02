@@ -1,3 +1,5 @@
+/*jslint browser: true*/
+
 var game = game || {};
 
 game.controllerHub = {

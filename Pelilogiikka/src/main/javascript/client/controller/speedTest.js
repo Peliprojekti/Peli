@@ -1,32 +1,33 @@
+/*jslint browser: true*/
+/*global coms: true*/
+/*global controller: true*/
 var controller = controller || {};
 
 controller.loadedTypes = controller.loadedTypes || [];
 controller.loadedTypes.speedTest = function (container, canvas, phone, coms) {
     "use strict";
-    var autoFireInterval = 1;
-    var sequence = 0;
+    var autoFireInterval = 1,
+        sequence = 0,
+        report = [],
+        y = Math.random(),
+        inter_autoFire = null,
+        autoFire = function () {
+            var sendTime = Date.now();
 
-    var report = [];
+            coms.call('position', [
+                ((sequence % 200) / 200),
+                y,
+                report.pop()
+            ],
+                null,
+                function () {
+                    report.push([sendTime, Date.now()]);
+                });
 
-    var y = Math.random();
+            sequence += 1;
+        };
 
-    var autoFire = function () {
-        var sendTime = Date.now();
-
-        coms.call('position', [
-            ((sequence % 200) / 200), 
-            y,
-            report.pop()
-        ],
-            null,
-            function (id) {
-                var returnTime = Date.now();
-                report.push([sendTime, returnTime]);
-            });
-
-        sequence++;
-    };
-    var inter_autoFire = setInterval(autoFire, autoFireInterval);
+    inter_autoFire = setInterval(autoFire, autoFireInterval);
 
     return function () {
         clearInterval(inter_autoFire);

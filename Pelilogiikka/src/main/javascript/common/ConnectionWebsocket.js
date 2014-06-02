@@ -41,7 +41,7 @@ ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback,
     this.connection.onclose = function() {
         self.connected = false;
         //console.info("ConnectionWebsocket::connect - disconnected ",  hoststr);
-        if (typeof self.closCallback == "function") {
+        if (typeof self.closeCallback == "function") {
             self.closeCallback(true);
             self.clear();
             //self.closeCallback = null;
