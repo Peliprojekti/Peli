@@ -27,23 +27,18 @@
     }
     
     
-    Triangle.prototype.transform = function( mtx44 )
+    Triangle.prototype.transform = function( linear, translation )
     {
-        var  w1 = new Vector4( this.v1.x, this.v1.y, this.v1.z , 1.0 );
-        var  w2 = new Vector4( this.v2.x, this.v2.y, this.v2.z , 1.0 );
-        var  w3 = new Vector4( this.v3.x, this.v3.y, this.v3.z , 1.0 );
-        
-             w1 = mtx44.transform( w1 );
-             w2 = mtx44.transform( w2 );
-             w3 = mtx44.transform( w3 );
-       
-        this.v1 = w1.toVec3();
-        this.v2 = w2.toVec3();
-        this.v3 = w3.toVec3();
+        this.v1 = linear.transform( this.v1 );
+        this.v2 = linear.transform( this.v2 );
+        this.v3 = linear.transform( this.v3 );
     
-    
-        // Transform the normals here later
-        console.info("TODO: Triangle normal transformation @ Worldbuilder - line 46");
+        this.v1 = this.v1.add( translation  );
+        this.v2 = this.v1.add( translation  );
+        this.v3 = this.v1.add( translation  );
+   
+    // Transform the normals here later
+    console.info("TODO: Triangle normal transformation @ Worldbuilder - line 46");
     }
     
     
@@ -107,10 +102,12 @@ function build_Indices( fields )
 return indexData;
 }
    
+   
+   
+   
 function build_Rawmeshes( meshPath , materials )
 {           
     var meshParser    = new Parser( meshPath );
-    
     var indexData     = build_Indices (  meshParser.the_Document.get_Subfields( "indices"  ) );   
     var vertexData    = build_Vertices(  meshParser.the_Document.get_Subfields( "vertices" ) ); 
     
@@ -129,18 +126,40 @@ return rawMeshes;
 
 
 
+function get_Linear( orientation )
+{
+    var angles = orientation.angles_V;
+    var scales = orientation.scales_V;
+    
+    var mat_X  = new Matrix33( ["ROT_X", angles.x ] );
+    var mat_Y  = new Matrix33( ["ROT_Y", angles.y ] );
+    var mat_Z  = new Matrix33( ["ROT_Z", angles.z ] );
+    var mat_S  = new Matrix33( ["SCALE", scales   ] );
+    
+    var mat =  new Matrix33( ["ID"] );
+        mat =  mat.multiply( mat_X  );
+        mat =  mat.multiply( mat_Y  );
+        mat =  mat.multiply( mat_Z  );
+        mat =  mat.multiply( mat_S  );
+   
+return mat;
+}
+
 
 // rawMeshes is a list of a list of rawmeshes.  Each worldnode can be split into 1..n submeshes.
 function compose_WorldMesh( rawMeshes, orientations ) 
 {
- 
     var triangles = [];
 
     // For each worldmesh
     for( var m = 0; m < rawMeshes.length; m++ )
     {
-        var transformation  = orientations[ m ].get_Matrix44();
-        var worldMesh       = rawMeshes[ m ];
+        var worldMesh       =    rawMeshes[ m ];
+        var orientation     = orientations[ m ];
+        
+        var linearPart      = get_Linear( orientation );
+        var translation     = orientation.position_V;
+        
         
         // For each submesh
         for( var i = 0; i < worldMesh.length; i++ )
@@ -158,19 +177,18 @@ function compose_WorldMesh( rawMeshes, orientations )
                 var v3        = vertices[ indices[ index++ ] ];
            
                 var triangle  = new Triangle( v1,v2,v3, material );
-                    triangle.transform( transformation );
                 
-             // Transform the triangle here into world space
-                triangles.push( triangle );
+                    triangle.transform( linearPart , translation  );
+            
+            triangles.push( triangle );
             }   
         }
     }
     console.info("TODO: Index array has off by one issue. Haxfix @ Worldbuilder line 152");
     alert( "Triangles" + triangles.length );
     
+    // Now we have a list of triangles ready.
     
-    
-
     
 }
    

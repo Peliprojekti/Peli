@@ -1,21 +1,19 @@
 
     
-    function BoundingBox( minX, minY, minZ, maxX, maxY, maxZ )
+    function BoundingBox( minX, maxX, minZ, maxZ )
     {
         this.minX = minX;
-        this.minY = minY;
         this.minZ = minZ;
-        
         this.maxX = maxX;
-        this.maxY = maxY;
         this.maxZ = maxZ;
-        
     }
     
+    
+    
 
-    function OctNode()
+    function QuadNode()
     {
-        this.matGroups = [];       // Contains a list of triangles of that material type.
+        this.matGroups = [];  // Contains a list of triangles of that material type.
         
     
     }

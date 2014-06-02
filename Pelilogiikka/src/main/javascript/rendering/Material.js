@@ -16,6 +16,6 @@
     {
         this.shader.bind( gl , this.texture, this.texture2, this.texture3, this.texture4, lights, camera );
        
+        gl.uniform1i(this.shader.shaderProgram.samplerUniform, 0); // Redundant
         
-        gl.uniform1i(this.shader.shaderProgram.samplerUniform, 0); 
     }

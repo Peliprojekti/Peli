@@ -171,8 +171,8 @@
                     textureList.push( assetManager.get( texturePaths[t] , function( renderer ,path )
                     {
                         var filterType = ( t == 0) ? "FILTER_FANCY" : "FILTER_PLAIN";
-                            
                         return new Texture( renderer.gl, path, filterType );  // Substitute PLAIN from extracted flags!
+                    
                     }));
             }
             
@@ -188,12 +188,9 @@
                   
                    textureList[2] = ( assetManager.get( haxPath , function( renderer , path )
                    {
-                      // alert( path );
-                       
                        return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
                    }));
             }
-            
             
             var shaderPath = "Shader1";                                                      // This is a dummy "path" for now
             
@@ -325,16 +322,6 @@
         
     return meshList;
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -480,7 +467,12 @@
                 
                 var materials            = build_Materials( material_Attributes, assetManager, renderer );
                 var rawMeshes            = build_Rawmeshes( meshPath, materials );
-                var orientation          = new Orientation( node_Position, node_Scale, node_Rotation );
+                
+                var orientation          = new Orientation( [ node_Position.x, node_Position.y, node_Position.z ] ,
+                                                            [    node_Scale.x,    node_Scale.y,    node_Scale.z ] , 
+                                                            [ node_Rotation.x, node_Rotation.y, node_Rotation.z ] );
+                
+            
                 
                 orientations_List.push( orientation );
                    rawMeshes_List.push( rawMeshes   );

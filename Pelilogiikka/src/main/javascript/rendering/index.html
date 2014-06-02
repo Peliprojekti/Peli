@@ -6,87 +6,106 @@
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 
-<script type="text/javascript" src="External/webglutils.js"          ></script>
-<script type="text/javascript" src="External/glMatrix.js"            ></script>
+<script type="text/javascript" src="External/webglutils.js"               ></script>
+<script type="text/javascript" src="External/glMatrix.js"                 ></script>
 
-<script type="text/javascript" src="Renderer.js"                     ></script>
-<script type="text/javascript" src="Shader.js"                       ></script>
-<script type="text/javascript" src="Inputs.js"                       ></script>
-<script type="text/javascript" src="Scene.js"                        ></script>
+<script type="text/javascript" src="Renderer.js"                          ></script>
+<script type="text/javascript" src="Shader.js"                            ></script>
+<script type="text/javascript" src="Inputs.js"                            ></script>
+<script type="text/javascript" src="Scene.js"                             ></script>
 
-<script type="text/javascript" src="Material.js"                     ></script>
-<script type="text/javascript" src="Texture.js"                      ></script>
+<script type="text/javascript" src="Material.js"                          ></script>
+<script type="text/javascript" src="Texture.js"                           ></script>
 
-<script type="text/javascript" src="Buffer.js"                       ></script>
-<script type="text/javascript" src="Model.js"                        ></script>
-<script type="text/javascript" src="Mesh.js"                         ></script>
-<script type="text/javascript" src="Light.js"                        ></script>
+<script type="text/javascript" src="Buffer.js"                            ></script>
+<script type="text/javascript" src="Model.js"                             ></script>
+<script type="text/javascript" src="Mesh.js"                              ></script>
+<script type="text/javascript" src="Light.js"                             ></script>
 
-<script type="text/javascript" src="GuiItem.js"                      ></script>
+<script type="text/javascript" src="GuiItem.js"                           ></script>
 
-<script type="text/javascript" src="Entity.js"                       ></script>
-<script type="text/javascript" src="Camera.js"                       ></script>
+<script type="text/javascript" src="Entity.js"                            ></script>
+<script type="text/javascript" src="Camera.js"                            ></script>
 
-<script type="text/javascript" src="parser/Parserobjects.js"         ></script>
-<script type="text/javascript" src="parser/GeneralPurposeParser.js"  ></script>
-<script type="text/javascript" src="parser/WorldBuilder.js"          ></script>
-<script type="text/javascript" src="parser/Partitioner.js"           ></script>
+<script type="text/javascript" src="parser/Parserobjects.js"              ></script>
+<script type="text/javascript" src="parser/GeneralPurposeParser.js"       ></script>
+<script type="text/javascript" src="parser/WorldBuilder.js"               ></script>
+<script type="text/javascript" src="parser/Partitioner.js"                ></script>
 
 
+<script type="text/javascript" src="math/Angles.js"                       ></script>
 
-<script type="text/javascript" src="math/Angles.js"                  ></script>
+<script type="text/javascript" src="math/Vector2.js"                      ></script>
+<script type="text/javascript" src="math/Vector3.js"                      ></script>
+<script type="text/javascript" src="math/Vector4.js"                      ></script>
 
-<script type="text/javascript" src="math/Vector2.js"                 ></script>
-<script type="text/javascript" src="math/Vector3.js"                 ></script>
-<script type="text/javascript" src="math/Vector4.js"                 ></script>
+<script type="text/javascript" src="math/Matrix22.js"                     ></script>
+<script type="text/javascript" src="math/Matrix33.js"                     ></script>
+<script type="text/javascript" src="math/Matrix44.js"                     ></script>
+<script type="text/javascript" src="math/MatrixGL.js"                     ></script>
 
-<script type="text/javascript" src="math/Matrix22.js"                ></script>
-<script type="text/javascript" src="math/Matrix33.js"                ></script>
-<script type="text/javascript" src="math/Matrix44.js"                ></script>
-<script type="text/javascript" src="math/MatrixGL.js"                ></script>
-
-<script type="text/javascript" src="math/Orientation.js"             ></script>
-<script type="text/javascript" src="math/Interpolator.js"            ></script>
+<script type="text/javascript" src="math/Orientation.js"                  ></script>
+<script type="text/javascript" src="math/Interpolator.js"                 ></script>
     
-<script type="text/javascript" src="Assetmanager.js"                 ></script>
-<script type="text/javascript" src="testCube.js"                     ></script>
+<script type="text/javascript" src="Assetmanager.js"                      ></script>
+<script type="text/javascript" src="testCube.js"                          ></script>
 
 
 
-<script type="text/javascript" src="data/Shaders/Shader1/Shader1.js"  ></script>
+<script type="text/javascript" src="data/Shaders/Shader1/Shader1.js"      ></script>
+<script type="text/javascript" src="data/Shaders/Guishader/Guishader.js"  ></script>
 
 
 
 <script type="text/javascript">
 
+  function Map_To_Screen( renderer , hPoint )
+    {
+       var w2 = renderer.target_Width  / 2;
+       var h2 = renderer.target_Height / 2;
+       var x  =  ( hPoint[0] - w2  )   / w2;
+       var y  =  (  h2 - hPoint[1] )   / h2; 
+       return [x,y,0];
+    }
+    
+       
+    function register_Inputs()
+    {
+        document.onkeydown = kbDown_Event;
+        document.onkeyup   = kbUp_Event; 
+    }
+       
+    
+    function resize( canvas )
+    {
+        canvas.width  = 800;//1920;//window.outerWidth;
+        canvas.height = 600;//1080;//window.outerHeight;
+    }
+
+    var canvas     = null;
     var renderer   = null;    
     var myCamera   = null;
     var myScene    = null;
-
-
     var haxLight   = new Light( new Vector3(-64.297035 , -34.088657 , -117.10157), 100.0, 0, 0, 0, 0, 0, 0 );
     
-    
     // Define these ELSEWHERE
-    KEY_W = 87;
-    KEY_S = 83;
-    KEY_Q = 81;
-    KEY_E = 69;
-    KEY_UP   = 38;
-    KEY_DOWN = 40;
-    KEY_LEFT = 37;
-    KEY_RIGHT = 39;
+    KEY_W        = 87;
+    KEY_S        = 83;
+    KEY_Q        = 81;
+    KEY_E        = 69;
+    KEY_UP       = 38;
+    KEY_DOWN     = 40;
+    KEY_LEFT     = 37;
+    KEY_RIGHT    = 39;
     KEY_PAGEUP   = 33;
     KEY_PAGEDOWN = 34;
+    KEY_ENTER    = 13;
+    // 
      
-      
-    KEY_ENTER = 13;
      
-    function tick() 
-    {   
-        requestAnimFrame( tick );
-          
-         
+     
+    function process_Inputs()
+    {
         if(  key_Down( KEY_W ) )   myCamera.pitch( 0.008 );        // W to pitch up
         if(  key_Down( KEY_S ) )   myCamera.pitch( -0.008 );      // S to pitch down
          
@@ -119,63 +138,43 @@
    
             }
          
-         
-        // Snap testlight to cam position
+      
         if( key_Down( KEY_ENTER ) )
         {    
-           // var vec3 = 
-              var vec  = myCamera.orientation.get_Position();
-              haxLight.orientation.set_Position( [vec.x,vec.y,vec.z] );
-            //myCamera.forward(  1.0 );
+            var vec  = myCamera.orientation.get_Position();
+            haxLight.orientation.set_Position( [vec.x,vec.y,vec.z] );
         }
-         
-    myScene.render();
+        
+    }
+     
+     
+     
+    function tick() 
+    {   
+        requestAnimFrame( tick );
+        process_Inputs();
+        myScene.render();
     }
     
-       
-    function Map_To_Screen( renderer , hPoint )
-    {
-       var w2 = renderer.target_Width  / 2;
-       var h2 = renderer.target_Height / 2;
-       var x  =  ( hPoint[0] - w2  )   / w2;
-       var y  =  (  h2 - hPoint[1] )   / h2; 
-       return [x,y,0];
-    }
-    
-       
-    function register_Inputs()
-    {
-        document.onkeydown = kbDown_Event;
-        document.onkeyup   = kbUp_Event; 
-    }
-       
-    
-    function resize( canvas )
-    {
-        canvas.width  = 800;//1920;//window.outerWidth;
-        canvas.height = 600;//1080;//window.outerHeight;
-    }
-
+  
     
  
     function Start() 
     { 
-       var canvas          = document.getElementById("Canvas");
-       
+       canvas          = document.getElementById("Canvas");
        resize( canvas );
-        
-       renderer            = new Renderer( canvas );
-       var assman          = new Assetmanager( renderer );
-        
-       myScene             = new Scene( renderer, assman, "Showcase" ); 
+
+       renderer        = new Renderer( canvas );
+       var assman      = new Assetmanager( renderer );
+       myScene         = new Scene( renderer, assman, "Showcase" ); 
        
        register_Inputs();      // Erillinen luokka tälle!
-    
-    
-    
-       // Shader1.load();
-    
-       myCamera            = new Camera( renderer, 0.1, 1000, 65     );
+        
+       var tex         =    new Texture( renderer.gl, "Data/Textures/concrete.jpg", "FILTER_PLAIN" );
+       var shd         = Guishader.load( renderer.gl, ["NULL","NULL"]                              );
+       var myMat       =   new Material( shd, tex, null, null, null                                );
+        
+       myCamera        = new Camera( renderer, 0.1, 1000, 65     );
        
        myCamera.set_Position ( [-2.750824,0.444516,-24.011581]       );
        myScene.insert        ( myCamera      , "CAM"                 );

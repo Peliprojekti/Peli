@@ -90,8 +90,4 @@
     {
         this.origin = origin;
         this.look   = lookVector;
-        
-        
-        
-        
     }

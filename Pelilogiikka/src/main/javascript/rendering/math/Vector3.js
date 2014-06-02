@@ -15,16 +15,16 @@ Vector3.prototype.set = function( x,y,z )
 
 Vector3.prototype.add = function( vec3 )
 {
-    return new Vector3(  this.x+vec3.x ,
-                         this.y+vec3.y ,
-                         this.z+vec3.z  );
+    return new Vector3(  this.x + vec3.x ,
+                         this.y + vec3.y ,
+                         this.z + vec3.z  );
 }
 
 Vector3.prototype.sub = function( vec3 )
 {
-    return new Vector3(  this.x-vec3.x ,
-                         this.y-vec3.y ,
-                         this.z-vec3.z );
+    return new Vector3(  this.x - vec3.x ,
+                         this.y - vec3.y ,
+                         this.z - vec3.z  );
 }
 
 Vector3.prototype.mul = function( scalar )
