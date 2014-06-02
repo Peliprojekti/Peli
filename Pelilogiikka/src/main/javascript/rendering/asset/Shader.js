@@ -1,12 +1,11 @@
-    // This template is used to initialize and bind various numbers of shader terms.
-    // Each shader program must be provided with the initializer.
+    
+    
     function ShaderTemplate( shader_Initializer, shader_Binder )
     {
         this.initializer = shader_Initializer;
         this.binder      = shader_Binder;
     }
     
-
     function ShaderFeatures( mappings )    
     {
         if( mappings[0] == "NORMAL") this.normal_Map = true;
@@ -46,48 +45,36 @@
     }
 
 
-
     Shader.prototype.build_Shader = function( gl, vs_Text, ps_Text )
     {
         var fragmentShader  = this.getShader( gl, ps_Text, "PIXEL_SHADER");
-	var vertexShader    = this.getShader( gl, vs_Text, "VERTEX_SHADER");
+        var vertexShader    = this.getShader( gl, vs_Text, "VERTEX_SHADER");
         var shaderProgram   = gl.createProgram();
 	
-	gl.attachShader( shaderProgram, vertexShader         );
-	gl.attachShader( shaderProgram, fragmentShader       );	
-	gl.linkProgram ( shaderProgram                       );
+        gl.attachShader( shaderProgram, vertexShader         );
+        gl.attachShader( shaderProgram, fragmentShader       );	
+        gl.linkProgram ( shaderProgram                       );
 
-	if (!gl.getProgramParameter( shaderProgram, gl.LINK_STATUS)) 
-	{
+        if (!gl.getProgramParameter( shaderProgram, gl.LINK_STATUS) ) 
+        {
             alert("Could not load shader!");
-	}
+        }
         
     return shaderProgram;
     }
     
-
     function Shader( gl, vs_Program, ps_Program, features, template )
     {
-        this.features       = features;                                         // Perhaps obsolete soon?
-        this.template       = template;                                         // Used to initialize shader variables and bind them before usage
+        this.features       = features;                               
+        this.template       = template;                   
         this.shaderProgram  = this.build_Shader( gl, vs_Program, ps_Program ); 
         
         gl.useProgram( this.shaderProgram );       
         this.template.initializer( gl , this.shaderProgram );    
     }
     
-   
-   
-
     Shader.prototype.bind = function( gl , tex1, tex2, tex3, tex4, lights, camera )
     {
         this.template.binder( gl, this.shaderProgram, this.features, tex1, tex2, tex3, tex4, lights, camera );
         gl.useProgram( this.shaderProgram );        
     }
-    
-    
-    
-    
-    
-    
-    

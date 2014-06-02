@@ -1,6 +1,5 @@
 
 
-  
     
     function Entity( mesh , material )
     {
@@ -9,11 +8,6 @@
         this.orientation  = new Orientation( [0,0,0],  [1,1,1], [0,0,0] );
     }
     
-   
-   
-   
-   
-   
    
     Entity.prototype.set_Position = function( point )
     {
