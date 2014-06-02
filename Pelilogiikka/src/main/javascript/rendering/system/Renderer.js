@@ -8,9 +8,6 @@
         this.canvas        = canvas;
         this.target_Width  = canvas.width;
         this.target_Height = canvas.height;
-
-        
-        
         
         try 
         {
