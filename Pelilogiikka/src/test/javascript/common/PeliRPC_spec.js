@@ -14,13 +14,13 @@ describe('the PeliRPC object', function() {
     //Specs
     describe('constructor', function() {
         it('works correctly', function() {
-            var testPRPC = new PeliRPC(connection);
+            var testPRPC = peliRPC.create(connection);
             expect(testPRPC.getOnMessage()).not.toBeNull();
         });
     });
 
     describe('exposeRpcMethod', function() {
-        var rpc = new PeliRPC(connection);
+        var rpc = peliRPC.create(connection);
 
         it('throws errors on incorrect calls', function() {
             expect(function() {

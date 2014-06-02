@@ -48,14 +48,20 @@ describe('the Vector2 object', function() {
         it('returns the length of the vector', function() {
             // allow for rounding errors, because, javascript
             var testVector = new Vector2(1, Math.sqrt(3));
-            expect(Math.round(testVector.length())).toBe(2);
+            expect( testVector.length().toFixed(5) ).toBe( (2).toFixed(5) );
         });
-//        it('normalizes the vector', function() {
-//
-//        });
-//        it('projects the vector', function() {
-//
-//        });
+        it('normalizes the vector', function() {
+            var testVector = new Vector2(1, Math.sqrt(3)).normalized();
+            expect( testVector.x.toFixed(5) ).toBe( (1/2).toFixed(5) );
+            expect( testVector.y.toFixed(5) ).toBe( (Math.sqrt(3)/2).toFixed(5) );
+        });
+        it('projects the vector', function() {
+            var vec1 = new Vector2(4,4);
+            var vec2 = new Vector2(2,2);
+            var result = vec1.projected(vec2);
+            expect(result.x).toBe(4);
+            expect(result.y).toBe(4);
+        });
     });
 
 });
