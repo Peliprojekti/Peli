@@ -17,3 +17,12 @@
   {
     return keyMap[ keyCode ];
   }
+  
+  
+  
+  function register_Inputs()
+  {
+     document.onkeydown = kbDown_Event;
+     document.onkeyup   = kbUp_Event; 
+  }
+       

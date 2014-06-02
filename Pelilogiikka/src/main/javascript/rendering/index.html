@@ -14,7 +14,6 @@
 <script type="text/javascript" src="data/Shaders/Shader1/Shader1.js"      ></script>
 <script type="text/javascript" src="data/Shaders/Guishader/Guishader.js"  ></script>
 
-
 <script type="text/javascript" src="system/Renderer.js"                   ></script>
 <script type="text/javascript" src="system/Inputs.js"                     ></script>
 <script type="text/javascript" src="system/Scene.js"                      ></script>
@@ -63,12 +62,7 @@
     }
     
        
-    function register_Inputs()
-    {
-        document.onkeydown = kbDown_Event;
-        document.onkeyup   = kbUp_Event; 
-    }
-       
+    
     
     function resize( canvas )
     {
@@ -155,21 +149,19 @@
  
     function Start() 
     { 
+       register_Inputs();      // Erillinen luokka tälle!
+       
        canvas          = document.getElementById("Canvas");
        resize( canvas );
 
-       renderer        = new Renderer( canvas );
-       var assman      = new Assetmanager( renderer );
-       myScene         = new Scene( renderer, assman, "Showcase" ); 
-       
-       register_Inputs();      // Erillinen luokka tälle!
-        
-       var tex         =    new Texture( renderer.gl, "Data/Textures/concrete.jpg", "FILTER_PLAIN" );
+       renderer        = new Renderer( canvas                                                      );
+       var assman      = new Assetmanager( renderer                                                );
+       myScene         = new Scene( renderer, assman, "Showcase"                                   ); 
        var shd         = Guishader.load( renderer.gl, ["NULL","NULL"]                              );
-       var myMat       =   new Material( shd, tex, null, null, null                                );
+       var tex         = new Texture( renderer.gl, "Data/Textures/concrete.jpg", "FILTER_PLAIN"    );
+       var myMat       = new Material( shd, tex, null, null, null                                  );
+       myCamera        = new Camera( renderer, 0.1, 1000, 65                                       );
         
-       myCamera        = new Camera( renderer, 0.1, 1000, 65     );
-       
        myCamera.set_Position ( [-2.750824,0.444516,-24.011581]       );
        myScene.insert        ( myCamera      , "CAM"                 );
        myScene.insert        ( haxLight      , "LIGHT"               );
