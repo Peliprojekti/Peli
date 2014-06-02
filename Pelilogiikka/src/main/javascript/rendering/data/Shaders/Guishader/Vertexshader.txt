@@ -1,0 +1,12 @@
+   
+    // Transformation marices
+    uniform mat4 worldMatrix;
+    
+    // Vertex attributes
+    attribute vec3    vertexPos;
+
+    
+    void main(void) 
+    {
+        gl_Position = worldMatrix * vec4(vertexPos, 1.0);
+    }

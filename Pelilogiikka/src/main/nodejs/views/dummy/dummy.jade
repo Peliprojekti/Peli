@@ -9,6 +9,12 @@ html(lang='en')
   body
     #container
       canvas#canvas HTML5 Canvas not supported.
+    #menuActivate
+      #menu
+        #rightMenu.menuPart
+          h1 Game config
+        #leftMenu.menuPart
+        #middleMenu.menuPart
 
     img#bulletHole(src="/data/bulletHole.png", style="display: hidden")
 
@@ -32,6 +38,7 @@ html(lang='en')
     script(type="text/javascript" src="/javascript/game/controller/swipe.js")
     script(type="text/javascript" src="/javascript/game/controller/motionController.js")
     script(type="text/javascript" src="/javascript/game/controller/thumbStick.js")
+    script(type="text/javascript" src="/javascript/game/controller/speedTest_G.js")
     
 
     script(type="text/javascript" src="/javascript/common/ConnectionWebsocket.js")

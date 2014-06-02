@@ -20,7 +20,7 @@ function ConnectionEngineIO(host, port, protocol, persistent) {
 
 ConnectionEngineIO.prototype.connect = function(connectCallback, closeCallback, onMessage) {
 	var that = this;
-	this.closeCallback = closeCallback;
+	//this.closeCallback = closeCallback;
     if (onMessage === null || onMessage === undefined) console.error("no onMessage supplied");
 	this.onMessage = onMessage;
 
@@ -40,9 +40,9 @@ ConnectionEngineIO.prototype.connect = function(connectCallback, closeCallback, 
 	this.socket.on('close', function() {
 		log.info("ConnectionEngineIO disconnected from " + hoststr);
 
-		if(typeof that.closCallback == "function") {
-			that.closeCallback(true);
-			that.closeCallback = null;
+		if(typeof closeCallback === 'function') {
+            closeCallback(true);
+            closeCallback = null;
 		}
 	});
 
@@ -50,7 +50,7 @@ ConnectionEngineIO.prototype.connect = function(connectCallback, closeCallback, 
         console.warn("error connecting ", err);
 		that.close();
 
-		if(typeof connectCallback == "function") {
+		if(typeof connectCallback === "function") {
 			connectCallback({"code": 1 , "message": "Failed to connect to: " + this.host + ":" + this.port + ", protocol: " +  this.protocol}, null);
 		}
 	});

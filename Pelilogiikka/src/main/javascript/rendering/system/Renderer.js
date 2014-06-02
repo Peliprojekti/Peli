@@ -8,9 +8,6 @@
         this.canvas        = canvas;
         this.target_Width  = canvas.width;
         this.target_Height = canvas.height;
-
-        
-        
         
         try 
         {
@@ -69,9 +66,6 @@
     {
         // Postprocessing here
         
-        
-        
-        
     }
 
     Renderer.prototype.draw = function(  myEntity , lights  )
@@ -79,7 +73,6 @@
         var shaderProgram   = myEntity.material.shader.shaderProgram;
         var worldMatrix     = myEntity.orientation.get_Matrix();       
         var viewMatrix      = this.camera.get_ViewMatrix(); 
-        
         var worldViewMatrix = mat4.multiply( viewMatrix , worldMatrix  );
      
         myEntity.material.bind( this.gl, this.gl.TEXTURE0, lights, this.camera );    // SLOT is OBSOLETE here!
@@ -96,61 +89,19 @@
      
      // NEEDS A DIFFERENT SHADER!
      Renderer.prototype.draw_SS = function( myEntity ) 
-     {
+     {  
         var shaderProgram   = myEntity.material.shader.shaderProgram;
-        var worldViewMatrix = myEntity.orientation.get_Matrix();  
-     
+        var worldMatrix     = new Matrix44( ["ID"] ).toGLMatrix(); 
         
-        myEntity.material.bind( this.gl, this.gl.TEXTURE0 );
+        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldMatrix );
+        myEntity.material.bind( this.gl, this.gl.TEXTURE0, null, null );
       
-        this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix           );
-        this.gl.uniformMatrix4fv( shaderProgram.mMatrixUniform , false,  worldViewMatrix                  );    // HAX. 
-        this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                  );
-        
-        myEntity.mesh.render_Indexed( this.gl, myEntity.material );      
+         myEntity.render( this.gl );
      }
      
      
      
      
-     
-     Renderer.prototype.begin_Blending = function()
-     {
-         this.disable_ZBuffer();
-         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE ); //  ANYWHERE ELSE!  
-         this.gl.enable(this.gl.BLEND);
-     }
-     
-     Renderer.prototype.end_Blending = function()
-     {
-         this.enable_ZBuffer();
-         this.gl.disable(this.gl.BLEND);
-     }
-     
-     
-     
-     Renderer.prototype.begin_GUI = function()
-     {
-          this.disable_ZBuffer();
-     }
-     
-     
-     Renderer.prototype.end_GUI = function()
-     {
-          this.enable_ZBuffer();
-     }
-     
-     
-     
-     Renderer.prototype.enable_ZBuffer = function()
-     {
-         this.gl.enable(this.gl.DEPTH_TEST);        /// ELSEWHERE!
-     }
-     
-     Renderer.prototype.disable_ZBuffer = function()
-     {
-         this.gl.disable(this.gl.DEPTH_TEST);        /// ELSEWHERE!
-     }
      
      Renderer.prototype.bind_Camera = function( cam )
      {

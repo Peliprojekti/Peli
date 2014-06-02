@@ -12,7 +12,6 @@
         {
             this.entries_Dynamic   = [];        // Animated objects differing from actors. A spinning table fan perhaps?
             this.entries_Static    = [];        // Chunks of inanimate geometry. Mostly terrain.
-            this.entries_GUI       = [];        // GUI items living on projection plane.
             this.entries_Cameras   = [];        // 0..n cameras, of which only one can be active at any given time.
             this.entries_Lights    = [];        // Lights treated as ... durr? lights?
             this.entries_Actors    = [];        // Animated things that are treated as actors.
@@ -22,12 +21,12 @@
         }
         else
             {
-                var sceneParser     = new Parser( fullPath  );
-                var dummy            = sceneParser.parse_Scene( renderer, assetManager );
+               var sceneParser        = new Parser( fullPath  );
+               var dummy              = sceneParser.parse_Scene( renderer, assetManager );
+             //var dummy              = sceneParser.parse_Scene_Advanced( renderer, assetManager );
                 
                 this.entries_Dynamic   = dummy.entries_Dynamic;         // Animated objects differing from actors. A spinning table fan perhaps?
                 this.entries_Static    = dummy.entries_Static;          // Chunks of inanimate geometry. Mostly terrain.
-                this.entries_GUI       = dummy.entries_GUI;             // GUI items living on projection plane.
                 this.entries_Cameras   = dummy.entries_Cameras;         // 0..n cameras, of which only one can be active at any given time.
                 this.entries_Lights    = dummy.entries_Lights;          // Lights treated as ... durr? lights?
                 this.entries_Actors    = dummy.entries_Actors;          // Animated things that are treated as actors.
@@ -43,13 +42,11 @@
         else
             if( type === "STATIC" ) this.entries_Static.push( entity );
             else
-                if( type === "GUI"  ) this.entries_GUI.push( entity );  
+                if( type === "CAM") this.entries_Cameras.push( entity );
                 else
-                    if( type === "CAM") this.entries_Cameras.push( entity );
+                    if( type === "LIGHT" ) this.entries_Lights.push( entity );
                     else
-                        if( type === "LIGHT" ) this.entries_Lights.push( entity );
-                        else
-                            alert("Undefined entity type: " + type);  
+                        alert("Undefined entity type: " + type);  
                  
     }
 
@@ -64,7 +61,6 @@
             
         rnd.begin();   
         
-        
             var lights = this.entries_Lights;
            
             this.entries_Dynamic.forEach(function( entry )
@@ -72,17 +68,14 @@
                 rnd.draw( entry , lights );   
             });
            
-
-        
             this.entries_GUI.forEach(function( entry )
             {
-                entry.draw( rnd.gl );
+                rnd.draw_SS( entry );
             });
-  
+            
        
-           // Disable momentarily
-           
-        rnd.end();     // All drawing is to be done here.
+    // Disable momentarily
+    rnd.end();     // All drawing is to be done here.
     }
 
 

@@ -1,16 +1,13 @@
-/*global console: false*/
-/*global graphics2d: false*/
 /*jslint browser: true*/
 
-var graphics2d = graphics2d || {};
-
-graphics2d.chartThingy = {
+chartThingy = {
     create: function (canvas, x, y, width, height, scale, flip) {
         "use strict";
-        return new graphics2d.chartThingy.ChartThingy(canvas, x, y, width, height, scale, flip);
+        return new chartThingy.ChartThingy(canvas, x, y, width, height, scale, flip);
     },
     ChartThingy: function (canvas, x, y, width, height, scale, flip) {
         "use strict";
+        this.maxWidth = 300;
         this.x = x || 0;
         this.y = y || 0;
         this.width = width || (canvas.width - this.x);
@@ -26,43 +23,44 @@ graphics2d.chartThingy = {
     }
 };
 
-graphics2d.chartThingy.ChartThingy.prototype.addValue = function (value) {
+chartThingy.ChartThingy.prototype.addValue = function (value) {
     "use strict";
     while (Math.abs(value * this.scale) > this.height) {
-        this.scale *= 0.8;
+        //this.scale *= 0.8;
         for (var i = 0; i < this.values.length; i++) {
-            this.values[i] *= 0.8;
+            var oldValue = (this.y + this.height - this.values[i]) / this.scale;
+            this.values[i] = (this.y + this.height) - (oldValue * 0.8 * this.scale);
         }
+        this.scale *= 0.8;
     }
 
-    this.values.unshift(value *= this.scale);
+    this.values.unshift(
+        (this.y + this.height) - (value * this.scale)
+        );
 
-    if (this.values.length > this.width) {
+    if (this.values.length > this.maxWidth) {
         this.values.pop();
     }
 };
 
-graphics2d.chartThingy.ChartThingy.prototype.update = function () {};
+chartThingy.ChartThingy.prototype.update = function () {};
 
-graphics2d.chartThingy.ChartThingy.prototype.draw = function (ctx) {
+chartThingy.ChartThingy.prototype.draw = function (ctx) {
     "use strict";
-    var i;
-    ctx.save();
+    var i,
+        max = this.values.length;
 
-    ctx.strokeStyle = "black"; //this.color;
+    ctx.strokeStyle = "black";
     ctx.fillStyle = this.color;
-    ctx.globalAlpha = 0.5;
 
     ctx.beginPath();
     ctx.moveTo(this.x, this.y + this.height);
 
-    for (i = 0; i < this.values.length; i += 1) {
-        ctx.lineTo(i + this.x, this.y + this.height - this.values[i]);
+    for (i = 0; i < max; i += 1) {
+        ctx.lineTo(i + this.x, this.values[i]);
     }
 
     ctx.lineTo(i + this.x, this.y + this.height);
     ctx.stroke();
     ctx.fill();
-
-    ctx.restore();
 };

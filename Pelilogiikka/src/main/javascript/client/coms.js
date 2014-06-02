@@ -5,7 +5,7 @@ client.coms = client.coms || {};
  * This opens the initial connection
  * @param {function} callback - will be called when connection is opened
  */
-client.coms.open = function(callback) {
+client.coms.open = function(callback, connectionClosedCallback) {
     if (!client.coms._isOpened) {
         var connection = new ConnectionEngineIO(location.hostname, CLIENT_PORT, JSONRPC_PROTOCOL, true);
         var rpc = new PeliRPC(connection);
@@ -16,10 +16,14 @@ client.coms.open = function(callback) {
 
         connection.connect(callback, 
                 function() {
+                    console.log("here we are");
+                    client.coms._isOpened = false;
+                    connectionClosedCallback();
+                    console.warn("connection error, trying to reconnect in 1s");
+
                     setTimeout(function() {
-                        client.coms.open(callback);
-                        console.warn("connection error, trying to reconnect");
-                    }, 100 );
+                        //client.coms.open(callback, connectionClosedCallback);
+                    }, 1000 );
                 },
                 rpc.getOnMessage());
     }
@@ -39,15 +43,18 @@ client.coms.close = function() {
  * This will send messages directly to the server
  * @param {function} msg
  */
+/*
 client.coms.serverMsg = function(msg) {
     log.warn('deprecated, instead use log.sendServerMessage directly');
     log.sendServerMessage(msg);
 };
+*/
 
 /**
  * Request a gameslot
  * @param {function} callback - will be called like so callback(controllerType);
  */
+/*
 client.coms.joinGame = function(userID, callback) {
     if (client.coms._rpc === undefined) {
         log.error("client.coms.joinGame - trying to join before opening connection");
@@ -58,6 +65,7 @@ client.coms.joinGame = function(userID, callback) {
     log.info("client.coms.joinGame - calling RPC::joinGame(" + userID + ")");
     client.coms._rpc.callRpc('joinGame', [userID], this, callback);
 };
+*/
 
 /**
  * Execute remote commands on player object (or kind of any, really)
@@ -78,6 +86,7 @@ client.coms.call = function(method, params, object, callback) {
  * instead at some point expose the carrRpc thingy to the outside, like the upper method
  */
 
+/*
 client.coms.position = function(params, object, callback) {
     client.coms.call('position', params, object, callback);
 };
@@ -91,6 +100,7 @@ client.coms.orientation = function(tiltLR, tiltFB, dir) {
     client.coms.call('orientation', [titleLR, titleFB, dir], null, null);
     //this.rpc.callRpc('orientation', [null, tiltLR, tiltFB, dir], this, null);
 };
+*/
 
 /**
  * Sends the device's motion data to the server if the device supports motion data
@@ -100,6 +110,8 @@ client.coms.orientation = function(tiltLR, tiltFB, dir) {
  * and accelerationData.rotationRate.(x-z). See motionController.deviceMotionHandler
  * for detailed use example.
  */
+/*
 client.coms.motion = function(accelerationData){
     client.coms.call('motion', accelerationData, null, null);
 };
+*/

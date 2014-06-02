@@ -18,6 +18,7 @@
 
 var dummy = dummy || {};
 dummy.screen = {
+    physicsEnabled: false,
     width: 0,
     height: 0,
     canvas: null,
@@ -33,14 +34,13 @@ dummy.screen = {
         this.height = canvas.height;
         this.width = canvas.width;
         this.context = canvas.getContext("2d");
-        this.background.push(graphics2d.fpsDisplay.createFancy(this.canvas));
         this.entities.init(canvas);
         this.box2d.init(canvas);
 
         this.entities.create({
             name: "companionSquare",
             type: "rectangleTarget",
-            x: 100,
+            x: canvas.width - 200,
             y: 100,
             angle: 50,
             width: 100,
@@ -52,6 +52,10 @@ dummy.screen = {
     addController: function (controller) {
         "use strict";
         this.controllers.push(controller);
+    },
+    setPhysicsEnabled: function(enabled) {
+        "use strict";
+        this.physicsEnabled = enabled;
     },
     removeController: function (controller) {
         "use strict";
@@ -76,7 +80,10 @@ dummy.screen = {
         self.drawBackground(time);
 
         self.updateControllers(time);
-        self.box2d.update(time);
+
+        if (self.physicsEnabled) {
+            self.box2d.update(time);
+        }
 
         self.entities.drawAll();
 
@@ -93,21 +100,25 @@ dummy.screen = {
         "use strict";
         for (var i = 0; i < this.background.length; i++) {
             this.background[i].update(time);
-            this.background[i].draw();
+            this.background[i].draw(this.context);
         }
+    },
+    addToBackground: function (object) {
+        this.background.push(object);
     },
     updateControllers: function (time) {
         "use strict";
         this.controllers.forEach(function (c) {
-            c.update(time);
+            // TODO these need to be removed...
+            if (c) c.update(time);
         });
     },
     drawPlayers: function () {
         "use strict";
-        var self = this;
+        var context = this.context;
         this.players.forEach(function (p) {
             "use strict";
-            p.draw(self.context);
+            p.draw(context);
         });
     },
     shoot: function(x,y) {

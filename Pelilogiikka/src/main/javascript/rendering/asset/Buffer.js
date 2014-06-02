@@ -5,8 +5,6 @@
         this.data.itemSize  = entrySize;
         this.data.numItems  = itemList.length / entrySize;
 		
-        
-        
         if( item_Type === "FLOAT")
         { 
               gl.bindBuffer(gl.ARRAY_BUFFER, this.data );
@@ -21,10 +19,8 @@
                  this.itemType = gl.UNSIGNED_SHORT;
            }
            else 
-              { 
-                 this.itemType = "UNKNOWN";
-                 throw ("Unrecognized buffer format " + item_Type);
-              }
+               throw ("Unrecognized buffer format " + item_Type);
+             
     }   
     
     

@@ -171,8 +171,8 @@
                     textureList.push( assetManager.get( texturePaths[t] , function( renderer ,path )
                     {
                         var filterType = ( t == 0) ? "FILTER_FANCY" : "FILTER_PLAIN";
-                            
                         return new Texture( renderer.gl, path, filterType );  // Substitute PLAIN from extracted flags!
+                    
                     }));
             }
             
@@ -188,12 +188,9 @@
                   
                    textureList[2] = ( assetManager.get( haxPath , function( renderer , path )
                    {
-                      // alert( path );
-                       
                        return new Texture( renderer.gl, path, "FILTER_PLAIN" );  // Substitute PLAIN from extracted flags!
                    }));
             }
-            
             
             var shaderPath = "Shader1";                                                      // This is a dummy "path" for now
             
@@ -329,16 +326,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
     Parser.prototype.parse_Scene = function( renderer, assetManager ) 
     { 
         var the_Scene                    = new Scene( renderer ); 
@@ -351,11 +338,9 @@
             
             if( type == "path" )
             {
-            
-            alert( "path found!");
-            return;
+                alert( "path found!");
+                return;
             }
-            
             
             
             var attributes               = node.get_Subfields("attributes");
@@ -368,7 +353,6 @@
             var node_Scale               = node_Description[2].casted();
         
             
-        
             // For a node that is of type "mesh"....
             if( type == "mesh")
             {
@@ -421,11 +405,8 @@
                         
                         the_Scene.insert( light , "LIGHT" );
                 }
-           
                 
         });
-        
-        
         
         
         
@@ -439,5 +420,107 @@
     
     
     
+  ///////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////PROTOTYPE PARSER STARTS HERE ////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////  
     
+   
+   
+   
+   
+   
+   
+    Parser.prototype.parse_Scene_Advanced = function( renderer, assetManager ) 
+    { 
+        var the_Scene                    = new Scene( renderer ); 
+        var nodes                        = this.the_Document.get_Subfields("node");
+        
+        var rawMeshes_List               = [];  // This is where all the mashes will end up before being processed
+        var orientations_List            = [];
+       
+      
+
+        // For each node, we need to extract the following data...
+        nodes.forEach( function( node )
+        {
+            var type                     = node.get_Type();
+            var attributes               = node.get_Subfields("attributes");
+            var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
+            var node_Description         = read_Node( node_Variables );
+                
+            var node_Position            = node_Description[0].casted();
+            var node_Scale               = node_Description[2].casted();
+            var node_Rotation            = node_Description[1].casted();
+            
+            // Convert the rotation into radians.
+            node_Rotation.x = DegToRad( node_Rotation.x );
+            node_Rotation.y = DegToRad( node_Rotation.y );
+            node_Rotation.z = DegToRad( node_Rotation.z );
+            
+
+            // For a node that is of type "mesh"....
+            if( type == "mesh")
+            {
+                var meshPath             = relative_Path( node_Description[3].casted() );
+                var node_Materials       = node.get_Subfields("materials");                 
+                var material_Attributes  = node_Materials[0].get_Subfields("attributes");  // There should be exactly ONE <materials> tag per field! More -> assert fail here.
+                
+                var materials            = build_Materials( material_Attributes, assetManager, renderer );
+                var rawMeshes            = build_Rawmeshes( meshPath, materials );
+                
+                var orientation          = new Orientation( [ node_Position.x, node_Position.y, node_Position.z ] ,
+                                                            [    node_Scale.x,    node_Scale.y,    node_Scale.z ] , 
+                                                            [ node_Rotation.x, node_Rotation.y, node_Rotation.z ] );
+                
+            
+                
+                orientations_List.push( orientation );
+                   rawMeshes_List.push( rawMeshes   );
+            }       
+            else
+                if( type == "light" )    // For a node that is of type "light"....
+                {
+                    var variables       = attributes[0].get_Variables();     // Plz god, let the light variables be in a fixed order...
+                    var light           = load_Light( variables );           
+                    the_Scene.insert( light , "LIGHT" );
+                }
+                
+        });
+        
+        
+        
+      console.log(" Scene extracted - baking a triangle mash ");    
+    
+      compose_WorldMesh( rawMeshes_List , orientations_List )
+ 
+    return the_Scene;
+    }
+    
+   
+   
+   
+  
+   
+   
+   
+   
+   
+   // IF not... Need to implement a retarded case - switch or if then else loop.
+    function load_Light( variables ) 
+    {
+          var lightName       = variables[0].casted();
+          var lightID         = variables[1].casted();
+          var lightPos        = variables[2].casted();
+          var lightRot        = variables[3].casted();
+          var lightScale      = variables[4].casted();
+                        
+          var color_Ambient   = variables[9].casted();
+          var color_Diffuse   = variables[10].casted();
+          var color_Specular  = variables[11].casted();
+                        
+          var attenuation     = variables[12].casted();
+          var radius          = variables[13].casted();
+  
+    return new Light( lightPos , radius, color_Ambient, color_Diffuse, color_Specular, attenuation.x, attenuation.y, attenuation.z );
+    }
    

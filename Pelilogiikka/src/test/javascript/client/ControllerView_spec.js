@@ -1,3 +1,4 @@
+/*
 describe('the ControllerView object', function() {
 
     //Create an easily-removed container for our tests to play in
@@ -30,3 +31,4 @@ describe('the ControllerView object', function() {
 //    });
 
 });
+*/
