@@ -14,8 +14,8 @@ var peliRPC = {
     create: function (connection) {
         "use strict";
         return (peliRPC.freeRPCs.length > 0 ?
-                this.freeRPCs.pop().attachConnection(connection) :
-                new peliRPC.PeliRPC(connection));
+            this.freeRPCs.pop().attachConnection(connection) :
+            new peliRPC.PeliRPC(connection));
     },
     free: function (rpc) {
         "use strict";
@@ -119,27 +119,32 @@ peliRPC.PeliRPC.prototype.getOnMessage = function () {
             } else {
                 //console.debug("PeliRPC::onMessage() - maybe a return value, for id ", rpc.id);
                 if (rpc.id !== undefined && (that.callbacks[rpc.id] !== "undefined")) {
-                    if (that.callbacks[rpc.id] === 'undefined') {
-                        //console.debug("PeliRPC::onMessage() - nope, no callback for id ", id);
-                        return;
-                    }
+                    if ((rpc.id + peliRPC.maxCallbacks) >= that.callSequence) {
+                        rpc.id = rpc.id % peliRPC.maxCallbacks;
 
-                    if (rpc.result !== "undefined") {
-                        //console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
-                        that.callbacks[rpc.id].listener.apply(that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
-                    } else if (rpc.error !== "undefined") {
-                        console.warn("PeliRPC::onMessage() - returning an error to callback: ", rpc.error);
-                        that.callbacks[rpc.id].listener.apply(
-                            that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
-                    } else {
-                        //console.debug("PeliRPC::onMessage() - calling callbac with no return value");
-                        that.callbacks[rpc.id].listener.apply(
-                            that.callbacks[rpc.id].object, [rpc.id, null, null]);
-                    }
+                        if (that.callbacks[rpc.id] === 'undefined') {
+                            //console.debug("PeliRPC::onMessage() - nope, no callback for id ", id);
+                            return;
+                        }
 
-                    delete that.callbacks[rpc.id];
-                } else {
-                    //console.debug("PeliRPC::onMessage() - oh, whatever, no callbacks for id ", rpc.id);
+                        if (rpc.result !== "undefined") {
+                            //console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
+                            that.callbacks[rpc.id].listener.apply(that.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
+                        } else if (rpc.error !== "undefined") {
+                            console.warn("PeliRPC::onMessage() - returning an error to callback: ", rpc.error);
+                            that.callbacks[rpc.id].listener.apply(
+                                that.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
+                        } else {
+                            //console.debug("PeliRPC::onMessage() - calling callbac with no return value");
+                            that.callbacks[rpc.id].listener.apply(
+                                that.callbacks[rpc.id].object, [rpc.id, null, null]);
+                        }
+
+                        delete that.callbacks[rpc.id];
+                    }
+                    else {
+                        console.warn("PeliRPC::onMessage() - callback too old, can no longer execute", rpc.id, that.sequence, that.maxCallbacks);;
+                    }
                 }
             }
         };
@@ -152,13 +157,13 @@ peliRPC.PeliRPC.prototype.callRpc = function (method, params, object, listener) 
     this.callObject.method = method;
     this.callObject.params = params;
     if (typeof listener === 'function') {
-        var realSeq = this.callSequence % peliRPC.maxCallbacks;
+        var modSeq = this.callSequence % peliRPC.maxCallbacks;
         //console.debug("PeliRPC::callRpc - stroring callback for id ", this.callSequence, peliRPC.maxCallbacks, realSeq);
-        this.callbacks[realSeq] = {
+        this.callbacks[modSeq] = {
             "object": object,
             "listener": listener
         };
-        this.callObject.id = realSeq;
+        this.callObject.id = this.callSequence;
         this.callSequence += 1;
     }
     else {
