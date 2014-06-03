@@ -14,10 +14,9 @@ dummy.game = {
     players: [],
     crosshairManager: new CrosshairManager(0),
     screen: null,
-    start: function () {
+    start: function (canvas, container) {
         "use strict";
-        var canvas = document.getElementById("canvas"),
-            container = document.getElementById("container");
+
         canvas.width = container.offsetWidth;
         canvas.height = container.offsetHeight;
 
@@ -114,5 +113,10 @@ dummy.game = {
 
 $(document).ready(function () {
     "use strict";
-    dummy.game.start();
+    var canvas = document.getElementById("canvas"),
+        container = document.getElementById("container");
+
+    if (container !== null) {
+        dummy.game.start(canvas, container);
+    }
 });

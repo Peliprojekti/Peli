@@ -15,11 +15,10 @@ client.phone = {
     oc: 0,
     controllerView: null,
     canvas: null,
-    onDocumentReady: function () {
+    onDocumentReady: function (canvas) {
         "use strict";
         
         this.connectingDiv = document.getElementById("connecting");
-        if (this.connectingDiv != null) {
             this.io = navigator.userAgent.match(/(iPhone)|(iPod)/);
 
             this.controllerView = client.controllerView.create(
@@ -29,7 +28,7 @@ client.phone = {
             this.onResize();
 
             this.controllerView.add(new fpsDisplay.create(document.getElementById("canvas")));
-            this.canvas = document.getElementById("canvas");
+            this.canvas = canvas;
 
             client.coms.open(this.onConnectionOpened.bind(this), this.onConnectionClosed.bind(this));
 
@@ -37,9 +36,6 @@ client.phone = {
             $(window).resize(this.onResize.bind(this));
 
             this.controllerView.start();
-        }
-        else
-            console.error("connectingDiv is null");
     },
     onOrientationChange: function () {
         "use strict";
@@ -148,4 +144,9 @@ client.phone = {
     }
 };
 
-$(document).ready(function(){client.phone.onDocumentReady()});
+$(document).ready(function(){
+    var canvas = document.getElementById('canvas');
+    if (canvas !== null) {
+        client.phone.onDocumentReady();
+    }
+});
