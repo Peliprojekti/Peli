@@ -59,7 +59,7 @@ game.controllerHub = {
         connection.connect(
             this.onConnectionOpened.bind(this, sequence, rpc),
             this.onConnectionClosed.bind(this, sequence, rpc),
-            rpc.getOnMessage()
+            rpc.onMessage.bind(rpc)
             );
         return true;
     },

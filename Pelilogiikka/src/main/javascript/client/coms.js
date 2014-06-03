@@ -24,7 +24,7 @@ client.coms.open = function(callback, connectionClosedCallback) {
                         //client.coms.open(callback, connectionClosedCallback);
                     }, 1000 );
                 },
-                rpc.getOnMessage());
+                rpc.onMessage.bind(rpc));
     }
 };
 
