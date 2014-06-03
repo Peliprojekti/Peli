@@ -1,6 +1,5 @@
 
-the_Renderer = null;
-    
+
     
     
     function Renderer( resolution )

@@ -7,6 +7,7 @@
         INVALID     : "INVALID",
         SINGLETON   : "SINGLETON",
         TYPE        : "TYPE",
+        SIZE        : "SIZE",
         UNSUPPORTED : "UNSUPPORTED"
     }   
 
@@ -25,7 +26,6 @@
     {
        console.log( "Exception caught: " + this.type + " : " + this.message  ); 
     }
-    
     
     
     
@@ -73,6 +73,20 @@
     }
     
     
+    function ASSERT_LENGTH( array, length )
+    {
+        ASSERT_TYPE( Array, array );
+        
+        if( array.length != length ) 
+            throw new Exception( Exception.Type.SIZE, "Unexpected array size encountered: " + array.length + " expected " + length );
+    }
+    
+    
+    function TYPE( type, instance )
+    {
+        return (instance instanceof type);
+    }
+    
     function VALID( entry ) 
     {
         return ( typeof entry != 'undefined' ) && ( entry != null );
@@ -88,7 +102,7 @@
     
     function Root_Exception_Handler( entryPoint )
     {
-        console.log( "Exception handler set" );
+    console.log( "Exception handler set" );
         
         try
         {
@@ -98,16 +112,17 @@
         {
             try
             {
-                ASSERT_TYPE( Exception, exception , "ULTIMATE FAILURE!");
+                ASSERT_TYPE( Exception, exception , exception.message );
             }
             catch( exception )
             {
-                alert("This software has 3==>{DOG}(O_o)  Exception emitted was of uncatchable type. You suck and your program smells like a barnyard. ")
+                alert("ULTIMATE FAILURE " + exception.message)        
             }
          
         exception.alert();
         }
         
-    console.log( "Application temrinated" );
+        
+    console.log( "Call path terminated" );
     }
     
