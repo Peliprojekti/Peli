@@ -45,7 +45,7 @@ controller.Swipe.prototype.update = function(time) {
         //console.debug("Controller update");
         var coords = this.lastSwipe[0];
         //Swipe start
-        if (this.lastSwipe[1] == 0) {
+        if (this.lastSwipe[1]) {
             this.startCoords = coords;
             //this.previousDirection = null;
             this.previousTime = 0;
@@ -61,9 +61,9 @@ controller.Swipe.prototype.update = function(time) {
     }
 };
 
-controller.Swipe.prototype.pushSwipe = function(x, y, sincePrevious) {
+controller.Swipe.prototype.pushSwipe = function(x, y, isStart) {
     this.lastSwipe = [
-        [x, y], sincePrevious
+        [x, y], isStart
     ];
     //log.debug("Pushed swipe: (" + x + ", " + y + ")" + ", " + sincePrevious);
 };

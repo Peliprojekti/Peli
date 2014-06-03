@@ -15,24 +15,15 @@ client.loadedTypes.Swipe = function(container, canvas, phone, coms) {
         this.startTime = new Date().getTime();
         this.sincePrevious = 0;
 
-        this.sendCoords(event);
+        this.sendCoords(event, true);
     };
 
-    Swipe.prototype.sendCoords = function(event) {
+    Swipe.prototype.sendCoords = function(event, isStart) {
         event.preventDefault();
 
         var coords = phone.getRelativeCoords(0, event);
-
-        if (this.sincePrevious === 0) {
-            this.sincePrevious = new Date().getTime() - this.startTime;
-            coms.call('swipe', [coords[0], coords[1], 0], null, null);
-            //log.debug("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", 0", true);
-        } else {
-            this.sincePrevious = new Date().getTime() - this.previousSendTime;
-            coms.call('swipe', [coords[0], coords[1], this.sincePrevious], null, null);
-            //log.debug("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", " + this.sincePrevious, true);
-        }
-
+        coms.call('swipe', [coords[0], coords[1], isStart], null, null);
+        //log.debug("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", 0", true);
     };
 
     Swipe.prototype.doTouchMove = function(event) {
@@ -40,7 +31,8 @@ client.loadedTypes.Swipe = function(container, canvas, phone, coms) {
 
         var currentTime = new Date().getTime();
         if (currentTime - this.previousSendTime >= this.updatePeriod) {
-            this.sendCoords(event);
+            this.sincePrevious = new Date().getTime() - this.previousSendTime;
+            this.sendCoords(event, false);
             this.previousSendTime = currentTime;
         }
 

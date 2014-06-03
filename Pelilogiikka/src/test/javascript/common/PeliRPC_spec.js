@@ -12,13 +12,6 @@ describe('the PeliRPC object', function() {
     });
 
     //Specs
-    describe('constructor', function() {
-        it('works correctly', function() {
-            var testPRPC = peliRPC.create(connection);
-            expect(testPRPC.getOnMessage()).not.toBeNull();
-        });
-    });
-
     describe('exposeRpcMethod', function() {
         var rpc = peliRPC.create(connection);
 

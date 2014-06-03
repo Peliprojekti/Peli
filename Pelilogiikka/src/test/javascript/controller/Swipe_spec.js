@@ -29,25 +29,23 @@ describe('the Swipe object', function() {
             evt.targetTouches = [{pageX: 12, pageY: 10}, {pageX: 12, pageY: 10}];
             canvas.dispatchEvent(evt);
             
-            var arr = [(12 / canvas.width), (10 / canvas.height), 0];
+            var arr = [(12 / canvas.width), (10 / canvas.height), true];
             
             expect(coms.call).toHaveBeenCalled();
             expect(coms.call).toHaveBeenCalledWith('swipe', arr, null, null);
         });
         
         it('calls coms with the correct method and position parameters on touch move', function () { 
-            /*
             var evt = document.createEvent("Events")
             //Aim: initialize it to be the event we want
             evt.initEvent('touchmove', true, true); //true for can bubble, true for cancelable
             evt.targetTouches = [{pageX: 12, pageY: 10}, {pageX: 12, pageY: 10}];
             canvas.dispatchEvent(evt);
             
-            var arr = [(12 / canvas.width), (10 / canvas.height), 0];
+            var arr = [(12 / canvas.width), (10 / canvas.height), false];
             
             expect(coms.call).toHaveBeenCalled();
             expect(coms.call).toHaveBeenCalledWith('swipe', arr, null, null);
-            */
         });
     });
 
