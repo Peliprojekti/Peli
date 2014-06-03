@@ -8,7 +8,8 @@
         SINGLETON   : "SINGLETON",
         TYPE        : "TYPE",
         SIZE        : "SIZE",
-        UNSUPPORTED : "UNSUPPORTED"
+        UNSUPPORTED : "UNSUPPORTED",
+        FAILURE     : "FAILURE"
     }   
 
     function Exception( type , message )
@@ -102,7 +103,7 @@
     
     function Root_Exception_Handler( entryPoint )
     {
-    console.log( "Exception handler set" );
+    console.log( "Exception frame begin" );
         
         try
         {
@@ -123,6 +124,6 @@
         }
         
         
-    console.log( "Call path terminated" );
+    console.log( " Exception frame end" );
     }
     

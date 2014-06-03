@@ -13,16 +13,14 @@
 <script type="text/javascript" src="Exception.js"                 ></script>
 <script type="text/javascript" src="Renderer.js"                  ></script>
 <script type="text/javascript" src="Buffer.js"                    ></script>
+<script type="text/javascript" src="Texture.js"                   ></script>
 
-
-<script type="text/javascript" src="Meshes/Worldmesh.js"          ></script>
-
+<script type="text/javascript" src="Batches/WorldBatch.js"         ></script>
 
 
 <script type="text/javascript" src="math/Angles.js"               ></script>
 <script type="text/javascript" src="math/Dimension2.js"           ></script>
 <script type="text/javascript" src="math/Color.js"                ></script>
-
 
 
 <script type="text/javascript" src="math/Vector2.js"              ></script>
@@ -31,7 +29,6 @@
 <script type="text/javascript" src="math/Matrix22.js"             ></script>
 <script type="text/javascript" src="math/Matrix33.js"             ></script>
 <script type="text/javascript" src="math/Matrix44.js"             ></script>
-
 
 
 
@@ -78,6 +75,11 @@
         matA.alert();
         matC.alert();
      
+     
+     
+        var texture = new Texture("data/crosshair1.bmp");
+        
+        
         
         rendererMain();
     }
