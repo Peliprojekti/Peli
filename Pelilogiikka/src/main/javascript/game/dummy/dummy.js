@@ -35,7 +35,7 @@ dummy.game = {
         "use strict";
         var self = dummy.game,
             crosshair = dummy.game.crosshairManager.requestCrosshair(player);
-        console.info("New player connected ", player);
+        console.info("dummy - New player connected ", player.userID);
         player.setCrosshair(crosshair);
         player.setOnShoot(function (x, y) {
             self.screen.shoot(x, y);
@@ -47,7 +47,7 @@ dummy.game = {
     onPlayerLeft: function (player, controller) {
         "use strict";
         var self = dummy.game;
-        console.info("Player disconnected ", player);
+        console.info("dummy - Player disconnected ", player.userID);
         self.screen.removeController(controller);
         if (typeof player.crossh.id !== 'undefined') {
             dummy.game.crosshairManager.freeCrosshair(player.crossh.id);

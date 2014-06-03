@@ -15,7 +15,6 @@ describe('the PeliRPC object', function() {
     describe('constructor', function() {
         it('works correctly', function() {
             var testPRPC = peliRPC.create(connection);
-            expect(testPRPC.getOnMessage()).not.toBeNull();
         });
     });
 

@@ -20,7 +20,7 @@ CrosshairManager.prototype.requestCrosshair = function(player) {
     if (typeof id !== 'undefined'){
         return new CrosshairImg(id);
     }
-    console.debug("returning old style random crosshair")
+    //console.debug("returning old style random crosshair")
     return new graphics2d.crosshair.createRandomColor(player.x, player.y, 20);
 };
 
