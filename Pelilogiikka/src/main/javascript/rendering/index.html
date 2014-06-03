@@ -6,85 +6,182 @@
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 
-<script type="text/javascript" src="external/webglutils.js"       ></script>
+<script type="text/javascript" src="external/webglutils.js"                     ></script>
+<script type="text/javascript" src="external/webglutils.js"                     ></script>
 
 
-<script type="text/javascript" src="Globals.js"                   ></script>
-<script type="text/javascript" src="Exception.js"                 ></script>
-<script type="text/javascript" src="Renderer.js"                  ></script>
-<script type="text/javascript" src="Buffer.js"                    ></script>
-<script type="text/javascript" src="Texture.js"                   ></script>
 
-<script type="text/javascript" src="Batches/WorldBatch.js"         ></script>
+<script type="text/javascript" src="data/Shaders/WorldShader/WorldShader.js"    ></script>
+<script type="text/javascript" src="data/Shaders/SimpleShader/Simpleshader.js"  ></script>
 
-
-<script type="text/javascript" src="math/Angles.js"               ></script>
-<script type="text/javascript" src="math/Dimension2.js"           ></script>
-<script type="text/javascript" src="math/Color.js"                ></script>
+<script type="text/javascript" src="Globals.js"                                 ></script>
+<script type="text/javascript" src="Exception.js"                               ></script>
+<script type="text/javascript" src="Renderer.js"                                ></script>
+<script type="text/javascript" src="Buffer.js"                                  ></script>
+<script type="text/javascript" src="Texture.js"                                 ></script>
+<script type="text/javascript" src="Camera.js"                                  ></script>
 
 
-<script type="text/javascript" src="math/Vector2.js"              ></script>
-<script type="text/javascript" src="math/Vector3.js"              ></script>
 
-<script type="text/javascript" src="math/Matrix22.js"             ></script>
-<script type="text/javascript" src="math/Matrix33.js"             ></script>
-<script type="text/javascript" src="math/Matrix44.js"             ></script>
+<script type="text/javascript" src="parser/GeneralPurposeParser.js"             ></script>
+<script type="text/javascript" src="parser/Parserobjects.js"                    ></script>
+
+
+<script type="text/javascript" src="Batches/WorldBatch.js"                      ></script>
+<script type="text/javascript" src="Batches/Batch.js"                           ></script>
+
+<script type="text/javascript" src="math/Angles.js"                             ></script>
+<script type="text/javascript" src="math/Dimension2.js"                         ></script>
+<script type="text/javascript" src="math/Color.js"                              ></script>
+
+<script type="text/javascript" src="math/Vector2.js"                            ></script>
+<script type="text/javascript" src="math/Vector3.js"                            ></script>
+
+<script type="text/javascript" src="math/Matrix22.js"                           ></script>
+<script type="text/javascript" src="math/Matrix33.js"                           ></script>
+<script type="text/javascript" src="math/Matrix44.js"                           ></script>
 
 
 
 <script type="text/javascript">
      
  
+    function testCube( texture ) 
+    {   
+        var vertices      = [ -1.0, -1.0,  1.0,  1.0, -1.0,  1.0, 1.0,  1.0,  1.0, -1.0,  1.0,  1.0,
+                              -1.0, -1.0, -1.0, -1.0,  1.0, -1.0, 1.0,  1.0, -1.0,  1.0, -1.0, -1.0,
+                              -1.0,  1.0, -1.0, -1.0,  1.0,  1.0, 1.0,  1.0,  1.0,  1.0,  1.0, -1.0,
+                              -1.0, -1.0, -1.0,  1.0, -1.0, -1.0, 1.0, -1.0,  1.0, -1.0, -1.0,  1.0,
+                               1.0, -1.0, -1.0,  1.0,  1.0, -1.0, 1.0,  1.0,  1.0,  1.0, -1.0,  1.0,
+                              -1.0, -1.0, -1.0, -1.0, -1.0,  1.0,-1.0,  1.0,  1.0, -1.0,  1.0, -1.0, ];
+        
+        var indices       = [  0,  1,  2,  0,  2,  3,  4, 
+                               5,  6,  4,  6,  7,  8,  9,
+                              10,  8, 10, 11, 12, 13, 14, 
+                              12, 14, 15, 16, 17, 18, 16, 
+                              18, 19, 20, 21, 22, 20, 22, 23 ];
+                          
+        var texCoords     = [ 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+                              1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0,
+                              0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
+                              1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
+                              1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0,
+                              0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0  ];   
+   
+        
+     return new Batch( vertices, indices, texCoords, texture );
+     }
+
+     var testCamera  = null;
+     var testBatch   = null;
+     var testShader  = null;
+     var testTexture = null;
      
+    
     function draw_Frame()
     {
         the_Renderer.begin();
+      
+        var gl = the_Renderer.gl;
+      
+        testTexture.bind( 0 );
         
-        // Render here
+        var orientation      = new Matrix33();
+            orientation.Scale( new Vector3(10,10,10) );
+            
+        var worldMatrix      = new Matrix44();
+            worldMatrix.embed( orientation );
         
+        var viewMatrix       = testCamera.get_ViewMatrix();
+        var projectionMatrix = testCamera.get_ProjectionMatrix(  50, 1,3333, 1, 10000 );
+      
+        gl.uniformMatrix4fv( testShader.program.projectionMatrix , false,  projectionMatrix.data   );
+        gl.uniformMatrix4fv( testShader.program.worldMatrix      , false,       worldMatrix.data   );
+        gl.uniformMatrix4fv( testShader.program.viewMatrix       , false,        viewMatrix.data   );
+        
+        testBatch.bind( testShader );
+        
+        gl.bindBuffer  ( gl.ELEMENT_ARRAY_BUFFER, testBatch.iBuffer.data                      );  
+        gl.drawElements( gl.TRIANGLES, testBatch.iBuffer.data.numItems, gl.UNSIGNED_SHORT, 0  );
+  
         the_Renderer.end();
     }
+    
+    
+    /*
+        // Renderer.draw
+    
+            var shaderProgram   = myEntity.material.shader.shaderProgram;
+            var worldMatrix     = myEntity.orientation.get_Matrix();       
+            var viewMatrix      = this.camera.get_ViewMatrix(); 
+            var worldViewMatrix = mat4.multiply( viewMatrix , worldMatrix  );
+     
+            myEntity.material.bind( this.gl, this.gl.TEXTURE0, lights, this.camera );    // SLOT is OBSOLETE here!
+        
+      
+            this.gl.uniformMatrix4fv( shaderProgram.pMatrixUniform , false,  this.projection_Matrix           );
+            this.gl.uniformMatrix4fv( shaderProgram.mMatrixUniform , false,  worldMatrix                      );
+            this.gl.uniformMatrix4fv( shaderProgram.mvMatrixUniform, false,  worldViewMatrix                  );
+        
+            myEntity.mesh.render_Indexed( this.gl, myEntity.material );
+
+        // Shader bind
+            this.template.binder( gl, this.shaderProgram, this.features, tex1, tex2, tex3, tex4, lights, camera );
+            gl.useProgram( this.shaderProgram );        
+    
+    
+        // Mesh.render_Indexed
+    
+            this.vertices.bind ( gl, material.shader.shaderProgram.vertexPositionAttribute      );    
+            this.texCoords.bind( gl, material.shader.shaderProgram.textureCoordAttribute        );
+            this.normals.bind  ( gl, material.shader.shaderProgram.vertexNormalAttribute        );
+         
+            if (typeof binormals  != 'undefined')
+                this.binormals.bind( gl, material.shader.shaderProgram.vertexBinormalAttribute  );
+   
+            if (typeof this.tangents  != 'undefined')
+                this.tangents.bind ( gl, material.shader.shaderProgram.vertexTangentAttribute   );
+    
+            if (typeof this.binormals  != 'undefined')
+                this.binormals.bind ( gl, material.shader.shaderProgram.vertexBinormalAttribute );
+    
+            gl.bindBuffer  (gl.ELEMENT_ARRAY_BUFFER, this.indices.data                          );    
+            gl.drawElements(gl.TRIANGLES, this.indices.data.numItems, gl.UNSIGNED_SHORT, 0      );
+    
+     */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
      
      
     function rendererMain() 
     {   
-        requestAnimFrame( rendererMain );
+          requestAnimFrame( rendererMain );
        
-    Root_Exception_Handler( draw_Frame );
+    Root_Exception_Handler( draw_Frame   );
     }
     
-  
-  
-  
-  
+
     function main() 
-    { 
-        var matA = new Matrix44();
-            matA.Identity();
-                              
-        var matB = new Matrix44();
-            
-        var matR = new Matrix33();
-            matR.RotationY( DegToRad( 90 ) );
+    {   
+        testShader  =  new SimpleShader(                        );
+        testTexture =  new      Texture( "data/crosshair1.png"  );
+        testCamera  =  new       Camera( new Vector3( 0, 0, 0 ) );
+        testBatch   =  testCube( testTexture );
         
-            matB.embed( matR );
-        
-        
-        var matC = matA.multiply( matB );
-       
-        matA.alert();
-        matC.alert();
-     
-     
-     
-        var texture = new Texture("data/crosshair1.bmp");
-        
-        
-        
-        rendererMain();
+    rendererMain();
     }
 
-    
     
     function global_Initializer()
     {
@@ -94,15 +191,9 @@
  
 
 
-
-
-    
-
     
 </script>
 
-
-asdas
 
 </head>
 

@@ -39,7 +39,7 @@
     }
     
 
-    Texture.prototype.set_Filter = function()
+    Texture.prototype.set_Filter = function( )
     {
         var gl = the_Renderer.gl;
         // Parametrise
@@ -49,26 +49,31 @@
     
     
     
-    Texture.prototype.bind = function( slot )
+    Texture.prototype.bind = function( slot , shader )
     {
         var gl = the_Renderer.gl;
         
         switch( slot )
         {
             case 0 : gl.activeTexture( gl.TEXTURE0 );
+                     gl.bindTexture  ( gl.TEXTURE_2D,  this.data );
+                     gl.uniform1i    ( gl.getUniformLocation( shader.program, "textureMapSampler"), 0 );
             break;
             
             case 1 : gl.activeTexture( gl.TEXTURE1 );
+                     gl.bindTexture  ( gl.TEXTURE_2D,  this.data );
+                     gl.uniform1i    ( gl.getUniformLocation( shader.program, "textureMapSampler"), 1 );
             break;
             
             case 2 : gl.activeTexture( gl.TEXTURE2 );
+                     gl.bindTexture  ( gl.TEXTURE_2D,  this.data );
+                     gl.uniform1i    ( gl.getUniformLocation( shader.program, "textureMapSampler"), 2 );
             break;
             
-            case 3 : gl.activeTexture( gl.TEXTURE1 );
-            break;
             
             default: throw new Exception( Exception.Type.INVALID , "Bad texture index " + slot );
         }
-        
-            gl.bindTexture  ( gl.TEXTURE_2D, this.data );
+            
     }
+    
+    

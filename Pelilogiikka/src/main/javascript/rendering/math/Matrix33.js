@@ -47,7 +47,7 @@
         this.data[6] =               0; this.data[7] =              0; this.data[8] = 1;
     }
     
-    Matrix33.prototype.ScaleZ = function( scales ) 
+    Matrix33.prototype.Scale = function( scales ) 
     {
         this.data[0] = scales.x; this.data[1] =         0; this.data[2] =          0;
         this.data[3] =        0; this.data[4] =  scales.y; this.data[5] =          0;
@@ -69,6 +69,20 @@
                                     mat.data[(3*i)+2] * this.data[6+j];
             }
        
+    return ret;
+    }
+
+
+    Matrix33.prototype.transposed = function()
+    {
+        var ret = new Matrix33();
+       
+        for( var i = 0; i < 3; i++ )
+            for( var j = 0; j < 3; j++ )
+            {
+               ret.data[ (3*j)+i] = this.data[ (3*i)+j ];
+            }
+            
     return ret;
     }
 

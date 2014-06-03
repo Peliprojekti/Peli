@@ -20,14 +20,14 @@ Vector3.prototype.add = function( vec3 )
                          this.z + vec3.z  );
 }
 
-Vector3.prototype.sub = function( vec3 )
+Vector3.prototype.subtract = function( vec3 )
 {
     return new Vector3(  this.x - vec3.x ,
                          this.y - vec3.y ,
                          this.z - vec3.z  );
 }
 
-Vector3.prototype.mul = function( scalar )
+Vector3.prototype.multiply = function( scalar )
 {
     return new Vector3(  this.x*scalar ,
                          this.y*scalar ,

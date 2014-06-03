@@ -103,7 +103,7 @@
     
     function Root_Exception_Handler( entryPoint )
     {
-    console.log( "Exception frame begin" );
+   // console.log( "Exception frame begin" );
         
         try
         {
@@ -124,6 +124,6 @@
         }
         
         
-    console.log( " Exception frame end" );
+   // console.log( " Exception frame end" );
     }
     

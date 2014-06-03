@@ -1,13 +1,6 @@
     precision mediump float;
 
-    uniform vec3      lights[ 32 ];
-    uniform vec4 lightColors[ 32 ];
-    uniform int           lightCnt;
-
     uniform sampler2D textureMapSampler;
-    uniform sampler2D  normalMapSampler;
-    uniform vec3            eyePosition;
-   
     varying   vec2        pixelTexcoord;
 
     void main( void )  
