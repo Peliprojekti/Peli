@@ -8,7 +8,6 @@ function Buffer( type, itemList, entrySize )
 		  
     switch( type ) 
     {
-            
     case "FLOAT":
             
         gl.bindBuffer(gl.ARRAY_BUFFER, this.data );

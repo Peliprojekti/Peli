@@ -1,5 +1,5 @@
 	
-    function Buffer( gl, item_Type, itemList, entrySize ) 
+    function Buffer( item_Type, itemList, entrySize ) 
     {             
         this.data           = gl.createBuffer();		
         this.data.itemSize  = entrySize;
