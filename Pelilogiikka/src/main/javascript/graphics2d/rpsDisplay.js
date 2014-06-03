@@ -15,16 +15,16 @@ var rpsDisplay = {
 
         this.fancy = fancy;
         this.lastTime = 0;
-        this.updateInterval = 1000;
+        this.updateInterval = 500;
         this.lastRps = 0;
         this.rps = 0;
 
         if (this.fancy) {
             this.thingy = chartThingy.create(canvas,
                 0,
-                canvas.height / 8,
+                Math.floor(canvas.height / 8),
                 canvas.width,
-                canvas.height / 8);
+                Math.floor(canvas.height / 8));
             this.thingy.color = '#903030';
         }
     }
@@ -61,5 +61,8 @@ rpsDisplay.RpsDisplay.prototype.draw = function (ctx) {
     ctx.textAlign = 'right';
     ctx.fillText(this.rps, this.x, this.y);
     ctx.strokeText(this.rps, this.x, this.y);
-
+    ctx.textAlign = 'right';
+    ctx.font = 'bold 12pt Calibri';
+    ctx.fillText('RPCs per second:', this.x - 120, this.y - 20);
+    ctx.strokeText('RPCs per second:', this.x - 120, this.y - 20);
 };

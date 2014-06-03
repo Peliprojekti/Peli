@@ -46,7 +46,7 @@ nconf.defaults({
     client_jade: 'controller.jade',
     screen_jade: 'dummy/dummy.jade',
 
-    controller: 'touchDrag'
+    controller: 'absPosition'
 });
 
 /*

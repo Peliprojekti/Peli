@@ -3,25 +3,15 @@
 /*global graphics2d: false*/
 /*jslint browser: true*/
 
-/*
- B2Vec2 = Box2D.Common.Math.b2Vec2;
- B2BodyDef = Box2D.Dynamics.b2BodyDef;
- B2Body = Box2D.Dynamics.b2Body;
- B2FixtureDef = Box2D.Dynamics.b2FixtureDef;
- B2Fixture = Box2D.Dynamics.b2Fixture;
- B2World = Box2D.Dynamics.b2World;
- B2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
- B2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
- B2DebugDraw = Box2D.Dynamics.b2DebugDraw;
- B2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef;
- */
-
 var dummy = dummy || {};
 dummy.screen = {
+    previousTime: 0,
+    targetFrameTime: 1000 / 120,
     physicsEnabled: false,
+    statsEnabled: false,
+    entitiesEnabled: false,
     width: 0,
     height: 0,
-    canvas: null,
     context: null,
     box2d: dummy.box2d,
     entities: dummy.entities,
@@ -30,12 +20,12 @@ dummy.screen = {
     controllers: [],
     start: function (canvas) {
         "use strict";
-        this.canvas = canvas;
         this.height = canvas.height;
         this.width = canvas.width;
         this.context = canvas.getContext("2d");
         this.entities.init(canvas);
         this.box2d.init(canvas);
+        this.statsDisplay = dummy.statsDisplay.create(canvas);
 
         this.entities.create({
             name: "companionSquare",
@@ -47,15 +37,25 @@ dummy.screen = {
             height: 100
         });
 
-        window.requestAnimationFrame(this.animate);
-    },
-    addController: function (controller) {
-        "use strict";
-        this.controllers.push(controller);
+        this.previousTime = Date.now();
+        this.animate(0);
+        //window.requestAnimationFrame(this.animate);
     },
     setPhysicsEnabled: function(enabled) {
         "use strict";
         this.physicsEnabled = enabled;
+    },
+    setEntitiesEnabled: function(enabled) {
+        "use stridct";
+        this.entitiesEnabled = enabled;
+    },
+    setStatsEnabled: function(enabled) {
+        "use strict";
+        this.statsEnabled = enabled;
+    },
+    addController: function (controller) {
+        "use strict";
+        this.controllers.push(controller);
     },
     removeController: function (controller) {
         "use strict";
@@ -73,55 +73,52 @@ dummy.screen = {
             return (p === player ? false : true);
         });
     },
-    animate: function (time) {
+    animate: function () {
         "use strict";
-        var self = dummy.screen;
-        self.clear();
-        self.drawBackground(time);
+        var self = dummy.screen,
+            ctx = self.context,
+            time = Date.now();
 
-        self.updateControllers(time);
+        self.clear(ctx);
+
+        if (self.statsEnabled) {
+            self.statsDisplay.update(time);
+            self.statsDisplay.draw(ctx);
+        }
 
         if (self.physicsEnabled) {
             self.box2d.update(time);
         }
 
-        self.entities.drawAll();
-
-        self.drawPlayers(self.context);
-
-        window.requestAnimationFrame(self.animate);
-    },
-    clear: function () {
-        "use strict";
-        this.context.fillStyle = 'white';
-        this.context.fillRect(0, 0, this.width, this.height);
-    },
-    drawBackground: function (time) {
-        "use strict";
-        for (var i = 0; i < this.background.length; i++) {
-            this.background[i].update(time);
-            this.background[i].draw(this.context);
+        if (self.entitiesEnabled) {
+            self.entities.drawAll(ctx);
         }
+
+        self.updateControllers(time);
+        self.drawPlayers(ctx);
+
+        setTimeout(self.animate, self.targetFrameTime + self.targetFrameTime - (time - self.previousTime));
+        self.previousTime = time;
+        //window.requestAnimationFrame(self.animate);
     },
-    addToBackground: function (object) {
-        this.background.push(object);
+    clear: function (ctx) {
+        "use strict";
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, this.width, this.height);
     },
     updateControllers: function (time) {
         "use strict";
         this.controllers.forEach(function (c) {
-            // TODO these need to be removed...
             if (c) c.update(time);
         });
     },
-    drawPlayers: function () {
+    drawPlayers: function (ctx) {
         "use strict";
-        var context = this.context;
         this.players.forEach(function (p) {
-            "use strict";
-            p.draw(context);
+            p.draw(ctx);
         });
     },
     shoot: function(x,y) {
-        this.background.push(graphics2d.bulletHole.create(this.canvas, x, y));
+        //this.background.push(graphics2d.bulletHole.create(this.canvas, x, y));
     }
 };

@@ -8,7 +8,9 @@
 var dummy = dummy || {};
 dummy.game = {
     initialConfig: {
-        enablePhysics: false
+        enablePhysics: false,
+        enableEntities: false,
+        enableStats: true
     },
     enablePhsyics: false,
     players: [],
@@ -25,10 +27,10 @@ dummy.game = {
         this.connectToServer();
         this.screen = dummy.screen;
         this.screen.setPhysicsEnabled(this.initialConfig.enablePhysics);
-        this.screen.addToBackground(fpsDisplay.createFancy(canvas));
-        this.screen.addToBackground(rpsDisplay.createFancy(canvas));
+        this.screen.setEntitiesEnabled(this.initialConfig.enableEntities);
+        this.screen.setStatsEnabled(this.initialConfig.enableStats);
 
-        this.screen.start(document.getElementById("canvas"));
+        this.screen.start(canvas);
     },
     onPlayerJoined: function (player, controller) {
         "use strict";
@@ -78,6 +80,21 @@ dummy.game = {
             function(value) {
                 this.screen.setPhysicsEnabled(value);
             }.bind(this)));
+        rightMenu.appendChild(this.createMenuOption(
+            "enable drawing of entities",
+            'checkbox',
+            this.initialConfig.enableEntities,
+            function(value) {
+                this.screen.setEntitiesEnabled(value);
+            }.bind(this)));
+        rightMenu.appendChild(this.createMenuOption(
+            "enable stats displays",
+            'checkbox',
+            this.initialConfig.enableStats,
+            function(value) {
+                this.screen.setStatsEnabled(value);
+            }.bind(this)));
+
     },
     createMenuOption: function(name, type, value, listener) {
         var configDiv = document.createElement('div'),

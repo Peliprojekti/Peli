@@ -51,7 +51,7 @@ game.controllerHub = {
     },
     openConnection: function () {
         "use strict";
-        if ((this.freeConnectiodns >= this.minimumFreeConnections) || this.playerCount === this.maxPlayers) {
+        if ((this.freeConnections >= this.minimumFreeConnections) || this.playerCount === this.maxPlayers) {
             return false;
         }
 

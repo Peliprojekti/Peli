@@ -16,11 +16,10 @@ var fpsDisplay = {
         this.x = x;
         this.y = y;
 
-        this.ctx = canvas.getContext("2d");
         this.fancy = fancy;
         this.frameCount = 0;
         this.lastTime = 0;
-        this.updateInterval = 1000;
+        this.updateInterval = 500;
         this.fps = 0;
 
         if (this.fancy) {
@@ -28,7 +27,7 @@ var fpsDisplay = {
                 0,
                 0,
                 canvas.width,
-                canvas.height / 8);
+                Math.floor(canvas.height / 8));
             this.thingy.color = '#309030';
         }
 
@@ -50,18 +49,22 @@ fpsDisplay.FpsDisplay.prototype.update = function (time) {
     }
 };
 
-fpsDisplay.FpsDisplay.prototype.draw = function () {
+fpsDisplay.FpsDisplay.prototype.draw = function (ctx) {
     "use strict";
 
     if (this.fancy) {
-        this.thingy.draw(this.ctx);
+        this.thingy.draw(ctx);
     }
 
-    this.ctx.font = 'bold 40pt Calibri';
-    this.ctx.fillStyle = '#30BB30';
-    this.ctx.strokeStyle = '#209020';
+    ctx.font = 'bold 40pt Calibri';
+    ctx.fillStyle = '#30BB30';
+    ctx.strokeStyle = '#209020';
 
-    this.ctx.textAlign = 'right';
-    this.ctx.fillText(this.fps, this.x, this.y);
-    this.ctx.strokeText(this.fps, this.x, this.y);
+    ctx.textAlign = 'right';
+    ctx.fillText(this.fps, this.x, this.y);
+    ctx.strokeText(this.fps, this.x, this.y);
+    ctx.textAlign = 'right';
+    ctx.font = 'bold 12pt Calibri';
+    ctx.fillText('frames per second:', this.x - 120, this.y - 20);
+    ctx.strokeText('frames per second:', this.x - 120, this.y - 20);
 };
