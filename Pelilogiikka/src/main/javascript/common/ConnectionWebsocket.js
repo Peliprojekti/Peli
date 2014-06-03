@@ -59,12 +59,14 @@ ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback
     };
 
     this.connection.onmessage = function (e) {
-        console.log("yaaadadad");
         if (e.data === '-1') {
             /* This is a server message notifying of client disconnect */
+            console.log("ConnectionWebsocket::onMessage - recieved player disconnect");
+            closeCallback(true);
+            closeCallback = null;
             self.close();
         } else {
-            console.debug("ConnectionWebsocket::connect - onessage", e.data);
+            //console.debug("ConnectionWebsocket::connect - onessage", e.data);
             onMessage(e.data);
         }
     };
