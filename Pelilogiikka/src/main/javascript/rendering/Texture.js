@@ -46,3 +46,29 @@
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST   );
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST   );
     }
+    
+    
+    
+    Texture.prototype.bind = function( slot )
+    {
+        var gl = the_Renderer.gl;
+        
+        switch( slot )
+        {
+            case 0 : gl.activeTexture( gl.TEXTURE0 );
+            break;
+            
+            case 1 : gl.activeTexture( gl.TEXTURE1 );
+            break;
+            
+            case 2 : gl.activeTexture( gl.TEXTURE2 );
+            break;
+            
+            case 3 : gl.activeTexture( gl.TEXTURE1 );
+            break;
+            
+            default: throw new Exception( Exception.Type.INVALID , "Bad texture index " + slot );
+        }
+        
+            gl.bindTexture  ( gl.TEXTURE_2D, this.data );
+    }
