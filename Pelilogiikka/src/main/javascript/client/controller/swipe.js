@@ -1,20 +1,18 @@
 var client = client || {};
 
 client.loadedTypes = client.loadedTypes || [];
-client.loadedTypes.Swipe = function(container, canvas, phone, coms) {
+client.loadedTypes.Swipe = function(container, canvas, phone, coms, updatePeriod) {
     
     function Swipe() {
-        this.updatePeriod = 20; //time in ms
-        this.sincePrevious = 0;
-        this.startTime = null;
-        this.previousSendTime = 0;
+        this.updatePeriod = 20;
+        if (typeof updatePeriod !== 'undefined') this.updatePeriod = updatePeriod;
+        this.previousSendTime;
     }
 
     Swipe.prototype.doTouchStart = function(event) {
         event.preventDefault();
-        this.startTime = new Date().getTime();
-        this.sincePrevious = 0;
-
+      
+        this.previousSendTime = new Date().getTime();
         this.sendCoords(event, true);
     };
 
@@ -31,7 +29,6 @@ client.loadedTypes.Swipe = function(container, canvas, phone, coms) {
 
         var currentTime = new Date().getTime();
         if (currentTime - this.previousSendTime >= this.updatePeriod) {
-            this.sincePrevious = new Date().getTime() - this.previousSendTime;
             this.sendCoords(event, false);
             this.previousSendTime = currentTime;
         }
