@@ -74,17 +74,18 @@
         gl.useProgram( this.program );       
         
     // Declare and enable vertex attributes to be used here
+        
         this.program.vertexPosition    = gl.getAttribLocation( this.program , "vertexPosition" );
-        this.program.vertexTexCoord    = gl.getAttribLocation( this.program , "vertexTexcoord"  );
+        this.program.vertexTexCoord    = gl.getAttribLocation( this.program , "vertexTexcoord" );
         this.program.vertexNormal      = gl.getAttribLocation( this.program , "vertexNormal"   );
         this.program.vertexBinormal    = gl.getAttribLocation( this.program , "vertexBinormal" );
         this.program.vertexTangent     = gl.getAttribLocation( this.program , "vertexTangent"  );
      
-        gl.enableVertexAttribArray(this.program.vertexPosition );
-        gl.enableVertexAttribArray(this.program.vertexTexCoord );
-        gl.enableVertexAttribArray(this.program.vertexNormal   ); 
-        gl.enableVertexAttribArray(this.program.vertexBinormal );  
-        gl.enableVertexAttribArray(this.program.vertexTangent  );     
+        gl.enableVertexAttribArray( this.program.vertexPosition );
+        gl.enableVertexAttribArray( this.program.vertexTexCoord );
+        gl.enableVertexAttribArray( this.program.vertexNormal   ); 
+        gl.enableVertexAttribArray( this.program.vertexBinormal );  
+        gl.enableVertexAttribArray( this.program.vertexTangent  );     
     
     // Declare uniform attributes here
         

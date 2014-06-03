@@ -16,10 +16,10 @@
         
     // Declare and enable vertex attributes to be used here
         this.program.vertexPosition    = gl.getAttribLocation( this.program , "vertexPosition" );
-        this.program.vertexTexCoord    = gl.getAttribLocation( this.program , "vertexTexcoord"  );
+        this.program.vertexTexcoord    = gl.getAttribLocation( this.program , "vertexTexcoord"  );
      
         gl.enableVertexAttribArray( this.program.vertexPosition );
-        gl.enableVertexAttribArray( this.program.vertexTexCoord );
+        gl.enableVertexAttribArray( this.program.vertexTexcoord );
     
     // Declare uniform attributes here
         
@@ -34,3 +34,8 @@
     
     
 
+    SimpleShader.prototype.bind = function()
+    {
+        var gl = the_Renderer.gl;
+        
+    }

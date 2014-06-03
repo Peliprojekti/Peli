@@ -13,9 +13,11 @@
     Batch.prototype.bind = function( shader )
     {
         var gl = the_Renderer.gl;
- 
-        this.vBuffer.bind( shader.program.vertexPosition );  
-        this.tBuffer.bind( shader.program.vertexTexcoord );  
         
-     
+          this.vBuffer.bind( shader.program.vertexPosition );  
+          this.tBuffer.bind( shader.program.vertexTexcoord );  
+       
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.iBuffer.data );  
+       
+        this.texture.bind( 0 , shader );
     }
