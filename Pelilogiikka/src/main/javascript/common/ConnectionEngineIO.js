@@ -109,7 +109,7 @@ ConnectionEngineIO.prototype.close = function () {
 ConnectionEngineIO.prototype.sendMessage = function (message) {
     "use strict";
     if (this.connected === true) {
-        console.debug("ConnectionEngine::sendMessage - sending", message);
+        //console.debug("ConnectionEngine::sendMessage - sending", message);
         this.socket.send(JSON.stringify(message));
     }
 };

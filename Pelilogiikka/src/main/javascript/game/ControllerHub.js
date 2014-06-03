@@ -51,7 +51,7 @@ game.controllerHub = {
     },
     openConnection: function () {
         "use strict";
-        if ((this.freeConnections >= this.minimumFreeConnections) || this.playerCount === this.maxPlayers) {
+        if ((this.freeConnectiodns >= this.minimumFreeConnections) || this.playerCount === this.maxPlayers) {
             return false;
         }
 
@@ -103,7 +103,6 @@ game.controllerHub = {
         "use strict";
         var controller = this.controllers[sequence],
             player = this.players[sequence];
-
 
         if (controller) {
             console.info("player disconnected, closing connection ");

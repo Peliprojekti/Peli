@@ -85,7 +85,7 @@ peliRPC.PeliRPC.prototype.onMessage = function (message) {
             return;
         }
 
-        try {
+        //try {
             var rpcMethod = this.rpcMethods[rpc.method];
             //console.debug("PeliRPC::onMessage() . Applying method", rpcMethod.object, rpc.params);
             var result = rpcMethod.method.apply(rpcMethod.object, rpc.params);
@@ -99,6 +99,7 @@ peliRPC.PeliRPC.prototype.onMessage = function (message) {
             } else {
 
             }
+            /*
         } catch (err) {
             var code = (err.code ? err.code : "");
             var message = (err.message ? err.message : "");
@@ -114,6 +115,7 @@ peliRPC.PeliRPC.prototype.onMessage = function (message) {
                 });
             }
         }
+        */
     } else {
         //console.debug("PeliRPC::onMessage() - maybe a return value, for id ", rpc.id);
         if (rpc.id !== undefined && (this.callbacks[rpc.id] !== "undefined")) {
