@@ -1,30 +1,35 @@
-var Guishader = 
-{
-         
-    initializer :  function( gl , shaderProgram )
+
+
+
+    function GuiShader()
     {
-        shaderProgram.vertexPositionAttribute   = gl.getAttribLocation ( shaderProgram, "vertexPos"      );
-        shaderProgram.samplerUniform            = gl.getUniformLocation( shaderProgram, "texSampler"     );
-        shaderProgram.mMatrixUniform            = gl.getUniformLocation( shaderProgram, "worldMatrix"    );
-    },
+        this.program     = shader_Loader( "Guishader" );
+        var gl           = the_Renderer.gl;
+    
+        gl.useProgram( this.program );       
+        
+    // Declare and enable vertex attributes to be used here
+        this.program.vertexPosition    = gl.getAttribLocation( this.program , "vertexPosition" );
+        this.program.vertexTexcoord    = gl.getAttribLocation( this.program , "vertexTexcoord"  );
+     
+        gl.enableVertexAttribArray( this.program.vertexPosition );
+        gl.enableVertexAttribArray( this.program.vertexTexcoord );
+    
+    // Declare uniform attributes here
+        
+        // One sampler for each map used
+        this.program.textureMapSampler         = gl.getUniformLocation( this.program, "textureMapSampler" );
+    
+        // Declare the standard transformation matrices
+        this.program.worldMatrix               = gl.getUniformLocation( this.program, "worldMatrix"       );
+        this.program.viewMatrix                = gl.getUniformLocation( this.program, "viewMatrix"        );
+        this.program.projectionMatrix          = gl.getUniformLocation( this.program, "projectionMatrix"  );
+   }                 
+    
+    
 
-
-    binder :  function(  gl , shaderProgram, shaderFeatures,  tex1, tex2, tex3, tex4, lights, camera )
+  
+    GuiShader.prototype.enable = function()
     {
-        gl.uniform4f     ( shaderProgram.vColor, 1.0,1.0,1.0,1.0                    );
-        gl.activeTexture ( gl.TEXTURE0                                              );
-        gl.bindTexture   ( gl.TEXTURE_2D, tex1.data                                 );
-        gl.uniform1i     ( gl.getUniformLocation( shaderProgram, "texSampler"), 0   );
-    },
-
-
-    load : function( gl, features ) 
-    {   
-         var path = "data/Shaders/Guishader/";
-         var p1   = new Parser(path+"/VertexShader.txt"); 
-         var p2   = new Parser(path+"/PixelShader.txt" ); 
-   
-    return new Shader( gl, p1.the_Document.rawData, p2.the_Document.rawData, features, new ShaderTemplate( Guishader.initializer, Guishader.binder ) );
+        the_Renderer.gl.useProgram( this.program );
     }
-
-};

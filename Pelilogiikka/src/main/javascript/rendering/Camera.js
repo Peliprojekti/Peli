@@ -26,6 +26,24 @@ Camera.prototype.backwards = function( amount )
 }
 
 
+
+Camera.prototype.up = function( amount )
+{
+    var look = this.orientation.extract_J();
+    this.position = this.position.add( look.multiply( amount ) );
+}
+
+
+Camera.prototype.down = function( amount )
+{
+    var look = this.orientation.extract_J();
+    this.position = this.position.add(  look.multiply( -amount ) );
+}
+
+
+
+
+
 Camera.prototype.yaw = function( amount )
 {
     var rotMatrix = new Matrix33();

@@ -62,9 +62,33 @@
 
 
 
-    Renderer.prototype.draw_Batch = function( batch ) 
+    Renderer.prototype.draw_Batch = function( batch, shader, camera ) 
     {
+        // TEST STUFF
+        var rot = new Matrix33();
+        var sca = new Matrix33();
+            sca.Scale( new Vector3( 10,10,10) );
+            
+            rot = rot.multiply( sca );
         
+            var world      = new Matrix44();
+                world.embed( rot );
+                
+            var view       = camera.get_ViewMatrix();
+            var project    = camera.get_ProjectionMatrix(  45, 800/600, 1, 1000 );
+        // TEST STUFF
+        
+        
+        
+        
+        batch.bind( shader );
+        shader.enable();
+        this.gl.uniformMatrix4fv( shader.program.worldMatrix      , false ,       world.data );
+        this.gl.uniformMatrix4fv( shader.program.viewMatrix       , false ,        view.data );
+        this.gl.uniformMatrix4fv( shader.program.projectionMatrix , false ,     project.data );
+        
+        
+        this.gl.drawElements( this.gl.TRIANGLES, batch.iBuffer.data.numItems, this.gl.UNSIGNED_SHORT, 0  );
     }
 
 

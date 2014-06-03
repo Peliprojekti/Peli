@@ -13,6 +13,11 @@
 
 <script type="text/javascript" src="data/Shaders/WorldShader/WorldShader.js"    ></script>
 <script type="text/javascript" src="data/Shaders/SimpleShader/Simpleshader.js"  ></script>
+<script type="text/javascript" src="data/Shaders/SpriteShader/Spriteshader.js"  ></script>
+<script type="text/javascript" src="data/Shaders/Guishader/Guishader.js"        ></script>
+
+
+
 
 <script type="text/javascript" src="Globals.js"                                 ></script>
 <script type="text/javascript" src="Exception.js"                               ></script>
@@ -77,7 +82,27 @@
      
      
      
-     
+     function testRect( texture, width, height )
+     {
+        this.width   = width;
+        this.height  = height;
+  
+    
+        var vertices     = [ -this.width,  this.height, 0,   // Top left
+                              this.width,  this.height, 0,   // Top Right
+                              this.width, -this.height, 0,   // Bottom Right
+                             -this.width, -this.height, 0 ]; // Bottom left
+       
+        var indices     = [ 0, 1, 2, 2, 3, 0 ];
+                  
+        var texCoords   = [ 0.0, 1.0, 
+                            1.0, 1.0, 
+                            1.0, 0.0, 
+                            0.0, 0.0 ];   
+                      
+                      
+     return new Batch( vertices, indices, texCoords, texture );
+     }
      
      
  
@@ -112,12 +137,19 @@
 
 
     var testCamera  = null;
-    var testBatch   = null;
     var testShader  = null;
     var testTexture = null;
      
+    var testBatch   = null;
     
-
+    var spriteShader = null;
+    var testSprite   = null;
+    var  spriteTex   = null;
+    
+    
+    var guiShader   = null;
+    var testGui     = null;
+    var guiTex      = null;
     
     
     var lul = 0.0;
@@ -125,8 +157,8 @@
     function draw_Frame()
     {
         
-        if( key_Down( 38 ) ) testCamera.forward( 5.0 );
-        if( key_Down( 40 ) ) testCamera.backwards( 5.0 );
+        if( key_Down( 38 ) )  testCamera.forward( 5.0 );
+        if( key_Down( 40 ) )  testCamera.backwards( 5.0 );
      
         if( key_Down( 37 ) )  testCamera.yaw( 2.0 );
         if( key_Down( 39 ) )  testCamera.yaw( -2.0 );
@@ -137,44 +169,20 @@
         if( key_Down( 87 ) )  testCamera.pitch( 2.0  );
         if( key_Down( 83 ) )  testCamera.pitch( -2.0 );
      
+        if( key_Down( 33 ) )  testCamera.up  ( 5.0 );
+        if( key_Down( 34 ) )  testCamera.down( 5.0 );
+     
         
-        
-        var rot = new Matrix33();
-            rot.RotationY( lul );
-            
-        var sca = new Matrix33();
-            sca.Scale( new Vector3( 10,10,10) );
-            
-            lul += 0.01;
-            
-        
-        var gl         = the_Renderer.gl;
-          
+     
+     
         the_Renderer.begin();
-            
-            rot = rot.multiply( sca );
         
-            var world      = new Matrix44();
-                world.embed( rot );
-                
-            
-            var view       = testCamera.get_ViewMatrix();
-            
-
-            
-            var project    = testCamera.get_ProjectionMatrix(  45, 800/600, 1, 1000 );
-       
-                               
+          the_Renderer.draw_Batch( testBatch, testShader, testCamera  );
         
-            gl.uniformMatrix4fv( testShader.program.worldMatrix      , false ,       world.data );
-            gl.uniformMatrix4fv( testShader.program.viewMatrix       , false ,        view.data );
-            gl.uniformMatrix4fv( testShader.program.projectionMatrix , false ,     project.data );
-        
-        
-        
-            testBatch.bind( testShader );
-        
-            gl.drawElements( gl.TRIANGLES, testBatch.iBuffer.data.numItems, gl.UNSIGNED_SHORT, 0  );
+         the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
+      
+         the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
+     
      }
     
     
@@ -194,10 +202,24 @@
 
     function main() 
     {   
-        testShader  =  new SimpleShader(                               );
-        testTexture =  new      Texture( "data/Textures/concrete.jpg"  );
-        testCamera  =  new       Camera( new Vector3( 0, 5, 150 )       );
-        testBatch   =  testCube( testTexture );
+        testCamera  =  new       Camera( new Vector3( 0, 5, 150 )           );
+        
+        testShader  =  new SimpleShader(                                    );
+        testTexture =  new      Texture( "data/Textures/concrete.jpg"       );
+        testBatch   =  testCube        ( testTexture                        );
+         
+        spriteShader = new SpriteShader(                                    );
+        spriteTex    = new      Texture( "data/Textures/Sprites/Otus.png"   );
+        testSprite   = testRect        ( spriteTex ,2,4                     );
+        
+        
+         
+        guiShader    =  new GuiShader(                                      );
+        guiTex       =  new   Texture( "data/crosshair1.bmp"                );
+        testGui      = testRect( guiTex, 0.007, (0.007)*1.3333              );
+        
+        
+        
         
     rendererMain();
     }

@@ -34,8 +34,7 @@
     
     
 
-    SimpleShader.prototype.bind = function()
+    SimpleShader.prototype.enable = function()
     {
-        var gl = the_Renderer.gl;
-        
+        the_Renderer.gl.useProgram( this.program );
     }

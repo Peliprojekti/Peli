@@ -1,9 +1,15 @@
-   precision mediump float;
+    precision mediump float;
 
-    uniform sampler2D       texSampler;
-  
-    void main(void) 
+    uniform sampler2D textureMapSampler;
+    varying   vec2        pixelTexcoord;
+
+    void main( void )  
     {
+        vec2 texCoords  = vec2( pixelTexcoord.s, pixelTexcoord.t );
         
-    gl_FragColor  = vec4( 1.0, 0.0, 0.0, 1.0 );
+        vec4 texel      =  texture2D( textureMapSampler, texCoords );
+        
+        if( texel.r == 1.0 ) discard;
+
+        gl_FragColor    = texture2D( textureMapSampler, texCoords );
     }
