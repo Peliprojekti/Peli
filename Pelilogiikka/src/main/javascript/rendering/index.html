@@ -90,13 +90,26 @@
             gl.uniformMatrix4fv( testShader.program.projectionMatrix , false ,     project.data );
     }
     
+    
+    var lul = 0.0;
+    
     function draw_Frame()
     {
+        
+        var hax = new Matrix33();
+            hax.RotationY( lul );
+            
+            lul += 0.01;
+            
+        
         var gl         = the_Renderer.gl;
           
         the_Renderer.begin();
         
             var world      = new Matrix44();
+                world.embed( hax );
+            
+            
             var view       = testCamera.get_ViewMatrix();
             var project    = testCamera.get_ProjectionMatrix(  50, 1,3333, 1, 10000 );
         
@@ -124,9 +137,9 @@
 
     function main() 
     {   
-        testShader  =  new SimpleShader(                        );
-        testTexture =  new      Texture( "data/crosshair1.png"  );
-        testCamera  =  new       Camera( new Vector3( 0, 0, 10 ) );
+        testShader  =  new SimpleShader(                               );
+        testTexture =  new      Texture( "data/Textures/concrete.jpg"  );
+        testCamera  =  new       Camera( new Vector3( 0, 0, 10 )       );
         testBatch   =  testCube( testTexture );
         
     rendererMain();

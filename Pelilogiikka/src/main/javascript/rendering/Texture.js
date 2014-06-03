@@ -2,16 +2,23 @@
     
     function onLoad( texture  )
     {
-        ASSERT_VALID(  texture, "No non-sources textures supported atm."  );
-         ASSERT_TYPE(   String, texture, "Failed to initialize Texture with parametertype:" + typeof texture + ". Expected String." );
+    //    ASSERT_VALID(  texture, "No non-sources textures supported atm."  );
+    //     ASSERT_TYPE(   String, texture, "Failed to initialize Texture with parametertype:" + typeof texture + ". Expected String." );
         
         var gl = the_Renderer.gl;
+       
+        gl.bindTexture( gl.TEXTURE_2D, texture ); 
         
-        gl.bindTexture(gl.TEXTURE_2D, texture); 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         gl.texImage2D (gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+        
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST   );
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST   );
+        
         gl.generateMipmap(gl.TEXTURE_2D);
+        
         gl.bindTexture(gl.TEXTURE_2D, null);
+   
     }
 
 
@@ -26,7 +33,7 @@
             
             myTexture.image.onload = function () 
             {
-                onLoad( gl, myTexture );
+                onLoad( myTexture );
             };
 
             myTexture.image.src = fileName;       
@@ -43,8 +50,8 @@
     {
         var gl = the_Renderer.gl;
         // Parametrise
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST   );
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST   );
+        gl.texParameteri( gl.TEXTURE_2D , gl.TEXTURE_MAG_FILTER , gl.NEAREST   );
+        gl.texParameteri( gl.TEXTURE_2D , gl.TEXTURE_MIN_FILTER , gl.NEAREST   );
     }
     
     
@@ -57,17 +64,17 @@
         {
             case 0 : gl.activeTexture( gl.TEXTURE0 );
                      gl.bindTexture  ( gl.TEXTURE_2D,  this.data );
-                     gl.uniform1i    ( gl.getUniformLocation( shader.program, "textureMapSampler"), 0 );
+                     gl.uniform1i    ( gl.getUniformLocation( shader.program , "textureMapSampler"), 0 );
             break;
             
             case 1 : gl.activeTexture( gl.TEXTURE1 );
                      gl.bindTexture  ( gl.TEXTURE_2D,  this.data );
-                     gl.uniform1i    ( gl.getUniformLocation( shader.program, "textureMapSampler"), 1 );
+                     gl.uniform1i    ( gl.getUniformLocation( shader.program , "textureMapSampler"), 1 );
             break;
             
             case 2 : gl.activeTexture( gl.TEXTURE2 );
                      gl.bindTexture  ( gl.TEXTURE_2D,  this.data );
-                     gl.uniform1i    ( gl.getUniformLocation( shader.program, "textureMapSampler"), 2 );
+                     gl.uniform1i    ( gl.getUniformLocation( shader.program , "textureMapSampler"), 2 );
             break;
             
             

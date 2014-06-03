@@ -25,7 +25,15 @@
         }
         
     this.fillColor = new Color( 1.0 , 0.0, 1.0, 1.0 );
-    the_Renderer   = this;
+    
+     this.gl.enable    ( this.gl.DEPTH_TEST );                   
+     this.gl.frontFace ( this.gl.CW         );
+     this.gl.enable    ( this.gl.CULL_FACE  );
+     this.gl.cullFace  ( this.gl.BACK       );
+        
+        
+        
+    the_Renderer   = this;  
     }
 
 
