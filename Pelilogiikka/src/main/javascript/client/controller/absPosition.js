@@ -1,11 +1,11 @@
 /*jslint browser: true*/
 /*global console: false*/
 /*global $: false*/
-/*global controller: false*/
-var controller = controller || {};
+/*global client: false*/
+var clinet = client || {};
 
-controller.loadedTypes = controller.loadedTypes || [];
-controller.loadedTypes.absPosition = function (container, canvas, phone, coms) {
+client.loadedTypes = client.loadedTypes || [];
+client.loadedTypes.absPosition = function (container, canvas, phone, coms) {
     "use strict";
     var previousTime = Date.now(),
         interval = 20,

@@ -1,3 +1,7 @@
+/*jslint browser: true */
+/*global WebSocket: true */
+/*global console: true */
+
 /**
  * This takes care of communication through Engine.io
  * @constructor
@@ -5,11 +9,10 @@
  * @param {number} port -
  * @param {string} protocol -
  * @param {boolean} persistent - connection stays open if set to true
+ * @returns {ConnectionWebsocket}
  */
 function ConnectionWebsocket(host, port, protocol, persistent) {
-    /*
-     * TODO check websocket support
-     */
+    "use strict";
 
     this.host = host;
     this.port = port;
@@ -17,82 +20,98 @@ function ConnectionWebsocket(host, port, protocol, persistent) {
     this.persistent = persistent;
     this.connected = false;
     this.connection = null;
-    this.closeCallback = null;
-    //this.onMessage = null;
 }
 
-ConnectionWebsocket.prototype.connect = function(connectCallback, closeCallback, onMessage) {
-    var self = this;
-    this.closeCallback = closeCallback;
-    //this.onMessage = onMessage;
-
-    var hoststr = "ws://" + this.host + ":" + this.port; // + "/" + this.protocol;
-
-    //console.info("ConnectionWebsocket::connect - connecting to: ", hoststr);
+/**
+ * 
+ * @param {type} connectCallback
+ * @param {type} closeCallback
+ * @param {type} onMessage
+ * @returns {undefined}
+ */
+ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback, onMessage) {
+    "use strict";
+    var self = this,
+        hoststr = "ws://" + this.host + ":" + this.port; // + "/" + this.protocol;
 
     this.connection = new WebSocket(hoststr);
 
-    this.connection.onopen = function() {
+    this.connection.onopen = function () {
         self.connected = true;
-        //console.info("ConnectionWebsocket::connect - connection opened ", hoststr);
         connectCallback(null, true);
     };
 
-    this.connection.onclose = function() {
-        self.connected = false;
-        //console.info("ConnectionWebsocket::connect - disconnected ",  hoststr);
-        if (typeof self.closeCallback == "function") {
-            self.closeCallback(true);
-            self.clear();
-            //self.closeCallback = null;
+    this.connection.onclose = function () {
+        if (typeof closeCallback === "function") {
+            closeCallback(true);
+            closeCallback = null;
+            self.close();
         }
     };
 
-    this.connection.onerror = function(error) {
-        self.connected = false;
-        console.info("ConnectionWebsocket::connect - connection error ", hoststr);
-        self.clear();
-
-        if (typeof self.connectionCallback == "function") {
-            //callback({"code": E_NO_CONNECTION_CODE, "message": E_NO_CONNECTION + host + ":" + port + ", protocol: " +  protocol}, null);
-            self.connectionCallback(error, null);
+    this.connection.onerror = function (error) {
+        console.errror("ConnectionWebsocket::connect - connection error ", hoststr);
+        if (typeof connectCallback === "function") {
+            connectCallback(error, null);
+            connectCallback = null;
         }
+        self.close();
     };
 
-    this.connection.onmessage = function(e) {
-        //console.debug("ConnectionWebsocket::connect - Recieved data---------", e);
-        if (e.data == '-1') {
-            //console.debug("Client disconnected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            self.closeCallback(true);
-            //self.clear();
-        }
-        else {
+    this.connection.onmessage = function (e) {
+        if (e.data === '-1') {
+            /* This is a server message notifying of client disconnect */
+            console.log("ConnectionWebsocket::onMessage - recieved player disconnect");
+            closeCallback(true);
+            closeCallback = null;
+            self.close();
+        } else {
+            //console.debug("ConnectionWebsocket::connect - onessage", e.data);
             onMessage(e.data);
         }
     };
 };
 
-ConnectionWebsocket.prototype.isOpen = function() {
+/**
+ * 
+ * @returns {Boolean}
+ */
+ConnectionWebsocket.prototype.isOpen = function () {
+    "use strict";
     return this.connected;
 };
 
-ConnectionWebsocket.prototype.close = function() {
+/**
+ * Closes conneciton and clears object
+ * 
+ * @returns {undefined}
+ */
+ConnectionWebsocket.prototype.close = function () {
+    "use strict";
     console.info("ConnectionWebsocket::close - closing connection");
-    if (self.connection !== null) self.connection.close();
-    self.clear();
-};
-
-ConnectionWebsocket.prototype.clear = function() {
-    this.closeEventCallback = null; // do this to disable redundant calls to this
-    this.connected = false;
+    this.connection.close();
+    this.connection.onopen = null;
+    this.connection.onclose = null;
+    this.connection.onerror = null;
+    this.connection.onmessage = null;
     this.connection = null;
+    this.connected = false;
 };
 
-ConnectionWebsocket.prototype.sendMessage = function(message) {
+/**
+ * Send message as JSON.stingified
+ * 
+ * @param {type} message
+ * @returns {Boolean} - true if send okay
+ */
+ConnectionWebsocket.prototype.sendMessage = function (message) {
+    "use strict";
     if (this.connected === true) {
         //console.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
         this.connection.send(JSON.stringify(message));
+        return true;
     } else {
         console.warn("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
+        return false;
     }
 };

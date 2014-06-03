@@ -22,8 +22,6 @@ graphics2d.crosshair = {
             array[randomIndex] = temporaryValue;
         }
 
-        console.debug("original values ", r,g,b);
-        console.debug("creating crosshair of color", array);
         return new graphics2d.crosshair.Crosshair(x, y, radius,
             'rgb(' + array.join() + ')'
         );

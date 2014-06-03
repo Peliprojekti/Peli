@@ -1,10 +1,10 @@
 /*jslint browser: true*/
 /*global coms: true*/
-/*global controller: true*/
-var controller = controller || {};
+/*global client: true*/
+var client = client || {};
 
-controller.loadedTypes = controller.loadedTypes || [];
-controller.loadedTypes.speedTest = function (container, canvas, phone, coms) {
+client.loadedTypes = client.loadedTypes || [];
+client.loadedTypes.speedTest = function (container, canvas, phone, coms) {
     "use strict";
     var sequence = 0,
         stop = false,
