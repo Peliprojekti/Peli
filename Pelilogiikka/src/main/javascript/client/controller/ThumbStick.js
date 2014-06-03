@@ -13,6 +13,7 @@ client.loadedTypes.ThumbStick = function (container, canvas, phone, coms, crossh
         r = 10;
 
     //peliAudio.loadSound('gun', true);
+    console.info("Loading ThumbStick.");
 
     client.loadedTypes.ThumbStick.draw  = function (context) {
         if (drawDot === true) {

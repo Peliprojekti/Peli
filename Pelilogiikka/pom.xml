@@ -66,6 +66,7 @@
                     <sourceIncludes>
                         <include>game/Player.js</include>
                         <include>common/*.js</include>
+                        <include>client/phone.js</include>
                         <include>client/controller/*.js</include>
                         <include>game/controller/*.js</include>
                         <include>game/graphics2d/*.js</include>
@@ -74,7 +75,6 @@
                         <include>rendering/**/*.js</include>
                         <!-- nää ei vielä skulaa, täytyy tunettaa...
                         <include>game/dummy/dummy.js</include>
-                        <include>client/phone.js</include>
                         -->
                         <include>client/coms.js</include>
                         <include>client/controllerView.js</include>

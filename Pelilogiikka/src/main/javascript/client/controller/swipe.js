@@ -1,7 +1,7 @@
-var controller = controller || {};
+var client = client || {};
 
-controller.loadedTypes = controller.loadedTypes || [];
-controller.loadedTypes['swipe'] = function(container, canvas, phone, coms) {
+client.loadedTypes = client.loadedTypes || [];
+client.loadedTypes.Swipe = function(container, canvas, phone, coms) {
     
     function Swipe() {
         this.updatePeriod = 20; //time in ms

@@ -14,26 +14,32 @@ client.phone = {
     rc: 0,
     oc: 0,
     controllerView: null,
+    canvas: null,
     onDocumentReady: function () {
         "use strict";
-
+        
         this.connectingDiv = document.getElementById("connecting");
-        this.io = navigator.userAgent.match(/(iPhone)|(iPod)/);
+        if (this.connectingDiv != null) {
+            this.io = navigator.userAgent.match(/(iPhone)|(iPod)/);
 
-        this.controllerView = client.controllerView.create(
-            document.getElementById('container'),
-            document.getElementById('canvas')
-        );
-        this.onResize();
+            this.controllerView = client.controllerView.create(
+                document.getElementById('container'),
+                document.getElementById('canvas')
+            );
+            this.onResize();
 
-        this.controllerView.add(new fpsDisplay.create(document.getElementById("canvas")));
+            this.controllerView.add(new fpsDisplay.create(document.getElementById("canvas")));
+            this.canvas = document.getElementById("canvas");
 
-        client.coms.open(this.onConnectionOpened.bind(this), this.onConnectionClosed.bind(this));
+            client.coms.open(this.onConnectionOpened.bind(this), this.onConnectionClosed.bind(this));
 
-        $(window).on("orientationchange", this.onOrientationChange.bind(this));
-        $(window).resize(this.onResize.bind(this));
+            $(window).on("orientationchange", this.onOrientationChange.bind(this));
+            $(window).resize(this.onResize.bind(this));
 
-        this.controllerView.start();
+            this.controllerView.start();
+        }
+        else
+            console.error("connectingDiv is null");
     },
     onOrientationChange: function () {
         "use strict";
@@ -97,12 +103,12 @@ client.phone = {
     loadController: function (type, crosshair) {
         "use strict";
 
-        if (!controller.loadedTypes[type]) {
+        if (!client.loadedTypes[type]) {
             console.error("trying to enable unregistered controller type ", type);
             throw new Error("trying to enable unregistered controller type: " + type);
         }
 
-        this.controllerView.add(controller.loadedTypes[type]);
+        this.controllerView.add(client.loadedTypes[type]);
         this.controllerView.showCrosshair(crosshair);
 
         if (typeof self.controllerDisabler === 'function') {
@@ -110,7 +116,7 @@ client.phone = {
             self.controllerDisabler = null;
         }
 
-        self.controllerDisabler = controller.loadedTypes[type](
+        self.controllerDisabler = client.loadedTypes[type](
             document.getElementById('container'),
             document.getElementById('canvas'),
             this,
@@ -130,11 +136,7 @@ client.phone = {
         return [relativeX, relativeY];
     },
     getCanvasDimensions: function () {
-        canvas = document.getElementById("canvas");
-        width = canvas.width;
-        height = canvas.height;
-
-        return [width, height];
+        return [this.canvas.width, this.canvas.height];
     },
     updateCoordinatesText: function (x, y) {
         var canvasDimensions = getCanvasDimensions();
@@ -146,4 +148,4 @@ client.phone = {
     }
 };
 
-$(document).ready(client.phone.onDocumentReady.bind(client.phone));
+$(document).ready(function(){client.phone.onDocumentReady()});

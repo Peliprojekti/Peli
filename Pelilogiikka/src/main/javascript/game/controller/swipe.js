@@ -1,7 +1,7 @@
 var controller = controller || {};
 
 controller.loadedTypes = controller.loadedTypes || [];
-controller.loadedTypes['swipe'] = {
+controller.loadedTypes.Swipe = {
     getController: function(player, rpc) {
         return new controller.Swipe(player, rpc);
     },
