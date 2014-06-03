@@ -14,10 +14,9 @@ dummy.game = {
     players: [],
     crosshairManager: new CrosshairManager(0),
     screen: null,
-    start: function () {
+    start: function (canvas, container) {
         "use strict";
-        var canvas = document.getElementById("canvas"),
-            container = document.getElementById("container");
+
         canvas.width = container.offsetWidth;
         canvas.height = container.offsetHeight;
 
@@ -35,7 +34,7 @@ dummy.game = {
         "use strict";
         var self = dummy.game,
             crosshair = dummy.game.crosshairManager.requestCrosshair(player);
-        console.info("New player connected ", player);
+        console.info("dummy - New player connected ", player.userID);
         player.setCrosshair(crosshair);
         player.setOnShoot(function (x, y) {
             self.screen.shoot(x, y);
@@ -47,7 +46,7 @@ dummy.game = {
     onPlayerLeft: function (player, controller) {
         "use strict";
         var self = dummy.game;
-        console.info("Player disconnected ", player);
+        console.info("dummy - Player disconnected ", player.userID);
         self.screen.removeController(controller);
         if (typeof player.crossh.id !== 'undefined') {
             dummy.game.crosshairManager.freeCrosshair(player.crossh.id);
@@ -114,5 +113,10 @@ dummy.game = {
 
 $(document).ready(function () {
     "use strict";
-    dummy.game.start();
+    var canvas = document.getElementById("canvas"),
+        container = document.getElementById("container");
+
+    if (container !== null) {
+        dummy.game.start(canvas, container);
+    }
 });

@@ -1,4 +1,7 @@
 /*jslint browser: true*/
+/*global SCREEN_PORT: true*/
+/*global CONTROLLER: true*/
+/*global game: false*/
 
 var game = game || {};
 
@@ -17,8 +20,10 @@ game.controllerHub = {
     players: {},
     controllers: {},
     update: function (time) {
-        var self = game.controllerHub;
-        for (var key in self.controllers) {
+        "use strict";
+        var self = game.controllerHub,
+            key;
+        for (key in self.controllers) {
             self.controllers[key].update(time);
         }
     },
@@ -65,7 +70,6 @@ game.controllerHub = {
     },
     rpcJoinGame: function (sequence, rpc, userID) {
         "use strict";
-        console.debug("here we are");
         var player = this.playerFactory.getPlayer(userID);
         var controller = this.controllerLoader.getController(player, rpc);
 
@@ -76,12 +80,12 @@ game.controllerHub = {
             this.players[sequence] = player;
         } catch (e) {
             console.error("Error while loading controller", this.controllerType);
+            throw new Error("Error while loading controller", this.controllerType);
         }
 
         this.openConnection();
 
         var playerData = this.onPlayerJoined(player, controller);
-        console.info("Player joined game with userID ", userID, "controllerType is ", this.controllerType);
         return [this.controllerType, playerData];
 
     },
@@ -89,7 +93,7 @@ game.controllerHub = {
         "use strict";
         if (error === null) {
             this.freeConnections++;
-            console.log("New connection successfully opened, total connecitons: ", this.freeConnections + this.playerCount);
+            console.log("New connection successfully opened (con,pla): ", this.freeConnections, this.playerCount);
             this.openConnection();
         } else {
             console.warn("Connection error ", sequence, error);
@@ -100,6 +104,7 @@ game.controllerHub = {
         var controller = this.controllers[sequence],
             player = this.players[sequence];
 
+
         if (controller) {
             console.info("player disconnected, closing connection ");
 
@@ -108,11 +113,12 @@ game.controllerHub = {
 
             delete this.controllers[sequence];
             delete this.players[sequence];
-            self.playerCount--;
+            this.playerCount--;
             this.onPlayerLeft(player, controller);
             rpc.clear();
         } else {
-            console.warn("connection unexpectedly closed ");
+            this.freeControllers--;
+            console.warn("connection unexpectedly closed", sequence);
         }
     }
 };

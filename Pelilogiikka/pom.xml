@@ -64,6 +64,8 @@
 
                     </preloadSources>
                     <sourceIncludes>
+                        <include>**/*.js</include>
+                        <!-- nää ei vielä skulaa, täytyy tunettaa...
                         <include>game/Player.js</include>
                         <include>common/*.js</include>
                         <include>client/phone.js</include>
@@ -73,15 +75,14 @@
                         <include>game/*.js</include>
                         <include>rendering/*.js</include>
                         <include>rendering/**/*.js</include>
-                        <!-- nää ei vielä skulaa, täytyy tunettaa...
                         <include>game/dummy/dummy.js</include>
-                        -->
                         <include>client/coms.js</include>
                         <include>client/controllerView.js</include>
                         <include>game/dummy/box2d.js</include>
                         <include>game/dummy/entities.js</include>
                         <include>game/dummy/gameScreen.js</include>
                         <include>common/ConnectionWebsocket.js</include>
+                        -->
                     </sourceIncludes>
                 </configuration>
             </plugin>

@@ -27,6 +27,7 @@ controller.SpeedTest.prototype.clear = function() {
 controller.SpeedTest.prototype.reset = function(player, rpc) {
     this.player = player;
     rpc.exposeRpcMethod('position', this, this.position);
+    return this;
 };
 
 controller.SpeedTest.prototype.update = function() {};

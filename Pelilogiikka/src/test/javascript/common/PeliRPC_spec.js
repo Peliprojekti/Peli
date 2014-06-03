@@ -12,6 +12,12 @@ describe('the PeliRPC object', function() {
     });
 
     //Specs
+    describe('constructor', function() {
+        it('works correctly', function() {
+            var testPRPC = peliRPC.create(connection);
+        });
+    });
+
     describe('exposeRpcMethod', function() {
         var rpc = peliRPC.create(connection);
 
