@@ -32,7 +32,6 @@
 
 
 
-
     Matrix44.prototype.multiply = function( mat )
     {
         ASSERT_TYPE( Matrix44, mat, "Expected Matrix44 for valid 4x4 Matrix multiplication");
@@ -48,12 +47,8 @@
                                     mat.data[(4*i)+3] * this.data[12+j];
             }
         
-       
     return ret;
     }
-
-
-
 
 
 

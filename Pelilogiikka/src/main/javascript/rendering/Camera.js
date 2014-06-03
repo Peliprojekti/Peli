@@ -15,14 +15,14 @@ function Camera(  position  )
 Camera.prototype.forward = function( amount )
 {
     var look = this.orientation.extract_K();
-    this.position.add(  look.multiply( amount ) );
+    this.position = this.position.add( look.multiply( -amount ) );
 }
 
 
 Camera.prototype.backwards = function( amount )
 {
     var look = this.orientation.extract_K();
-    this.position.add(  look.multiply( -amount ) );
+    this.position = this.position.add(  look.multiply( amount ) );
 }
 
 
@@ -56,11 +56,13 @@ Camera.prototype.get_ViewMatrix = function()
     var ret = new Matrix44();
         ret.embed( this.orientation.transposed() );    
         
-        ret.data[ 12 ] = -this.position.x;
-        ret.data[ 13 ] = -this.position.y;
-        ret.data[ 14 ] = -this.position.z;
+        
+    var lol = new Matrix44();
+        lol.data[ 12 ] = -this.position.x;
+        lol.data[ 13 ] = -this.position.y;
+        lol.data[ 14 ] = -this.position.z;
 
-return ret;
+return ret.multiply( lol );;
 }
 
 

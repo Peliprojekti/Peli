@@ -7,7 +7,7 @@
 
 
 <script type="text/javascript" src="external/webglutils.js"                     ></script>
-<script type="text/javascript" src="external/webglutils.js"                     ></script>
+<script type="text/javascript" src="external/glMatrix.js"                       ></script>
 
 
 
@@ -44,6 +44,41 @@
 
 
 <script type="text/javascript">
+     
+     
+     
+  var keyMap = {}; 
+  
+
+  function kbDown_Event(event) 
+  {     
+      keyMap[event.keyCode] = true;
+  };
+
+  function kbUp_Event(event) 
+  {
+     keyMap[event.keyCode] = false;
+  };
+  
+  function key_Down( keyCode )
+  {
+    return keyMap[ keyCode ];
+  }
+  
+  
+  
+  function register_Inputs()
+  {
+     document.onkeydown = kbDown_Event;
+     document.onkeyup   = kbUp_Event; 
+  }
+       
+     
+     
+     
+     
+     
+     
      
  
     function testCube( texture ) 
@@ -82,13 +117,7 @@
     var testTexture = null;
      
     
-    function set_Uniforms( world, view, project )
-    {
-        var gl = the_Renderer.gl;
-            gl.uniformMatrix4fv( testShader.program.worldMatrix      , false ,       world.data );
-            gl.uniformMatrix4fv( testShader.program.viewMatrix       , false ,        view.data );
-            gl.uniformMatrix4fv( testShader.program.projectionMatrix , false ,     project.data );
-    }
+
     
     
     var lul = 0.0;
@@ -96,8 +125,25 @@
     function draw_Frame()
     {
         
-        var hax = new Matrix33();
-            hax.RotationY( lul );
+        if( key_Down( 38 ) ) testCamera.forward( 5.0 );
+        if( key_Down( 40 ) ) testCamera.backwards( 5.0 );
+     
+        if( key_Down( 37 ) )  testCamera.yaw( 2.0 );
+        if( key_Down( 39 ) )  testCamera.yaw( -2.0 );
+     
+        if( key_Down( 81 ) )  testCamera.roll( 2.0  );
+        if( key_Down( 69 ) )  testCamera.roll( -2.0 );
+        
+        if( key_Down( 87 ) )  testCamera.pitch( 2.0  );
+        if( key_Down( 83 ) )  testCamera.pitch( -2.0 );
+     
+        
+        
+        var rot = new Matrix33();
+            rot.RotationY( lul );
+            
+        var sca = new Matrix33();
+            sca.Scale( new Vector3( 10,10,10) );
             
             lul += 0.01;
             
@@ -105,15 +151,26 @@
         var gl         = the_Renderer.gl;
           
         the_Renderer.begin();
+            
+            rot = rot.multiply( sca );
         
             var world      = new Matrix44();
-                world.embed( hax );
-            
+                world.embed( rot );
+                
             
             var view       = testCamera.get_ViewMatrix();
-            var project    = testCamera.get_ProjectionMatrix(  50, 1,3333, 1, 10000 );
+            
+
+            
+            var project    = testCamera.get_ProjectionMatrix(  45, 800/600, 1, 1000 );
+       
+                               
         
-            set_Uniforms( world, view, project );
+            gl.uniformMatrix4fv( testShader.program.worldMatrix      , false ,       world.data );
+            gl.uniformMatrix4fv( testShader.program.viewMatrix       , false ,        view.data );
+            gl.uniformMatrix4fv( testShader.program.projectionMatrix , false ,     project.data );
+        
+        
         
             testBatch.bind( testShader );
         
@@ -139,7 +196,7 @@
     {   
         testShader  =  new SimpleShader(                               );
         testTexture =  new      Texture( "data/Textures/concrete.jpg"  );
-        testCamera  =  new       Camera( new Vector3( 0, 0, 10 )       );
+        testCamera  =  new       Camera( new Vector3( 0, 5, 150 )       );
         testBatch   =  testCube( testTexture );
         
     rendererMain();
@@ -149,6 +206,10 @@
     function global_Initializer()
     {
         new Renderer( new Dimension2( 800, 600 ) );
+        
+        register_Inputs();
+        
+        
         main();
     }
 

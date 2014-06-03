@@ -30,7 +30,7 @@
         this.program.worldMatrix               = gl.getUniformLocation( this.program, "worldMatrix"       );
         this.program.viewMatrix                = gl.getUniformLocation( this.program, "viewMatrix"        );
         this.program.projectionMatrix          = gl.getUniformLocation( this.program, "projectionMatrix"  );
-   }
+   }                 
     
     
 
