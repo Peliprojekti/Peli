@@ -29,7 +29,7 @@ describe('the Vector3 object', function() {
         });
         it('subtracts another vector from the vector', function() {
             var res = (
-                new Vector3(5,5,10)).sub(
+                new Vector3(5,5,10)).subtract(
                 new Vector3(2,1,2));
 
             expect(res.x).toBe(3);
@@ -38,7 +38,7 @@ describe('the Vector3 object', function() {
         });
         it('multiplies the vector with a scalar number', function() {
             var res = (
-                new Vector3(1, 2, 3)).mul(4);
+                new Vector3(1, 2, 3)).multiply(4);
             expect(res.x).toBe(4);
             expect(res.y).toBe(8);
             expect(res.z).toBe(12);

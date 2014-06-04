@@ -65,7 +65,7 @@ Vector3.prototype.length = function()
     Vector3.prototype.projected = function( vec3 )
     {
         var t = this.dot( vec3 ) / vec3.dot(vec3);
-        return vec3.mul( t );
+        return vec3.multiply( t );
     }
 
 
