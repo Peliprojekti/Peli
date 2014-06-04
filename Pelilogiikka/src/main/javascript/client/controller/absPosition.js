@@ -5,10 +5,10 @@
 var clinet = client || {};
 
 client.loadedTypes = client.loadedTypes || [];
-client.loadedTypes.absPosition = function (container, canvas, phone, coms) {
+client.loadedTypes.absPosition = function (container, canvas, phone, coms, interval) {
     "use strict";
     var previousTime = Date.now(),
-        interval = 20,
+        interval = interval,
         mouseMoveListener = function (event) {
             //phone.setControllerInfo(event.clientX + " x " + event.clientY);
             coms.call('position', [
