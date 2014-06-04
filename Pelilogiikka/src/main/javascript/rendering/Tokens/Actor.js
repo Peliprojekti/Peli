@@ -14,7 +14,7 @@
         this.translation.embed_Translation( screenPos3 );
     }
 
-    Actor.get_Transformation = function()
+    Actor.prototype.get_Transformation = function()
     {
         var ret = new Matrix44();
             ret.embed( this.orientation );    

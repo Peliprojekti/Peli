@@ -1,10 +1,10 @@
 
 
-    function SimpleShader()
+
+    function GuiShader()
     {
+        this.program     = shader_Loader( "GuiShader" );
         var gl           = the_Renderer.gl;
-     
-        this.program     = shader_Loader( "SimpleShader" );
     
         gl.useProgram( this.program );       
         
@@ -28,7 +28,8 @@
     
     
 
-    SimpleShader.prototype.enable = function()
+  
+    GuiShader.prototype.enable = function()
     {
         the_Renderer.gl.useProgram( this.program );
     }

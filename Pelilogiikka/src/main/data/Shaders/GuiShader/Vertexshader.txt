@@ -1,0 +1,23 @@
+    // HERE
+    uniform mat4 worldMatrix;
+    uniform mat4 viewMatrix;
+    uniform mat4 projectionMatrix;
+                 
+    uniform sampler2D textureMapSampler;
+
+    // Vertex attributes
+    attribute vec3    vertexPosition;
+    attribute vec2    vertexTexcoord;
+
+    // Varying attributes
+    varying   vec2     pixelTexcoord;
+    
+    void main(void) 
+    {
+       pixelTexcoord = vertexTexcoord;
+       
+       mat4 hax = worldMatrix;
+
+       gl_Position =  hax * vec4( vertexPosition, 1.0);    //DIS WRONG!
+
+    }

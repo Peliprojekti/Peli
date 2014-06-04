@@ -1,4 +1,21 @@
+/*jslint browser: true*/
+/*global console: false*/
+/*global $: false*/
+/*global game: false*/
+/*global Root_Exception_Handler: false*/
+/*global global_Initializer: false*/
 
+var renderingPeli = renderingPeli || {};
+renderingPeli.scene = {
+    start: function (canvas) {
+        new Renderer(new Dimension2(canvas.width, canvas.height));
+
+    }
+};
+
+
+/*
+var 
 var keyMap = {};
 
 function kbDown_Event (event)
@@ -110,8 +127,8 @@ function draw_Frame ()
     the_Renderer.set_Shader( spriteShader );
       
     the_Renderer.set_Matrices( testActor.get_Transformation(), null, null );
-                               
-    the_Renderer.draw_Batch(testActor.batch );
+
+    the_Renderer.draw_Batch(testActor);
 
 }
 
@@ -161,10 +178,10 @@ function global_Initializer ()
 
 
     main();
-    main();
 }
 
 
 $('document').ready(function () {
     Root_Exception_Handler( global_Initializer );
 });
+*/

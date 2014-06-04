@@ -1,54 +1,87 @@
-describe('the AbsPosition object', function() {
+describe('the AbsPosition object', function () {
+
+    var canvas;
+    var evt;
+    var coms;
+    var arr;
+
 
     //Create an easily-removed container for our tests to play in
-    beforeEach(function() {
+    beforeEach(function () {
     });
 
     //Clean it up after each spec
-    afterEach(function() {
+    afterEach(function () {
     });
 
     //Specs
-    describe('AbsPosition tests', function() {
+    describe('AbsPosition tests', function () {
+
         it('calls coms with the correct method and position parameters on touch move', function () {
-            var canvas = document.createElement("canvas");
+            canvas = document.createElement("canvas");
             canvas.width = 100;
             canvas.height = 100;
-
-            var coms = {
+            coms = {
                 call: function (method, params, object, callback) {
                 }
             };
-
-            spyOn(coms, 'call');
-            
-            evt = document.createEvent("Events");
             
             var interval = 20;
-            
-            client.loadedTypes.absPosition(null, canvas, null, coms, interval);
-            //Aim: initialize it to be the event we want
+            client.loadedTypes.absPosition(null, canvas, null, coms, 20);
+
+            spyOn(coms, 'call');
+            evt = document.createEvent("Events");
+
+            //Aim: initialize it to be the event we want     
             evt.initEvent('touchmove', true, true); //true for can bubble, true for cancelable
-            evt.changedTouches = [{clientX: 12, clientY: 10}];
-            
-            var date = Date.now();
-            do {
-                curDate = Date.now();
-            }
-            while (curDate - date < interval + 1);
+            evt.changedTouches = [{clientX: 12, clientY: 10}, {clientX: 12, clientY: 10}];
+
+
+            var time = Date.now();
+            while (Date.now() - time < interval)
+                ;
 
             canvas.dispatchEvent(evt);
 
-            var arr = [(12 / canvas.width), (10 / canvas.height)];
-
+            arr = [(12 / canvas.width), (10 / canvas.height)];
             expect(coms.call).toHaveBeenCalled();
             expect(coms.call).toHaveBeenCalledWith('position', arr, null, null);
 
-
         });
 
+//        it('calls coms with the correct method and position parameters on mousemove event', function () {
+//
+//            spyOn(coms, 'call');
+//            evt = document.createEvent("Events");
+//
+//            //Aim: initialize it to be the event we want     
+//            evt.initEvent('mousemove', true, true); //true for can bubble, true for cancelable
+//            evt.clientX = 15;
+//            evt.clientY = 30;
+//
+//            canvas.dispatchEvent(evt);
+//
+//            arr = [evt.clientX / canvas.width, evt.clientY / canvas.height];
+//            expect(coms.call).toHaveBeenCalled();
+//            expect(coms.call).toHaveBeenCalledWith('position', arr, null, null);
+//
+//        });
+//
+//        it('calls coms with the correct method and position parameters on click event', function () {
+//
+//            spyOn(coms, 'call');
+//            evt = document.createEvent("Events");
+//
+//            //Aim: initialize it to be the event we want     
+//            evt.initEvent('click', true, true); //true for can bubble, true for cancelable
+//
+//            canvas.dispatchEvent(evt);
+//
+//            arr = [];
+//            expect(coms.call).toHaveBeenCalled();
+//            expect(coms.call).toHaveBeenCalledWith('shoot', arr, null, null);
+//
+//        });
 
     });
-
-
 });
