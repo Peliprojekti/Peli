@@ -4,6 +4,7 @@ describe('the AbsPosition object', function () {
     var evt;
     var coms;
     var arr;
+    var controllerDisabler;
 
 
     //Create an easily-removed container for our tests to play in
@@ -25,7 +26,9 @@ describe('the AbsPosition object', function () {
                 call: function (method, params, object, callback) {
                 }
             };
-            client.loadedTypes.absPosition(null, canvas, null, coms);
+            
+            var interval = 20;
+            controllerDisabler = client.loadedTypes.absPosition(null, canvas, null, coms, 20);
 
             spyOn(coms, 'call');
             evt = document.createEvent("Events");
@@ -36,7 +39,7 @@ describe('the AbsPosition object', function () {
 
 
             var time = Date.now();
-            while (Date.now() - time < 20)
+            while (Date.now() - time < interval)
                 ;
 
             canvas.dispatchEvent(evt);
@@ -47,39 +50,48 @@ describe('the AbsPosition object', function () {
 
         });
 
-//        it('calls coms with the correct method and position parameters on mousemove event', function () {
-//
-//            spyOn(coms, 'call');
-//            evt = document.createEvent("Events");
-//
-//            //Aim: initialize it to be the event we want     
-//            evt.initEvent('mousemove', true, true); //true for can bubble, true for cancelable
-//            evt.clientX = 15;
-//            evt.clientY = 30;
-//
-//            canvas.dispatchEvent(evt);
-//
-//            arr = [evt.clientX / canvas.width, evt.clientY / canvas.height];
-//            expect(coms.call).toHaveBeenCalled();
-//            expect(coms.call).toHaveBeenCalledWith('position', arr, null, null);
-//
-//        });
-//
-//        it('calls coms with the correct method and position parameters on click event', function () {
-//
-//            spyOn(coms, 'call');
-//            evt = document.createEvent("Events");
-//
-//            //Aim: initialize it to be the event we want     
-//            evt.initEvent('click', true, true); //true for can bubble, true for cancelable
-//
-//            canvas.dispatchEvent(evt);
-//
-//            arr = [];
-//            expect(coms.call).toHaveBeenCalled();
-//            expect(coms.call).toHaveBeenCalledWith('shoot', arr, null, null);
-//
-//        });
+        it('calls coms with the correct method and position parameters on mousemove event', function () {
+
+            spyOn(coms, 'call');
+            evt = document.createEvent("Events");
+
+            //Aim: initialize it to be the event we want     
+            evt.initEvent('mousemove', true, true); //true for can bubble, true for cancelable
+            evt.clientX = 15;
+            evt.clientY = 30;
+
+            canvas.dispatchEvent(evt);
+
+            arr = [evt.clientX / canvas.width, evt.clientY / canvas.height];
+            expect(coms.call).toHaveBeenCalled();
+            expect(coms.call).toHaveBeenCalledWith('position', arr, null, null);
+
+        });
+
+        it('calls coms with the correct method and position parameters on click event', function () {
+
+            spyOn(coms, 'call');
+            evt = document.createEvent("Events");
+
+            //Aim: initialize it to be the event we want     
+            evt.initEvent('click', true, true); //true for can bubble, true for cancelable
+
+            canvas.dispatchEvent(evt);
+
+            arr = [];
+            expect(coms.call).toHaveBeenCalled();
+            expect(coms.call).toHaveBeenCalledWith('shoot', arr, null, null);
+
+        });
+        
+        it ('removes listeners', function() {
+            spyOn(canvas, 'removeEventListener');
+            controllerDisabler();
+            expect(canvas.removeEventListener).toHaveBeenCalled();
+            expect(canvas.removeEventListener).toHaveBeenCalledWith('mousemove', jasmine.any(Function));
+            expect(canvas.removeEventListener).toHaveBeenCalledWith('click', jasmine.any(Function));
+            expect(canvas.removeEventListener).toHaveBeenCalledWith('touchmove', jasmine.any(Function));
+        });
 
     });
 });

@@ -5,10 +5,10 @@
 var clinet = client || {};
 
 client.loadedTypes = client.loadedTypes || [];
-client.loadedTypes.absPosition = function (container, canvas, phone, coms) {
+client.loadedTypes.absPosition = function (container, canvas, phone, coms, interval) {
     "use strict";
     var previousTime = Date.now(),
-        interval = 20,
+        interval = interval,
         mouseMoveListener = function (event) {
             //phone.setControllerInfo(event.clientX + " x " + event.clientY);
             coms.call('position', [
@@ -34,14 +34,12 @@ client.loadedTypes.absPosition = function (container, canvas, phone, coms) {
         };
 
     canvas.addEventListener("touchmove", touchListener);
-    $('#canvas').mousemove(mouseMoveListener);
-    $('#canvas').click(clickListener);
+    canvas.addEventListener("mousemove", mouseMoveListener);
+    canvas.addEventListener("click", clickListener);
 
     return function () {
-        canvas.unbind('mousemove', mouseMoveListener);
-        canvas.unbind('click', clickListener);
+        canvas.removeEventListener('mousemove', mouseMoveListener);
+        canvas.removeEventListener('click', clickListener);
         canvas.removeEventListener("touchmove", touchListener);
-        mouseMoveListener = null;
-        clickListener = null;
     };
 };
