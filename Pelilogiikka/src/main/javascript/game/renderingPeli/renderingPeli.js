@@ -15,8 +15,8 @@ renderingPeli.game = {
     start: function (canvas, container) {
         "use strict";
 
-        canvas.width = container.offsetWidth;
-        canvas.height = container.offsetHeight;
+        this.width = canvas.width = container.offsetWidth;
+        this.height = canvas.height = container.offsetHeight;
 
         //this.initConfigMenu();
 
@@ -32,11 +32,14 @@ renderingPeli.game = {
             //self.screen.shoot(x, y);
         });
         player.setOnPosition(function (x, y) {
-            player.guiItem.set_Position(new Vector2(x * canvas.width, y * canvas.width));
+            var vecX = -1 + x*2;
+            var vecY = 1 - y*2;
+
+            player.guiItem.set_Position(new Vector2(vecX, vecY));
         });
         //self.scene.addController(controller);
         self.scene.addPlayer(player);
-        return crosshair.id;
+        //return crosshair.id;
     },
     onPlayerLeft: function (player, controller) {
         "use strict";

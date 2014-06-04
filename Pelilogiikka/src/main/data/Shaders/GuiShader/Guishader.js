@@ -3,7 +3,7 @@
 
     function GuiShader()
     {
-        this.program     = shader_Loader( "Guishader" );
+        this.program     = shader_Loader( "GuiShader" );
         var gl           = the_Renderer.gl;
     
         gl.useProgram( this.program );       
