@@ -5,6 +5,7 @@ function Player(userID) {
     this.x = 0.5;
     this.y = 0.5;
     this.crossh = null;
+    this.onsetPosition = null;
 
     this.responseTime = null;
     this.messagesPerSecond = 0;
@@ -17,7 +18,12 @@ Player.prototype.getID = function() {
 Player.prototype.setOnShoot = function(onShoot) {
     "use strict";
     this.onShoot = onShoot;
-}
+};
+
+Player.prototype.setOnPosition = function(setPosition) {
+    "use strict";
+    this.onSetPosition = setPosition;
+};
 
 Player.prototype.setGameOn = function(gameOn) {
     log.error("is this even doing anything?");
@@ -57,8 +63,13 @@ Player.prototype.setPosition = function(x, y) {
     if (x > 1 || x < 0 || y > 1 || y < 0) {
         throw new Error("setPosition recieved incorrect values " + x + "," + y);
     }
-    this.x = x;
-    this.y = y;
+    if (this.onSetPosition !== null) {
+        this.onSetPosition(x,y);
+    }
+    else {
+        this.x = x;
+        this.y = y;
+    }
 };
 
 Player.prototype.setCrosshair = function(crosshair) {
