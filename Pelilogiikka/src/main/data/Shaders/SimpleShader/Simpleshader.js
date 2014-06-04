@@ -4,8 +4,8 @@
     {
         var gl           = the_Renderer.gl;
         
-        var parser1      = new Parser("data/Shaders/Simpleshader/Vertexshader.txt"); 
-        var parser2      = new Parser("data/Shaders/SimpleShader/Pixelshader.txt"); 
+        var parser1      = new Parser("/data/Shaders/SimpleShader/Vertexshader.txt"); 
+        var parser2      = new Parser("/data/Shaders/SimpleShader/Pixelshader.txt"); 
         
         var text_Vertex  = parser1.the_Document.rawData;
         var text_Pixel   = parser2.the_Document.rawData;

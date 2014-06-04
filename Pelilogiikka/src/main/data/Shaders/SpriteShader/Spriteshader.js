@@ -4,8 +4,8 @@
     {
         var gl           = the_Renderer.gl;
         
-        var parser1      = new Parser("data/Shaders/"+name+"/Vertexshader.txt"); 
-        var parser2      = new Parser("data/Shaders/"+name+"/Pixelshader.txt"); 
+        var parser1      = new Parser("/data/Shaders/"+name+"/Vertexshader.txt"); 
+        var parser2      = new Parser("/data/Shaders/"+name+"/Pixelshader.txt"); 
         var text_Vertex  = parser1.the_Document.rawData;
         var text_Pixel   = parser2.the_Document.rawData;
         
@@ -18,13 +18,7 @@
     function SpriteShader()
     {
         var gl           = the_Renderer.gl;
-        var parser1      = new Parser("data/Shaders/SpriteShader/Vertexshader.txt"); 
-        var parser2      = new Parser("data/Shaders/SpriteShader/Pixelshader.txt"); 
-        
-        var text_Vertex  = parser1.the_Document.rawData;
-        var text_Pixel   = parser2.the_Document.rawData;
-    
-        this.program     = build_ShaderProgram( text_Vertex, text_Pixel );
+        this.program     = shader_Loader( "SpriteShader");   
     
     
         gl.useProgram( this.program );       

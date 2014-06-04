@@ -4,7 +4,7 @@ html(lang='en')
     title= title  
 
     style
-      include dummy.css
+      include rendering.css
 
   body
     #container
@@ -15,7 +15,6 @@ html(lang='en')
       var DEBUG = #{jsdebug};
       var JSONRPC_PROTOCOL = "#{jsonrpc_protocol}"
       var CONTROLLER = '#{controller}';
-
 
     script(type="text/javascript" src="/javascript/lib/jquery.js")
     script(type="text/javascript" src="/javascript/lib/engine.io.js")
@@ -55,41 +54,40 @@ html(lang='en')
     script(type="text/javascript" src="/javascript/rendering/math/Vector2.js")
 
     //- RENDERING STUFF -------------------------------------------------------------
+
     script(type="text/javascript" src="/javascript/rendering/external/webglutils.js")
     script(type="text/javascript" src="/javascript/rendering/external/glMatrix.js")
-    script(type="text/javascript" src="/javasciprt/rendering/data/Shaders/Shader1/Shader1.js")
-    script(type="text/javascript" src="/javasciprt/rendering/data/Shaders/Guishader/Guishader.js")
 
-    script(type="text/javascript" src="/javasciprt/rendering/system/Renderer.js")                  
-    script(type="text/javascript" src="/javasciprt/rendering/system/Inputs.js")                    
-    script(type="text/javascript" src="/javasciprt/rendering/system/Scene.js")                     
-    script(type="text/javascript" src="/javasciprt/rendering/system/Assetmanager.js")              
+    script(type="text/javascript" src="/data/Shaders/WorldShader/WorldShader.js")
+    script(type="text/javascript" src="/data/Shaders/SimpleShader/Simpleshader.js")
+    script(type="text/javascript" src="/data/Shaders/SpriteShader/Spriteshader.js")
+    script(type="text/javascript" src="/data/Shaders/Guishader/Guishader.js")
 
-    script(type="text/javascript" src="/javascript/rendering/asset/Buffer.js")                     
-    script(type="text/javascript" src="/javascript/rendering/asset/Mesh.js")                       
-    script(type="text/javascript" src="/javascript/rendering/asset/Material.js")                   
-    script(type="text/javascript" src="/javascript/rendering/asset/Texture.js")                    
-    script(type="text/javascript" src="/javascript/rendering/asset/Shader.js")                     
-    script(type="text/javascript" src="/javascript/rendering/asset/Guithing.js")                   
+    script(type="text/javascript" src="/javascript/rendering/Globals.js")
+    script(type="text/javascript" src="/javascript/rendering/Exception.js")
+    script(type="text/javascript" src="/javascript/rendering/Renderer.js")
+    script(type="text/javascript" src="/javascript/rendering/Buffer.js")
+    script(type="text/javascript" src="/javascript/rendering/Texture.js")
+    script(type="text/javascript" src="/javascript/rendering/Camera.js")
+    script(type="text/javascript" src="/javascript/rendering/Tokens/GuiItem.js")
+    script(type="text/javascript" src="/javascript/rendering/Tokens/Actor.js")
 
-    script(type="text/javascript" src="/javascript/rendering/thing/Light.js")                      
-    script(type="text/javascript" src="/javascript/rendering/thing/Entity.js")                     
-    script(type="text/javascript" src="/javascript/rendering/thing/Camera.js")                     
+    script(type="text/javascript" src="/javascript/rendering/parser/GeneralPurposeParser.js")
+    script(type="text/javascript" src="/javascript/rendering/parser/Parserobjects.js")
 
-    script(type="text/javascript" src="/javascript/rendering/parser/Parserobjects.js")             
-    script(type="text/javascript" src="/javascript/rendering/parser/GeneralPurposeParser.js")      
-    script(type="text/javascript" src="/javascript/rendering/parser/WorldBuilder.js")              
-    script(type="text/javascript" src="/javascript/rendering/parser/Partitioner.js")               
+    script(type="text/javascript" src="/javascript/rendering/batches/WorldBatch.js")
+    script(type="text/javascript" src="/javascript/rendering/batches/Batch.js")
 
-    script(type="text/javascript" src="/javascript/rendering/math/Angles.js")                      
-    script(type="text/javascript" src="/javascript/rendering/math/Vector2.js")                     
-    script(type="text/javascript" src="/javascript/rendering/math/Vector3.js")                     
-    script(type="text/javascript" src="/javascript/rendering/math/Vector4.js")                     
-    script(type="text/javascript" src="/javascript/rendering/math/Matrix22.js")                    
-    script(type="text/javascript" src="/javascript/rendering/math/Matrix33.js")                    
-    script(type="text/javascript" src="/javascript/rendering/math/Matrix44.js")                    
-    script(type="text/javascript" src="/javascript/rendering/math/MatrixGL.js")                    
-    script(type="text/javascript" src="/javascript/rendering/math/Orientation.js")                 
-    script(type="text/javascript" src="/javascript/rendering/math/Interpolator.js")                
-    
-    script(type="text/javascript" src="/javascript/rendering/misc/testCube.js")                    
+    script(type="text/javascript" src="/javascript/rendering/math/Angles.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Dimension2.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Color.js")
+
+    script(type="text/javascript" src="/javascript/rendering/math/Vector2.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Vector3.js")
+
+    script(type="text/javascript" src="/javascript/rendering/math/Matrix22.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Matrix33.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Matrix44.js")
+
+    script(type="text/javascript")
+      include rendering.js

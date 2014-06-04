@@ -1,127 +1,163 @@
-function Map_To_Screen (renderer, hPoint)
+
+var keyMap = {};
+
+function kbDown_Event (event)
 {
-    var w2 = renderer.target_Width / 2;
-    var h2 = renderer.target_Height / 2;
-    var x = (hPoint[0] - w2) / w2;
-    var y = (h2 - hPoint[1]) / h2;
-    return [x, y, 0];
+    keyMap[event.keyCode] = true;
+}
+;
+
+function kbUp_Event (event)
+{
+    keyMap[event.keyCode] = false;
+}
+;
+
+function key_Down (keyCode)
+{
+    return keyMap[ keyCode ];
 }
 
-function resize (canvas)
+function register_Inputs ()
 {
-    canvas.width = 800;//1920;//window.outerWidth;
-    canvas.height = 600;//1080;//window.outerHeight;
+    document.onkeydown = kbDown_Event;
+    document.onkeyup = kbUp_Event;
 }
 
-var canvas = null;
-var renderer = null;
-var myCamera = null;
-var myScene = null;
-var haxLight = new Light(new Vector3(-64.297035, -34.088657, -117.10157), 100.0, 0, 0, 0, 0, 0, 0);
 
-// Define these ELSEWHERE
-KEY_W = 87;
-KEY_S = 83;
-KEY_Q = 81;
-KEY_E = 69;
-KEY_UP = 38;
-KEY_DOWN = 40;
-KEY_LEFT = 37;
-KEY_RIGHT = 39;
-KEY_PAGEUP = 33;
-KEY_PAGEDOWN = 34;
-KEY_ENTER = 13;
-// 
+var testCamera = null;
 
-function process_Inputs ()
+var testShader = null;
+var testTexture = null;
+var testBatch = null;
+
+var spriteShader = null;
+var testSprite = null;
+var spriteTex = null;
+
+var guiShader = null;
+var testGui = null;
+var guiTex = null;
+
+
+
+
+
+var guiItem = null;
+var testActor = null;
+
+
+function draw_Frame ()
 {
-    if (key_Down(KEY_W))
-        myCamera.pitch(0.008);        // W to pitch up
-    if (key_Down(KEY_S))
-        myCamera.pitch(-0.008);      // S to pitch down
 
-    if (key_Down(KEY_Q))
-        myCamera.roll(0.008);       // Q to roll left
-    if (key_Down(KEY_E))
-        myCamera.roll(-0.008);      // E to roll right
-
-
-    if (key_Down(16)) // Shift
+    if (key_Down(38))
     {
-        if (key_Down(KEY_UP))
-            haxLight.forward(1.0);
-        if (key_Down(KEY_DOWN))
-            haxLight.backward(1.0);
-
-        if (key_Down(KEY_PAGEUP))
-            haxLight.move([0, 1, 0]);
-        if (key_Down(KEY_PAGEDOWN))
-            haxLight.move([0, -1, 0]);
-
-        if (key_Down(KEY_LEFT))
-            haxLight.move([1, 0, 0]);
-        if (key_Down(39))
-            haxLight.move([-1, 0, 0]);
-
-    }
-    else
-    {
-        if (key_Down(KEY_UP))
-            myCamera.forward(1.0);
-        if (key_Down(KEY_DOWN))
-            myCamera.backward(1.0);
-
-        if (key_Down(KEY_PAGEUP))
-            myCamera.move([0, 1, 0]);
-        if (key_Down(KEY_PAGEDOWN))
-            myCamera.move([0, -1, 0]);
-
-        if (key_Down(KEY_LEFT))
-            myCamera.yaw(-0.05);
-        if (key_Down(KEY_RIGHT))
-            myCamera.yaw(0.05);
-
+        testCamera.forward(5.0);
+        guiItem.move(new Vector2(0, 0.01));
     }
 
-
-    if (key_Down(KEY_ENTER))
+    if (key_Down(40))
     {
-        var vec = myCamera.orientation.get_Position();
-        haxLight.orientation.set_Position([vec.x, vec.y, vec.z]);
+        testCamera.backwards(5.0);
+        guiItem.move(new Vector2(0, -0.01));
     }
 
+    if (key_Down(37))
+    {
+        testCamera.yaw(2.0);
+        guiItem.move(new Vector2(-0.01, 0));
+    }
+
+    if (key_Down(39))
+    {
+        testCamera.yaw(-2.0);
+        guiItem.move(new Vector2(0.01, 0));
+    }
+
+    if (key_Down(81))
+        testCamera.roll(2.0);
+    if (key_Down(69))
+        testCamera.roll(-2.0);
+
+    if (key_Down(87))
+        testCamera.pitch(2.0);
+    if (key_Down(83))
+        testCamera.pitch(-2.0);
+
+    if (key_Down(33))
+        testCamera.up(5.0);
+    if (key_Down(34))
+        testCamera.down(5.0);
+
+
+
+    the_Renderer.set_Camera(testCamera);
+
+    the_Renderer.begin();
+
+    //   the_Renderer.draw_Batch( testBatch, testShader, testCamera  );
+
+        //the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
+
+       //the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
+
+    the_Renderer.set_Shader(guiShader);
+
+    the_Renderer.set_Matrices(guiItem.get_Transformation(), null, null);
+
+    the_Renderer.draw_Batch(guiItem.batch);
+
 }
 
-function tick ()
+
+
+
+
+function rendererMain ()
 {
-    requestAnimFrame(tick);
-    process_Inputs();
-    myScene.render();
+    requestAnimFrame(rendererMain);
+
+    Root_Exception_Handler(draw_Frame);
 }
 
-function Start ()
+
+
+function main ()
 {
-    register_Inputs();      // Erillinen luokka tälle!
+    testCamera = new Camera(new Vector3(0, 5, 150));
 
-    canvas = document.getElementById("Canvas");
-    resize(canvas);
+    testShader = new SimpleShader(                                    );
+    testTexture = new Texture("data/Textures/concrete.jpg");
+    testBatch = testCube(testTexture);
 
-    renderer = new Renderer(canvas);
-    var assman = new Assetmanager(renderer);
-    myScene = new Scene(renderer, assman, "Showcase");
-    var shd = Guishader.load(renderer.gl, ["NULL", "NULL"]);
-    var tex = new Texture(renderer.gl, "Data/Textures/concrete.jpg", "FILTER_PLAIN");
-    var myMat = new Material(shd, tex, null, null, null);
-    myCamera = new Camera(renderer, 0.1, 1000, 65);
+    spriteShader = new SpriteShader(                                    );
+    spriteTex = new Texture("data/Textures/Sprites/Otus.png");
+    testSprite = testRect(spriteTex, 2, 4);
 
-    myCamera.set_Position([-2.750824, 0.444516, -24.011581]);
-    myScene.insert(myCamera, "CAM");
-    myScene.insert(haxLight, "LIGHT");
-    renderer.set_BgrColor([0.0, 0.4, 0.7, 1.0]);
 
-    tick();
+    guiShader = new GuiShader(                                      );
+    guiTex = new Texture("data/crosshair1.bmp");
+    testGui = testRect(guiTex, 0.007, (0.007) * 1.3333);
+
+    guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), guiTex);
+
+
+    rendererMain();
 }
 
-$('document').ready(function() {
-    Start();
+
+function global_Initializer ()
+{
+    new Renderer(new Dimension2(800, 600));
+
+    register_Inputs();
+
+
+    main();
+    main();
+}
+
+
+$('document').ready(function () {
+    Root_Exception_Handler( global_Initializer );
 });
