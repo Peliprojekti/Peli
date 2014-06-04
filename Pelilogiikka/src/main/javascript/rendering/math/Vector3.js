@@ -20,14 +20,14 @@ Vector3.prototype.add = function( vec3 )
                          this.z + vec3.z  );
 }
 
-Vector3.prototype.sub = function( vec3 )
+Vector3.prototype.subtract = function( vec3 )
 {
     return new Vector3(  this.x - vec3.x ,
                          this.y - vec3.y ,
                          this.z - vec3.z  );
 }
 
-Vector3.prototype.mul = function( scalar )
+Vector3.prototype.multiply = function( scalar )
 {
     return new Vector3(  this.x*scalar ,
                          this.y*scalar ,
@@ -52,24 +52,35 @@ Vector3.prototype.length = function()
     return Math.sqrt( length_Squared );
 }
 
-Vector3.prototype.normalized = function()
-{
-    var length_Squared = this.x*this.x + this.y*this.y + this.z*this.z;
-    var length         = Math.sqrt( length_Squared );
+    Vector3.prototype.normalized = function()
+    {
+        var length_Squared = this.x*this.x + this.y*this.y + this.z*this.z;
+        var length         = Math.sqrt( length_Squared );
     
-    return new Vector3( this.x / length,
-                        this.y / length,
-                        this.z / length );
-}
+        return new Vector3( this.x / length,
+                            this.y / length,
+                            this.z / length );
+    }
+    
+    Vector3.prototype.projected = function( vec3 )
+    {
+        var t = this.dot( vec3 ) / vec3.dot(vec3);
+        return vec3.mul( t );
+    }
 
-Vector3.prototype.projected = function( vec3 )
-{
-    var t = this.dot( vec3 ) / vec3.dot(vec3);
-    return vec3.mul( t );
-}
 
-Vector3.prototype.report = function()
-{
-    alert("< "+this.x +" , "+ this.y + " , " +this.z+" >");
-}
+    Vector3.prototype.transformed = function( matrix )
+    {
+        ASSERT_TYPE( Matrix33, matrix, "Matrix33 expected as parameter for Vector3.transformed() ");
+        
+        return new Vector3( (this.x * matrix.m11 + this.y * matrix.m21 + this.z * matrix.m31),
+                            (this.x * matrix.m12 + this.y * matrix.m22 + this.z * matrix.m32),
+                            (this.x * matrix.m13 + this.y * matrix.m23 + this.z * matrix.m33)  );
+    }
+
+
+    Vector3.prototype.report = function()
+    {
+        alert("< "+this.x +" , "+ this.y + " , " +this.z+" >");
+    }
 

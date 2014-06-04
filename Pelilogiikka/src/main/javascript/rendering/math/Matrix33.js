@@ -1,95 +1,125 @@
 
-    Matrix33.prototype.identity = function ()
-    {
-        this.m11 = 1; this.m12 = 0; this.m13 = 0;
-        this.m21 = 0; this.m22 = 1; this.m23 = 0;
-        this.m31 = 0; this.m32 = 0; this.m33 = 1;   
+
+    function Matrix33( array )
+    { 
+      this.data = [ 1, 0, 0,
+                    0, 1, 0,
+                    0, 0, 1  ]; // HURR DURR. WE NO USE LEFT HANDED CONVENTION
+                
+        if( VALID( array ) )
+        {
+            ASSERT_LENGTH( array, 9 );
+    
+            for( var i = 0; i < 9; i++ )
+                this.data[ i ] = array[ i ];
+        }
+
+
     }
-
-
-    function Matrix33( args )
+    
+    
+    Matrix33.prototype.Identity = function ()
     {
-        if( args[0] == "ID" )
-        {
-            this.identity(); 
-            return;
-        }
-   
-        if( args[0] == "ROT_Z" )
-        {
-            var r    = args[1];
-            this.m11 =  Math.cos(r); this.m12 = Math.sin(r); this.m13 = 0;
-            this.m21 = -Math.sin(r); this.m22 = Math.cos(r); this.m23 = 0;
-            this.m31 =            0; this.m32 =           0; this.m33 = 1;
-  
-        return;
-        }
-   
-        if( args[0] == "ROT_Y" )
-        {
-            var r    = args[1];
-            this.m11 =  Math.cos(r); this.m12 =           0; this.m13 = -Math.sin(r);
-            this.m21 =            0; this.m22 =           1; this.m23 = 0;
-            this.m31 =  Math.sin(r); this.m32 =           0; this.m33 =  Math.cos(r);
-  
-        return;
-        }
-   
-        if( args[0] == "ROT_X" )
-        {
-            var r    = args[1];
-            this.m11 =            1; this.m12 =            0; this.m13 =           0;
-            this.m21 =            0; this.m22 =  Math.cos(r); this.m23 = Math.sin(r);
-            this.m31 =            0; this.m32 = -Math.sin(r); this.m33 = Math.cos(r);
-  
-        return;
-        }
-          
-        if( args[0] == "SCALE" )
-        {
-   
-            this.m11 =    args[1].x; this.m12 =            0; this.m13 =           0;
-            this.m21 =            0; this.m22 =   args[1].y; this.m23 =            0;
-            this.m31 =            0; this.m32 =            0; this.m33 =   args[1].z;
-  
-        return;
-        }
+          for( var i = 0; i < 3; i++ )
+            for( var j = 0; j < 3; j++ )
+                 this.data[i*3+j] = ( i == j) ? 1.0 : 0.0; 
     }
+    
 
+    Matrix33.prototype.RotationX = function( rads )
+    {
+        this.data[0] = 1; this.data[1] =               0; this.data[2] =              0;
+        this.data[3] = 0; this.data[4] =  Math.cos(rads); this.data[5] = Math.sin(rads);
+        this.data[6] = 0; this.data[7] = -Math.sin(rads); this.data[8] = Math.cos(rads);
+    }
+    
+    Matrix33.prototype.RotationY = function( rads )
+    {
+         this.data[0] =  Math.cos(rads); this.data[1] = 0; this.data[2] = -Math.sin(rads);
+         this.data[3] =            0;    this.data[4] = 1; this.data[5] = 0;
+         this.data[6] =  Math.sin(rads); this.data[7] = 0; this.data[8] =  Math.cos(rads);
+    }
+    
+    Matrix33.prototype.RotationZ = function( rads ) 
+    {
+        this.data[0] =  Math.cos(rads); this.data[1] = Math.sin(rads); this.data[2] = 0;
+        this.data[3] = -Math.sin(rads); this.data[4] = Math.cos(rads); this.data[5] = 0;
+        this.data[6] =               0; this.data[7] =              0; this.data[8] = 1;
+    }
+    
+    Matrix33.prototype.Scale = function( scales ) 
+    {
+        this.data[0] = scales.x; this.data[1] =         0; this.data[2] =          0;
+        this.data[3] =        0; this.data[4] =  scales.y; this.data[5] =          0;
+        this.data[6] =        0; this.data[7] =         0; this.data[8] =   scales.z;
+    }
+    
 
     Matrix33.prototype.multiply = function( mat )
     {
-        var mtx = new Matrix33( ["NULL"] );
+        ASSERT_TYPE( Matrix33, mat, "Expected Matrix33 for valid 3x3 Matrix multiplication");
         
-        mtx.m11 = mat.m11*this.m11 + mat.m12*this.m21 + mat.m13*this.m31;
-        mtx.m12 = mat.m11*this.m12 + mat.m12*this.m22 + mat.m13*this.m32;
-        mtx.m13 = mat.m11*this.m13 + mat.m12*this.m32 + mat.m13*this.m33;
+        var ret = new Matrix33();
+
+        for( var i = 0; i < 3; i++ )
+            for( var j = 0; j < 3; j++ )
+            {
+                ret.data[(3*i)+j] = mat.data[ 3*i   ] * this.data[0+j] + 
+                                    mat.data[(3*i)+1] * this.data[3+j] + 
+                                    mat.data[(3*i)+2] * this.data[6+j];
+            }
        
-        mtx.m21 = mat.m21*this.m11 + mat.m22*this.m21 + mat.m23*this.m31;
-        mtx.m22 = mat.m21*this.m12 + mat.m22*this.m22 + mat.m23*this.m32;
-        mtx.m23 = mat.m21*this.m13 + mat.m22*this.m32 + mat.m23*this.m33;
+    return ret;
+    }
+
+
+    Matrix33.prototype.transposed = function()
+    {
+        var ret = new Matrix33();
        
-        mtx.m31 = mat.m31*this.m11 + mat.m32*this.m21 + mat.m33*this.m31;
-        mtx.m32 = mat.m31*this.m12 + mat.m32*this.m22 + mat.m33*this.m32;
-        mtx.m33 = mat.m31*this.m13 + mat.m32*this.m32 + mat.m33*this.m33;
-
-    return mtx;
+        for( var i = 0; i < 3; i++ )
+            for( var j = 0; j < 3; j++ )
+            {
+               ret.data[ (3*j)+i] = this.data[ (3*i)+j ];
+            }
+            
+    return ret;
     }
 
 
-    Matrix33.prototype.transform = function( vec3 )
+    Matrix33.prototype.alert = function() 
+    {       
+        var msg = "";
+        
+        for( var r = 0; r < 3; r++ )
+        {
+            msg += "[ ";
+            for( var c = 0; c < 3; c++ )
+            {
+                var val  = this.data[ 3*r + c ];
+                    val  = ( Math.abs(val) < EPSILON ) ? 0 : val;
+                    msg += val;
+                    msg += " "; 
+            }
+            msg += "] \n";
+        }
+        
+    alert( msg );
+    }
+    
+    
+
+    Matrix33.prototype.extract_I = function()
     {
-        var vOut = new Vector3( (vec3.x * this.m11 + vec3.y * this.m21 + vec3.z * this.m31),
-                                (vec3.x * this.m12 + vec3.y * this.m22 + vec3.z * this.m32),
-                                (vec3.x * this.m13 + vec3.y * this.m23 + vec3.z * this.m33));
-                                
-    return vOut;
+        return new Vector3( this.data[0], this.data[1], this.data[2] );
     }
-
-
-    Matrix33.prototype.report = function()
+    
+    Matrix33.prototype.extract_J = function()
     {
-        alert("[ "+this.m11 +" , "+ this.m12 + " , " +this.m13+" ] \n" +
-              "[ "+this.m21 +" , "+ this.m22 + " , " +this.m23+" ] \n" +
-              "[ "+this.m31 +" , "+ this.m32 + " , " +this.m33+" ] \n" );
-    }
+        return new Vector3( this.data[3], this.data[4], this.data[5] );
+    }    
+    
+    Matrix33.prototype.extract_K = function()
+    {
+        return new Vector3( this.data[6], this.data[7], this.data[8] );
+    }    

@@ -1,0 +1,29 @@
+    // HERE
+    uniform mat4 worldMatrix;
+    uniform mat4 viewMatrix;
+    uniform mat4 projectionMatrix;
+
+    uniform vec3      lights[ 32 ];
+    uniform vec4 lightColors[ 32 ];
+    uniform int  lightCnt;
+
+    uniform vec3            eyePosition;
+
+    uniform sampler2D textureMapSampler;
+    uniform sampler2D  normalMapSampler;
+
+    // Vertex attributes
+    attribute vec3    vertexPosition;
+    attribute vec2    vertexTexcoord;
+    attribute vec3      vertexNormal;
+    attribute vec3    vertexBinormal;
+    attribute vec3     vertexTangent;
+
+    // Varying attributes
+    varying   vec2     pixelTexcoord;
+    
+    void main(void) 
+    {
+        pixelTexcoord   = vertexTexcoord;
+        gl_Position     = projectionMatrix * viewMatrix * worldMatrix * vec4(vertexPosition, 1.0);
+    }
