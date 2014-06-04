@@ -11,7 +11,6 @@ describe('the PeliRPC object', function() {
     afterEach(function() {
     });
 
-    //Specs
     describe('constructor', function() {
         it('works correctly', function() {
             var testPRPC = peliRPC.create(connection);
@@ -35,7 +34,7 @@ describe('the PeliRPC object', function() {
                 rpc.exposeRpcMethod('function, no context', null, function() {})
                 ).toBe(true);
             expect(
-                rpc.exposeRpcMethod('function, with context', null, function() {})
+                rpc.exposeRpcMethod('function, with context', new Object(), function() {})
                 ).toBe(true);
         });
 
@@ -46,4 +45,50 @@ describe('the PeliRPC object', function() {
             }).toThrow();
         });
     });
+
+    describe('onMessage', function() {
+        var rpc = peliRPC.create(connection);
+
+        it('throws error on unrecognized/mallformed message', function() {
+            expect(function() {
+                rpc.onMessage("jaadajaadajaa");
+            }).toThrow();
+        });
+
+        it('correctly calls method callbakcs', function() {
+            var testObject = {
+                testVariable: false,
+                testFunction: function() { 
+                    this.testVariable = true;
+                },
+                testMethod: function() {
+                    this.testVariable = true;
+                }
+            };
+
+            spyOn(testObject, 'testFunction');
+
+            rpc.exposeRpcMethod('testFunction', null, testObject.testFunction);
+            rpc.onMessage(JSON.stringify({
+                jsonrpc: "2.0",
+                method: 'testFunction',
+                params: [],
+                id: null
+            }));
+
+            expect(testObject.testFunction).toHaveBeenCalled();
+            expect(testObject.testVariable).toBe(false);
+
+            rpc.exposeRpcMethod('testMethod', testObject, testObject.testMethod);
+            rpc.onMessage(JSON.stringify({
+                jsonrpc: "2.0",
+                method: 'testMethod',
+                params: [],
+                id: null
+            }));
+
+            expect(testObject.testVariable).toBe(true);
+        });
+    });
+
 });
