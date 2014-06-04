@@ -18,7 +18,7 @@
     function SpriteShader()
     {
         var gl           = the_Renderer.gl;
-        this.program     = shader_Loader( "SpriteShader");   
+        this.program     = shader_Loader( "Spriteshader");   
     
     
         gl.useProgram( this.program );       
