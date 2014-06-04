@@ -1,4 +1,16 @@
     
+    
+    
+    function load_World( worldName )
+    {
+        
+        
+    }
+    
+    
+    
+    /*
+    
     // This represents a basic vertex in the world. 
     // Position, uv-coords and the 2/3 of the tangent basis.
     function Vertex( position, texCoord, normal, biNormal )
@@ -126,25 +138,6 @@ return rawMeshes;
 
 
 
-function get_Linear( orientation )
-{
-    var angles = orientation.angles_V;
-    var scales = orientation.scales_V;
-    
-    var mat_X  = new Matrix33( ["ROT_X", angles.x ] );
-    var mat_Y  = new Matrix33( ["ROT_Y", angles.y ] );
-    var mat_Z  = new Matrix33( ["ROT_Z", angles.z ] );
-    var mat_S  = new Matrix33( ["SCALE", scales   ] );
-    
-    var mat =  new Matrix33( ["ID"] );
-        mat =  mat.multiply( mat_X  );
-        mat =  mat.multiply( mat_Y  );
-        mat =  mat.multiply( mat_Z  );
-        mat =  mat.multiply( mat_S  );
-   
-return mat;
-}
-
 
 // rawMeshes is a list of a list of rawmeshes.  Each worldnode can be split into 1..n submeshes.
 function compose_WorldMesh( rawMeshes, orientations ) 
@@ -167,7 +160,7 @@ function compose_WorldMesh( rawMeshes, orientations )
             var vertices      = worldMesh[i].vertices;
             var indices       = worldMesh[i].indices;
             var material      = worldMesh[i].material;
-            var triCnt        = (indices.length-1)/3;           // Häksän hää
+            var triCnt        = (indices.length-1)/3;           // Hï¿½ksï¿½n hï¿½ï¿½
             var index         = 0;
            
             for( var t = 0; t < triCnt; t++ )
@@ -191,4 +184,5 @@ function compose_WorldMesh( rawMeshes, orientations )
     
     
 }
-   
+    
+     */
