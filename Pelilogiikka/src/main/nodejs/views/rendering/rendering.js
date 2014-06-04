@@ -110,7 +110,7 @@ function draw_Frame ()
     the_Renderer.set_Shader( spriteShader );
       
     the_Renderer.set_Matrices( testActor.get_Transformation(), null, null );
-
+                               
     the_Renderer.draw_Batch(testActor);
 
 }
