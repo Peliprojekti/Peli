@@ -10,12 +10,10 @@
 <script type="text/javascript" src="external/glMatrix.js"                       ></script>
 
 
-
 <script type="text/javascript" src="data/Shaders/WorldShader/WorldShader.js"    ></script>
 <script type="text/javascript" src="data/Shaders/SimpleShader/Simpleshader.js"  ></script>
 <script type="text/javascript" src="data/Shaders/SpriteShader/Spriteshader.js"  ></script>
 <script type="text/javascript" src="data/Shaders/Guishader/Guishader.js"        ></script>
-
 
 
 <script type="text/javascript" src="Globals.js"                                 ></script>
@@ -24,7 +22,9 @@
 <script type="text/javascript" src="Buffer.js"                                  ></script>
 <script type="text/javascript" src="Texture.js"                                 ></script>
 <script type="text/javascript" src="Camera.js"                                  ></script>
-<script type="text/javascript" src="GuiItem.js"                                 ></script>
+<script type="text/javascript" src="Tokens/GuiItem.js"                          ></script>
+<script type="text/javascript" src="Tokens/Actor.js"                            ></script>
+
 
 
 
@@ -48,6 +48,7 @@
 
 
 <script type="text/javascript">
+     
      
      
   var keyMap = {}; 
@@ -88,12 +89,15 @@
     var testGui      = null;
     var guiTex       = null;
     
-    
-    
     var guiItem      = null;
-    
-    var lul = 0.0;
-    
+   
+   
+   
+   
+    var testCrosshair = null;
+    var testActor     = null;
+   
+   
     function draw_Frame()
     {
         
@@ -114,19 +118,18 @@
      
         
      
-     
         the_Renderer.begin();
         
-          the_Renderer.draw_Batch( testBatch, testShader, testCamera  );
+       //   the_Renderer.draw_Batch( testBatch, testShader, testCamera  );
         
-         the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
+     //    the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
       
-         the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
-     
+      //   the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
+        
+        
+        the_Renderer.draw_Batch( guiItem.batch, guiShader, testCamera );
+        
      }
-    
-    
-    
     
     
     
@@ -139,6 +142,7 @@
     Root_Exception_Handler( draw_Frame   );
     }
     
+
 
     function main() 
     {   
@@ -159,7 +163,10 @@
         testGui      = testRect( guiTex, 0.007, (0.007)*1.3333              );
         
         
-        guiItem      = new GuiItem( new Vector2(0,0) , new Dimension2( 0.007, 0.007 ) );
+        guiItem      = new GuiItem( new Vector2(0,0) , new Dimension2( 0.007, 0.007 ) , guiTex );
+        
+        
+        
         
         
     rendererMain();

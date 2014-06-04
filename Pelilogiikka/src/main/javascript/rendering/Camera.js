@@ -80,7 +80,7 @@ Camera.prototype.get_ViewMatrix = function()
         lol.data[ 13 ] = -this.position.y;
         lol.data[ 14 ] = -this.position.z;
 
-return ret.multiply( lol );;
+return ret.multiply( lol );
 }
 
 
