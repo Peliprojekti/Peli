@@ -49,39 +49,39 @@ describe('the AbsPosition object', function () {
 
         });
 
-//        it('calls coms with the correct method and position parameters on mousemove event', function () {
-//
-//            spyOn(coms, 'call');
-//            evt = document.createEvent("Events");
-//
-//            //Aim: initialize it to be the event we want     
-//            evt.initEvent('mousemove', true, true); //true for can bubble, true for cancelable
-//            evt.clientX = 15;
-//            evt.clientY = 30;
-//
-//            canvas.dispatchEvent(evt);
-//
-//            arr = [evt.clientX / canvas.width, evt.clientY / canvas.height];
-//            expect(coms.call).toHaveBeenCalled();
-//            expect(coms.call).toHaveBeenCalledWith('position', arr, null, null);
-//
-//        });
-//
-//        it('calls coms with the correct method and position parameters on click event', function () {
-//
-//            spyOn(coms, 'call');
-//            evt = document.createEvent("Events");
-//
-//            //Aim: initialize it to be the event we want     
-//            evt.initEvent('click', true, true); //true for can bubble, true for cancelable
-//
-//            canvas.dispatchEvent(evt);
-//
-//            arr = [];
-//            expect(coms.call).toHaveBeenCalled();
-//            expect(coms.call).toHaveBeenCalledWith('shoot', arr, null, null);
-//
-//        });
+        it('calls coms with the correct method and position parameters on mousemove event', function () {
+
+            spyOn(coms, 'call');
+            evt = document.createEvent("Events");
+
+            //Aim: initialize it to be the event we want     
+            evt.initEvent('mousemove', true, true); //true for can bubble, true for cancelable
+            evt.clientX = 15;
+            evt.clientY = 30;
+
+            canvas.dispatchEvent(evt);
+
+            arr = [evt.clientX / canvas.width, evt.clientY / canvas.height];
+            expect(coms.call).toHaveBeenCalled();
+            expect(coms.call).toHaveBeenCalledWith('position', arr, null, null);
+
+        });
+
+        it('calls coms with the correct method and position parameters on click event', function () {
+
+            spyOn(coms, 'call');
+            evt = document.createEvent("Events");
+
+            //Aim: initialize it to be the event we want     
+            evt.initEvent('click', true, true); //true for can bubble, true for cancelable
+
+            canvas.dispatchEvent(evt);
+
+            arr = [];
+            expect(coms.call).toHaveBeenCalled();
+            expect(coms.call).toHaveBeenCalledWith('shoot', arr, null, null);
+
+        });
 
     });
 });

@@ -34,14 +34,12 @@ client.loadedTypes.absPosition = function (container, canvas, phone, coms, inter
         };
 
     canvas.addEventListener("touchmove", touchListener);
-    $('#canvas').mousemove(mouseMoveListener);
-    $('#canvas').click(clickListener);
+    canvas.addEventListener("mousemove", mouseMoveListener);
+    canvas.addEventListener("click", clickListener);
 
     return function () {
-        canvas.unbind('mousemove', mouseMoveListener);
-        canvas.unbind('click', clickListener);
+        canvas.removeEventListener('mousemove', mouseMoveListener);
+        canvas.removeEventListener('click', clickListener);
         canvas.removeEventListener("touchmove", touchListener);
-        mouseMoveListener = null;
-        clickListener = null;
     };
 };
