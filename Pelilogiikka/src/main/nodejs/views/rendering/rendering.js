@@ -107,6 +107,12 @@ function draw_Frame ()
 
     the_Renderer.draw_Batch(guiItem.batch);
 
+    the_Renderer.set_Shader( spriteShader );
+      
+    the_Renderer.set_Matrices( testActor.get_Transformation(), null, null );
+
+    the_Renderer.draw_Batch(testActor);
+
 }
 
 
@@ -140,7 +146,8 @@ function main ()
     testGui = testRect(guiTex, 0.007, (0.007) * 1.3333);
 
     guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), guiTex);
-
+    
+    testActor = new Actor( new Vector3(0,0,0), new Dimension2( 10,10), spriteTex );
 
     rendererMain();
 }
