@@ -53,9 +53,6 @@
 
 
 
-
-
-
     Matrix44.prototype.embed = function( matrix )
     {
         ASSERT_TYPE( Matrix33, matrix, "Expected Matrix33 for embed to Matrix44" );
@@ -65,7 +62,17 @@
                 this.data[i*4 + j] = matrix.data[i*3 + j];
     }
     
-    
+
+    Matrix44.prototype.embed_Translation = function( vector )
+    {
+        ASSERT_TYPE( Vector3, vector, "Expected Vector3 to for embed to Matrix44 as translation");
+        
+        this.data[12] = vector.x;
+        this.data[13] = vector.y;
+        this.data[14] = vector.z;
+    }
+
+
     
     Matrix44.prototype.alert = function() 
     {

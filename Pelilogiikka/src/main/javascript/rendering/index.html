@@ -18,13 +18,13 @@
 
 
 
-
 <script type="text/javascript" src="Globals.js"                                 ></script>
 <script type="text/javascript" src="Exception.js"                               ></script>
 <script type="text/javascript" src="Renderer.js"                                ></script>
 <script type="text/javascript" src="Buffer.js"                                  ></script>
 <script type="text/javascript" src="Texture.js"                                 ></script>
 <script type="text/javascript" src="Camera.js"                                  ></script>
+<script type="text/javascript" src="GuiItem.js"                                 ></script>
 
 
 
@@ -47,14 +47,11 @@
 <script type="text/javascript" src="math/Matrix44.js"                           ></script>
 
 
-
 <script type="text/javascript">
-     
      
      
   var keyMap = {}; 
   
-
   function kbDown_Event(event) 
   {     
       keyMap[event.keyCode] = true;
@@ -70,87 +67,30 @@
     return keyMap[ keyCode ];
   }
   
-  
-  
   function register_Inputs()
   {
      document.onkeydown = kbDown_Event;
      document.onkeyup   = kbUp_Event; 
   }
        
-     
-     
-     
-     
-     function testRect( texture, width, height )
-     {
-        this.width   = width;
-        this.height  = height;
-  
+
+    var testCamera   = null;
     
-        var vertices     = [ -this.width,  this.height, 0,   // Top left
-                              this.width,  this.height, 0,   // Top Right
-                              this.width, -this.height, 0,   // Bottom Right
-                             -this.width, -this.height, 0 ]; // Bottom left
-       
-        var indices     = [ 0, 1, 2, 2, 3, 0 ];
-                  
-        var texCoords   = [ 0.0, 1.0, 
-                            1.0, 1.0, 
-                            1.0, 0.0, 
-                            0.0, 0.0 ];   
-                      
-                      
-     return new Batch( vertices, indices, texCoords, texture );
-     }
-     
-     
- 
-    function testCube( texture ) 
-    {   
-        
-        var vertices      = [ -1.0, -1.0,  1.0,  1.0, -1.0,  1.0, 1.0,  1.0,  1.0, -1.0,  1.0,  1.0,
-                              -1.0, -1.0, -1.0, -1.0,  1.0, -1.0, 1.0,  1.0, -1.0,  1.0, -1.0, -1.0,
-                              -1.0,  1.0, -1.0, -1.0,  1.0,  1.0, 1.0,  1.0,  1.0,  1.0,  1.0, -1.0,
-                              -1.0, -1.0, -1.0,  1.0, -1.0, -1.0, 1.0, -1.0,  1.0, -1.0, -1.0,  1.0,
-                               1.0, -1.0, -1.0,  1.0,  1.0, -1.0, 1.0,  1.0,  1.0,  1.0, -1.0,  1.0,
-                              -1.0, -1.0, -1.0, -1.0, -1.0,  1.0,-1.0,  1.0,  1.0, -1.0,  1.0, -1.0, ];
-        
-        var indices       = [  0,  1,  2,  0,  2,  3,  4, 
-                               5,  6,  4,  6,  7,  8,  9,
-                              10,  8, 10, 11, 12, 13, 14, 
-                              12, 14, 15, 16, 17, 18, 16, 
-                              18, 19, 20, 21, 22, 20, 22, 23 ];
-                          
-        var texCoords     = [ 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-                              1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0,
-                              0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
-                              1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
-                              1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0,
-                              0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0  ];   
-   
-        
-     return new Batch( vertices, indices, texCoords, texture );
-     }
-
-
-
-
-    var testCamera  = null;
-    var testShader  = null;
-    var testTexture = null;
-     
-    var testBatch   = null;
+    var testShader   = null;
+    var testTexture  = null;
+    var testBatch    = null;
     
     var spriteShader = null;
     var testSprite   = null;
     var  spriteTex   = null;
     
+    var guiShader    = null;
+    var testGui      = null;
+    var guiTex       = null;
     
-    var guiShader   = null;
-    var testGui     = null;
-    var guiTex      = null;
     
+    
+    var guiItem      = null;
     
     var lul = 0.0;
     
@@ -219,6 +159,7 @@
         testGui      = testRect( guiTex, 0.007, (0.007)*1.3333              );
         
         
+        guiItem      = new GuiItem( new Vector2(0,0) , new Dimension2( 0.007, 0.007 ) );
         
         
     rendererMain();

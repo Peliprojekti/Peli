@@ -24,9 +24,14 @@
             throw new Exception( Exception.Type.FATAL, error.message );
         }
         
-     this.fillColor = new Color( 0.2 , 0.6, 0.7, 1.0 );
+        
+        
+     this.aspectRatio   = this.canvas.width/this.canvas.height;
+     this.fillColor     = new Color( 0.2 , 0.6, 0.7, 1.0 );
     
-     this.gl.enable    ( this.gl.DEPTH_TEST );      
+     this.gl.enable( this.gl.DEPTH_TEST );      
+     
+     
      
  //    this.gl.frontFace ( this.gl.CW         );
  //    this.gl.enable    ( this.gl.CULL_FACE  );
