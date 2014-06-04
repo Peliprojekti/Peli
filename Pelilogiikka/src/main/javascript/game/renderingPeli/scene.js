@@ -26,12 +26,19 @@ renderingPeli.scene = {
 
         this.renderer.set_Camera(this.camera);
         this.renderer.begin();
+         
+        this.renderer.set_Matrices( null, this.camera.get_ViewMatrix(), this.camera.get_ProjectionMatrix() );
+
 
         for (i = 0; i < this.players.length; i++) {
+            //var player = this.players[i];
+            var player = this.onePlayer;
             console.debug("Drawing player ", player.userID);
+
             this.renderer.set_Shader(player.shader);
-            this.renderer.setMatrices(guiItem.get_transformation(), null, null);
-            this.renderer.draw_Batch(guitItem.batch);
+            var trans = player.guiItem.get_Transformation();
+            this.renderer.set_Matrices(trans, null, null);
+            this.renderer.draw_Batch(player.guiItem.batch);
         }
 
         /*
@@ -49,8 +56,10 @@ renderingPeli.scene = {
     addPlayer: function (player) {
         var texture = new Texture('/data/crosshair1.bmp');
 
-        player.shader = new SimpleShader();
+        player.shader = new GuiShader();
         player.guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), texture);
+        this.players.push(player);
+        this.onePlayer = player;
     }
 };
 /*
