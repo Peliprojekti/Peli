@@ -32,8 +32,10 @@ renderingPeli.game = {
             //self.screen.shoot(x, y);
         });
         player.setOnPosition(function (x, y) {
-            console.debug("liiku nyt prkl, ", x, y);
-            player.guiItem.set_Position(new Vector2(x, y));
+            var vecX = -1 + x*2;
+            var vecY = 1 - y*2;
+
+            player.guiItem.set_Position(new Vector2(vecX, vecY));
         });
         //self.scene.addController(controller);
         self.scene.addPlayer(player);

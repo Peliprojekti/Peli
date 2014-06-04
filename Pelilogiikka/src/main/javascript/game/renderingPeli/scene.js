@@ -10,6 +10,7 @@ renderingPeli.scene = {
     renderer: null,
     camera: null,
     players: [],
+    crosshair_id: 0,
     start: function (canvas) {
         console.log("starting up renderer stuff");
         this.renderer = new Renderer(new Dimension2(canvas.width, canvas.height));
@@ -31,35 +32,23 @@ renderingPeli.scene = {
 
 
         for (i = 0; i < this.players.length; i++) {
-            //var player = this.players[i];
-            var player = this.onePlayer;
-            console.debug("Drawing player ", player.userID);
+            var player = this.players[i];
 
             this.renderer.set_Shader(player.shader);
             var trans = player.guiItem.get_Transformation();
             this.renderer.set_Matrices(trans, null, null);
             this.renderer.draw_Batch(player.guiItem.batch);
         }
-
-        /*
-         this.renderer.set_Shader( spriteShader );
-         this.renderer.set_Matrices( testActor.get_Transformation(), null, null );
-         this.renderer.draw_Batch(testActor);
-         */
-
-        /*
-         this.renderer.set_Shader(guiShader);
-         this.renderer.set_Matrices(guiItem.get_Transformation(), null, null);
-         this.renderer.draw_Batch(guiItem.batch);
-         */
     },
     addPlayer: function (player) {
-        var texture = new Texture('/data/crosshair1.bmp');
+        //var texture = new Texture('/data/crosshair1.bmp');
+        var texture = new Texture('/data/crosshairs/crosshair' + this.crosshair_id + '.png');
+        this.crosshair_id = (this.crosshair_id + 1) % 8;
 
         player.shader = new GuiShader();
         player.guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), texture);
         this.players.push(player);
-        this.onePlayer = player;
+        //this.onePlayer = player;
     }
 };
 /*
