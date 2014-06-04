@@ -11,14 +11,17 @@
         if( VALID( array ) )
         {
             ASSERT_LENGTH( array, 16 );
-         
-            for( var i = 0; i < 16; i++ )
-            {
-                this.data[ i ] = array[i];
-            }
-                  
-        return;
+            for( var i = 0; i < 16; i++ )  this.data[ i ] = array[i];
+            return;
         }
+
+        if( TYPE( Matrix33, array ) ) return this.embed( array );
+               
+        if( TYPE( Matrix44, array ) ) 
+            for( var i = 0; i < 16; i++ ) 
+            {
+                this.data[ i ] = array.data[i];
+            }
 
     }
     
@@ -70,6 +73,14 @@
         this.data[12] = vector.x;
         this.data[13] = vector.y;
         this.data[14] = vector.z;
+    }
+    
+    
+    Matrix44.prototype.extract_Orientation = function()
+    {
+        return new Matrix33( [ this.data[ 0 ],this.data[ 1 ],this.data[ 2 ],
+                               this.data[ 4 ],this.data[ 5 ],this.data[ 6 ],
+                               this.data[ 8 ],this.data[ 9 ],this.data[ 10] ] );
     }
     
     

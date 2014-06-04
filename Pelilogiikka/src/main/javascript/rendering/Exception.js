@@ -1,15 +1,16 @@
     Exception.Type = 
     {
-        FATAL       : "FATAL", 
-        NULL        : "NULL",
-        UNDEFINED   : "UNDEFINED",
-        MISMATCH    : "MISMATCH",
-        INVALID     : "INVALID",
-        SINGLETON   : "SINGLETON",
-        TYPE        : "TYPE",
-        SIZE        : "SIZE",
-        UNSUPPORTED : "UNSUPPORTED",
-        FAILURE     : "FAILURE"
+        FATAL           : "FATAL", 
+        NULL            : "NULL",
+        UNDEFINED       : "UNDEFINED",
+        MISMATCH        : "MISMATCH",
+        INVALID         : "INVALID",
+        SINGLETON       : "SINGLETON",
+        TYPE            : "TYPE",
+        SIZE            : "SIZE",
+        UNSUPPORTED     : "UNSUPPORTED",
+        FAILURE         : "FAILURE",
+        CONTRADICTION   : "CONTRADICTION"
     }   
 
     function Exception( type , message )
@@ -29,6 +30,13 @@
     }
     
     
+    
+    
+    
+    function ASSERT( expression, onFailMessage )
+    {
+        if( !expression ) throw new Exception( Exception.Type.CONTRADICTION, onFailMessage );
+    }
     
     function ASSERT_INTERVAL( entry, low, high, onFailMessage )
     {  
@@ -98,6 +106,9 @@
     {
         return ( typeof value == 'number' );
     }   
+    
+
+    
     
     
     

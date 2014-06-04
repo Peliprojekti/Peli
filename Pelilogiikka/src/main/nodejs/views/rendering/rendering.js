@@ -40,39 +40,27 @@ var testGui = null;
 var guiTex = null;
 
 
-
-
-
 var guiItem = null;
 var testActor = null;
 
 
+var testWorld = null;
+
+
+
 function draw_Frame ()
 {
-
     if (key_Down(38))
-    {
         testCamera.forward(5.0);
-        guiItem.move(new Vector2(0, 0.01));
-    }
-
+  
     if (key_Down(40))
-    {
         testCamera.backwards(5.0);
-        guiItem.move(new Vector2(0, -0.01));
-    }
 
     if (key_Down(37))
-    {
         testCamera.yaw(2.0);
-        guiItem.move(new Vector2(-0.01, 0));
-    }
-
-    if (key_Down(39))
-    {
+    
+    if (key_Down(39)) 
         testCamera.yaw(-2.0);
-        guiItem.move(new Vector2(0.01, 0));
-    }
 
     if (key_Down(81))
         testCamera.roll(2.0);
@@ -107,11 +95,11 @@ function draw_Frame ()
 
     the_Renderer.draw_Batch(guiItem.batch);
 
-    the_Renderer.set_Shader( spriteShader );
+  //  the_Renderer.set_Shader( spriteShader );
       
-    the_Renderer.set_Matrices( testActor.get_Transformation(), null, null );
+  //  the_Renderer.set_Matrices( testActor.get_Transformation(), null, null );
                                
-    the_Renderer.draw_Batch(testActor.batch );
+  //  the_Renderer.draw_Batch(testActor.batch );
 
 }
 
@@ -149,8 +137,18 @@ function main ()
     
     testActor = new Actor( new Vector3(0,0,0), new Dimension2( 10,10), spriteTex );
 
+
+
+    testWorld = new World( "Showcase" );
+
+
     rendererMain();
 }
+
+
+
+
+ 
 
 
 function global_Initializer ()
@@ -160,7 +158,8 @@ function global_Initializer ()
     register_Inputs();
 
 
-    main();
+
+
     main();
 }
 

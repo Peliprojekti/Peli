@@ -77,8 +77,7 @@
                      gl.uniform1i    ( gl.getUniformLocation( shader.program , "textureMapSampler"), 2 );
             break;
             
-            
-            default: throw new Exception( Exception.Type.INVALID , "Bad texture index " + slot );
+        default: throw new Exception( Exception.Type.INVALID , "Bad texture index " + slot );
         }
             
     }

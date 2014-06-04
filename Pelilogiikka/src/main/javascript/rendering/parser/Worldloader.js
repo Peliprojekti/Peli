@@ -1,12 +1,10 @@
     
     
+   
     
-    function load_World( worldName )
-    {
-        
-        
-        
-    }
+    
+    
+    /*
  
     
     function parse_Mesh( node, description )
@@ -35,95 +33,13 @@
                 the_Scene.insert( entity , "DYNAMIC" );
                 }
     */            
-    }           
+//    }           
         
     
     
     
     
     
-    
-    
-    
-    function parse_Scene( document ) 
-    { 
-        
-        var nodes = document.get_Subfields("node");
-      
-        nodes.forEach( function( node )
-        {
-            var attributes = node.get_Subfields("attributes");
-           
-            var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
-            var node_Description         = read_Node( node_Variables );
-            var node_Transformation      = build_Matrix( node_Description[0].casted() ,
-                                                         node_Description[1].casted() ,
-                                                         node_Description[2].casted() );
-         
-           
-            var type       = node.get_Type();
-            
-            switch( type ) 
-            {
-            
-                case "mesh":   parse_Mesh( node, node_Description );
-                break;
-                
-                case "light": 
-                break;
-            
-            
-                default: console.log("Unknown Node encountered - Skipping: " + type );
-            }
-           
-      
-        }
-      
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    // Käsi taskussa kirjoiteltu -> Tarkista
-    function build_Matrix( position, rotation, scale )
-    {
-        var orient = new Matrix33();
-        var rot    = new Matrix33();
-        
-        rot.RotationX( rotation.x );
-        orient = orient.multiply( rot );
-        
-        rot.RotationY( rotation.y );
-        orient = orient.multiply( rot );
-        
-        rot.RotationY( rotation.z );
-        orient = orient.multiply( rot );
-           
-           
-        var m1 = new Matrix44();
-            m1.embed( orient );
-            
-        var m2 = new Matrix44();    
-            m2.embed_Translation( position );
-            
-        var s  = scale;
-        var m3 = new Matrix44( s.x,   0,   0,   0,
-                                 0, s.y,   0,   0,
-                                 0,   0, s.z,   0,
-                                 0,   0,   0, 1.0 );
-            
-        var ret = m3.multiply( m2 );
-            ret = ret.multiply( m1 );
-            
-    return ret;
-    }
-        
-        
-        
         
         
         
@@ -205,11 +121,11 @@
     console.log(" Scene parsed succesfully! ");    
     //alert("OK with " + the_Scene.entries_Dynamic.length + " nodes");
     return the_Scene;
-    */
+   
     }
 
     
-    
+     */
     
     
     

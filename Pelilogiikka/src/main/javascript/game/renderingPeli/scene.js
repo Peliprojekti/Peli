@@ -29,8 +29,9 @@ renderingPeli.scene = {
         this.renderer.begin();
          
         this.renderer.set_Matrices( null, this.camera.get_ViewMatrix(), this.camera.get_ProjectionMatrix() );
-
-
+        
+        alert("OK");
+        
         for (i = 0; i < this.players.length; i++) {
             var player = this.players[i];
 
