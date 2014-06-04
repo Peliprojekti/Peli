@@ -4,6 +4,7 @@ describe('the AbsPosition object', function () {
     var evt;
     var coms;
     var arr;
+    var controllerDisabler;
 
 
     //Create an easily-removed container for our tests to play in
@@ -27,7 +28,7 @@ describe('the AbsPosition object', function () {
             };
             
             var interval = 20;
-            client.loadedTypes.absPosition(null, canvas, null, coms, 20);
+            controllerDisabler = client.loadedTypes.absPosition(null, canvas, null, coms, 20);
 
             spyOn(coms, 'call');
             evt = document.createEvent("Events");
@@ -81,6 +82,15 @@ describe('the AbsPosition object', function () {
             expect(coms.call).toHaveBeenCalled();
             expect(coms.call).toHaveBeenCalledWith('shoot', arr, null, null);
 
+        });
+        
+        it ('removes listeners', function() {
+            spyOn(canvas, 'removeEventListener');
+            controllerDisabler();
+            expect(canvas.removeEventListener).toHaveBeenCalled();
+            expect(canvas.removeEventListener).toHaveBeenCalledWith('mousemove', jasmine.any(Function));
+            expect(canvas.removeEventListener).toHaveBeenCalledWith('click', jasmine.any(Function));
+            expect(canvas.removeEventListener).toHaveBeenCalledWith('touchmove', jasmine.any(Function));
         });
 
     });
