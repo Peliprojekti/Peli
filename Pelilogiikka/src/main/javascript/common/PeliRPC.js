@@ -9,7 +9,7 @@
  */
 var peliRPC = {
     totalMessagesProcessed: 0,
-    maxCallbacks: 1000, /* should be more than enough on reasonable response times and load */
+    maxCallbacks: 50, /* should be more than enough on reasonable response times and load */
     freeRPCs: [],
     create: function (connection) {
         "use strict";

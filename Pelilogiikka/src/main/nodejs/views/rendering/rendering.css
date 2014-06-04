@@ -1,0 +1,20 @@
+body,html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	color: white;
+}
+
+#container {
+    z-index: 1;
+	width: 1000px;
+	height: 1000px;
+	overflow: auto;
+	background: "#AAAAAA";
+}
+
+#container canvas {
+	vertical-align: top;
+	display: block;
+	overflow: auto;
+}
