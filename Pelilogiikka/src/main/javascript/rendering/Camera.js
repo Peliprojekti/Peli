@@ -6,6 +6,12 @@ function Camera(  position  )
 {
     this.position    = position;
     this.orientation = new Matrix33();
+    
+    this.vertical_Fov = 45;
+    this.aspectRatio  = 1.3333;
+    this.nearPlane    = 1.0;
+    this.farPlane     = 10000;
+    
 }
 
 
@@ -39,7 +45,6 @@ Camera.prototype.down = function( amount )
     var look = this.orientation.extract_J();
     this.position = this.position.add(  look.multiply( -amount ) );
 }
-
 
 
 
@@ -85,16 +90,16 @@ return ret.multiply( lol );
 
 
 
-Camera.prototype.get_ProjectionMatrix = function( vertical_Fov, aspectRatio, nearPlane, farPlane )
+Camera.prototype.get_ProjectionMatrix = function()
 {
     var ret    = new Matrix44();
     
-    var top    = nearPlane*Math.tan(vertical_Fov*Math.PI / 360.0);
-    var right  = top*aspectRatio;
+    var top    = this.nearPlane*Math.tan(this.vertical_Fov*Math.PI / 360.0);
+    var right  = top*this.aspectRatio;
     var left   = -right;
     var bottom = -top;
-    var near   = nearPlane;
-    var far    = farPlane;
+    var near   = this.nearPlane;
+    var far    = this.farPlane;
     
     var rl     = (right - left);
     var tb     = (top - bottom);

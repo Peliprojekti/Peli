@@ -73,6 +73,15 @@
     }
 
 
+    Matrix44.prototype.get_Translation = function()
+    {
+        return new Vector3( this.data[12] ,
+                            this.data[13] ,
+                            this.data[14] );
+    }
+
+
+
     
     Matrix44.prototype.alert = function() 
     {
