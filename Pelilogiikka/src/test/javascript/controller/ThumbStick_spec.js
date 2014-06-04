@@ -3,6 +3,7 @@ describe('the ThumbStick object', function () {
     var canvas;
     var evt;
     var coms;
+    var disabler;
 
     beforeEach(function () {
 
@@ -28,7 +29,7 @@ describe('the ThumbStick object', function () {
             spyOn(coms, 'call');
             evt = document.createEvent("Events");
 
-            client.loadedTypes.ThumbStick(null, canvas, null, coms);
+            disabler = client.loadedTypes.ThumbStick(null, canvas, null, coms);
             //Aim: initialize it to be the event we want
             evt.initEvent('touchstart', true, true); //true for can bubble, true for cancelable
             evt.targetTouches = [{pageX: 12, pageY: 10}, {pageX: 12, pageY: 10}];
@@ -68,6 +69,53 @@ describe('the ThumbStick object', function () {
             expect(coms.call).toHaveBeenCalled();
             expect(coms.call).toHaveBeenCalledWith('thumbStickPosition', arr, null, null);
 
+        });
+
+        it('disables all the event listeners when the disable function is called', function () {
+            spyOn(canvas, 'removeEventListener');
+            disabler();
+            expect(canvas.removeEventListener).toHaveBeenCalled();
+            expect(canvas.removeEventListener).toHaveBeenCalledWith("touchstart", jasmine.any(Function), false);
+            expect(canvas.removeEventListener).toHaveBeenCalledWith("touchend", jasmine.any(Function), false);
+            expect(canvas.removeEventListener).toHaveBeenCalledWith("touchmove", jasmine.any(Function), false);
+
+        });
+
+        it('draws correctly', function () {
+            /*
+             context.strokeStyle = "#FF0000";
+             context.fillStyle = "#FFFF00";
+             context.beginPath();
+             context.arc(x, y, r, 0, Math.PI * 2, true);
+             context.closePath();
+             context.stroke();
+             context.fill();
+             */
+
+            evt = document.createEvent("Events");
+
+            client.loadedTypes.ThumbStick(null, canvas, null, coms);
+            //Aim: initialize it to be the event we want
+            evt.initEvent('touchstart', true, true); //true for can bubble, true for cancelable
+            evt.targetTouches = [{pageX: 12, pageY: 10}, {pageX: 12, pageY: 10}];
+
+            canvas.dispatchEvent(evt);
+
+            var ctx = canvas.getContext("2d");
+            spyOn(ctx, 'beginPath');
+            spyOn(ctx, 'closePath');
+            spyOn(ctx, 'arc');
+            spyOn(ctx, 'stroke');
+            spyOn(ctx, 'fill');
+
+            var controllerObj = client.loadedTypes['ThumbStick'];
+            controllerObj.draw(ctx);
+            expect(ctx.beginPath).toHaveBeenCalled();
+            expect(ctx.arc).toHaveBeenCalled();
+            expect(ctx.arc).toHaveBeenCalledWith(12, 10, 10, 0, Math.PI * 2, true);
+            expect(ctx.closePath).toHaveBeenCalled();
+            expect(ctx.stroke).toHaveBeenCalled();
+            expect(ctx.fill).toHaveBeenCalled();
         });
     });
 });
