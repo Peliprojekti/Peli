@@ -32,8 +32,8 @@
     GuiItem.prototype.set_Position = function( vec2 ) 
     {
          var v3 =this.translation.get_Translation();
-            v3.x = vec2.x;
-            v3.y = vec2.y;
+             v3.x = vec2.x;
+             v3.y = vec2.y;
     }
     
 
