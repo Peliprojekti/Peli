@@ -1,0 +1,93 @@
+doctype html
+html(lang='en')  
+  head  
+    title= title  
+
+    style
+      include renderingPeli.css
+
+  body
+    #container
+      canvas#Canvas HTML5 Canvas not supported.
+
+    script(type="text/javascript").
+      var SCREEN_PORT = #{screen_port};
+      var DEBUG = #{jsdebug};
+      var JSONRPC_PROTOCOL = "#{jsonrpc_protocol}"
+      var CONTROLLER = '#{controller}';
+
+    script(type="text/javascript" src="/javascript/lib/jquery.js")
+    script(type="text/javascript" src="/javascript/lib/engine.io.js")
+    //-script(type="text/javascript" src="/javascript/lib/Box2dWeb.js")
+
+    script(type="text/javascript" src="/javascript/common/log.js")
+    script(type="text/javascript" src="/javascript/common/sendServerMessage.js")
+
+    script(type="text/javascript" src="/javascript/game/Player.js")
+    script(type="text/javascript" src="/javascript/game/ControllerHub.js")
+    script(type="text/javascript" src="/javascript/game/controller/absPosition.js")
+    script(type="text/javascript" src="/javascript/game/controller/swipe.js")
+    script(type="text/javascript" src="/javascript/game/controller/motionController.js")
+    script(type="text/javascript" src="/javascript/game/controller/thumbStick.js")
+    script(type="text/javascript" src="/javascript/game/controller/speedTest_G.js")
+
+    script(type="text/javascript" src="/javascript/common/ConnectionWebsocket.js")
+    script(type="text/javascript" src="/javascript/common/PeliRPC.js")
+
+    //-script(type="text/javascript" src="/javascript/graphics2d/bulletHole.js")
+    //-script(type="text/javascript" src="/javascript/graphics2d/crosshair.js")
+    //-script(type="text/javascript" src="/javascript/graphics2d/fpsDisplay.js")
+    //-script(type="text/javascript" src="/javascript/graphics2d/rpsDisplay.js")
+    //-script(type="text/javascript" src="/javascript/graphics2d/playerPerformance.js")
+    //-script(type="text/javascript" src="/javascript/graphics2d/chartThingy.js")
+
+    script(type="text/javascript" src="/javascript/graphics2d/CrosshairImg.js")
+    script(type="text/javascript" src="/javascript/game/CrosshairManager.js")
+
+    //-script(type="text/javascript" src="/javascript/game/dummy/statsDisplay.js")
+    //-script(type="text/javascript" src="/javascript/game/dummy/box2d.js")
+    //-script(type="text/javascript" src="/javascript/game/dummy/entities.js")
+    //-script(type="text/javascript" src="/javascript/game/dummy/gameScreen.js")
+    //-script(type="text/javascript" src="/javascript/game/dummy/dummy.js")
+
+    script(type="text/javascript" src="/javascript/rendering/math/Interpolator.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Vector2.js")
+
+    //- RENDERING STUFF -------------------------------------------------------------
+
+    script(type="text/javascript" src="/javascript/rendering/external/webglutils.js")
+    script(type="text/javascript" src="/javascript/rendering/external/glMatrix.js")
+
+    script(type="text/javascript" src="/data/Shaders/WorldShader/WorldShader.js")
+    script(type="text/javascript" src="/data/Shaders/SimpleShader/Simpleshader.js")
+    script(type="text/javascript" src="/data/Shaders/SpriteShader/Spriteshader.js")
+    script(type="text/javascript" src="/data/Shaders/Guishader/Guishader.js")
+
+    script(type="text/javascript" src="/javascript/rendering/Globals.js")
+    script(type="text/javascript" src="/javascript/rendering/Exception.js")
+    script(type="text/javascript" src="/javascript/rendering/Renderer.js")
+    script(type="text/javascript" src="/javascript/rendering/Buffer.js")
+    script(type="text/javascript" src="/javascript/rendering/Texture.js")
+    script(type="text/javascript" src="/javascript/rendering/Camera.js")
+    script(type="text/javascript" src="/javascript/rendering/Tokens/GuiItem.js")
+    script(type="text/javascript" src="/javascript/rendering/Tokens/Actor.js")
+
+    script(type="text/javascript" src="/javascript/rendering/parser/GeneralPurposeParser.js")
+    script(type="text/javascript" src="/javascript/rendering/parser/Parserobjects.js")
+
+    script(type="text/javascript" src="/javascript/rendering/batches/WorldBatch.js")
+    script(type="text/javascript" src="/javascript/rendering/batches/Batch.js")
+
+    script(type="text/javascript" src="/javascript/rendering/math/Angles.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Dimension2.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Color.js")
+
+    script(type="text/javascript" src="/javascript/rendering/math/Vector2.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Vector3.js")
+
+    script(type="text/javascript" src="/javascript/rendering/math/Matrix22.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Matrix33.js")
+    script(type="text/javascript" src="/javascript/rendering/math/Matrix44.js")
+
+    script(type="text/javascript" src="/javascript/game/renderingPeli/renderingPeli.js")
+    script(type="text/javascript" src="/javascript/game/renderingPeli/scene.js")
