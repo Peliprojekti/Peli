@@ -71,6 +71,8 @@
         this.data[13] = vector.y;
         this.data[14] = vector.z;
     }
+    
+    
 
 
     Matrix44.prototype.get_Translation = function()

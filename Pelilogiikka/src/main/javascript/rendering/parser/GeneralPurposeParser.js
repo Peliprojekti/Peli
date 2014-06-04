@@ -6,25 +6,18 @@
         return  full_Path.substring( clip, full_Path.length );
     }
     
-
     function Parser( fileName )
     {
         console.log("Accesssing " + fileName );
-        // Grab the file contents.
+        
         var request = new XMLHttpRequest();
             request.open("GET", fileName, false);
             request.send( null);
 
-       this.the_Document = new Field( request.responseText );
+    this.the_Document = new Field( request.responseText );
     }
-    
-    
-    
 
-
-
-
-   function Field( data, label )
+    function Field( data, label )
     {
         this.rawData = data;
         this.label   = label;
@@ -36,7 +29,6 @@
         alert( this.rawData );
     }
     
-    
     Field.prototype.get_Subfields = function( tag )
     {
         var retArray    = [];
@@ -47,21 +39,16 @@
             var first_Line = this.rawData.indexOf( "<"+tag  ,    stringIndex );
             var last_Line  = this.rawData.indexOf( "</"+tag+">", first_Line  );
             
-             if( first_Line == -1  )
-             {
+            if( first_Line == -1  )  
                 return retArray;
-             }
              
-             if( last_Line == -1 )
-             {
-                throw "Bad Interval: " + first_Line + " , " + last_Line;
-             }
-            
+            if( last_Line == -1 )
+                throw new Exception( Exception.Type.INVALID, "GPP - Bad Interval: " + first_Line + " , " + last_Line );
+             
         retArray.push( new Field(  this.rawData.substring( first_Line, last_Line ), tag ) );
         stringIndex = last_Line;
         }
     }
-    
     
     
     Field.prototype.get_Variables = function()
@@ -85,7 +72,7 @@
             var label_End    = this.rawData.indexOf( '"'       , label_Begin   );
             var value_Begin  = this.rawData.indexOf( 'value=' ,  stringIndex   );
             
-                value_Begin += 'value="'.length;
+            value_Begin     += 'value="'.length;
             
             var value_End    = this.rawData.indexOf( '"'      , value_Begin    );
             var label        = this.rawData.substring( label_Begin, label_End  );
@@ -110,22 +97,16 @@
              var first_Line = this.rawData.indexOf( "<"+tag  , stringIndex );
              var last_Line  = this.rawData.indexOf( "/>"     , first_Line  );
         
-        
             if( first_Line == -1  )
-            {
                 return retArray;
-            }
-
+            
             if( last_Line == -1 )
             {
-                last_Line  = this.rawData.indexOf( "</"+tag+">",   first_Line );
+                last_Line = this.rawData.indexOf( "</"+tag+">",   first_Line );
          
                 if( last_Line == -1 ) 
-                {
-                    throw "Opening " + "<"+tag+ " found but failed to terminate!: " + tag;
-                }
+                    throw new Exception( Exception.Type.MISMATCH , "GPP - Opening " + "<"+tag+ " found but failed to terminate!: " + tag );
             }
-   
    
         retArray.push( new Attribute(  this.rawData.substring( first_Line, last_Line ) ) );
         stringIndex = last_Line;
@@ -141,27 +122,24 @@
                 begin += '="'.length;
             var end    = this.rawData.indexOf( '"'      , begin );
             this.type  = this.rawData.substring( begin, end );
-            
         }
         
     return this.type;
     }
     
- //////////////////////////////   
-    
+//////////////////////////////   
     
     function Attribute( data )
     {
         this.rawData = data;
     }
     
-    Attribute.prototype.report =  function()
+    Attribute.prototype.alert =  function()
     {
         alert( this.rawData );
     }
-    
-       
-   //////////////////////////////        
+
+//////////////////////////////        
        
     function Variable( label, value, type )
     {
@@ -170,7 +148,7 @@
         this.type  = type.trim();       
     }
     
-    Variable.prototype.report =  function()
+    Variable.prototype.alert =  function()
     {
         alert( this.label + " = "+ this.value );
     }
@@ -189,20 +167,18 @@
             case "<colorf"   : var values = this.value.split(" "); 
                                return new Vector3( parseFloat( values[0] ), parseFloat( values[1] ) , parseFloat( values[2] ) );                   
         
-        
             case  "<color"   : return   parseInt( this.value );
             
             case "<string"   : return this.value;
             case "<texture"  : return this.value;
             case "<enum"     : return this.value;
-                
-            
         }
         
     return "NULL";
     }
 
 
+    
     
     
     

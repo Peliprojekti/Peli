@@ -5,7 +5,162 @@
     {
         
         
+        
     }
+    
+    
+    
+    
+    
+    
+    function build_Matrix( position, rotation, scale )
+    {
+
+        var orient = new Matrix33();
+        var rot    = new Matrix33();
+        
+        rot.RotationX( rotation.x );
+        orient = orient.multiply( rot );
+        
+        rot.RotationY( rotation.y );
+        orient = orient.multiply( rot );
+        
+        rot.RotationY( rotation.z );
+        orient = orient.multiply( rot );
+           
+           
+        var m1 = new Matrix44();
+            m1.embed( orient );
+            
+        var m2 = new Matrix44();    
+            m2.embed_Translation( position );
+            
+        var s  = scale;
+        var m3 = new Matrix44( s.x,   0,   0,   0,
+                                 0, s.y,   0,   0,
+                                 0,   0, s.z,   0,
+                                 0,   0,   0, 1.0 );
+            
+        var ret = m3.multiply( m2 );
+            ret = ret.multiply( m1 );
+            
+    return ret;
+    }
+    
+    
+    
+    
+    
+    function parse_Scene( document ) 
+    { 
+        
+        var nodes = document.get_Subfields("node");
+      
+        nodes.forEach( function( node )
+        {
+            var type       = node.get_Type();
+            var attributes = node.get_Subfields("attributes");
+           
+            var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
+            var node_Description         = read_Node( node_Variables );
+           
+            var node_Transformation      = build_Matrix( node_Description[0].casted() ,
+                                                         node_Description[1].casted() ,
+                                                         node_Description[2].casted() );
+         //   var node_Position            = node_Description[0].casted();
+         //   var node_Rotation            = node_Description[1].casted();
+        //    var node_Scale               = node_Description[2].casted();
+        
+           
+      
+        }
+      
+        
+    /*    var the_Scene                    = new Scene( renderer ); 
+      
+        // For each node, we need to extract the following data...
+        nodes.forEach( function( node )
+        {
+            var type                     = node.get_Type();
+            
+            
+            var attributes               = node.get_Subfields("attributes");
+           
+            var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
+            var node_Description         = read_Node( node_Variables );
+                
+            var node_Position            = node_Description[0].casted();
+            var node_Rotation            = node_Description[1].casted();
+            var node_Scale               = node_Description[2].casted();
+        
+            
+            // For a node that is of type "mesh"....
+            if( type == "mesh")
+            {
+                var node_Materials       = node.get_Subfields("materials");                 
+                var material_Attributes  = node_Materials[0].get_Subfields("attributes");  // There should be exactly ONE <materials> tag per field! More -> assert fail here.
+                var materialList         = build_Materials( material_Attributes, assetManager, renderer );
+                var materialCount        = materialList.length; 
+         
+                var meshPath             = relative_Path( node_Description[3].casted() );
+                var meshList             = build_Meshes( meshPath, assetManager, renderer );
+                var meshCount            = meshList.length;
+              
+                if( meshCount != materialCount )                                         // There had better be one material available for all meshes. 1:1 not required though.
+                {
+                    alert(" Mesh - Material incongruity! - ABORT - ");
+                }
+             
+                for( var i = 0; i < meshCount; i++ )
+                {
+                    var entity = new Entity( meshList[i], materialList[i] );
+                        entity.set_Position( [             node_Position.x ,             node_Position.y , node_Position.z             ] );
+                        entity.set_Rotation( [ DegToRad( node_Rotation.x ) , DegToRad( node_Rotation.y ) , DegToRad( node_Rotation.z ) ] );
+                        entity.set_Scale   ( [                node_Scale.x ,                node_Scale.y , node_Scale.z                ] );         // Okay. This is just sad... I need to either overload Orientation class or swap over to Vector notation. Can't do it yet in fear of breaking something.
+                    
+                the_Scene.insert( entity , "DYNAMIC" );
+                }
+                
+                
+            }       
+            else
+                if( type == "light" )    // For a node that is of type "light"....
+                {
+                  
+                        var variables       = attributes[0].get_Variables();     // Plz god, let the light variables be in a fixed order...
+                                                                                 // IF not... Need to implement a retarded case - switch or if then else loop.
+                        var lightName       = variables[0].casted();
+                        var lightID         = variables[1].casted();
+                        var lightPos        = variables[2].casted();
+                        var lightRot        = variables[3].casted();
+                        var lightScale      = variables[4].casted();
+                        
+                        var color_Ambient   = variables[9].casted();
+                        var color_Diffuse   = variables[10].casted();
+                        var color_Specular  = variables[11].casted();
+                        
+                        var attenuation     = variables[12].casted();
+                        var radius          = variables[13].casted();
+                        
+                        var light           = new Light( lightPos , radius, color_Ambient, color_Diffuse, color_Specular, attenuation.x, attenuation.y, attenuation.z );
+                        
+                        the_Scene.insert( light , "LIGHT" );
+                }
+                
+        });
+        
+        
+        
+    console.log(" Scene parsed succesfully! ");    
+    //alert("OK with " + the_Scene.entries_Dynamic.length + " nodes");
+    return the_Scene;
+    */
+    }
+
+    
+    
+    
+    
     
     
     
