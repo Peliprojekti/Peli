@@ -90,16 +90,23 @@ function draw_Frame ()
        //the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
 
     the_Renderer.set_Shader(guiShader);
+   
 
     the_Renderer.set_Matrices(guiItem.get_Transformation(), null, null);
 
     the_Renderer.draw_Batch(guiItem.batch);
 
-  //  the_Renderer.set_Shader( spriteShader );
+    the_Renderer.set_Shader( spriteShader );
       
-  //  the_Renderer.set_Matrices( testActor.get_Transformation(), null, null );
+      
+       
+    var viewI = testCamera.get_ViewMatrix().extract_Orientation().transposed();
+    var trans = testActor.get_Transformation(); 
+        trans.embed( viewI );
+        
+    the_Renderer.set_Matrices( trans, null, null );
                                
-  //  the_Renderer.draw_Batch(testActor.batch );
+    the_Renderer.draw_Batch(testActor.batch );
 
 }
 
