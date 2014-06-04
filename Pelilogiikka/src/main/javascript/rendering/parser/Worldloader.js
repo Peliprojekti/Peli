@@ -7,15 +7,90 @@
         
         
     }
+ 
+    
+    function parse_Mesh( node, description )
+    {
+        var node_Materials       = node.get_Subfields("materials");                 
+        var material_Attributes  = node_Materials[0].get_Subfields("attributes");  // There should be exactly ONE <materials> tag per field! More -> assert fail here.
+    //    var materialList         = build_Materials( material_Attributes, assetManager, renderer );
+     //   var materialCount        = materialList.length; 
+        
+                var meshPath             = relative_Path( description[3].casted() );
+    //            var meshList             = build_Meshes( meshPath, assetManager, renderer );
+    //            var meshCount            = meshList.length;
+    /*           
+                if( meshCount != materialCount )                                         // There had better be one material available for all meshes. 1:1 not required though.
+                {
+                    alert(" Mesh - Material incongruity! - ABORT - ");
+                }
+             
+                for( var i = 0; i < meshCount; i++ )
+                {
+                    var entity = new Entity( meshList[i], materialList[i] );
+                        entity.set_Position( [             node_Position.x ,             node_Position.y , node_Position.z             ] );
+                        entity.set_Rotation( [ DegToRad( node_Rotation.x ) , DegToRad( node_Rotation.y ) , DegToRad( node_Rotation.z ) ] );
+                        entity.set_Scale   ( [                node_Scale.x ,                node_Scale.y , node_Scale.z                ] );         // Okay. This is just sad... I need to either overload Orientation class or swap over to Vector notation. Can't do it yet in fear of breaking something.
+                    
+                the_Scene.insert( entity , "DYNAMIC" );
+                }
+    */            
+    }           
+        
     
     
     
     
     
     
+    
+    
+    function parse_Scene( document ) 
+    { 
+        
+        var nodes = document.get_Subfields("node");
+      
+        nodes.forEach( function( node )
+        {
+            var attributes = node.get_Subfields("attributes");
+           
+            var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
+            var node_Description         = read_Node( node_Variables );
+            var node_Transformation      = build_Matrix( node_Description[0].casted() ,
+                                                         node_Description[1].casted() ,
+                                                         node_Description[2].casted() );
+         
+           
+            var type       = node.get_Type();
+            
+            switch( type ) 
+            {
+            
+                case "mesh":   parse_Mesh( node, node_Description );
+                break;
+                
+                case "light": 
+                break;
+            
+            
+                default: console.log("Unknown Node encountered - Skipping: " + type );
+            }
+           
+      
+        }
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    // Käsi taskussa kirjoiteltu -> Tarkista
     function build_Matrix( position, rotation, scale )
     {
-
         var orient = new Matrix33();
         var rot    = new Matrix33();
         
@@ -46,35 +121,11 @@
             
     return ret;
     }
-    
-    
-    
-    
-    
-    function parse_Scene( document ) 
-    { 
         
-        var nodes = document.get_Subfields("node");
-      
-        nodes.forEach( function( node )
-        {
-            var type       = node.get_Type();
-            var attributes = node.get_Subfields("attributes");
-           
-            var node_Variables           = attributes[0].get_Variables();                  // There shold be only ONE per node!
-            var node_Description         = read_Node( node_Variables );
-           
-            var node_Transformation      = build_Matrix( node_Description[0].casted() ,
-                                                         node_Description[1].casted() ,
-                                                         node_Description[2].casted() );
-         //   var node_Position            = node_Description[0].casted();
-         //   var node_Rotation            = node_Description[1].casted();
-        //    var node_Scale               = node_Description[2].casted();
         
-           
-      
-        }
-      
+        
+        
+        
         
     /*    var the_Scene                    = new Scene( renderer ); 
       
