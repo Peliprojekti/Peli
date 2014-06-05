@@ -52,13 +52,13 @@ describe('the PeliRPC object', function() {
     describe('onMessage tests', function() {
         var rpc = peliRPC.create(connection);
 
-        it('throws error on mallformed rpc message', function() {
+        it('throws error on mallformed remote rpc calls', function() {
             expect(function() {
                 rpc.onMessage("jaadajaadajaa");
             }).toThrow();
         });
 
-        it('probperly handles unrecognized rpc mehtods', function() {
+        it('probperly handles unrecognized remote rpc calls', function() {
             connection = {
                 lastMessage: "howdyho",
                 connect: function() {},
@@ -82,7 +82,7 @@ describe('the PeliRPC object', function() {
             expect(connection.lastMessage.id).toBe(1);
         });
 
-        it('correctly calls method callbakcs', function() {
+        it('correctly calls callbakcs on remote rpc calls', function() {
             var testObject = {
                 testVariable: false,
                 testFunction: function() { 
@@ -118,7 +118,7 @@ describe('the PeliRPC object', function() {
 
         });
 
-        it('correctly handles methods throwing errors', function() {
+        it('correctly handles methods throwing errors on remote rpc calls', function() {
             connection = {
                 lastMessage: "howdyho",
                 connect: function() {},
@@ -139,6 +139,17 @@ describe('the PeliRPC object', function() {
                     jsonrpc: "2.0",
                     method: 'failFunction',
                     params: [1,0],
+                    id: null
+                }));
+            }).not.toThrow();
+
+            expect(connection.lastMessage === 'howdyho');
+
+            expect(function () {
+                rpc.onMessage(JSON.stringify({
+                    jsonrpc: "2.0",
+                    method: 'failFunction',
+                    params: [1,0],
                     id: 1
                 }));
             }).not.toThrow();
@@ -146,6 +157,60 @@ describe('the PeliRPC object', function() {
             expect(connection.lastMessage.jsonrpc).toBe('2.0');
             expect(connection.lastMessage.error).not.toBe(null);
             expect(connection.lastMessage.id).toBe(1);
+        });
+
+        it('correctly returns values on remote rpc calls', function() {
+            connection = {
+                lastMessage: "howdyho",
+                connect: function() {},
+                sendMessage: function(msg) {
+                    this.lastMessage = msg;
+                }
+            };
+
+            rpc = peliRPC.create(connection);
+
+            rpc.exposeRpcMethod('adder', null, function(x,y) {
+                return x + y;
+            });
+
+            rpc.onMessage(JSON.stringify({
+                jsonrpc: "2.0",
+                method: 'adder',
+                params: [1,3],
+                id: null
+            }));
+
+            expect(connection.lastMessage).toBe('howdyho');
+
+            rpc.onMessage(JSON.stringify({
+                jsonrpc: "2.0",
+                method: 'adder',
+                params: [1,3],
+                id: 11
+            }));
+
+            expect(connection.lastMessage.jsonrpc).toBe('2.0');
+            expect(connection.lastMessage.result).toBe(4);
+            expect(connection.lastMessage.id).toBe(11);
+        });
+
+        it('correctly handles return values from rpc calls', function() {
+            var retval = null;
+
+            rpc = peliRPC.create(connection);
+
+            var id = rpc.callRpc('tester', [1,2], null, function(id, error, value) {
+                retval = value;
+            });
+
+            rpc.onMessage(JSON.stringify({
+                "jsonrpc": "2.0",
+                "result": 'yay',
+                "id": id
+            }));
+
+            expect(retval).toBe('yay');
         });
     });
 });
