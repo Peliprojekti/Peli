@@ -1,4 +1,4 @@
-//describe('the Buffer object', function() {
+//describe('the Ray3 object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,6 +9,7 @@
 //    });
 //
 //    //Specs
-//    describe('Buffer tests', function() {
-//    });
+////    describe('Ray3 tests', function() {  
+////    });
+//
 //});

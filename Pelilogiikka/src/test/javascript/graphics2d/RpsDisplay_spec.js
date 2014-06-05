@@ -1,4 +1,4 @@
-//describe('the Connection object', function() {
+//describe('the RpsDisplay object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('Connection tests', function() {
-////
+////    describe('RpsDisplay tests', function() {  
 ////    });
 //
 //});

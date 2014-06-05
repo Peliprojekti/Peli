@@ -3,21 +3,24 @@ describe('the PeliRPC object', function() {
 
     beforeEach(function() {
         connection = {
+            lastMessage: "howdyho",
             connect: function() {},
-            sendMessage: function() {}
+            sendMessage: function(msg) {
+                this.lastMessage = msg;
+            }
         };
     });
 
     afterEach(function() {
     });
 
-    describe('constructor', function() {
+    describe('constructor test', function() {
         it('works correctly', function() {
             var testPRPC = peliRPC.create(connection);
         });
     });
 
-    describe('exposeRpcMethod', function() {
+    describe('exposeRpcMethod tests', function() {
         var rpc = peliRPC.create(connection);
 
         it('throws errors on incorrect calls', function() {
@@ -46,13 +49,37 @@ describe('the PeliRPC object', function() {
         });
     });
 
-    describe('onMessage', function() {
+    describe('onMessage tests', function() {
         var rpc = peliRPC.create(connection);
 
-        it('throws error on unrecognized/mallformed message', function() {
+        it('throws error on mallformed rpc message', function() {
             expect(function() {
                 rpc.onMessage("jaadajaadajaa");
             }).toThrow();
+        });
+
+        it('probperly handles unrecognized rpc mehtods', function() {
+            connection = {
+                lastMessage: "howdyho",
+                connect: function() {},
+                sendMessage: function(msg) {
+                    this.lastMessage = msg;
+                }
+            };
+
+            rpc = peliRPC.create(connection);
+
+            rpc.onMessage(JSON.stringify({
+                jsonrpc: "2.0",
+                method: 'testFunction',
+                params: [],
+                id: 1
+            }));
+
+            expect(connection.lastMessage.jsonrpc).toBe('2.0');
+            expect(connection.lastMessage.error.code).toBe(-32601);
+            expect(connection.lastMessage.error.message).toBe('Method testFunction not found.');
+            expect(connection.lastMessage.id).toBe(1);
         });
 
         it('correctly calls method callbakcs', function() {
@@ -77,7 +104,7 @@ describe('the PeliRPC object', function() {
             }));
 
             expect(testObject.testFunction).toHaveBeenCalled();
-            expect(testObject.testVariable).toBe(false);
+            expect(testObject.testVariable).toBe(false); 
 
             rpc.exposeRpcMethod('testMethod', testObject, testObject.testMethod);
             rpc.onMessage(JSON.stringify({

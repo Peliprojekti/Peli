@@ -19,9 +19,14 @@ client.loadedTypes.Swipe = function(container, canvas, phone, coms, updatePeriod
     Swipe.prototype.sendCoords = function(event, isStart) {
         event.preventDefault();
 
-        var coords = phone.getRelativeCoords(0, event);
+        //var coords = phone.getrelativecoords(0, event);
+        var coords = [
+            event.targetTouches[0].pageX / canvas.width,
+            event.targetTouches[0].pageY / canvas.height
+        ];
+            
         coms.call('swipe', [coords[0], coords[1], isStart], null, null);
-        //log.debug("Sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", 0", true);
+        //log.debug("sent swipe: (" + coords[0] + ", " + coords[1] + ")" + ", 0", true);
     };
 
     Swipe.prototype.doTouchMove = function(event) {
@@ -33,10 +38,12 @@ client.loadedTypes.Swipe = function(container, canvas, phone, coms, updatePeriod
             this.previousSendTime = currentTime;
         }
 
-        if (DEBUG) {
-            var coords = phone.getRelativeCoords(0, event);
-            updateCoordinatesText(coords[0], coords[1]);
+        /*
+        if (debug) {
+            var coords = phone.getrelativecoords(0, event);
+            updatecoordinatestext(coords[0], coords[1]);
         }
+        */
     };
 
 
@@ -50,6 +57,7 @@ client.loadedTypes.Swipe = function(container, canvas, phone, coms, updatePeriod
         }, false);
     };
 
+    /*
     function updateCoordinatesText(x, y) {
         var canvasDimensions = phone.getCanvasDimensions();
 
@@ -58,6 +66,7 @@ client.loadedTypes.Swipe = function(container, canvas, phone, coms, updatePeriod
             "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
         );
     }
+    */
 
     var swipeObj = new Swipe();
     swipeObj.enable(canvas);

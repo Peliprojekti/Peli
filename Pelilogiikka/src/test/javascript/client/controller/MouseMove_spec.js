@@ -1,4 +1,4 @@
-//describe('the Material object', function() {
+//describe('the MouseMove object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,8 @@
 //    });
 //
 //    //Specs
-////    describe('Material tests', function() {
-////
-////    });
+//    describe('MouseMove tests', function() {
+//    });
+//
 //
 //});

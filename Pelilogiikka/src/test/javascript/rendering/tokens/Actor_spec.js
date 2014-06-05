@@ -1,4 +1,4 @@
-//describe('the Buffer object', function() {
+//describe('the Actor object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,6 +9,8 @@
 //    });
 //
 //    //Specs
-//    describe('Buffer tests', function() {
-//    });
+////    describe('Actor tests', function() {
+////
+////    });
+//
 //});

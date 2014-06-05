@@ -1,4 +1,4 @@
-//describe('the GuiObject object', function() {
+//describe('the ChartThingy object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('GuiObject tests', function() {
-////
+////    describe('ChartThingy tests', function() {  
 ////    });
 //
 //});

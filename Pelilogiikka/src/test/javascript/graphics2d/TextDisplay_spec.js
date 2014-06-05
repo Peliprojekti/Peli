@@ -1,4 +1,4 @@
-//describe('the GlMatrix object', function() {
+//describe('the TextDisplay object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('GlMatrix tests', function() {
-////
+////    describe('TextDisplay tests', function() {  
 ////    });
 //
 //});

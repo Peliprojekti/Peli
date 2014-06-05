@@ -1,4 +1,4 @@
-//describe('the Color object', function() {
+//describe('the Texture object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,6 @@
 //    });
 //
 //    //Specs
-////    describe('Color tests', function() {
-////
-////    });
-//
+//    describe('Texture tests', function() {
+//    });
 //});
