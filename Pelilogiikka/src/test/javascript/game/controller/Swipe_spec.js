@@ -1,9 +1,13 @@
 
 
-describe('the ThumbStick object', function () {
+describe('the Swipe (game) object', function () {
     //Create an easily-removed container for our tests to play in
 
-    var mockPlayer;
+    var mockPlayer = {
+        setPosition: function () {
+
+        }
+    };
     var mockRpc = {
         exposeRpcMethod: function () {
         }
@@ -12,16 +16,16 @@ describe('the ThumbStick object', function () {
 
     beforeEach(function () {
         controllerObj = controller.loadedTypes.Swipe.getController(mockPlayer, mockRpc);
-        spyOn(controllerObj, 'calcNewPosition');
-        spyOn(controllerObj, 'calcNewDirection');
+
     });
 
     //Clean it up after each spec
     afterEach(function () {
+        
     });
 
     //Specs
-    describe('ThumbStick tests', function () {
+    describe('Swipe tests', function () {
 
         it('reset function resets attributes correctly', function () {
 
@@ -56,7 +60,8 @@ describe('the ThumbStick object', function () {
         });
 
         it('updates attributes correctly on update if swipe has been started', function () {
-
+            spyOn(controllerObj, 'calcNewPosition');
+            spyOn(controllerObj, 'calcNewDirection');
             controllerObj.pushSwipe(7, 15, true);
             controllerObj.previousTime = 10;
 
@@ -74,7 +79,8 @@ describe('the ThumbStick object', function () {
         });
 
         it('calculates new position if lastSwipe is null', function () {
-
+            spyOn(controllerObj, 'calcNewPosition');
+            spyOn(controllerObj, 'calcNewDirection');
             controllerObj.previousTime = 4;
             var time = Date.now();
             controllerObj.update(time);
@@ -86,7 +92,8 @@ describe('the ThumbStick object', function () {
         });
 
         it('updates attributes correctly on update if swipe is continuing', function () {
-            
+            spyOn(controllerObj, 'calcNewDirection');
+
             var coords = [7, 15];
             var startCoords = [2, 5];
             controllerObj.pushSwipe(coords[0], coords[1], false);
@@ -94,9 +101,45 @@ describe('the ThumbStick object', function () {
 
             var time = Date.now();
             controllerObj.update(time);
-            
+
             expect(controllerObj.calcNewDirection).toHaveBeenCalledWith(startCoords, coords);
 
+        });
+
+        it('does not allow illegal coordinates to be set with setPosition function', function () {
+
+            var x = 5;
+            var y = 10;
+
+            controllerObj.setPosition(x, y);
+
+            expect(controllerObj.x).toBe(0.5);
+            expect(controllerObj.y).toBe(0.5);
+
+        });
+
+        it('calculates new position correctly when previous time = 0', function () {
+           // var controllerObj2 = controller.loadedTypes.Swipe.getController(mockPlayer, mockRpc);
+            controllerObj.reset(mockPlayer, mockRpc);
+            var direction = new Vector2(1, 1);
+            controllerObj.currentDirection = direction;
+            controllerObj.time = 0.5;
+            spyOn(controllerObj, 'setPosition');
+            var time2 = Date.now();
+
+            controllerObj.calcNewPosition(time2);
+
+            expect(controllerObj.previousTime).toBe(time2);
+
+            var expectedTime = 0.5 + controllerObj.delta;
+
+            expect(controllerObj.time).toBe(expectedTime);
+            var currentDir = direction.mul(controllerObj.interpolator.interpolate(controllerObj.time));
+            
+            expect(controllerObj.currentDirection).toEqual(currentDir);
+            expect(controllerObj.setPosition).toHaveBeenCalledWith(controllerObj.x + currentDir.x * controllerObj.posChangeMul, 
+            controllerObj.y + currentDir.y * controllerObj.posChangeMul);
+              
         });
     });
 });
