@@ -122,16 +122,9 @@
         }
         catch( exception )
         {
-            try
-            {
-                ASSERT_TYPE( Exception, exception , exception.message );
-            }
-            catch( exception )
-            {
-                alert("ULTIMATE FAILURE " + exception.message)        
-            }
-         
-        exception.alert();
+            if( TYPE( Exception, exception) )  exception.alert();
+            else
+                alert("ULTIMATE FAILURE " + exception.message)    
         }
         
         
