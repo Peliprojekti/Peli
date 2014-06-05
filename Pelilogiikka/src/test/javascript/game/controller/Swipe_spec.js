@@ -21,7 +21,7 @@ describe('the Swipe (game) object', function () {
 
     //Clean it up after each spec
     afterEach(function () {
-        
+
     });
 
     //Specs
@@ -119,11 +119,11 @@ describe('the Swipe (game) object', function () {
         });
 
         it('calculates new position correctly when previous time = 0', function () {
-           // var controllerObj2 = controller.loadedTypes.Swipe.getController(mockPlayer, mockRpc);
             controllerObj.reset(mockPlayer, mockRpc);
             var direction = new Vector2(1, 1);
             controllerObj.currentDirection = direction;
             controllerObj.time = 0.5;
+            controllerObj.previousTime = 0;
             spyOn(controllerObj, 'setPosition');
             var time2 = Date.now();
 
@@ -135,11 +135,49 @@ describe('the Swipe (game) object', function () {
 
             expect(controllerObj.time).toBe(expectedTime);
             var currentDir = direction.mul(controllerObj.interpolator.interpolate(controllerObj.time));
-            
+
             expect(controllerObj.currentDirection).toEqual(currentDir);
-            expect(controllerObj.setPosition).toHaveBeenCalledWith(controllerObj.x + currentDir.x * controllerObj.posChangeMul, 
-            controllerObj.y + currentDir.y * controllerObj.posChangeMul);
-              
+            expect(controllerObj.setPosition).toHaveBeenCalledWith(controllerObj.x + currentDir.x * controllerObj.posChangeMul,
+                controllerObj.y + currentDir.y * controllerObj.posChangeMul);
+
         });
+
+        it('calculates new position correctly when previous time != 0', function () {
+            controllerObj.reset(mockPlayer, mockRpc);
+            var direction = new Vector2(1, 1);
+            controllerObj.currentDirection = direction;
+            controllerObj.time = 0.5;
+            controllerObj.previousTime = 1;
+            spyOn(controllerObj, 'setPosition');
+            var time2 = Date.now();
+
+            controllerObj.calcNewPosition(time2);
+
+            expect(controllerObj.previousTime).toBe(time2);
+
+            var expectedTime = (time2 - 1) * (controllerObj.delta / 100) + 0.5;
+
+            expect(controllerObj.time).toBe(expectedTime);
+            var currentDir = direction.mul(controllerObj.interpolator.interpolate(controllerObj.time));
+
+            expect(controllerObj.currentDirection).toEqual(currentDir);
+            expect(controllerObj.setPosition).toHaveBeenCalledWith(controllerObj.x + currentDir.x * controllerObj.posChangeMul,
+                controllerObj.y + currentDir.y * controllerObj.posChangeMul);
+
+        });
+
+//        it('calculates new direction correctly when previous direction is null', function () {
+//            controllerObj.time = 5;
+//            controllerObj.previousDirection = null;
+//            
+//            var beginning = [4, 9];
+//            var end = [12, 23];
+//            var vect = new Vector2(end[0], end[1]);
+//            controllerObj.calcNewDirection(beginning, end);
+//            
+//            expect(controllerObj.time).toBe(0);
+//            expect(controllerObj.previousDirection).toBe(vect);
+//            expect(controllerObj.currentDirection).toBe(vect);     
+//        });
     });
 });

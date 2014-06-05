@@ -106,6 +106,14 @@ controller.Swipe.prototype.calcNewPosition = function(timestamp) {
     }
 };
 
+/**
+ * 
+ * @param {type} beginning  beginning[0] = start x coordinate, 
+ * beginning[1] = start y coordinate
+ * 
+ * @param {type} end    end[0] = end x coordinate, end[1] = end y coordinate
+ * @returns {undefined}
+ */
 controller.Swipe.prototype.calcNewDirection = function(beginning, end) {
     //log.debug("BEGINNING: " + beginning[0] + ", " + beginning[1] + " END: " + end[0] + ", " + end[1]);
     var startPos = new Vector2(beginning[0], beginning[1]);
