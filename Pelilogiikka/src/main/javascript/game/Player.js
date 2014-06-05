@@ -5,7 +5,7 @@ function Player(userID) {
     this.x = 0.5;
     this.y = 0.5;
     this.crossh = null;
-    this.onsetPosition = null;
+    this.onSetPosition = null;
 
     this.responseTime = null;
     this.messagesPerSecond = 0;

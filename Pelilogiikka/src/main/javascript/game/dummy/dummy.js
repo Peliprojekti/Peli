@@ -117,6 +117,21 @@ dummy.game = {
                 });
                 valElement.appendChild(checkbox);
                 break;
+            case 'dropdown':
+                var input = document.createElement('select');
+                value.forEach(function(v) {
+                    var option = document.createElement('option');
+                    if (v.isDefault) {
+                        // TODO;
+                        option.selected = true;
+                    }
+
+                    option.value = v.value;
+                    option.innerHTML = v.value;
+                    input.appencchild(option);
+                });
+                return input;
+                break;
             default:
                 valElement.innerHTML = 'ERROR';
         }
