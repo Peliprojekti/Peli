@@ -55,6 +55,26 @@ module.exports = new function() {
             });
         });
 
+        server.get('/screen/rendering', function(request, response) {
+            response.render('rendering/rendering.jade', {
+                "pretty": nconf.get('html_pretty'),
+                "jsdebug": nconf.get("debug"),
+                "screen_port": nconf.get('screen_port'),
+                "controller": nconf.get("controller"),
+                "jsonrpc_protocol": nconf.get("jsonrpc_protocol")
+            });
+        });
+
+        server.get('/screen/renderingPeli', function(request, response) {
+            response.render('renderingPeli/renderingPeli.jade', {
+                "pretty": nconf.get('html_pretty'),
+                "jsdebug": nconf.get("debug"),
+                "screen_port": nconf.get('screen_port'),
+                "controller": nconf.get("controller"),
+                "jsonrpc_protocol": nconf.get("jsonrpc_protocol")
+            });
+        });
+
         server.listen(nconf.get('http_port'));
 
         return this;

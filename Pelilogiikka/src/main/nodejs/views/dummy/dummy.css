@@ -70,6 +70,13 @@ body,html {
     height: 100%;
 }
 
+#middleMenu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+}
+
 div.menuPart {
     border-style: outset;
     background: rgba(100,100,100,0.9);
