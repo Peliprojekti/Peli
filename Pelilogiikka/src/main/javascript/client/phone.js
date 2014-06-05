@@ -10,6 +10,7 @@ client.phone = {
     controllerDisabler: null,
     isOrienting: false,
     isResizing: false,
+    canvas: null,
     connectingDiv: null,
     rc: 0,
     oc: 0,
@@ -132,7 +133,8 @@ client.phone = {
         return [relativeX, relativeY];
     },
     getCanvasDimensions: function () {
-        return [this.canvas.width, this.canvas.height];
+        var self = client.phone;
+        return [self.canvas.width, self.canvas.height];
     },
     updateCoordinatesText: function (x, y) {
         var canvasDimensions = getCanvasDimensions();
