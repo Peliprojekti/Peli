@@ -5,7 +5,7 @@
         this.normal = normal;
     }
 
-    Plane3.prototype.rotate( mat33 )
+    Plane3.prototype.rotate = function( mat33 )
     {
         ASSERT_TYPE( Matrix33, mat33 );
         this.normal = mat33.transform( this.normal );
@@ -20,7 +20,7 @@
     }
     
     
-    Ray3.prototype.intersects( plane )
+    Ray3.prototype.intersects = function( plane )
     {
         
         
