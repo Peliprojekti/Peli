@@ -1,4 +1,4 @@
-//describe('the ParserObjects object', function() {
+//describe('the PlayerPerformance object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('ParserObjects tests', function() {
-////
+////    describe('PlayerPerformance tests', function() {  
 ////    });
 //
 //});

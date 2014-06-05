@@ -9,8 +9,6 @@
 //    });
 //
 //    //Specs
-////    describe('Camera tests', function() {
-////
-////    });
-//
+//    describe('Camera tests', function() {
+//    });
 //});

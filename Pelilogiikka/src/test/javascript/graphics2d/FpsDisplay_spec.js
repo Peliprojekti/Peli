@@ -1,4 +1,4 @@
-//describe('the Entity object', function() {
+//describe('the FpsDisplay object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('Entity tests', function() {
-////
+////    describe('FpsDisplay tests', function() {  
 ////    });
 //
 //});

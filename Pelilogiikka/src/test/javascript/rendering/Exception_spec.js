@@ -1,4 +1,4 @@
-//describe('the MatrixGL object', function() {
+//describe('the Exception object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,6 @@
 //    });
 //
 //    //Specs
-////    describe('MatrixGL tests', function() {
-////
-////    });
-//
+//    describe('Exception tests', function() {
+//    });
 //});

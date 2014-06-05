@@ -1,4 +1,4 @@
-//describe('the Inputs object', function() {
+//describe('the Guiltem object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,6 @@
 //    });
 //
 //    //Specs
-////    describe('Inputs tests', function() {
-////
-////    });
-//
+//    describe('Guiltem tests', function() {
+//    });
 //});

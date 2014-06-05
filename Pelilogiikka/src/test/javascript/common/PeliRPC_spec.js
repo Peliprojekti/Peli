@@ -11,13 +11,13 @@ describe('the PeliRPC object', function() {
     afterEach(function() {
     });
 
-    describe('constructor', function() {
+    describe('constructor test', function() {
         it('works correctly', function() {
             var testPRPC = peliRPC.create(connection);
         });
     });
 
-    describe('exposeRpcMethod', function() {
+    describe('exposeRpcMethod tests', function() {
         var rpc = peliRPC.create(connection);
 
         it('throws errors on incorrect calls', function() {
@@ -46,7 +46,7 @@ describe('the PeliRPC object', function() {
         });
     });
 
-    describe('onMessage', function() {
+    describe('onMessage tests', function() {
         var rpc = peliRPC.create(connection);
 
         it('throws error on unrecognized/mallformed message', function() {

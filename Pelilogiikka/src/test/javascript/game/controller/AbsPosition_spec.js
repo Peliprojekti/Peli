@@ -1,4 +1,4 @@
-//describe('the Model object', function() {
+//describe('the AbsPosition object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('Model tests', function() {
-////
+////    describe('AbsPosition tests', function() {  
 ////    });
 //
 //});

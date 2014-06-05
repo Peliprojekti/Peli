@@ -1,4 +1,4 @@
-//describe('the Mesh object', function() {
+//describe('the Crosshair object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('Mesh tests', function() {
-////
+////    describe('Crosshair tests', function() {  
 ////    });
 //
 //});

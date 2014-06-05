@@ -1,4 +1,4 @@
-//describe('the Shader2 object', function() {
+//describe('the MotionController object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('Shader2 tests', function() {
-////
+////    describe('MotionController tests', function() {  
 ////    });
 //
 //});

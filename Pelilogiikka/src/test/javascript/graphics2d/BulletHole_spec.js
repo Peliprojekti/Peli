@@ -1,4 +1,4 @@
-//describe('the Shader object', function() {
+//describe('the BulletHole object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('Shader tests', function() {
-////
+////    describe('BulletHole tests', function() {  
 ////    });
 //
 //});
