@@ -114,8 +114,6 @@
     
     function Root_Exception_Handler( entryPoint )
     {
-   // console.log( "Exception frame begin" );
-        
         try
         {
             entryPoint();
@@ -127,7 +125,5 @@
                 alert("ULTIMATE FAILURE " + exception.message)    
         }
         
-        
-   // console.log( " Exception frame end" );
     }
     
