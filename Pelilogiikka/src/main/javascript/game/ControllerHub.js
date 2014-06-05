@@ -1,6 +1,7 @@
 /*jslint browser: true*/
 /*global SCREEN_PORT: true*/
 /*global CONTROLLER: true*/
+/*global controller: false*/
 /*global game: false*/
 
 var game = game || {};
@@ -19,6 +20,20 @@ game.controllerHub = {
     sequence: 0,
     players: {},
     controllers: {},
+    connectionsInUse: [],
+    changeControllerType: function (type) {
+        "use strict";
+
+        console.log("controllerHub::changeControllerType - changing controllerType ", type);
+        var connection = this.connectionsInUse.pop();
+        while (typeof connection !== 'undefined') {
+            connection.close();
+            connection = this.connectionsInUse.pop();
+        }
+
+        this.controllerType = type;
+        this.controllerLoader = controller.loadedTypes[this.controllerType];
+    },
     update: function (time) {
         "use strict";
         var self = game.controllerHub,
@@ -59,7 +74,7 @@ game.controllerHub = {
         var rpc = peliRPC.create(connection); //new PeliRPC(connection);
         var sequence = this.sequence++;
 
-        rpc.exposeRpcMethod('joinGame', null, this.rpcJoinGame.bind(this, sequence, rpc));
+        rpc.exposeRpcMethod('joinGame', null, this.rpcJoinGame.bind(this, sequence, rpc, connection));
 
         connection.connect(
             this.onConnectionOpened.bind(this, sequence, rpc),
@@ -68,10 +83,11 @@ game.controllerHub = {
             );
         return true;
     },
-    rpcJoinGame: function (sequence, rpc, userID) {
+    rpcJoinGame: function (sequence, rpc, connection, userID) {
         "use strict";
         var player = this.playerFactory.getPlayer(userID);
         var controller = this.controllerLoader.getController(player, rpc);
+        this.connectionsInUse.push(connection);
 
         try {
             this.playerCount++;
@@ -86,6 +102,7 @@ game.controllerHub = {
         this.openConnection();
 
         var playerData = this.onPlayerJoined(player, controller);
+        console.debug("controllerHub::rpcJoinGame - player joined", this.controllerType);
         return [this.controllerType, playerData];
 
     },
@@ -109,12 +126,12 @@ game.controllerHub = {
 
             this.controllerLoader.freeController(controller);
             this.playerFactory.freePlayer(player);
+            peliRPC.free(rpc);
 
             delete this.controllers[sequence];
             delete this.players[sequence];
             this.playerCount--;
             this.onPlayerLeft(player, controller);
-            rpc.clear();
         } else {
             this.freeControllers--;
             console.warn("connection unexpectedly closed", sequence);

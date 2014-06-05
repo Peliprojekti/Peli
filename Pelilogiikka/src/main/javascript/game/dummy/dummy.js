@@ -59,7 +59,6 @@ dummy.game = {
     connectToServer: function () {
         "use strict";
         game.controllerHub.openHub(this.onPlayerJoined, this.onPlayerLeft,
-
                 {// playerFactory
                     getPlayer: function (userID) {
                         return new Player(userID);
@@ -94,9 +93,35 @@ dummy.game = {
             function(value) {
                 this.screen.setStatsEnabled(value);
             }.bind(this)));
-
+        rightMenu.appendChild(this.createMenuOption(
+            "controller type",
+            'dropdown',
+            [
+                {
+                    value: 'absPosition',
+                    isDefault: true
+                },
+                {
+                    value: 'motionController'
+                },
+                {
+                    value: 'ThumbStick'
+                },
+                {
+                    value: 'Swipe'
+                },
+                {
+                    value: 'speedTest'
+                }
+            ],
+            function (value) {
+                game.controllerHub.changeControllerType(value);
+                window.alert("please refresh clients to update controllers");
+            }.bind(this)));
     },
-    createMenuOption: function(name, type, value, listener) {
+    createMenuOption: function (name, type, value, listener) {
+        "use strict";
+
         var configDiv = document.createElement('div'),
             varElement = document.createElement('div'),
             valElement = document.createElement('div');
@@ -107,37 +132,44 @@ dummy.game = {
 
         varElement.innerHTML = name;
 
-        switch(type) {
-            case 'checkbox':
-                var checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = value;
-                checkbox.addEventListener('change', function() {
-                    listener(checkbox.checked);
-                });
-                valElement.appendChild(checkbox);
-                break;
-            case 'dropdown':
-                var input = document.createElement('select');
-                value.forEach(function(v) {
-                    var option = document.createElement('option');
-                    if (v.isDefault) {
-                        // TODO;
-                        option.selected = true;
-                    }
+        switch (type) {
+        case 'checkbox':
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = value;
+            checkbox.addEventListener('change', function () {
+                listener(checkbox.checked);
+            });
+            valElement.appendChild(checkbox);
+            break;
+        case 'dropdown':
+            var input = document.createElement('select');
+            value.forEach(function (v) {
+                var option = document.createElement('option');
+                if (v.isDefault) {
+                    option.selected = true;
+                }
 
-                    option.value = v.value;
-                    option.innerHTML = v.value;
-                    input.appencchild(option);
-                });
-                return input;
-                break;
-            default:
-                valElement.innerHTML = 'ERROR';
+                option.value = v.value;
+                option.innerHTML = v.value;
+                input.appendChild(option);
+            });
+            input.addEventListener('change', function () {
+                for (var i = 0; i < input.children.length; i++) {
+                    var o = input.children[i];
+                    if (o.selected === true) {
+                        listener(o.value);
+                    }
+                }
+            });
+            valElement.appendChild(input);
+            break;
+        default:
+            valElement.innerHTML = 'ERROR';
         }
 
-        configDiv.appendChild(varElement); 
-        configDiv.appendChild(valElement); 
+        configDiv.appendChild(varElement);
+        configDiv.appendChild(valElement);
         configDiv.appendChild(document.createElement('br'));
         return configDiv;
     }

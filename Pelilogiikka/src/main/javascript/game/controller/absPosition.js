@@ -12,13 +12,14 @@ controller.loadedTypes['absPosition'] = {
     },
 
     freeController: function(controller) {
-        //controller.absPosition.freeControllers.push(controller);
+        controller.clear();
+        this.freeControllers.push(controller);
     }
 };
 
-    controller.AbsPosition = function(player, rpc) {
-        this.reset(player, rpc);
-    };
+controller.AbsPosition = function(player, rpc) {
+    this.reset(player, rpc);
+};
 
 controller.AbsPosition.prototype.clear = function() {
     this.player = null;

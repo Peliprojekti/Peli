@@ -20,6 +20,7 @@ function ConnectionWebsocket(host, port, protocol, persistent) {
     this.persistent = persistent;
     this.connected = false;
     this.connection = null;
+    this.closeCallback = null;
 }
 
 /**
@@ -33,6 +34,8 @@ ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback
     "use strict";
     var self = this,
         hoststr = "ws://" + this.host + ":" + this.port; // + "/" + this.protocol;
+
+    this.closeCallback = closeCallback;
 
     this.connection = new WebSocket(hoststr);
 
@@ -89,12 +92,19 @@ ConnectionWebsocket.prototype.isOpen = function () {
 ConnectionWebsocket.prototype.close = function () {
     "use strict";
     console.info("ConnectionWebsocket::close - closing connection");
-    this.connection.close();
-    this.connection.onopen = null;
-    this.connection.onclose = null;
-    this.connection.onerror = null;
-    this.connection.onmessage = null;
-    this.connection = null;
+    if (this.conneciton !== null) {
+        if (this.closeCallback !== null) {
+            this.closeCallback(true);
+            this.closeCallback = null;
+        }
+
+        this.connection.close();
+        this.connection.onopen = null;
+        this.connection.onclose = null;
+        this.connection.onerror = null;
+        this.connection.onmessage = null;
+        this.connection = null;
+    }
     this.connected = false;
 };
 
