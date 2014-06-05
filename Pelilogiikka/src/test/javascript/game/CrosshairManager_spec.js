@@ -1,4 +1,4 @@
-//describe('the WebGLUtils object', function() {
+//describe('the CrosshairManager object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('WebGLUtils tests', function() {
-////
+////    describe('CrosshairManager tests', function() {  
 ////    });
 //
 //});

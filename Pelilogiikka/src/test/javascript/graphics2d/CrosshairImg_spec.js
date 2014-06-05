@@ -1,4 +1,4 @@
-//describe('the Buffer object', function() {
+//describe('the CrosshairImg object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,6 +9,7 @@
 //    });
 //
 //    //Specs
-//    describe('Buffer tests', function() {
-//    });
+////    describe('CrosshairImg tests', function() {  
+////    });
+//
 //});

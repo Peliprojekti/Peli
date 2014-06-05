@@ -1,6 +1,6 @@
 
 
-describe('the ThumbStick object', function () {
+describe('the Swipe object', function () {
     //Create an easily-removed container for our tests to play in
 
     var mockPlayer;
@@ -21,7 +21,7 @@ describe('the ThumbStick object', function () {
     });
 
     //Specs
-    describe('ThumbStick tests', function () {
+    describe('Swipe tests', function () {
 
         it('reset function resets attributes correctly', function () {
 

@@ -1,4 +1,4 @@
-//describe('the ShaderUtils object', function() {
+//describe('the WorldLoader object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,7 +9,7 @@
 //    });
 //
 //    //Specs
-////    describe('ShaderUtils tests', function() {
+////    describe('WorldLoader tests', function() {
 ////
 ////    });
 //
