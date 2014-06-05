@@ -115,7 +115,37 @@ describe('the PeliRPC object', function() {
             }));
 
             expect(testObject.testVariable).toBe(true);
+
+        });
+
+        it('correctly handles methods throwing errors', function() {
+            connection = {
+                lastMessage: "howdyho",
+                connect: function() {},
+                sendMessage: function(msg) {
+                    this.lastMessage = msg;
+                }
+            };
+
+            rpc = peliRPC.create(connection);
+
+            rpc.exposeRpcMethod('failFunction', null, function(x,y) {
+                throw new Error("OMG");
+                return x/y;
+            });
+
+            expect(function () {
+                rpc.onMessage(JSON.stringify({
+                    jsonrpc: "2.0",
+                    method: 'failFunction',
+                    params: [1,0],
+                    id: 1
+                }));
+            }).not.toThrow();
+
+            expect(connection.lastMessage.jsonrpc).toBe('2.0');
+            expect(connection.lastMessage.error).not.toBe(null);
+            expect(connection.lastMessage.id).toBe(1);
         });
     });
-
 });
