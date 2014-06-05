@@ -35,6 +35,7 @@ controller.Swipe.prototype.reset = function(player, rpc) {
     this.interpolator = new Interpolator(1, 0);
     this.time = 0;
     this.previousTime = 0;
+    this.delta = 0.01;
 };
 
 
@@ -80,13 +81,15 @@ controller.Swipe.prototype.setPosition = function(x, y) {
 };
 
 controller.Swipe.prototype.calcNewPosition = function(timestamp) {
+    
+    this.x = 6;
     if (this.currentDirection.length() > 0.001) {
         if (this.time <= 1) {
             var addition = 0;
             if (this.previousTime === 0) {
-                addition = 0.01;
+                addition = this.delta;
             } else {
-                addition = (timestamp - this.previousTime) * 0.0001;
+                addition = (timestamp - this.previousTime) * (this.delta/100);
             }
             this.time += addition;
             this.previousTime = timestamp;
@@ -98,7 +101,7 @@ controller.Swipe.prototype.calcNewPosition = function(timestamp) {
             this.setPosition(
                 newX,
                 newY);
-            //console.debug("New pos: (" + newX + ", " + newY + ")");
+            console.debug("New pos: (" + newX + ", " + newY + ")");
         }
     }
 };
