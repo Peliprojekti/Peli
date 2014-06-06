@@ -1,128 +1,159 @@
-describe('the PeliRPC object', function() {
-    var connection;
+/*global peliRPC: true */
+/*global describe: true */
+/*global expect: true */
+/*global it: true */
+/*global spyOn: true */
 
-    beforeEach(function() {
-        connection = {
-            lastMessage: "howdyho",
-            connect: function() {},
-            sendMessage: function(msg) {
-                this.lastMessage = msg;
+describe('the PeliRPC object', function () {
+    "use strict";
+
+    function getConnection() {
+        return {
+            connected: false,
+            send: "noChange",
+            connect: function () {
+                this.connected = true;
+            },
+            sendMessage: function (msg) {
+                this.send = msg;
+            },
+            getSentJSON: function() {
+                return JSON.parse(this.send);
             }
         };
-    });
+    }
 
-    afterEach(function() {
-    });
+    function emptyFunc(x) {
+        return x + 2;
+    }
 
-    describe('object factory', function() {
-        if('gives and returns new objects') {
-            peliRPC.free(peliRPC.create());
-            var count = peliRPC.freeRPCs.length;
-                
-            var testRPC = peliRPC.create();
+    describe('constructor', function () {
+        it('works correctly', function () {
+            var testRPC = peliRPC.create(getConnection());
             expect(testRPC).not.toBe(null);
-            expect(peliRPC.freeRPCs.length).toBe(count-1);
+        });
+    });
+
+    describe('factory', function () {
+        it('creates and frees new objects', function () {
+            /* make sure we have at least one recycled */
+            peliRPC.free(peliRPC.create());
+            var count = peliRPC.freeRPCs.length,
+                testRPC = peliRPC.create();
+
+            expect(testRPC).not.toBe(null);
+            expect(peliRPC.freeRPCs.length).toBe(count - 1);
 
             peliRPC.free(testRPC);
             expect(peliRPC.freeRPCs.length).toBe(count);
-        }
-    });
-
-    describe('constructor test', function() {
-        it('works correctly', function() {
-            var testRPC = peliRPC.create(connection);
-            expect(testRPC).not.toBe(null);
         });
     });
 
-    describe('exposeRpcMethod tests', function() {
-        var rpc = peliRPC.create(connection);
 
-        it('throws errors on incorrect calls', function() {
-            expect(function() {
-                rpc.exposeRpcMethod("just a string");
-            }).toThrow();
-            expect(function() {
-                rpc.exposeRpcMethod('no function supplied', null, null);
-            }).toThrow();
-        });
+    describe('exposeRpcMethod', function () {
+        //var rpc = peliRPC.create(getConnection());
 
-        it('accepts proper calls', function() {
-            expect(
-                rpc.exposeRpcMethod('function, no context', null, function() {})
-                ).toBe(true);
-            expect(
-                rpc.exposeRpcMethod('function, with context', new Object(), function() {})
-                ).toBe(true);
-        });
+        it('throws errors on incorrect calls', function () {
+            var rpc = peliRPC.create(getConnection()),
+                funcNoMethod = function () {
+                    rpc.exposeRpcMethod('no function supplied', null, null);
+                };
 
-        it('throws error on exposing same method name twice', function() {
-            rpc.exposeRpcMethod('myname', null, function() {});
-            expect(function() {
-                rpc.exposeRpcMethod('myname', null, function() {});
-            }).toThrow();
-        });
-    });
-
-    describe('onMessage tests', function() {
-        var rpc = peliRPC.create(connection);
-
-        it('throws error on recieving mallformed remote json', function() {
-            expect(function() {
-                rpc.onMessage("jaadajaadajaa");
-            }).toThrow();
+            expect(funcNoMethod).toThrow();
             try {
-                rpc.onMessage("jaadajaadajaa");
+                funcNoMethod();
+            } catch (e) {
+                expect(e.message).toBe("rpcMethod method undefined");
             }
-            catch(e) {
+        });
+
+        it('throws error on exposing same method name twice', function () {
+            var rpc = peliRPC.create(getConnection()),
+                oopsIDidItAgain = function () {
+                    rpc.exposeRpcMethod('myname', null, emptyFunc);
+                };
+
+            oopsIDidItAgain();
+            expect(oopsIDidItAgain).toThrow();
+            try {
+                oopsIDidItAgain();
+            } catch (e) {
+                expect(e.message).toBe('rpcMethod name already exposed');
+            }
+
+            peliRPC.free(rpc);
+        });
+
+        it('accepts proper calls', function () {
+            var rpc = peliRPC.create(getConnection());
+
+            expect(function () {
+                rpc.exposeRpcMethod('function, no context', null, emptyFunc);
+            }).not.toThrow();
+            expect(function () {
+                rpc.exposeRpcMethod('function, with context', {}, emptyFunc);
+            }).not.toThrow();
+
+            peliRPC.free(rpc);
+        });
+    });
+
+    describe('onMessage', function () {
+
+        it('throws error on recieving mallformed remote json', function () {
+            var rpc = peliRPC.create(getConnection()),
+                badMsg = function () {
+                    rpc.onMessage("bad JSON");
+                };
+
+            expect(badMsg).toThrow();
+            try {
+                badMsg();
+            } catch (e) {
                 expect(e.message).toBe("Unable to parse JSON string");
             }
-        });
 
-        if('throw error on recieving unrecognized, but correct JSON', function() {
-            var msg = JSON.stringify({
-                "message": "msg"
-            });
-            expect(function() {
-                rpc.onMessage(msg);
-            }).toThrow();
-            try {
-                rpc.onMessage(msg);
-            }
-            catch(e) {
-                expect(e.message).toBe("unable to recognize message: " + msg);
-            }
-        });
-
-        it('throws error on incorrect rpc version', function() {
-            connection = {
-                lastMessage: "howdyho",
-                connect: function() {},
-                sendMessage: function(msg) {
-                    this.lastMessage = msg;
-                }
-            };
             peliRPC.free(rpc);
-            rpc = peliRPC.create(connection);
+        });
+
+        it('throw error on recieving unrecognized, but correct JSON', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection),
+                msg = JSON.stringify({
+                    "notRecognized": "x"
+                }),
+                unrecMsg = function () {
+                    rpc.onMessage(msg);
+                },
+                retval;
+
+
+            unrecMsg();
+            retval = connection.getSentJSON();
+            expect(retval.error.code).toBe(-32600);
+            expect(retval.error.message).toBe("Invalid Request");
+
+            peliRPC.free(rpc);
+        });
+
+        it('sends back error on incorrect rpc version', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection);
 
             rpc.onMessage(JSON.stringify({
                 jsonrpc: "1.0",
                 method: 'yay'
             }));
 
-            expect(connection.lastMessage.error.message).toBe("Invalid JSON-RPC.");
+            expect(connection.getSentJSON().error.message).toBe("Invalid Request");
+
+            peliRPC.free(rpc);
         });
 
-        it('probperly handles unrecognized remote rpc calls', function() {
-            connection = {
-                lastMessage: "howdyho",
-                connect: function() {},
-                sendMessage: function(msg) {
-                    this.lastMessage = msg;
-                }
-            };
-
-            rpc = peliRPC.create(connection);
+        it('probperly handles unrecognized remote rpc calls', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection),
+                retval;
 
             rpc.onMessage(JSON.stringify({
                 jsonrpc: "2.0",
@@ -131,22 +162,28 @@ describe('the PeliRPC object', function() {
                 id: 1
             }));
 
-            expect(connection.lastMessage.jsonrpc).toBe('2.0');
-            expect(connection.lastMessage.error.code).toBe(-32601);
-            expect(connection.lastMessage.error.message).toBe('Method testFunction not found.');
-            expect(connection.lastMessage.id).toBe(1);
+            retval = connection.getSentJSON();
+
+            expect(retval.jsonrpc).toBe('2.0');
+            expect(retval.id).toBe(1);
+            expect(retval.error.code).toBe(-32601);
+            expect(retval.error.message).toBe('Method not found');
+
+            peliRPC.free(rpc);
         });
 
-        it('correctly calls callbakcs on remote rpc calls', function() {
-            var testObject = {
-                testVariable: false,
-                testFunction: function() { 
-                    this.testVariable = true;
-                },
-                testMethod: function() {
-                    this.testVariable = true;
-                }
-            };
+        it('correctly calls callbakcs on remote rpc calls', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection),
+                testObject = {
+                    testVariable: false,
+                    testFunction: function () {
+                        this.testVariable = true;
+                    },
+                    testMethod: function () {
+                        this.testVariable = true;
+                    }
+                };
 
             spyOn(testObject, 'testFunction');
 
@@ -159,7 +196,7 @@ describe('the PeliRPC object', function() {
             }));
 
             expect(testObject.testFunction).toHaveBeenCalled();
-            expect(testObject.testVariable).toBe(false); 
+            expect(testObject.testVariable).toBe(false);
 
             rpc.exposeRpcMethod('testMethod', testObject, testObject.testMethod);
             rpc.onMessage(JSON.stringify({
@@ -171,29 +208,22 @@ describe('the PeliRPC object', function() {
 
             expect(testObject.testVariable).toBe(true);
 
+            peliRPC.free(rpc);
         });
 
-        it('correctly handles methods throwing errors on remote rpc calls', function() {
-            connection = {
-                lastMessage: "howdyho",
-                connect: function() {},
-                sendMessage: function(msg) {
-                    this.lastMessage = msg;
-                }
-            };
+        it('correctly handles methods throwing errors on remote rpc calls', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection);
 
-            rpc = peliRPC.create(connection);
-
-            rpc.exposeRpcMethod('failFunction', null, function(x,y) {
-                throw new Error("OMG");
-                return x/y;
+            rpc.exposeRpcMethod('failFunction', null, function (x, y) {
+                throw new Error("OMG", x + y);
             });
 
             expect(function () {
                 rpc.onMessage(JSON.stringify({
                     jsonrpc: "2.0",
                     method: 'failFunction',
-                    params: [1,0],
+                    params: [1, 0],
                     id: null
                 }));
             }).not.toThrow();
@@ -204,7 +234,7 @@ describe('the PeliRPC object', function() {
                 rpc.onMessage(JSON.stringify({
                     jsonrpc: "2.0",
                     method: 'failFunction',
-                    params: [1,0],
+                    params: [1, 0],
                     id: 1
                 }));
             }).not.toThrow();
@@ -212,27 +242,22 @@ describe('the PeliRPC object', function() {
             expect(connection.lastMessage.jsonrpc).toBe('2.0');
             expect(connection.lastMessage.error).not.toBe(null);
             expect(connection.lastMessage.id).toBe(1);
+
+            peliRPC.free(rpc);
         });
 
-        it('correctly returns values on remote rpc calls', function() {
-            connection = {
-                lastMessage: "howdyho",
-                connect: function() {},
-                sendMessage: function(msg) {
-                    this.lastMessage = msg;
-                }
-            };
+        it('correctly returns values on remote rpc calls', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection);
 
-            rpc = peliRPC.create(connection);
-
-            rpc.exposeRpcMethod('adder', null, function(x,y) {
+            rpc.exposeRpcMethod('adder', null, function (x, y) {
                 return x + y;
             });
 
             rpc.onMessage(JSON.stringify({
                 jsonrpc: "2.0",
                 method: 'adder',
-                params: [1,3],
+                params: [1, 3],
                 id: null
             }));
 
@@ -241,21 +266,24 @@ describe('the PeliRPC object', function() {
             rpc.onMessage(JSON.stringify({
                 jsonrpc: "2.0",
                 method: 'adder',
-                params: [1,3],
+                params: [1, 3],
                 id: 11
             }));
 
             expect(connection.lastMessage.jsonrpc).toBe('2.0');
             expect(connection.lastMessage.result).toBe(4);
             expect(connection.lastMessage.id).toBe(11);
+
+            peliRPC.free(rpc);
         });
 
-        it('correctly handles return values from rpc calls', function() {
-            var retval = null;
+        it('correctly handles return values from rpc calls', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection),
+                retval = null,
+                id;
 
-            rpc = peliRPC.create(connection);
-
-            var id = rpc.callRpc('tester', [1,2], null, function(id, error, value) {
+            id = rpc.callRpc('tester', [1,2], null, function (id, error, value) {
                 retval = value;
             });
 
@@ -271,7 +299,7 @@ describe('the PeliRPC object', function() {
                 id: null,
                 error: "some error",
                 result: "some result",
-                func: function(id, error, result) { 
+                func: function(id, error, result) {
                     this.id = id;
                     this.error = error;
                     this.result = result;
