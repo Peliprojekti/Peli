@@ -69,7 +69,7 @@ ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback
             closeCallback = null;
             self.close();
         } else {
-            //console.debug("ConnectionWebsocket::connect - onessage", e.data);
+            //console.debug("ConnectionWebsocket::connect - onmessage", e.data);
             onMessage(e.data);
         }
     };

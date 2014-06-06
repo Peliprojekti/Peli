@@ -29,14 +29,14 @@ controller.MotionController.prototype.reset = function (player, rpc) {
     this.y = player.y;
     this.tiltLR = 0;
     this.tiltFB = 0;
-    this.multiplier = 0.01;
+    this.multiplier = 0.0001;
     rpc.exposeRpcMethod('orientation', this, this.orientation);
     rpc.exposeRpcMethod('motion', this, this.motion);
+    return this;
 };
 
-controller.MotionController.prototype.update = function () {
-    
-    this.setPosition(this.x + this.tiltFB * this.multiplier, this.y + this.tiltFB * this.multiplier);
+controller.MotionController.prototype.update = function () {    
+    this.setPosition(this.x + this.tiltFB * this.multiplier, this.y + this.tiltLR * this.multiplier);
 };
 
 controller.MotionController.prototype.position = function (x, y) {
@@ -45,13 +45,19 @@ controller.MotionController.prototype.position = function (x, y) {
 
 controller.MotionController.prototype.setPosition = function (x, y) {
     //console.debug("setPosition ", x, y);
-    this.x = x;
-    this.y = y;
-    this.player.setPosition(x, y);
+    if (x >= 0 && x <= 1) {
+        this.x = x;
+    }
+    if (y >= 0 && y <= 1) {
+        this.y = y;
+    }
+    this.player.setPosition(this.x, this.y);
 };
 
 controller.MotionController.prototype.orientation = function (tiltLR, tiltFB, dir) {
-    this.tiltLR = tiltLR;
+    //console.debug("orientation called");
+    
+    this.tiltLR = -tiltLR;
     this.tiltFB = tiltFB;
 
 
@@ -65,8 +71,8 @@ controller.MotionController.prototype.orientation = function (tiltLR, tiltFB, di
 //        //move right
 //    }
 
-    log.debug("pos: (" + this.x + ", " + this.y + ")\n" +
-        "dir: " + dir);
+    //log.debug("pos: (" + this.x + ", " + this.y + ")\n" +
+      //  "dir: " + dir);
 //    log.debug("Orientation changed, new orientation:\n" +
 //            "tiltLR (gamma): " + tiltLR + "\n" +
 //            "tiltFB (beta): " + tiltFB + "\n" +

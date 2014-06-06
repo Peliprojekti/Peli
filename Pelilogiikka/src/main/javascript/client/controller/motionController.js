@@ -23,6 +23,7 @@ client.loadedTypes.motionController = function(container, canvas, phone, coms) {
 		var dir = eventData.alpha;
 
 		coms.call('orientation', [tiltLR, tiltFB, dir], null, null);
+                //log.debug("sent orientation: " + tiltLR + ", " + tiltFB, true);
 
 		if (DEBUG) {
 			log.info("Orientation changed, new orientation:\n" +
@@ -54,7 +55,7 @@ client.loadedTypes.motionController = function(container, canvas, phone, coms) {
 					"z: " + rotation.z);
 		}
 
-		coms.call('motion', eventData, null, null);
+		//coms.call('motion', eventData, null, null);
 
 	};
 
@@ -77,12 +78,12 @@ client.loadedTypes.motionController = function(container, canvas, phone, coms) {
 			log.warn("Device orientation event not supported", true, false);
 		}
 
-		if (window.DeviceMotionEvent) {
-			window.addEventListener('devicemotion', deviceMotionHandler, false);
-            this.motionListener = true;
-		} else {
-			log.warn("Device motion event not supported");
-		}
+//		if (window.DeviceMotionEvent) {
+//			window.addEventListener('devicemotion', deviceMotionHandler, false);
+//            this.motionListener = true;
+//		} else {
+//			log.warn("Device motion event not supported");
+//		}
 	};
 
 	MotionController.prototype.disable = function(window) {
