@@ -1,5 +1,3 @@
-
-
 describe('the Swipe (game) object', function () {
     //Create an easily-removed container for our tests to play in
 
@@ -31,7 +29,7 @@ describe('the Swipe (game) object', function () {
 
             spyOn(mockRpc, 'exposeRpcMethod');
 
-
+            controllerObj.x = 10;
             controllerObj.reset(mockPlayer, mockRpc);
 
             expect(controllerObj.player).toBe(mockPlayer);
@@ -102,7 +100,7 @@ describe('the Swipe (game) object', function () {
             var time = Date.now();
             controllerObj.update(time);
 
-            expect(controllerObj.calcNewDirection).toHaveBeenCalledWith(startCoords, coords);
+            expect(controllerObj.calcNewDirection).toHaveBeenCalledWith(startCoords, coords, time);
 
         });
 
@@ -166,18 +164,68 @@ describe('the Swipe (game) object', function () {
 
         });
 
-//        it('calculates new direction correctly when previous direction is null', function () {
-//            controllerObj.time = 5;
-//            controllerObj.previousDirection = null;
-//            
-//            var beginning = [4, 9];
-//            var end = [12, 23];
-//            var vect = new Vector2(end[0], end[1]);
-//            controllerObj.calcNewDirection(beginning, end);
-//            
-//            expect(controllerObj.time).toBe(0);
-//            expect(controllerObj.previousDirection).toBe(vect);
-//            expect(controllerObj.currentDirection).toBe(vect);     
-//        });
+        it('calculates new direction correctly when previous direction is null', function () {
+            spyOn(controllerObj, 'setPosition');
+            controllerObj.time = 5;
+            controllerObj.previousDirection = null;
+
+            var beginning = [4, 9];
+            var end = [12, 23];
+            controllerObj.calcNewDirection(beginning, end);
+            var startVect = new Vector2(beginning[0], beginning[1]);
+            var endVect = new Vector2(end[0], end[1]);
+            var newVect = endVect.sub(startVect);
+
+            expect(controllerObj.time).toBe(0);
+            expect(controllerObj.previousDirection).toEqual(newVect);
+            expect(controllerObj.currentDirection).toEqual(newVect);
+            expect(controllerObj.lastSwipe).toBe(null);
+            expect(controllerObj.setPosition).not.toHaveBeenCalled();
+
+        });
+
+        it('calculates new direction correctly when previous direction is NOT null', function () {
+            controllerObj.reset(mockPlayer, mockRpc);
+            spyOn(controllerObj, 'setPosition');
+            var x = 2;
+            var y = 5;
+
+            var vect = new Vector2(x, y);
+
+            controllerObj.previousDirection = vect;
+
+            var beginning = [4, 9];
+            var end = [12, 23];
+            var startVect = new Vector2(beginning[0], beginning[1]);
+            var endVect = new Vector2(end[0], end[1]);
+            var newVect = endVect.sub(startVect);
+            controllerObj.time = 5;
+
+            x = 7;
+            y = 10;
+
+            vect = new Vector2(x, y);
+            controllerObj.currentDirection = vect;
+
+            var newDir = controllerObj.currentDirection.add(newVect);
+
+            controllerObj.x = 10;
+            controllerObj.y = 18;
+
+            controllerObj.calcNewDirection(beginning, end);
+
+            expect(controllerObj.time).toBe(0);
+            expect(controllerObj.previousDirection).toEqual(newDir);
+            expect(controllerObj.currentDirection).toEqual(newDir);
+            expect(controllerObj.lastSwipe).toBe(null);
+
+            expect(controllerObj.x).toBe(10);
+
+            var newX = 10 + newVect.x * controllerObj.posChangeMul;
+            var newY = 18 + newVect.y * controllerObj.posChangeMul;
+            expect(controllerObj.setPosition).toHaveBeenCalledWith(newX,
+                newY);
+
+        });
     });
 });

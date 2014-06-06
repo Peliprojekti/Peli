@@ -14,9 +14,24 @@ describe('the PeliRPC object', function() {
     afterEach(function() {
     });
 
+    describe('object factory', function() {
+        if('gives and returns new objects') {
+            peliRPC.free(peliRPC.create());
+            var count = peliRPC.freeRPCs.length;
+                
+            var testRPC = peliRPC.create();
+            expect(testRPC).not.toBe(null);
+            expect(peliRPC.freeRPCs.length).toBe(count-1);
+
+            peliRPC.free(testRPC);
+            expect(peliRPC.freeRPCs.length).toBe(count);
+        }
+    });
+
     describe('constructor test', function() {
         it('works correctly', function() {
-            var testPRPC = peliRPC.create(connection);
+            var testRPC = peliRPC.create(connection);
+            expect(testRPC).not.toBe(null);
         });
     });
 
@@ -56,6 +71,25 @@ describe('the PeliRPC object', function() {
             expect(function() {
                 rpc.onMessage("jaadajaadajaa");
             }).toThrow();
+        });
+
+        it('throws error on incorrect rpc version', function() {
+            connection = {
+                lastMessage: "howdyho",
+                connect: function() {},
+                sendMessage: function(msg) {
+                    this.lastMessage = msg;
+                }
+            };
+            peliRPC.free(rpc);
+            rpc = peliRPC.create(connection);
+
+            rpc.onMessage(JSON.stringify({
+                jsonrpc: "1.0",
+                method: 'yay'
+            }));
+
+            expect(connection.lastMessage.error.message).toBe("Invalid JSON-RPC.");
         });
 
         it('probperly handles unrecognized remote rpc calls', function() {
