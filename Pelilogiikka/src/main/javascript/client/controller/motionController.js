@@ -6,11 +6,11 @@ var client = client || {};
 client.loadedTypes = client.loadedTypes || [];
 client.loadedTypes.motionController = function(container, canvas, phone, coms) {
 	function MotionController() {
-		//this.coms = null;
+		this.orientationListener = false;   //boolean tells wehter the listener exists
+        this.motionListener = false;        //boolean tells wehter the listener exists
 	}
 
 	MotionController.prototype.deviceOrientationHandler = function(eventData) {
-            sendServerMessage("orienatation event");
 		// event.preventDefault();
 
 		// gamma is the left-to-right tilt in degrees, where right is positive
@@ -22,10 +22,8 @@ client.loadedTypes.motionController = function(container, canvas, phone, coms) {
 		// alpha is the compass direction the device is facing in degrees
 		var dir = eventData.alpha;
 
-		//  send data to server
-                sendServerMessage("sending");
 		coms.call('orientation', [tiltLR, tiltFB, dir], null, null);
-                sendserverMessage("done sending");
+                //log.debug("sent orientation: " + tiltLR + ", " + tiltFB, true);
 
 		if (DEBUG) {
 			log.info("Orientation changed, new orientation:\n" +
@@ -33,7 +31,6 @@ client.loadedTypes.motionController = function(container, canvas, phone, coms) {
 					"tiltFB (beta): " + this.toInteger(tiltFB) + "\n" +
 					"dir (alpha): " + this.toInteger(dir));
 		}
-                sendServerMessage("orientation event done");
 	}
 
 	//motion integration with server not tested yet
@@ -58,16 +55,15 @@ client.loadedTypes.motionController = function(container, canvas, phone, coms) {
 					"z: " + rotation.z);
 		}
 
-		//lähetä data serverille
+		//coms.call('motion', eventData, null, null);
 
-	}
+	};
 
 	MotionController.prototype.toInteger = function(num) {
 		return parseFloat(num).toFixed(0);
-	}
+	};
 
 	MotionController.prototype.enable = function() { //coms, window) {
-            sendServerMessage("enable");
 		var thisObject = this;
 		//this.coms = coms;
 		log.info("Enabling MotionController", true);
@@ -76,30 +72,32 @@ client.loadedTypes.motionController = function(container, canvas, phone, coms) {
 			window.addEventListener('deviceorientation', function(eventData) {
 					thisObject.deviceOrientationHandler(eventData)
 					}, false);
+            this.orientationListener = true;
 
 		} else {
 			log.warn("Device orientation event not supported", true, false);
 		}
 
-/*
-		if (window.DeviceMotionEvent) {
-			window.addEventListener('devicemotion', deviceMotionHandler, false);
-		} else {
-			log.warn("Device motion event not supported");
-		}
-            */
-                sendServerMessage("done enable");
-	}
+//		if (window.DeviceMotionEvent) {
+//			window.addEventListener('devicemotion', deviceMotionHandler, false);
+//            this.motionListener = true;
+//		} else {
+//			log.warn("Device motion event not supported");
+//		}
+	};
 
 	MotionController.prototype.disable = function(window) {
-		window.removeEventListener("deviceorientation", this.doTouchMove);
-	}
+        if(this.orientationListener){
+            window.removeEventListener("deviceorientation", this.deviceOrientationHandler);
+            this.orientationListener = false;
+        }
+		if(this.motionListener){
+            window.removeEventListener("devicemotion", this.deviceMotionHandler);
+            this.motionListener = false;
+        }
+	};
 
- sendServerMessage("ok so far");
     var tdObj = new MotionController();
     tdObj.enable();
-    sendServerMessage("ok so far, done loading");
-    return function() {
-	// TODO Tähän funktio joka disabloi
-    };
+    return tdObj.disable.bind(tdObj);
 };
