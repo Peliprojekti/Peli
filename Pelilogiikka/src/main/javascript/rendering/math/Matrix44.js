@@ -52,6 +52,22 @@
         
     return ret;
     }
+    
+    
+    
+    Matrix44.prototype.transform = function( vec3 )
+    {
+        ASSERT_TYPE( Vector3, vec3, "Expected Vector3 for the HAX44 transformation");
+        
+        var x   = vec3.x;
+        var y   = vec3.y;
+        var z   = vec3.z;
+        var ret = new Vector3( x * this.data[0] + x * this.data[1] + x * this.data[2] ,
+                               y * this.data[4] + y * this.data[5] + y * this.data[6] , 
+                               z * this.data[9] + z * this.data[9] + z * this.data[10] );
+         
+    return ret.add( this.get_Translation() );
+    }
 
 
 
@@ -114,4 +130,38 @@
         }
         
     alert( msg );
+    }
+    
+    
+    
+    Matrix44.prototype.build_Transformation = function( position, rotation, scale )
+    {
+        var rotX   = new Matrix33();
+        var rotY   = new Matrix33();
+        var rotZ   = new Matrix33();
+        
+        rotX.RotationX( rotation.x );
+        rotY.RotationX( rotation.y );
+        rotZ.RotationX( rotation.z );
+        
+        var orient = new Matrix33();
+            orient = orient.multiply( rotX );
+            orient = orient.multiply( rotY );
+            orient = orient.multiply( rotZ );
+           
+        var     m1 = new Matrix44();
+                m1.embed( orient );
+            
+        var     m2 = new Matrix44( [       1.0,          0,          0,     0,
+                                             0,        1.0,          0,     0,
+                                             0,          0,        1.0,     0,
+                                    position.x, position.y, position.z,   1.0  ]);
+   
+        var     m3 = new Matrix44( [ scale.x,       0,       0,     0,
+                                           0, scale.y,       0,     0,
+                                           0,       0, scale.z,     0,
+                                           0,       0,       0,   1.0  ]);
+        var ret =  m3.multiply( m2 );
+            ret = ret.multiply( m1 );
+    return  ret; 
     }

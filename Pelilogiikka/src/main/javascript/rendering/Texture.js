@@ -43,6 +43,9 @@
         {
             throw new Exception( Exception.Type.FAILURE, "Failed to load Texture: " + fileName + " Reason: " + exception.message );
         }
+        
+    
+    this.source = fileName;     // Path of the texture
     }
     
 
