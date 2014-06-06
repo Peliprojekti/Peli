@@ -166,18 +166,58 @@ describe('the Swipe (game) object', function () {
 
         });
 
-//        it('calculates new direction correctly when previous direction is null', function () {
-//            controllerObj.time = 5;
-//            controllerObj.previousDirection = null;
-//            
-//            var beginning = [4, 9];
-//            var end = [12, 23];
-//            var vect = new Vector2(end[0], end[1]);
-//            controllerObj.calcNewDirection(beginning, end);
-//            
-//            expect(controllerObj.time).toBe(0);
-//            expect(controllerObj.previousDirection).toBe(vect);
-//            expect(controllerObj.currentDirection).toBe(vect);     
-//        });
+        it('calculates new direction correctly when previous direction is null', function () {
+            controllerObj.time = 5;
+            controllerObj.previousDirection = null;
+
+            var beginning = [4, 9];
+            var end = [12, 23];
+            controllerObj.calcNewDirection(beginning, end);
+            var startVect = new Vector2(beginning[0], beginning[1]);
+            var endVect = new Vector2(end[0], end[1]);
+            var newVect = endVect.sub(startVect);
+
+            expect(controllerObj.time).toBe(0);
+            expect(controllerObj.previousDirection).toEqual(newVect);
+            expect(controllerObj.currentDirection).toEqual(newVect);
+            expect(controllerObj.lastSwipe).toBe(null);
+
+        });
+
+        it('calculates new direction correctly when previous direction is NOT null', function () {
+            spyOn(controllerObj, 'setPosition');
+            var x = 2;
+            var y = 5;
+
+            var vect = new Vector2(x, y);
+
+            controllerObj.previousDirection = vect;
+
+            var beginning = [4, 9];
+            var end = [12, 23];
+            var startVect = new Vector2(beginning[0], beginning[1]);
+            var endVect = new Vector2(end[0], end[1]);
+            var newVect = endVect.sub(startVect);
+            controllerObj.time = 5;
+
+            x = 7;
+            y = 10;
+
+            vect = new Vector2(x, y);
+            controllerObj.currentDirection = vect;
+
+            var newDir = controllerObj.currentDirection.add(newVect);
+
+            controllerObj.calcNewDirection(beginning, end);
+
+            expect(controllerObj.time).toBe(0);
+            expect(controllerObj.previousDirection).toEqual(newDir);
+            expect(controllerObj.currentDirection).toEqual(newDir);
+            expect(controllerObj.lastSwipe).toBe(null);
+            
+            controllerObj.x = 10;
+            expect(controllerObj.setPosition).toHaveBeenCalled();
+
+        });
     });
 });

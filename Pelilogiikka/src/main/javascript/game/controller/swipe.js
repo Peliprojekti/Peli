@@ -81,7 +81,6 @@ controller.Swipe.prototype.setPosition = function(x, y) {
 };
 
 controller.Swipe.prototype.calcNewPosition = function(timestamp) {
-    
     if (this.currentDirection.length() > 0.001) {
         if (this.time <= 1) {
             var addition = 0;
@@ -132,7 +131,7 @@ controller.Swipe.prototype.calcNewDirection = function(beginning, end) {
         this.time = 0;
 
         var newX = this.x + newVec.x * this.posChangeMul;
-        var newY = this.y + newVec.x * this.posChangeMul;
+        var newY = this.y + newVec.y * this.posChangeMul;
 
         this.setPosition(newX, newY);
         //log.info("Vector: (" + newVec.x + ", " + newVec.y + ")");
