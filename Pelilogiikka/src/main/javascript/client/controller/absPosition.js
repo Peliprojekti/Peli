@@ -2,7 +2,7 @@
 /*global console: false*/
 /*global $: false*/
 /*global client: false*/
-var clinet = client || {};
+var client = client || {};
 
 client.loadedTypes = client.loadedTypes || [];
 client.loadedTypes.absPosition = function (container, canvas, phone, coms, interval) {
