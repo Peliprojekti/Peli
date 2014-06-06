@@ -1,17 +1,5 @@
 
     
-    
-   
-    
-    
-    function byMat( a,b )
-    {
-         if (a.material.hash <= b.material.hash) return -1;
-         if (a.material.hash >= b.material.hash) return  1;
-         return 0;
-    }
-
-
     function new_Bank( triangle )
     {
      return new VertexBank( triangle.material.texture1, 
@@ -21,6 +9,12 @@
     }
     
     
+    function byMat( a,b )
+    {
+         if (a.material.hash <= b.material.hash) return -1;
+         if (a.material.hash >= b.material.hash) return  1;
+         return 0;
+    }
     
 
     function build_WorldBatch( triangleList )
@@ -48,10 +42,8 @@
             
         banks[ bankIndex ].feed_Triangle( triangle );   
         }
-           
             
-    alert("Done with " + banks.length + " banks.  " );     
+    console.info("Done with " + banks.length + " banks.  " );     
     
-    // Create the worldBatch
-    
+    return new WorldBatch( banks );
     }

@@ -15,7 +15,7 @@
         gl.enableVertexAttribArray( this.program.vertexPosition );
         gl.enableVertexAttribArray( this.program.vertexTexcoord );
     
-    // Declare uniform attributes here
+       // Declare uniform attributes here
         
         // One sampler for each map used
         this.program.textureMapSampler         = gl.getUniformLocation( this.program, "textureMapSampler" );

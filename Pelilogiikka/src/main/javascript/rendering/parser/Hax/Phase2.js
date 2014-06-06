@@ -15,9 +15,12 @@
             b.point = transformation.transform( b.point );
             c.point = transformation.transform( c.point );
         
+        
         retPtr.push(  new Triangle( a,b,c, material) );
         }   
     }
+    
+    
     
     
     function parse_Mesh( node, description, transformation, retPtr )
@@ -43,8 +46,8 @@
              var vertices = vertexBatches[b];
              var indices  =  indexBatches[b];
              var material =     materials[b];
-             
-             build_TriangleList( vertices, indices, material, transformation, retPtr );
+          
+        build_TriangleList( vertices, indices, material, transformation, retPtr );
         }
        
     }     

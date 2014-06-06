@@ -23,13 +23,11 @@
  
  
  
- 
     function World( worldName )
     {
         var fullPath      = "/data/"+worldName+"/"+worldName+".irr";
         var parser        = new Parser( fullPath );
         var nodes         = parser.the_Document.get_Subfields("node");
-        
         
         var triangleList  = [];
         
@@ -49,7 +47,6 @@
             switch( node_Type ) 
             {
                  case "mesh":   
-                     
                      parse_Mesh( node, node_Description, node_Transformation, triangleList );
                  break;
                
@@ -58,9 +55,21 @@
             
             default: console.info("Unknown Node encountered - Skipping: " + type );
             }
-            
         }
       
-      
-    partition_Geometry( triangleList );   
+    // UV should be fine here!
+    
+    this.quadTree = partition_Geometry( triangleList );   
+    this.shader   = new SimpleShader(                );
+    }
+    
+    
+    
+    
+    World.prototype.render = function()
+    {
+        the_Renderer.set_Shader( this.shader      );
+        the_Renderer.set_Matrices( new Matrix44(), null, null );
+        
+        this.quadTree.render(  );
     }

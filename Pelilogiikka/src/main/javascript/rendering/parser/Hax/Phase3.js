@@ -72,6 +72,7 @@
             var texturePaths = [ relative_Path( description[0] ) , relative_Path( description[1] ), 
                                  relative_Path( description[2] ) , relative_Path( description[3] ) ];  
             
+            
             for( var t = 0; t < MAX_TEXTURES; t++ ) 
             {
                 if( texturePaths[t] == "NULL") textureList.push( new Texture( "/data/NULL.png" ) );  

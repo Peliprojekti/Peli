@@ -98,7 +98,9 @@ function draw_Frame ()
 
     the_Renderer.set_Shader( spriteShader );
       
-      
+    
+    testWorld.render();
+    
        
     var viewI = testCamera.get_ViewMatrix().extract_Orientation().transposed();
     var trans = testActor.get_Transformation(); 

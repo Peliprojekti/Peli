@@ -3,7 +3,8 @@
     { 
         var clip = full_Path.indexOf( "data" );
         if( clip == -1 ) return "NULL";
-        return  full_Path.substring( clip, full_Path.length );
+        var string = full_Path.substring( clip, full_Path.length );
+    return string;
     }
     
     function Parser( fileName )

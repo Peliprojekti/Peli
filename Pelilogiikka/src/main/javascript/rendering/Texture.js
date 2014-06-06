@@ -46,6 +46,8 @@
         
     
     this.source = fileName;     // Path of the texture
+    
+    console.info("Loaded " + fileName );
     }
     
 
