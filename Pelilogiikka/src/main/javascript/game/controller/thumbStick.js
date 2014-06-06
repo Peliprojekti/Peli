@@ -3,6 +3,7 @@ var controller = controller || {};
 controller.loadedTypes = controller.loadedTypes || [];
 controller.loadedTypes['ThumbStick'] = {
     freeControllers: [],
+    
     getController: function (player, rpc) {
         return (this.freeControllers.length > 0 ?
             this.freeControllers.pop().reset(player, rpc) :
@@ -21,6 +22,8 @@ controller.ThumbStick = function (player, rpc) {
 
 controller.ThumbStick.prototype.reset = function (player, rpc) {
     this.player = player;
+    
+    this.x = 0;
 
     this.posChangeSpeed = 0.01;
     this.thumbStickPos = new Vector2(0, 0);
@@ -47,7 +50,10 @@ controller.ThumbStick.prototype.buttonPushed = function () {
 };
 
 controller.ThumbStick.prototype.thumbStickPosition = function (x, y) {
-    this.thumbStickPos = new Vector2(x - 0.5, y - 1);
+    if (x <= 1) {
+        this.x = x;
+    }
+    this.thumbStickPos = new Vector2(this.x - 0.5, y - 1);
 };
 
 
