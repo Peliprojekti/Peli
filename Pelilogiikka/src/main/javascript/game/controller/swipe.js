@@ -82,7 +82,6 @@ controller.Swipe.prototype.setPosition = function(x, y) {
 
 controller.Swipe.prototype.calcNewPosition = function(timestamp) {
     
-    this.x = 6;
     if (this.currentDirection.length() > 0.001) {
         if (this.time <= 1) {
             var addition = 0;
