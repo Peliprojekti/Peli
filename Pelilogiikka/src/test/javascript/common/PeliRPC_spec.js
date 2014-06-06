@@ -67,10 +67,31 @@ describe('the PeliRPC object', function() {
     describe('onMessage tests', function() {
         var rpc = peliRPC.create(connection);
 
-        it('throws error on mallformed remote rpc calls', function() {
+        it('throws error on recieving mallformed remote json', function() {
             expect(function() {
                 rpc.onMessage("jaadajaadajaa");
             }).toThrow();
+            try {
+                rpc.onMessage("jaadajaadajaa");
+            }
+            catch(e) {
+                expect(e.message).toBe("Unable to parse JSON string");
+            }
+        });
+
+        if('throw error on recieving unrecognized, but correct JSON', function() {
+            var msg = JSON.stringify({
+                "message": "msg"
+            });
+            expect(function() {
+                rpc.onMessage(msg);
+            }).toThrow();
+            try {
+                rpc.onMessage(msg);
+            }
+            catch(e) {
+                expect(e.message).toBe("unable to recognize message: " + msg);
+            }
         });
 
         it('throws error on incorrect rpc version', function() {
@@ -245,6 +266,109 @@ describe('the PeliRPC object', function() {
             }));
 
             expect(retval).toBe('yay');
+
+            var testObj = {
+                id: null,
+                error: "some error",
+                result: "some result",
+                func: function(id, error, result) { 
+                    this.id = id;
+                    this.error = error;
+                    this.result = result;
+                }
+            };
+
+            spyOn(testObj, 'func').andCallThrough();
+
+            id = rpc.callRpc('tester', null, testObj, testObj.func);
+
+            rpc.onMessage(JSON.stringify({
+                "jsonrpc": "2.0",
+                "id": id
+            }));
+
+            expect(testObj.func).toHaveBeenCalled();
+            expect(testObj.id).toBe(id);
+            expect(testObj.error).toBe(null);
+            expect(testObj.result).toBe(null);
+
+
+            id = rpc.callRpc('tester', null, testObj, testObj.func);
+            rpc.onMessage(JSON.stringify({
+                "jsonrpc": "2.0",
+                "id": id,
+                "result": "testerResult"
+            }));
+            expect(testObj.id).toBe(id);
+            expect(testObj.result).toBe("testerResult");
+            peliRPC.free(rpc);
+        });
+
+        it('correctly handles returned errors after remote calls', function() {
+            var rpc = peliRPC.create(connection);
+            var retval = null;
+
+            var testObj = {
+                id: null,
+                error: "some error",
+                result: "some result",
+                func: function(id, error, result) { 
+                    this.id = id;
+                    this.error = error;
+                    this.result = result;
+                }
+            };
+
+            id = rpc.callRpc('tester', null, testObj, testObj.func);
+            rpc.onMessage(JSON.stringify({
+                "jsonrpc": "2.0",
+                "id": id,
+                "error": "failfailfail"
+            }));
+
+            expect(testObj.id).toBe(id);
+            expect(testObj.error).toBe("failfailfail");
+            peliRPC.free(rpc);
+        });
+
+        it('throws errors on too late callbacks', function() {
+            var rpc = peliRPC.create(connection);
+            var count = peliRPC.maxCallbacks + 10;
+
+            var testObj = {
+                id: null,
+                error: "some error",
+                result: "some result",
+                func: function(id, error, result) { 
+                    this.id = id;
+                    this.error = error;
+                    this.result = result;
+                }
+            };
+
+            while (count > 0) {
+                id = rpc.callRpc('tester', null, testObj, testObj.func);
+                count--;
+            }
+
+            expect(function() {
+                rpc.onMessage(JSON.stringify({
+                    "id": id-1,
+                    "result": "something",
+                    "jsonrpc": "2.0"
+            }));
+            }).toThrow();
+
+            try {
+                rpc.onMessage(JSON.stringify({
+                    "id": id,
+                    "result": "something",
+                    "jsonrpc": "2.0"
+                }));
+            }
+            catch(e) {
+                expect(e.message).toBe("Callback too old.");
+            }
         });
     });
 });

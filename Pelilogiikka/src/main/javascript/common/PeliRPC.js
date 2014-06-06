@@ -117,18 +117,17 @@ peliRPC.PeliRPC.prototype.onMessage = function (message) {
     } else {
         //console.debug("PeliRPC::onMessage() - maybe a return value, for id ", rpc.id);
         if (rpc.id !== undefined && (this.callbacks[rpc.id] !== "undefined")) {
-            if ((rpc.id + peliRPC.maxCallbacks) >= this.callSequence) {
+            if (rpc.id < (this.callSequence - peliRPC.maxCallbacks)) {
                 rpc.id = rpc.id % peliRPC.maxCallbacks;
 
-                if (this.callbacks[rpc.id] === 'undefined') {
-                    //console.debug("PeliRPC::onMessage() - nope, no callback for id ", id);
-                    return;
+                if (typeof this.callbacks[rpc.id] === 'undefined') {
+                    throw new Error("callback missing for rpc result with id: " + rpc.id);
                 }
 
-                if (rpc.result !== "undefined") {
+                if (typeof rpc.result !== "undefined") {
                     //console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
                     this.callbacks[rpc.id].listener.apply(this.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
-                } else if (rpc.error !== "undefined") {
+                } else if (typeof rpc.error !== "undefined") {
                     console.warn("PeliRPC::onMessage() - returning an error to callback: ", rpc.error);
                     this.callbacks[rpc.id].listener.apply(
                         this.callbacks[rpc.id].object, [rpc.id, rpc.error, null]);
@@ -141,7 +140,8 @@ peliRPC.PeliRPC.prototype.onMessage = function (message) {
                 delete this.callbacks[rpc.id];
             }
             else {
-                console.warn("PeliRPC::onMessage() - callback too old, can no longer execute", rpc.id, this.sequence, this.maxCallbacks);
+                console.warn("PeliRPC::onMessage() - callback too old, can no longer execute", rpc.id, this.callSequence, peliRPC.maxCallbacks);
+                throw new Error("Callback too old id:" + rpc.id + ", sequence: " + this.callSequence + ", maxCallbacks" + peliRPC.maxCallbacks);
             }
         }
         else {
