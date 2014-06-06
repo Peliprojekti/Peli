@@ -31,7 +31,7 @@ describe('the Swipe (game) object', function () {
 
             spyOn(mockRpc, 'exposeRpcMethod');
 
-
+            controllerObj.x = 10;
             controllerObj.reset(mockPlayer, mockRpc);
 
             expect(controllerObj.player).toBe(mockPlayer);
@@ -102,7 +102,7 @@ describe('the Swipe (game) object', function () {
             var time = Date.now();
             controllerObj.update(time);
 
-            expect(controllerObj.calcNewDirection).toHaveBeenCalledWith(startCoords, coords);
+            expect(controllerObj.calcNewDirection).toHaveBeenCalledWith(startCoords, coords, time);
 
         });
 
