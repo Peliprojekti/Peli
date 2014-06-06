@@ -42,7 +42,7 @@
             var node_Transformation      = new Matrix44();
                 node_Transformation.build_Transformation( node_Description[0].casted() ,
                                                           node_Description[1].casted() ,
-                                                          node_Description[2].casted() ) 
+                                                          node_Description[2].casted() ); 
             
             switch( node_Type ) 
             {

@@ -9,7 +9,7 @@
        this.tBuffer      = new Buffer( "FLOAT", texCoords, 2 );
        this.nBuffer      = new Buffer( "FLOAT",   normals, 3 );
        this.bBuffer      = new Buffer( "FLOAT", binormals, 3 );
-       this.tBuffer      = new Buffer( "FLOAT",  tangents, 3 );
+       this.aBuffer      = new Buffer( "FLOAT",  tangents, 3 );
        this.iBuffer      = new Buffer( "INT"  ,   indices, 1 );
     }
       
