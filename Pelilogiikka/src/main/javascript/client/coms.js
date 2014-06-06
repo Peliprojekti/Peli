@@ -38,33 +38,6 @@ client.coms.close = function() {
     client.coms._rpc.close();
 };
 
-/**
- * This will send messages directly to the server
- * @param {function} msg
- */
-/*
-client.coms.serverMsg = function(msg) {
-    log.warn('deprecated, instead use log.sendServerMessage directly');
-    log.sendServerMessage(msg);
-};
-*/
-
-/**
- * Request a gameslot
- * @param {function} callback - will be called like so callback(controllerType);
- */
-/*
-client.coms.joinGame = function(userID, callback) {
-    if (client.coms._rpc === undefined) {
-        log.error("client.coms.joinGame - trying to join before opening connection");
-    }
-    if (!userID) {
-        log.error("client.coms.joinGame - must supply userID, recieved: " + userID);
-    }
-    log.info("client.coms.joinGame - calling RPC::joinGame(" + userID + ")");
-    client.coms._rpc.callRpc('joinGame', [userID], this, callback);
-};
-*/
 
 /**
  * Execute remote commands on player object (or kind of any, really)
@@ -79,38 +52,3 @@ client.coms.call = function(method, params, object, callback) {
     client.coms._rpc.callRpc(method, params, object, callback);
 };
 
-/*
- * MOVE THESE AWAY FROM HERE
- * Keep coms.js as clean as possible from actual game/controller mechanics. Possibly
- * instead at some point expose the carrRpc thingy to the outside, like the upper method
- */
-
-/*
-client.coms.position = function(params, object, callback) {
-    client.coms.call('position', params, object, callback);
-};
-
-client.coms.swipe = function(x, y, sincePreviousTime) {
-    //client.coms.call('position', [x,y,sincePreviousTime], null, null);
-    //this.rpc.callRpc('swipe', [x, y, sincePreviousTime], this, null);
-};
-
-client.coms.orientation = function(tiltLR, tiltFB, dir) {
-    client.coms.call('orientation', [titleLR, titleFB, dir], null, null);
-    //this.rpc.callRpc('orientation', [null, tiltLR, tiltFB, dir], this, null);
-};
-*/
-
-/**
- * Sends the device's motion data to the server if the device supports motion data
- * 
- * @param {type} accelerationData Acceleration data consists of three maps: 
- * accelerationData.acceleration.(x-z), accelerationData.accelerationIncludingGravity
- * and accelerationData.rotationRate.(x-z). See motionController.deviceMotionHandler
- * for detailed use example.
- */
-/*
-client.coms.motion = function(accelerationData){
-    client.coms.call('motion', accelerationData, null, null);
-};
-*/

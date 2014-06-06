@@ -1,5 +1,3 @@
-
-
 describe('the Swipe (game) object', function () {
     //Create an easily-removed container for our tests to play in
 
