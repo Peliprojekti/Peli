@@ -54,20 +54,6 @@
     }
     
     
-    
-    Matrix44.prototype.transform = function( vec3 )
-    {
-        ASSERT_TYPE( Vector3, vec3, "Expected Vector3 for the HAX44 transformation");
-        
-        var x   = vec3.x;
-        var y   = vec3.y;
-        var z   = vec3.z;
-        var ret = new Vector3( x * this.data[0] + x * this.data[1] + x * this.data[2] ,
-                               y * this.data[4] + y * this.data[5] + y * this.data[6] , 
-                               z * this.data[9] + z * this.data[9] + z * this.data[10] );
-         
-    return ret.add( this.get_Translation() );
-    }
 
 
 
@@ -134,35 +120,60 @@
     
     
     
-    Matrix44.prototype.build_Transformation = function( position, rotation, scale )
-    {
-        var rotX   = new Matrix33();
-        var rotY   = new Matrix33();
-        var rotZ   = new Matrix33();
-        
-        rotX.RotationX( rotation.x );
-        rotY.RotationX( rotation.y );
-        rotZ.RotationX( rotation.z );
-        
-        var orient = new Matrix33();
-            orient = orient.multiply( rotX );
-            orient = orient.multiply( rotY );
-            orient = orient.multiply( rotZ );
-           
-        var     m1 = new Matrix44();
-                m1.embed( orient );
-            
-        var     m2 = new Matrix44( [       1.0,          0,          0,     0,
-                                             0,        1.0,          0,     0,
-                                             0,          0,        1.0,     0,
-                                    position.x, position.y, position.z,   1.0  ]);
-   
-        var     m3 = new Matrix44( [ scale.x,       0,       0,     0,
-                                           0, scale.y,       0,     0,
-                                           0,       0, scale.z,     0,
-                                           0,       0,       0,   1.0  ]);
-        var ret =  m3.multiply( m2 );
-            ret = ret.multiply( m1 );
     
-    return  ret; 
+        
+    Matrix44.prototype.transform = function( vec3 )
+    {
+        ASSERT_TYPE( Vector3, vec3, "Expected Vector3 for the HAX44 transformation");
+        
+        var x = vec3.x;
+        var y = vec3.y;
+        var z = vec3.z;
+    
+        var orient = this.get_Translation();
+        
+       
+        var x1 = x + orient.x;
+        var y1 = y + orient.y;
+        var z1 = z + orient.z;
+        
+        var retVec = new Vector3(x1,y1,z1),
+            retVec = this.extract_Orientation().transform( retVec );
+             
+
+    return retVec;
+    }
+
+    
+    
+    Matrix44.prototype.build_Transformation = function( pos, rot, sca )
+    {
+        
+        console.info( pos.x + " " + pos.y + " " + pos.z );
+        
+        var rotation_X = new Matrix33();
+            rotation_X.RotationX( DegToRad( rot.x ) );
+        
+        var rotation_Y = new Matrix33();
+            rotation_Y.RotationY( DegToRad( rot.y ) );
+          
+        var rotation_Z = new Matrix33();
+            rotation_Z.RotationZ( DegToRad( rot.z ) );
+        
+        var rotation   = rotation_X.multiply( rotation_Y );
+            rotation   = rotation.multiply( rotation_Z );
+        
+     
+        
+        var rot44      = new Matrix44();
+            rot44.embed( rotation );
+            
+        
+        var phase2 = rot44;
+            phase2.data[12] = pos.x;
+            phase2.data[13] = pos.y;
+            phase2.data[14] = pos.z;
+        
+         
+    return phase2;
     }

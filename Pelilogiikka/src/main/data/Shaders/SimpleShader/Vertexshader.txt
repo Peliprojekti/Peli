@@ -16,7 +16,7 @@
     {
        pixelTexcoord = vertexTexcoord;
        
-       mat4 hax = projectionMatrix * viewMatrix * worldMatrix;
+       mat4 hax = projectionMatrix * viewMatrix;
 
        gl_Position =  hax * vec4( vertexPosition, 1.0);    //DIS WRONG!
 

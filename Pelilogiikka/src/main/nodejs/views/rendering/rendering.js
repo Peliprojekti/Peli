@@ -96,12 +96,12 @@ function draw_Frame ()
 
     the_Renderer.draw_Batch(guiItem.batch);
 
-    the_Renderer.set_Shader( spriteShader );
-      
-    
+
     testWorld.render();
     
-       
+     the_Renderer.set_Shader( spriteShader );
+      
+    
     var viewI = testCamera.get_ViewMatrix().extract_Orientation().transposed();
     var trans = testActor.get_Transformation(); 
         trans.embed( viewI );
@@ -148,7 +148,7 @@ function main ()
 
 
 
-    testWorld = new World( "Showcase" );
+    testWorld = new World( "Simple" );
 
 
     rendererMain();

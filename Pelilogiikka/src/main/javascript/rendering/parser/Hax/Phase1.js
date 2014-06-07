@@ -38,11 +38,21 @@
             var node_Attributes          = node.get_Subfields("attributes");
             var node_Variables           = node_Attributes[0].get_Variables();                 
             
-            var node_Description         = read_Node( node_Variables                  );
+            var node_Description         = read_Node( node_Variables   );
+            
+           
+            var node_Position            = node_Description[0].casted();
+            var node_Rotation            = node_Description[1].casted();
+            var node_Scale               = node_Description[2].casted();
+            
+           
             var node_Transformation      = new Matrix44();
-                node_Transformation.build_Transformation( node_Description[0].casted() ,
-                                                          node_Description[1].casted() ,
-                                                          node_Description[2].casted() ); 
+                node_Transformation      = node_Transformation.build_Transformation( node_Position  ,
+                                                                                     node_Rotation  ,
+                                                                                     node_Scale     ); 
+            
+            
+            
             
             switch( node_Type ) 
             {

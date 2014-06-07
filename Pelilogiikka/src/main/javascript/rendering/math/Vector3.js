@@ -84,3 +84,11 @@ Vector3.prototype.length = function()
         alert("< "+this.x +" , "+ this.y + " , " +this.z+" >");
     }
 
+
+
+    Vector3.prototype.alert = function( comment )
+    {
+        if( VALID(comment) )alert( comment + " < "+this.x +" , "+ this.y + " , " +this.z+" >");
+        else
+            alert("< "+this.x +" , "+ this.y + " , " +this.z+" >");
+    }

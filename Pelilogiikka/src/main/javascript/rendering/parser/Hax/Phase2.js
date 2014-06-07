@@ -15,7 +15,6 @@
             b.point = transformation.transform( b.point );
             c.point = transformation.transform( c.point );
         
-        
         retPtr.push(  new Triangle( a,b,c, material) );
         }   
     }
