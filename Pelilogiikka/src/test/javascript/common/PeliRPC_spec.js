@@ -62,6 +62,23 @@ describe('the PeliRPC object', function () {
         });
     });
 
+    describe('callRPC', function () {
+        it('works without callbacks', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection);
+
+            expect(function () {
+                rpc.callRPC('someMethod', null, null, null);
+            });
+
+            expect(connection.getSentJSON().method).toBe('someMethod');
+        });
+
+        it('properly registers callbacks', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection);
+        });
+    });
 
     describe('exposeRpcMethod', function () {
         //var rpc = peliRPC.create(getConnection());
@@ -112,7 +129,6 @@ describe('the PeliRPC object', function () {
     });
 
     describe('onMessage', function () {
-
         it('throws error on recieving mallformed remote json', function () {
             var rpc = peliRPC.create(getConnection()),
                 badMsg = function () {
@@ -399,4 +415,5 @@ describe('the PeliRPC object', function () {
             }
         });
     });
+
 });
