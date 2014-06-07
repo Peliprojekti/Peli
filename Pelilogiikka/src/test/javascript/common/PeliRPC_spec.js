@@ -23,6 +23,19 @@ describe('the PeliRPC object', function () {
         };
     }
 
+    function getTestObj () {
+        return {
+            id: null,
+            error: null,
+            result: null,
+            func: function(r_id, r_error, r_result) {
+                this.id = r_id;
+                this.error = r_error;
+                this.result = r_result;
+            }
+        };
+    }
+
     function emptyFunc(x) {
         return x + 2;
     }
@@ -284,8 +297,10 @@ describe('the PeliRPC object', function () {
             var connection = getConnection(),
                 rpc = peliRPC.create(connection),
                 retval = null,
+                testObj = getTestObj(),
                 id, first_id;
 
+            // Test function callback with return value
             first_id = rpc.callRpc('tester', [1,2], null, function (id, error, value) {
                 retval = value;
             });
@@ -300,19 +315,7 @@ describe('the PeliRPC object', function () {
 
             expect(retval).toBe('yay');
 
-            var testObj = {
-                id: null,
-                error: null,
-                result: null,
-                func: function(r_id, r_error, r_result) {
-                    this.id = r_id;
-                    this.error = r_error;
-                    this.result = r_result;
-                }
-            };
-
-            expect(testObj.result).toBe(null);
-
+            // Test method callback with no return value
             id = rpc.callRpc('tester', null, testObj, testObj.func);
             expect(id).toBe(first_id + 1);
 
@@ -327,6 +330,7 @@ describe('the PeliRPC object', function () {
             expect(testObj.error).toBe(null);
             expect(testObj.result).toBe(null);
 
+            // Test method callback with return value
             id = rpc.callRpc('tester', null, testObj, testObj.func);
             expect(id).toBe(first_id + 2);
             expect(function() {
@@ -344,20 +348,11 @@ describe('the PeliRPC object', function () {
             peliRPC.free(rpc);
         });
 
-        it('correctly handles returned errors after remote calls', function() {
-            var rpc = peliRPC.create(connection);
-            var retval = null;
-
-            var testObj = {
-                id: null,
-                error: "some error",
-                result: "some result",
-                func: function(id, error, result) { 
-                    this.id = id;
-                    this.error = error;
-                    this.result = result;
-                }
-            };
+        it('correctly handles returned errors after remote calls', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection),
+                testObj = getTestObj(),
+                id;
 
             id = rpc.callRpc('tester', null, testObj, testObj.func);
             rpc.onMessage(JSON.stringify({
@@ -368,46 +363,39 @@ describe('the PeliRPC object', function () {
 
             expect(testObj.id).toBe(id);
             expect(testObj.error).toBe("failfailfail");
+
             peliRPC.free(rpc);
         });
 
-        it('throws errors on too late callbacks', function() {
-            var rpc = peliRPC.create(connection);
-            var count = peliRPC.maxCallbacks + 10;
+        it('throws errors on too late callbacks', function () {
+            var connection = getConnection(),
+                rpc = peliRPC.create(connection),
+                testObj = getTestObj(),
+                count = peliRPC.maxCallbacks,
+                first_id;
 
-            var testObj = {
-                id: null,
-                error: "some error",
-                result: "some result",
-                func: function(id, error, result) { 
-                    this.id = id;
-                    this.error = error;
-                    this.result = result;
-                }
-            };
-
+            first_id = rpc.callRpc('tester', null, testObj, testObj.func);
             while (count > 0) {
-                id = rpc.callRpc('tester', null, testObj, testObj.func);
-                count--;
+                rpc.callRpc('tester', null, testObj, testObj.func);
+                count -= 1;
             }
 
-            expect(function() {
+            expect(function () {
                 rpc.onMessage(JSON.stringify({
-                    "id": id-1,
+                    "id": first_id,
                     "result": "something",
                     "jsonrpc": "2.0"
-            }));
+                }));
             }).toThrow();
 
             try {
                 rpc.onMessage(JSON.stringify({
-                    "id": id,
+                    "id": first_id,
                     "result": "something",
                     "jsonrpc": "2.0"
                 }));
-            }
-            catch(e) {
-                expect(e.message).toBe("Callback too old.");
+            } catch (e) {
+                expect(e.message).toBe("Callback too old, unable to return value form remote RPC call");
             }
         });
     });

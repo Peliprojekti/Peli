@@ -157,7 +157,7 @@ peliRPC.PeliRPC.prototype.onMessageReturnValue = function (rpc) {
 
         delete this.callbacks[rpc.id];
     } else {
-        throw new Error("Callback too old id:" + rpc.id + ", sequence: " + this.callSequence + ", maxCallbacks: " + peliRPC.maxCallbacks);
+        throw new Error("Callback too old, unable to return value form remote RPC call");
     }
 };
 
