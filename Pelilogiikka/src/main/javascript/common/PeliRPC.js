@@ -48,25 +48,25 @@ peliRPC.PeliRPC.prototype.attachConnection = function (connection) {
     return this;
 };
 
-peliRPC.PeliRPC.prototype.returnError = function (code, msg, data, rpcid) {
+peliRPC.PeliRPC.prototype.returnError = function (code, message, data, rpcid) {
     "use strict";
     var msg = {
         "jsonrpc": "2.0",
         "error": {
             "code": code,
-            "message": msg
+            "message": message
         },
         "id": "woohoo"
     };
 
-    if (typeof data !== 'undefined' && data !== null) {
+    if (data !== 'undefined' && data !== null) {
         msg.data = data;
     }
-    if (typeof rpcid !== 'undefined' || rpcid !== null) {
+    if (rpcid !== 'undefined' || rpcid !== null) {
         msg.id = rpcid;
     }
 
-    console.log("PeliRPC::returnError - ", msg);
+    console.warn("PreliRPC::returnError - ", msg);
     this.connection.sendMessage(JSON.stringify(msg));
 };
 
@@ -87,9 +87,9 @@ peliRPC.PeliRPC.prototype.onMessage = function (message) {
         console.error("PeliRPC::onMessage() - received invalid JSON-RPC message: " + message);
         this.returnError(-32600, "Invalid Request", message); // JSON-RPC spec error code & message
     } else {
-        if (rpc.method) {
+        if (rpc.method !== undefined) {
             this.onMessageMethodCall(rpc);
-        } else if (rpc.id !== undefined && (this.callbacks[rpc.id] !== "undefined")) {
+        } else if (rpc.id !== undefined && (this.callbacks[rpc.id] !== undefined)) {
             this.onMessageReturnValue(rpc);
         } else {
             console.error("PeliRPC::onMessage - recieved invalid JSON-RPC message: ", message);
@@ -105,7 +105,7 @@ peliRPC.PeliRPC.prototype.onMessageMethodCall = function (rpc) {
     if (!this.rpcMethods.hasOwnProperty(rpc.method)) {
         console.error("PeliRPC::onMessage() . Received a call to an unknown JSON-RPC method: " + rpc.method);
         if (rpc.id !== null) {
-            this.returnError(-32601, "Method not found", rpc.method, null, rpc.id);
+            this.returnError(-32601, "Method not found", rpc.method, rpc.id);
         }
         return;
     }
@@ -114,16 +114,16 @@ peliRPC.PeliRPC.prototype.onMessageMethodCall = function (rpc) {
         rpcMethod = this.rpcMethods[rpc.method];
         result = rpcMethod.method.apply(rpcMethod.object, rpc.params);
         if (rpc.id !== null) {
-            this.connection.sendMessage({
+            this.connection.sendMessage(JSON.stringify({
                 "jsonrpc": "2.0",
                 "result": result,
                 "id": rpc.id
-            });
+            }));
         }
     } catch (err) {
         console.error("An exeption got raised when executing a RPC method", err);
         if (rpc.id !== null) {
-            this.returnError(-32001, "error executing rpcMethod", err, null, rpc.id);
+            this.returnError(-32001, "error executing rpcMethod", err, rpc.id);
         }
     }
 };
@@ -131,17 +131,17 @@ peliRPC.PeliRPC.prototype.onMessageMethodCall = function (rpc) {
 peliRPC.PeliRPC.prototype.onMessageReturnValue = function (rpc) {
     "use strict";
 
-    if (rpc.id < (this.callSequence - peliRPC.maxCallbacks)) {
-        rpc.id = rpc.id % peliRPC.maxCallbacks;
+    if (rpc.id > (this.callSequence - peliRPC.maxCallbacks)) {
+        rpc.id = (rpc.id % peliRPC.maxCallbacks);
 
-        if (this.callbacks[rpc.id] === 'undefined') {
+        if (this.callbacks[rpc.id] === undefined) {
             throw new Error("callback missing for rpc result with id: " + rpc.id);
         }
 
-        if (rpc.result !== "undefined") {
+        if (rpc.result !== undefined) {
             //console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
             this.callbacks[rpc.id].listener.apply(this.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
-        } else if (rpc.error !== "undefined") {
+        } else if (rpc.error !== undefined) {
             console.error("PeliRPC::onMessage() - returning an error to callback: ", rpc.error);
             this.callbacks[rpc.id].listener.apply(
                 this.callbacks[rpc.id].object,
@@ -178,7 +178,7 @@ peliRPC.PeliRPC.prototype.callRpc = function (method, params, object, listener) 
         this.callObject.id = null;
     }
 
-    this.connection.sendMessage(this.callObject);
+    this.connection.sendMessage(JSON.stringify(this.callObject));
     return this.callObject.id;
 };
 

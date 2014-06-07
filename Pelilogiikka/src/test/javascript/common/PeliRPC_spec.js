@@ -10,7 +10,7 @@ describe('the PeliRPC object', function () {
     function getConnection() {
         return {
             connected: false,
-            send: "noChange",
+            send: null,
             connect: function () {
                 this.connected = true;
             },
@@ -18,7 +18,7 @@ describe('the PeliRPC object', function () {
                 this.send = msg;
             },
             getSentJSON: function() {
-                return JSON.parse(this.send);
+                return (this.send ? JSON.parse(this.send) : null);
             }
         };
     }
@@ -216,7 +216,7 @@ describe('the PeliRPC object', function () {
                 rpc = peliRPC.create(connection);
 
             rpc.exposeRpcMethod('failFunction', null, function (x, y) {
-                throw new Error("OMG", x + y);
+                throw new Error("OMG" + (x + y));
             });
 
             expect(function () {
@@ -227,8 +227,8 @@ describe('the PeliRPC object', function () {
                     id: null
                 }));
             }).not.toThrow();
-
-            expect(connection.lastMessage === 'howdyho');
+            
+            expect(connection.getSentJSON()).toBe(null);
 
             expect(function () {
                 rpc.onMessage(JSON.stringify({
@@ -239,16 +239,17 @@ describe('the PeliRPC object', function () {
                 }));
             }).not.toThrow();
 
-            expect(connection.lastMessage.jsonrpc).toBe('2.0');
-            expect(connection.lastMessage.error).not.toBe(null);
-            expect(connection.lastMessage.id).toBe(1);
+            //expect(connection.lastMessage.jsonrpc).toBe('2.0');
+            expect(connection.getSentJSON().error.message).not.toBe("OMG1");
+            expect(connection.getSentJSON().id).toBe(1);
 
             peliRPC.free(rpc);
         });
 
         it('correctly returns values on remote rpc calls', function () {
             var connection = getConnection(),
-                rpc = peliRPC.create(connection);
+                rpc = peliRPC.create(connection),
+                sentJSON;
 
             rpc.exposeRpcMethod('adder', null, function (x, y) {
                 return x + y;
@@ -261,7 +262,7 @@ describe('the PeliRPC object', function () {
                 id: null
             }));
 
-            expect(connection.lastMessage).toBe('howdyho');
+            expect(connection.getSentJSON()).toBe(null);
 
             rpc.onMessage(JSON.stringify({
                 jsonrpc: "2.0",
@@ -270,9 +271,11 @@ describe('the PeliRPC object', function () {
                 id: 11
             }));
 
-            expect(connection.lastMessage.jsonrpc).toBe('2.0');
-            expect(connection.lastMessage.result).toBe(4);
-            expect(connection.lastMessage.id).toBe(11);
+            sentJSON = connection.getSentJSON();
+
+            expect(sentJSON.jsonrpc).toBe('2.0');
+            expect(sentJSON.result).toBe(4);
+            expect(sentJSON.id).toBe(11);
 
             peliRPC.free(rpc);
         });
@@ -281,54 +284,63 @@ describe('the PeliRPC object', function () {
             var connection = getConnection(),
                 rpc = peliRPC.create(connection),
                 retval = null,
-                id;
+                id, first_id;
 
-            id = rpc.callRpc('tester', [1,2], null, function (id, error, value) {
+            first_id = rpc.callRpc('tester', [1,2], null, function (id, error, value) {
                 retval = value;
             });
 
-            rpc.onMessage(JSON.stringify({
-                "jsonrpc": "2.0",
-                "result": 'yay',
-                "id": id
-            }));
+            expect(function() {
+                rpc.onMessage(JSON.stringify({
+                    "jsonrpc": "2.0",
+                    "result": 'yay',
+                    "id": first_id
+                }));
+            }).not.toThrow();
 
             expect(retval).toBe('yay');
 
             var testObj = {
                 id: null,
-                error: "some error",
-                result: "some result",
-                func: function(id, error, result) {
-                    this.id = id;
-                    this.error = error;
-                    this.result = result;
+                error: null,
+                result: null,
+                func: function(r_id, r_error, r_result) {
+                    this.id = r_id;
+                    this.error = r_error;
+                    this.result = r_result;
                 }
             };
 
-            spyOn(testObj, 'func').andCallThrough();
+            expect(testObj.result).toBe(null);
 
             id = rpc.callRpc('tester', null, testObj, testObj.func);
+            expect(id).toBe(first_id + 1);
 
-            rpc.onMessage(JSON.stringify({
-                "jsonrpc": "2.0",
-                "id": id
-            }));
+            expect(function() {
+                rpc.onMessage(JSON.stringify({
+                    "jsonrpc": "2.0",
+                    "id": id
+                }));
+            }).not.toThrow();
 
-            expect(testObj.func).toHaveBeenCalled();
             expect(testObj.id).toBe(id);
             expect(testObj.error).toBe(null);
             expect(testObj.result).toBe(null);
 
-
             id = rpc.callRpc('tester', null, testObj, testObj.func);
-            rpc.onMessage(JSON.stringify({
-                "jsonrpc": "2.0",
-                "id": id,
-                "result": "testerResult"
-            }));
+            expect(id).toBe(first_id + 2);
+            expect(function() {
+                rpc.onMessage(JSON.stringify({
+                    "jsonrpc": "2.0",
+                    "result": "testerResult",
+                    "id": id
+                }));
+            }).not.toThrow();
+
             expect(testObj.id).toBe(id);
+            expect(testObj.error).toBe(null);
             expect(testObj.result).toBe("testerResult");
+
             peliRPC.free(rpc);
         });
 
