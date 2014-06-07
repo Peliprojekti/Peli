@@ -134,10 +134,6 @@ peliRPC.PeliRPC.prototype.onMessageReturnValue = function (rpc) {
     if (rpc.id > (this.callSequence - peliRPC.maxCallbacks)) {
         rpc.id = (rpc.id % peliRPC.maxCallbacks);
 
-        if (this.callbacks[rpc.id] === undefined) {
-            throw new Error("callback missing for rpc result with id: " + rpc.id);
-        }
-
         if (rpc.result !== undefined) {
             //console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
             this.callbacks[rpc.id].listener.apply(this.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);

@@ -17,13 +17,20 @@ describe('the PeliRPC object', function () {
             sendMessage: function (msg) {
                 this.send = msg;
             },
-            getSentJSON: function() {
-                return (this.send ? JSON.parse(this.send) : null);
+            getSentJSON: function () {
+                try {
+                    return (this.send ? JSON.parse(this.send) : null);
+                } catch (e) {
+                    throw new Error("JSON parse fail: " + this.send);
+                }
+            },
+            getSent: function () {
+                return this.send;
             }
         };
     }
 
-    function getTestObj () {
+    function getTestObj() {
         return {
             id: null,
             error: null,
@@ -65,18 +72,32 @@ describe('the PeliRPC object', function () {
     describe('callRPC', function () {
         it('works without callbacks', function () {
             var connection = getConnection(),
-                rpc = peliRPC.create(connection);
+                rpc = peliRPC.create(connection),
+                sent;
 
             expect(function () {
-                rpc.callRPC('someMethod', null, null, null);
-            });
+                rpc.callRpc('someMethod', null, null, null);
+            }).not.toThrow();
 
-            expect(connection.getSentJSON().method).toBe('someMethod');
+            sent = connection.getSentJSON();
+            expect(sent).not.toBe(null);
+            expect(sent.method).toBe('someMethod');
         });
 
-        it('properly registers callbacks', function () {
+        it('properly recognizes callbacks', function () {
             var connection = getConnection(),
-                rpc = peliRPC.create(connection);
+                rpc = peliRPC.create(connection),
+                sent,
+                id;
+
+            expect(function () {
+                id = rpc.callRpc('someMethod', null, null, emptyFunc);
+            }).not.toThrow();
+
+            sent = connection.getSentJSON();
+            expect(sent).not.toBe(null);
+            expect(sent.method).toBe('someMethod');
+            expect(sent.id).toBe(id);
         });
     });
 
@@ -149,6 +170,7 @@ describe('the PeliRPC object', function () {
             var connection = getConnection(),
                 rpc = peliRPC.create(connection),
                 msg = JSON.stringify({
+                    "jsonrpc": "2.0",
                     "notRecognized": "x"
                 }),
                 unrecMsg = function () {
@@ -413,7 +435,36 @@ describe('the PeliRPC object', function () {
             } catch (e) {
                 expect(e.message).toBe("Callback too old, unable to return value form remote RPC call");
             }
+
+            peliRPC.free(rpc);
         });
     });
 
+    describe("callRpc stress test", function () {
+        var sendConnection = getConnection(),
+            resConnection = getConnection(),
+            sender = peliRPC.create(sendConnection),
+            reciever = peliRPC.create(resConnection),
+            testObj = getTestObj(),
+            count = peliRPC.maxCallbacks + 10,
+            i,
+            id;
+
+        reciever.exposeRpcMethod('someFunction', null, function (x, y) {
+            return x + y;
+        });
+
+        for (i = 0; i < count; i++) {
+            id = sender.callRpc('someFunction', [i, 10000], testObj, testObj.func);
+
+            expect(sendConnection.getSentJSON().id).toBe(id);
+            reciever.onMessage(sendConnection.getSent());
+
+            expect(resConnection.getSentJSON().result).toBe(i + 10000);
+            expect(resConnection.getSentJSON().id).toBe(id);
+            sender.onMessage(resConnection.getSent());
+
+            expect(testObj.result).toBe(i + 10000);
+        }
+    });
 });
