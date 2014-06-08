@@ -83,6 +83,9 @@
  
         this.gl.drawElements( this.gl.TRIANGLES, batch.iBuffer.data.numItems, this.gl.UNSIGNED_SHORT, 0  );
     }
+    
+
+  
 
 
     

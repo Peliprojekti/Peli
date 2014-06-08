@@ -57,8 +57,7 @@
         this.texCoords.push( triangle.v3.uv.x );
         this.texCoords.push( triangle.v3.uv.y );
         
-        // Texcoords fine when entering the bank
-        
+        // Texcoords fine when entering the bank        
         
         this.normals.push( triangle.v1.normal.x );
         this.normals.push( triangle.v1.normal.y );

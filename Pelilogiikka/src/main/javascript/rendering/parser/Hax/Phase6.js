@@ -11,14 +11,15 @@
     
     function byMat( a,b )
     {
-         if (a.material.hash <= b.material.hash) return -1;
-         if (a.material.hash >= b.material.hash) return  1;
+         if ( a.material.hash <= b.material.hash ) return -1;
+         if ( a.material.hash >= b.material.hash ) return  1;
          return 0;
     }
     
 
     function build_WorldBatch( triangleList )
     {
+        
         // Sort the triangleList by material hash
         var sorted = triangleList.sort( byMat );
         

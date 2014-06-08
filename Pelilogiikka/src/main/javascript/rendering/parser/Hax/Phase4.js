@@ -1,6 +1,6 @@
 
 
-    function extract_MeshData( meshPath )
+    function extract_MeshData( meshPath , transformation )
     {    
         var meshParser   = new Parser( meshPath );
         var vertexList   = [];
@@ -32,7 +32,7 @@
             
             
             for( var i = 1; i < lines.length; i++ )     // Skip the header at 0
-            {
+            {            
                 var line   = lines[i];
                 var tokens = line.split(" ");
                 
@@ -56,11 +56,18 @@
                 var tZ = parseFloat( tokens[14]);
                 
                 
-                vertices.push( new Vertex( new Vector3(x,y,z),
-                                           new Vector2( u,-v),
-                                           new Vector3( nX,nY,nZ),
-                                           new Vector3( bX,bY,bZ),
-                                           new Vector3( tX,tY,tZ) ) );
+                    
+                // Transform the point and normal here
+                var position = new Vector3(x,y,z);
+                
+                    position = transformation.transform( position );
+                    
+                
+                vertices.push( new Vertex( position               ,
+                                           new Vector2( u,-v)     ,
+                                           new Vector3( nX,nY,nZ) ,
+                                           new Vector3( bX,bY,bZ) ,
+                                           new Vector3( tX,tY,tZ)  ) );
             }
            
         vertexList.push( vertices );

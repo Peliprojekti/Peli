@@ -129,26 +129,19 @@
         var x = vec3.x;
         var y = vec3.y;
         var z = vec3.z;
-    
-        var orient = this.get_Translation();
         
-       
-        var x1 = x + orient.x;
-        var y1 = y + orient.y;
-        var z1 = z + orient.z;
+        var x1 = x * this.data[0] + y * this.data[4] + z * this.data[8]  + 1.0* this.data[12];
+        var y1 = x * this.data[1] + y * this.data[5] + z * this.data[9]  + 1.0* this.data[13];
+        var z1 = x * this.data[2] + y * this.data[6] + z * this.data[10] + 1.0* this.data[14];
         
-        var retVec = new Vector3(x1,y1,z1),
-            retVec = this.extract_Orientation().transform( retVec );
-             
-
-    return retVec;
+        
+    return new Vector3(x1,y1,z1); //vec3;
     }
 
     
     
     Matrix44.prototype.build_Transformation = function( pos, rot, sca )
     {
-        
         console.info( pos.x + " " + pos.y + " " + pos.z );
         
         var rotation_X = new Matrix33();
@@ -162,18 +155,18 @@
         
         var rotation   = rotation_X.multiply( rotation_Y );
             rotation   = rotation.multiply( rotation_Z );
-        
-     
-        
+             
+        var scale      = new Matrix33();
+            scale.Scale( sca );
+            
+            rotation   = rotation.multiply( scale );
         var rot44      = new Matrix44();
             rot44.embed( rotation );
-            
-        
-        var phase2 = rot44;
-            phase2.data[12] = pos.x;
-            phase2.data[13] = pos.y;
-            phase2.data[14] = pos.z;
-        
-         
-    return phase2;
+  
+    
+            rot44.data[12] = pos.x;
+            rot44.data[13] = pos.y;
+            rot44.data[14] = pos.z;
+    
+    return rot44;
     }

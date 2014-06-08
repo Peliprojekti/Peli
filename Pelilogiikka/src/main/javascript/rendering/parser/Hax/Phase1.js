@@ -45,6 +45,8 @@
             var node_Rotation            = node_Description[1].casted();
             var node_Scale               = node_Description[2].casted();
             
+            node_Position.alert();
+            
            
             var node_Transformation      = new Matrix44();
                 node_Transformation      = node_Transformation.build_Transformation( node_Position  ,
