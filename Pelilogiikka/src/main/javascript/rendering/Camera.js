@@ -5,26 +5,37 @@
 //              \   /
 //               \ /
 //              Origin
-function ViewTriangle( origin3, look3,  lTrans, rTrans, farPlaneDist )
-{
+    function ViewTriangle( origin3, look3,  lTrans, rTrans, farPlaneDist )
+    {
+        this.look       = new Vector2( look3.x, look3.z );
+        
+        var left        = lTrans.transform( this.look );
+        var right       = rTrans.transform( this.look );
+        var farLook     = this.look.multiply( farPlaneDist );
+        var left_Side   = farLook.projected( left  );
+        var right_Side  = farLook.projected( right );
    
-    this.look       = new Vector2( look3.x, look3.z );
-    var left        = lTrans.transform( this.look );
-    var right       = rTrans.transform( this.look );
-    
-    var farLook      = this.look.multiply( farPlaneDist );
-      
-    var left_Side    = farLook.projected( left  );
-    var right_Side   = farLook.projected( right );
-   
-    left.alert();
-   
-    this.origin      = new Vector2( origin3.x, origin3.z );
-    this.left_Point  = this.origin.add( left_Side  );
-    this.right_Point = this.origin.add( right_Side ); 
-    
-    this.left_Point.alert();
-}
+        this.origin     = new Vector2( origin3.x, origin3.z );
+        
+        this.left       = this.origin.add( left_Side  );
+        this.right      = this.origin.add( right_Side ); 
+    }
+
+
+    ViewTriangle.prototype.contains = function ( aabr )
+    {
+        return true;
+    }
+
+
+    ViewTriangle.prototype.alert = function()
+    {
+        alert("Viewtriangle");
+        this.origin.alert();
+        this.left.alert();
+        this.right.alert();
+    }
+
 
 
 function Camera(  position  )

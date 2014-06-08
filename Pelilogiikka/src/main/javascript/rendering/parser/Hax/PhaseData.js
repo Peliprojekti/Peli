@@ -138,44 +138,14 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    function byX( a,b )
+    // Axis Aligned Bounding Rectangle
+    function AABR( minX, maxX, minZ, maxZ )
     {
-        /*
-         if (a.v1.point.x < b.v1.point.x) return -1;
-         if (a.v1.point.x > b.v1.point.x) return  1; 
-         return 0;
-        */
-       return a.v1.point.x - b.v1.point.x;
+        this.p1 = new Vector2( minX, maxZ );
+        this.p2 = new Vector2( maxX, maxZ );
+        this.p3 = new Vector2( minX, minZ );
+        this.p4 = new Vector2( maxX, minZ );
     }
-    
-    function byZ( a,b )
-    {
-        return a.v1.point.z - b.v1.point.z;
-        /*
-        if (a.v1.point.z <  b.v1.point.z) return -1;
-        if (a.v1.point.z >  b.v1.point.z) return  1;
-        return 0;
-        */
-    }
-    
-   function split( triangleList, funct )
-   {
-        var sorted = triangleList.sort(        funct           );
-        var middle =         Math.ceil(    sorted.length/2     );
-        var low    =     sorted.splice(      0 , middle        );
-        var high   =     sorted.splice( middle , sorted.length );
-       
-        
-   return [ low,high ];
-   }
     
     
     
@@ -187,9 +157,6 @@
         
         this.batch    = build_WorldBatch( triangleList );
         
-        
-  
-        
         if( triangleList.length < target_BatchSize )
         {
             console.log( "Node finished at " + depth + " with " + triangleList.length + " triangles");
@@ -198,35 +165,17 @@
         else
             console.log( "Node proceeding at " + depth + " with " + triangleList.length + " triangles");
        
-        var quadrants = this.partition( triangleList );
-        
-        var q1 = quadrants[0];
-        var q2 = quadrants[1];
-        var q3 = quadrants[2];
-        var q4 = quadrants[3];
-        
-       
-        this.q1       = new QuadNode( quadrants[0], target_BatchSize, depth );
-        this.q2       = new QuadNode( quadrants[1], target_BatchSize, depth );
-        this.q3       = new QuadNode( quadrants[2], target_BatchSize, depth );
-        this.q4       = new QuadNode( quadrants[3], target_BatchSize, depth );
-    }
-    
-    
-    
-    
-    
-    QuadNode.prototype.partition = function( triangleList )
-    {
-        
+ 
         var triangleCnt = triangleList.length;
-       
-        var zSorted = [];
+        var zSorted     = [];
         
         zSorted = triangleList.sort( function(a,b)
         {
             return a.v1.point.z - b.v1.point.z;
         });
+        
+        var minZ = zSorted[        0         ].v1.point.z;
+        var maxZ = zSorted[ zSorted.length-1 ].v1.point.z;
         
         var middleZ = Math.ceil( zSorted.length/2);
         
@@ -246,6 +195,16 @@
             return a.v1.point.x - b.v1.point.x;
         });
         
+        var minX = ( xSortedNear[0].v1.point.x < xSortedFar[0].v1.point.x )  ? 
+                     xSortedNear[0].v1.point.x : xSortedFar[0].v1.point.x;
+        
+        var hax1 = xSortedNear.length-1;
+        var hax2 = xSortedFar.length-1;
+        
+        var maxX = ( xSortedNear[hax1].v1.point.x > xSortedFar[hax2].v1.point.x )  ? 
+                     xSortedNear[hax1].v1.point.x : xSortedFar[hax2].v1.point.x;
+        
+        
         
         var q1 = xSortedFar.splice( 0, Math.ceil( xSortedFar.length/2  )  );
         var q2 = xSortedFar;
@@ -257,9 +216,19 @@
         
         ASSERT( sigma == triangleCnt , "VITUIX MENI " + sigma + " vs " + triangleCnt );
         
-    
-    return [ q1,q2,q3,q4 ]; 
+        this.boundingRect = new AABR( minX,maxX, minZ,maxZ);
+        
+        this.q1           = new QuadNode( q1, target_BatchSize, depth );
+        this.q2           = new QuadNode( q2, target_BatchSize, depth );
+        this.q3           = new QuadNode( q3, target_BatchSize, depth );
+        this.q4           = new QuadNode( q4, target_BatchSize, depth );
     }
+    
+    
+    
+    
+    
+
     
     
     
@@ -277,7 +246,7 @@
     }
     
     
-    QuadTree.prototype.render = function()
+    QuadTree.prototype.render = function( viewFrustrum )
     {
         this.rootNode.q1.render();
         this.rootNode.q2.render();

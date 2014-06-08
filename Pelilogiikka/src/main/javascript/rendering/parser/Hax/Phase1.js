@@ -74,10 +74,10 @@
     
     
     
-    World.prototype.render = function()
+    World.prototype.render = function( camera )
     {
         the_Renderer.set_Shader( this.shader      );
         the_Renderer.set_Matrices( new Matrix44(), null, null );
         
-        this.quadTree.render(  );
+        this.quadTree.render( camera.frustrum );
     }
