@@ -67,8 +67,8 @@
       
     // UV should be fine here!
     
-    this.quadTree = partition_Geometry( triangleList );   
-    this.shader   = new SimpleShader(                );
+    this.quadTree =  new     QuadTree( triangleList   ); 
+    this.shader   =  new SimpleShader(                );
     }
     
     

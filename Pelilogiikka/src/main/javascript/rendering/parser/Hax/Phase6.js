@@ -46,5 +46,5 @@
             
     console.info("Done with " + banks.length + " banks.  " );     
     
-    return new WorldBatch( banks );
+    return new WorldBatch( banks, triangleList );
     }

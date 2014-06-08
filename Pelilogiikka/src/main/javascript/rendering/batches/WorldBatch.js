@@ -30,9 +30,10 @@
     
     
 
-    function WorldBatch( vertexBankList  ) 
+    function WorldBatch( vertexBankList, triangles  ) 
     {
-        this.batches = [];
+        this.triangles = triangles;         // The raw list of the triangles. Unusable for rendering, but priceless for ray-world queries.
+        this.batches   = [];
         
         for( var i = 0; i < vertexBankList.length; i++ )
         {

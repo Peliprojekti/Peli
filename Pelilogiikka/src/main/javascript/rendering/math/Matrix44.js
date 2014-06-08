@@ -120,8 +120,6 @@
     }
     
     
-    
-    
         
     Matrix44.prototype.transform = function( vec3 )
     {
@@ -142,23 +140,19 @@
     
     Matrix44.prototype.build_Transformation = function( pos, rot, sca )
     {   
-        var rotX = new Matrix33();
-            rotX.RotationX( DegToRad( rot.x ) );
+        var rotX   = new Matrix33();
+        var rotY   = new Matrix33();
+        var rotZ   = new Matrix33();
         
-        var rotY = new Matrix33();
-            rotY.RotationY( DegToRad( rot.y ) );
-          
-        var rotZ = new Matrix33();
-            rotZ.RotationZ( DegToRad( rot.z ) );
+        rotX.RotationX( DegToRad( rot.x ) );
+        rotY.RotationY( DegToRad( rot.y ) );
+        rotZ.RotationZ( DegToRad( rot.z ) );
         
         var rotXYZ = new Matrix33();
             rotXYZ = rotXYZ.multiply( rotZ );
             rotXYZ = rotXYZ.multiply( rotY );
             rotXYZ = rotXYZ.multiply( rotX );
-            
-            // Wtf? Order should be irrelevant with rotations? Gimbal lock?
-            
-            
+            // Wtf? Order should be irrelevant with rotations? Gimbal lock?   Why not happy with X,Y,Z convention?
             
         var rotate44    = new Matrix44();
             rotate44.embed( rotXYZ );
@@ -173,9 +167,6 @@
                                          0,0,1,0,
                                          pos.x,pos.y,pos.z,1]);  
          
-        
-        
-        
     var ret = new Matrix44();
         ret = ret.multiply( translate44 );
         ret = ret.multiply( rotate44    );

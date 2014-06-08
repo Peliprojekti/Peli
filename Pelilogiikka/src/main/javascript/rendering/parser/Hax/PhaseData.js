@@ -129,14 +129,139 @@
     
     
     
-    function QuadNode( batch )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    function byX( a,b )
     {
-        this.batch    = batch;
-        this.q1       = null;
-        this.q2       = null;
-        this.q3       = null;
-        this.q4       = null;
+        /*
+         if (a.v1.point.x < b.v1.point.x) return -1;
+         if (a.v1.point.x > b.v1.point.x) return  1; 
+         return 0;
+        */
+       return a.v1.point.x - b.v1.point.x;
     }
+    
+    function byZ( a,b )
+    {
+        return a.v1.point.z - b.v1.point.z;
+        /*
+        if (a.v1.point.z <  b.v1.point.z) return -1;
+        if (a.v1.point.z >  b.v1.point.z) return  1;
+        return 0;
+        */
+    }
+    
+   function split( triangleList, funct )
+   {
+        var sorted = triangleList.sort(        funct           );
+        var middle =         Math.ceil(    sorted.length/2     );
+        var low    =     sorted.splice(      0 , middle        );
+        var high   =     sorted.splice( middle , sorted.length );
+       
+        
+   return [ low,high ];
+   }
+    
+    
+    
+    
+    
+    function QuadNode( triangleList, target_BatchSize, depth )
+    {
+        depth++;
+        
+        this.batch    = build_WorldBatch( triangleList );
+        
+        
+  
+        
+        if( triangleList.length < target_BatchSize )
+        {
+            console.log( "Node finished at " + depth + " with " + triangleList.length + " triangles");
+            return;
+        }
+        else
+            console.log( "Node proceeding at " + depth + " with " + triangleList.length + " triangles");
+       
+        var quadrants = this.partition( triangleList );
+        
+        var q1 = quadrants[0];
+        var q2 = quadrants[1];
+        var q3 = quadrants[2];
+        var q4 = quadrants[3];
+        
+       
+        this.q1       = new QuadNode( quadrants[0], target_BatchSize, depth );
+        this.q2       = new QuadNode( quadrants[1], target_BatchSize, depth );
+        this.q3       = new QuadNode( quadrants[2], target_BatchSize, depth );
+        this.q4       = new QuadNode( quadrants[3], target_BatchSize, depth );
+    }
+    
+    
+    
+    
+    
+    QuadNode.prototype.partition = function( triangleList )
+    {
+        
+        var triangleCnt = triangleList.length;
+       
+        var zSorted = [];
+        
+        zSorted = triangleList.sort( function(a,b)
+        {
+            return a.v1.point.z - b.v1.point.z;
+        });
+        
+        var middleZ = Math.ceil( zSorted.length/2);
+        
+        var nearZ  = zSorted.splice( 0, middleZ        );
+        var farZ   = zSorted;
+        
+        var xSortedNear = [];   // Lower half sorted
+        var xSortedFar  = [];   // Upper half sorted
+        
+        xSortedNear = nearZ.sort( function(a,b)
+        {
+            return a.v1.point.x - b.v1.point.x;
+        });
+        
+        xSortedFar = farZ.sort( function(a,b)
+        {
+            return a.v1.point.x - b.v1.point.x;
+        });
+        
+        
+        var q1 = xSortedFar.splice( 0, Math.ceil( xSortedFar.length/2  )  );
+        var q2 = xSortedFar;
+        
+        var q3 = xSortedNear.splice( 0, Math.ceil( xSortedNear.length/2)  );
+        var q4 = xSortedNear;
+        
+        var sigma = q1.length + q2.length + q3.length + q4.length;
+        
+        ASSERT( sigma == triangleCnt , "VITUIX MENI " + sigma + " vs " + triangleCnt );
+        
+    
+    return [ q1,q2,q3,q4 ]; 
+    }
+    
+    
     
     QuadNode.prototype.render = function()
     {
@@ -146,14 +271,17 @@
     
     
     
-    function QuadTree( rootNode )
+    function QuadTree( triangleList )
     {
-        this.rootNode = rootNode;
+        this.rootNode = new QuadNode( triangleList, 32, 1 );
     }
     
     
     QuadTree.prototype.render = function()
     {
-        this.rootNode.render();
+        this.rootNode.q1.render();
+        this.rootNode.q2.render();
+        this.rootNode.q3.render();
+        this.rootNode.q4.render();
         
     }

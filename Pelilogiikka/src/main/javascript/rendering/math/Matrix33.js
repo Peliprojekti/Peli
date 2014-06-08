@@ -84,6 +84,7 @@
                                y * this.data[3] + y * this.data[4] + y * this.data[5] , 
                                z * this.data[6] + z * this.data[7] + z * this.data[8] );
     */
+   // This is just pitiful... How could THIS bug have ended up here during rewrite? Suppose this method is never used outside of the parser...
         
         var ret = new Vector3( x * this.data[0] + y * this.data[1] + z * this.data[2] ,
                                x * this.data[3] + y * this.data[4] + z * this.data[5] , 
