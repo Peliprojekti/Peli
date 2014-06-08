@@ -79,9 +79,16 @@
         var x   = vec3.x;
         var y   = vec3.y;
         var z   = vec3.z;
+    /*    
         var ret = new Vector3( x * this.data[0] + x * this.data[1] + x * this.data[2] ,
                                y * this.data[3] + y * this.data[4] + y * this.data[5] , 
                                z * this.data[6] + z * this.data[7] + z * this.data[8] );
+    */
+        
+        var ret = new Vector3( x * this.data[0] + y * this.data[1] + z * this.data[2] ,
+                               x * this.data[3] + y * this.data[4] + z * this.data[5] , 
+                               x * this.data[6] + y * this.data[7] + z * this.data[8] );
+        
     return ret;
     }
 

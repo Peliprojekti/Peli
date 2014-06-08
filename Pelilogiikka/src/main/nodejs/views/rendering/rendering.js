@@ -57,15 +57,15 @@ function draw_Frame ()
         testCamera.backwards(5.0);
 
     if (key_Down(37))
-        testCamera.yaw(2.0);
+        testCamera.yaw(-2.0);
     
     if (key_Down(39)) 
-        testCamera.yaw(-2.0);
+        testCamera.yaw(2.0);
 
     if (key_Down(81))
-        testCamera.roll(2.0);
-    if (key_Down(69))
         testCamera.roll(-2.0);
+    if (key_Down(69))
+        testCamera.roll(2.0);
 
     if (key_Down(87))
         testCamera.pitch(2.0);
@@ -108,7 +108,7 @@ function draw_Frame ()
         
     the_Renderer.set_Matrices( trans, null, null );
                                
-    the_Renderer.draw_Batch(testActor.batch );
+  //  the_Renderer.draw_Batch(testActor.batch );
 
 }
 

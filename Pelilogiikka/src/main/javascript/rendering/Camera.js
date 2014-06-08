@@ -122,6 +122,16 @@ Camera.prototype.get_ProjectionMatrix = function()
        ret.data[14] = -(far*near*2) / fn;
        ret.data[15] = 0;  
     
+    // Mirror the projection matrix along X
+    var mirror = new Matrix44( [-1,0,0,0,
+                                0,1,0,0,
+                                0,0,1,0,
+                                0,0,0,1] );
+                                
+     
+    ret = ret.multiply( mirror );
+    
+    
 return ret;
 }
 
