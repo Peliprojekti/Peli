@@ -1,5 +1,30 @@
-
-
+//  LeftPoint-----------RightPoint
+//           \         /
+//            \       /
+//             \     /
+//              \   /
+//               \ /
+//              Origin
+function ViewTriangle( origin3, look3,  lTrans, rTrans, farPlaneDist )
+{
+   
+    this.look       = new Vector2( look3.x, look3.z );
+    var left        = lTrans.transform( this.look );
+    var right       = rTrans.transform( this.look );
+    
+    var farLook      = this.look.multiply( farPlaneDist );
+      
+    var left_Side    = farLook.projected( left  );
+    var right_Side   = farLook.projected( right );
+   
+    left.alert();
+   
+    this.origin      = new Vector2( origin3.x, origin3.z );
+    this.left_Point  = this.origin.add( left_Side  );
+    this.right_Point = this.origin.add( right_Side ); 
+    
+    this.left_Point.alert();
+}
 
 
 function Camera(  position  )
@@ -7,13 +32,30 @@ function Camera(  position  )
     this.position    = position;
     this.orientation = new Matrix33();
     
-    this.vertical_Fov = 45;
+    this.vertical_Fov = 60;
     this.aspectRatio  = 1.3333;
     this.nearPlane    = 1.0;
-    this.farPlane     = 10000;
+    this.farPlane     = 500;
     
+    
+    // Parameters to make viewTriangle creation faster
+    this.fov     = this.vertical_Fov / this.aspectRatio; // Does this even make sense? ~ w/h = fov_V / fov_H 
+    this.lTrans  = new Matrix22();
+    this.rTrans  = new Matrix22();
+    this.lTrans.Rotation(  DegToRad(this.fov)  );
+    this.rTrans.Rotation(  DegToRad(-this.fov) );
+    
+    
+    var look = this.orientation.extract_K();
+   
+    this.frustrum = new ViewTriangle( this.position,
+                                      look,
+                                      this.lTrans,
+                                      this.rTrans,
+                                      this.farPlane );
+ 
+     
 }
-
 
 
 

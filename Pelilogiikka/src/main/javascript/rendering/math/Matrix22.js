@@ -41,7 +41,7 @@
 
     Matrix22.prototype.multiply = function( mat )
     {
-        ASSERT_TYPE( Matrix33, mat, "Expected Matrix33 for valid 3x3 Matrix multiplication");
+        ASSERT_TYPE( Matrix22, mat, "Expected Matrix22 for valid 2x2 Matrix multiplication");
         
         var ret = new Matrix22();
 
@@ -54,6 +54,16 @@
        
     return ret;
     }
+    
+    Matrix22.prototype.transform = function( vec2 ) 
+    {
+        ASSERT_TYPE( Vector2, vec2, "Expected Vector2 for valid transformation by 2x2 Matrix ");
+
+        return new Vector2( vec2.x * this.data[0] + vec2.y * this.data[1] , 
+                            vec2.x * this.data[2] + vec2.y * this.data[3]  );
+    }
+    
+    
 
 
     Matrix22.prototype.alert = function() 

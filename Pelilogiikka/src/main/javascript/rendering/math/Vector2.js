@@ -18,13 +18,13 @@ Vector2.prototype.add = function( vec2 )
                          this.y+vec2.y );
 }
 
-Vector2.prototype.sub = function( vec2 )
+Vector2.prototype.subtract = function( vec2 )
 {
     return new Vector2(  this.x-vec2.x ,
                          this.y-vec2.y );
 }
 
-Vector2.prototype.mul = function( scalar )
+Vector2.prototype.multiply = function( scalar )
 {
     return new Vector2(  this.x*scalar ,
                          this.y*scalar );
@@ -53,8 +53,8 @@ Vector2.prototype.normalized = function()
 
 Vector2.prototype.projected = function( vec2 )
 {
-    var t = this.dot( vec2 ) / vec2.dot(vec2);
-    return vec2.mul( t );
+    var t = this.dot( vec2 ) / vec2.dot( vec2 );
+    return vec2.multiply( t );
 }
 
 
@@ -74,8 +74,8 @@ Vector2.prototype.angleWith = function( vec2 )
 }
 
 
-Vector2.prototype.report = function()
+Vector2.prototype.alert = function()
 {
-    alert("< "+this.x +" , "+ this.y + " , " +this.z+" >");
+    alert("< "+this.x +" , "+ this.y +" >");
 }
 
