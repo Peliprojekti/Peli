@@ -7,24 +7,42 @@
 //              Origin
     function ViewTriangle( origin3, look3,  lTrans, rTrans, farPlaneDist )
     {
-        this.look       = new Vector2( look3.x, look3.z );
+        this.look       = new Vector2( look3.x, look3.z ).normalized();
         
-        var left        = lTrans.transform( this.look );
-        var right       = rTrans.transform( this.look );
+        var leftU       = lTrans.transform( this.look );
+        var rightU      = rTrans.transform( this.look );
         var farLook     = this.look.multiply( farPlaneDist );
-        var left_Side   = farLook.projected( left  );
-        var right_Side  = farLook.projected( right );
+        var left_Side   = farLook.projected( leftU  );
+        var right_Side  = farLook.projected( rightU );
    
         this.origin     = new Vector2( origin3.x, origin3.z );
-        
         this.left       = this.origin.add( left_Side  );
         this.right      = this.origin.add( right_Side ); 
     }
 
 
+
     ViewTriangle.prototype.contains = function ( aabr )
     {
-        return true;
+        var p1            = this.origin;
+        var p2            = this.left;
+        var p3            = this.right;
+        var testDir       = new Vector2(1,1).normalized();
+        var points_Inside = 0;
+        
+        for( var i = 0; i < aabr.points.length; i++ )
+        {   
+            var testRay   = new Ray2( aabr.points[i], testDir );
+            var hits      = 0;
+            
+            if( testRay.intersects( p1,p2 ) ) hits++;
+            if( testRay.intersects( p2,p3 ) ) hits++;
+            if( testRay.intersects( p3,p1 ) ) hits++;
+     
+            if( (hits % 2) != 0 ) points_Inside++;
+        }
+        
+    return points_Inside;
     }
 
 
@@ -35,6 +53,7 @@
         this.left.alert();
         this.right.alert();
     }
+
 
 
 
@@ -55,18 +74,20 @@ function Camera(  position  )
     this.rTrans  = new Matrix22();
     this.lTrans.Rotation(  DegToRad(this.fov)  );
     this.rTrans.Rotation(  DegToRad(-this.fov) );
-    
-    
-    var look = this.orientation.extract_K();
-   
+ 
+    this.rebuild_Frustrum();
+}
+
+
+Camera.prototype.rebuild_Frustrum = function()
+{
     this.frustrum = new ViewTriangle( this.position,
-                                      look,
+                                      this.orientation.extract_K(),
                                       this.lTrans,
                                       this.rTrans,
                                       this.farPlane );
- 
-     
 }
+
 
 
 
@@ -129,6 +150,8 @@ Camera.prototype.roll = function( amount )
 
 Camera.prototype.get_ViewMatrix = function()
 { 
+    this.rebuild_Frustrum();  // Kinda hax it here
+    
     var ret = new Matrix44();
         ret.embed( this.orientation.transposed() );    
         

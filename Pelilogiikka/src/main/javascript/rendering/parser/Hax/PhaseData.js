@@ -141,12 +141,13 @@
     // Axis Aligned Bounding Rectangle
     function AABR( minX, maxX, minZ, maxZ )
     {
-        this.p1 = new Vector2( minX, maxZ );
-        this.p2 = new Vector2( maxX, maxZ );
-        this.p3 = new Vector2( minX, minZ );
-        this.p4 = new Vector2( maxX, minZ );
+        this.points    = [];
+        
+        this.points[0] = new Vector2( minX, maxZ );
+        this.points[1] = new Vector2( maxX, maxZ );
+        this.points[2] = new Vector2( minX, minZ );
+        this.points[3] = new Vector2( maxX, minZ );
     }
-    
     
     
     
@@ -231,11 +232,25 @@
 
     
     
-    
-    QuadNode.prototype.render = function()
+    QuadNode.prototype.render = function( viewFrustrum )
     {
-        this.batch.render();
+        var hits = viewFrustrum.contains( this.boundingRect );
+        
      
+        if( hits == 4 )
+        {
+            console.info("Entire node inside - Draw and return");
+        }
+        else
+            if( hits > 0 )
+            {
+                console.info("Node partially inside - Continue query");
+                 this.batch.render();
+            }
+            else
+                console.info("Node completely outside - Stop query and draw nothing");
+      
+      //  this.batch.render();
     }
     
     
@@ -248,9 +263,11 @@
     
     QuadTree.prototype.render = function( viewFrustrum )
     {
-        this.rootNode.q1.render();
-        this.rootNode.q2.render();
-        this.rootNode.q3.render();
-        this.rootNode.q4.render();
-        
+        this.rootNode.render( viewFrustrum );
+        /*
+        this.rootNode.q1.render( viewFrustrum );
+        this.rootNode.q2.render( viewFrustrum );
+        this.rootNode.q3.render( viewFrustrum );
+        this.rootNode.q4.render( viewFrustrum );
+        */
     }
