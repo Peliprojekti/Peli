@@ -58,9 +58,9 @@ controller.MotionController.prototype.orientation = function (tiltLR, tiltFB, di
     //console.debug("orientation called");
     
     this.tiltLR = -tiltLR;
-    this.tiltFB = tiltFB;
-
-
+    if(tiltFB >= -90 && tiltFB <= 90){
+        this.tiltFB = tiltFB;
+    }
 
 //    if(dir < 180){
 //        this.setPosition(this.x - this.speed, this.y);
