@@ -5,7 +5,7 @@ describe('the MotionController (client) object', function () {
     var coms;
     var arr;
     var controllerDisabler;
-    var sendServerMessage_old = sendServerMessage;
+    
     sendServerMessage = function(){
         
     };
@@ -51,9 +51,7 @@ describe('the MotionController (client) object', function () {
 //            expect(coms.call).toHaveBeenCalledWith('orientation', arr, null, null);
 //
 //        });
-    });
+//    });
     
-    
-    
-    sendServerMessage = sendServerMessage_old;
+   
 });
