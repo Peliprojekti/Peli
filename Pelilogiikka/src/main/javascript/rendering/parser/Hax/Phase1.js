@@ -20,8 +20,6 @@
         
         });
         
-        node_Name.alert();
-        
     return [ node_Position, node_Rotation, node_Scale, node_Mesh, node_Name ];
     }
  
@@ -44,7 +42,6 @@
             var node_Variables           = node_Attributes[0].get_Variables();                 
             
             var node_Description         = read_Node( node_Variables   );
-           
             var node_Name                = node_Variables[0].value;         // HAX HAX HAX. node_Variables bugaa.
            
             var node_Position            = node_Description[0].casted();
@@ -55,12 +52,14 @@
                 node_Transformation      = node_Transformation.build_Transformation( node_Position  ,
                                                                                      node_Rotation  ,
                                                                                      node_Scale     ); 
+           
+            
            if( node_Name == "Mesh1")
            {
-               alert("ASSFUCK");
+               alert("ASS");
            }
            
-          
+           
             switch( node_Type ) 
             {
                  case "mesh":   
