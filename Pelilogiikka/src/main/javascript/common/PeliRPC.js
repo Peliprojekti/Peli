@@ -89,7 +89,7 @@ peliRPC.PeliRPC.prototype.onMessage = function (message) {
     } else {
         if (rpc.method !== undefined) {
             this.onMessageMethodCall(rpc);
-        } else if (rpc.id !== undefined && (this.callbacks[rpc.id] !== undefined)) {
+        } else if (rpc.id !== undefined) { //&& (this.callbacks[rpc.id] !== undefined)) {
             this.onMessageReturnValue(rpc);
         } else {
             console.error("PeliRPC::onMessage - recieved invalid JSON-RPC message: ", message);
@@ -130,28 +130,29 @@ peliRPC.PeliRPC.prototype.onMessageMethodCall = function (rpc) {
 
 peliRPC.PeliRPC.prototype.onMessageReturnValue = function (rpc) {
     "use strict";
+    var modID;
 
     if (rpc.id > (this.callSequence - peliRPC.maxCallbacks)) {
-        rpc.id = (rpc.id % peliRPC.maxCallbacks);
+        modID = (rpc.id % peliRPC.maxCallbacks);
 
         if (rpc.result !== undefined) {
             //console.debug("PeliRPC::onMessage() - returning value to callback: " + rpc.result);
-            this.callbacks[rpc.id].listener.apply(this.callbacks[rpc.id].object, [rpc.id, null, rpc.result]);
+            this.callbacks[modID].listener.apply(this.callbacks[modID].object, [rpc.id, null, rpc.result]);
         } else if (rpc.error !== undefined) {
             console.error("PeliRPC::onMessage() - returning an error to callback: ", rpc.error);
-            this.callbacks[rpc.id].listener.apply(
-                this.callbacks[rpc.id].object,
+            this.callbacks[modID].listener.apply(
+                this.callbacks[modID].object,
                 [rpc.id, rpc.error, null]
             );
         } else {
             //console.debug("PeliRPC::onMessage() - calling callbac with no return value");
-            this.callbacks[rpc.id].listener.apply(
-                this.callbacks[rpc.id].object,
+            this.callbacks[modID].listener.apply(
+                this.callbacks[modID].object,
                 [rpc.id, null, null]
             );
         }
 
-        delete this.callbacks[rpc.id];
+        delete this.callbacks[modID];
     } else {
         throw new Error("Callback too old, unable to return value form remote RPC call");
     }

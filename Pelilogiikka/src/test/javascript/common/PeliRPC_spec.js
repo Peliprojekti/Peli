@@ -446,7 +446,7 @@ describe('the PeliRPC object', function () {
             sender = peliRPC.create(sendConnection),
             reciever = peliRPC.create(resConnection),
             testObj = getTestObj(),
-            count = peliRPC.maxCallbacks + 10,
+            count = (2*peliRPC.maxCallbacks) + 10,
             i,
             id;
 
@@ -455,15 +455,27 @@ describe('the PeliRPC object', function () {
         });
 
         for (i = 0; i < count; i++) {
-            id = sender.callRpc('someFunction', [i, 10000], testObj, testObj.func);
+            expect(function() {
+                id = sender.callRpc('someFunction', [i, 10000], testObj, testObj.func);
+            }).not.toThrow();
 
             expect(sendConnection.getSentJSON().id).toBe(id);
-            reciever.onMessage(sendConnection.getSent());
+
+            expect(function() {
+                reciever.onMessage(sendConnection.getSent());
+            }).not.toThrow();
 
             expect(resConnection.getSentJSON().result).toBe(i + 10000);
             expect(resConnection.getSentJSON().id).toBe(id);
-            sender.onMessage(resConnection.getSent());
+            expect(resConnection.getSentJSON().error).toBe(undefined);
+            expect(resConnection.getSentJSON().jsonrpc).toBe("2.0");
 
+            expect(function() {
+                sender.onMessage(resConnection.getSent());
+            }).not.toThrow();
+            
+            expect(testObj.error).toBe(null);
+            expect(testObj.id).toBe(id);
             expect(testObj.result).toBe(i + 10000);
         }
     });
