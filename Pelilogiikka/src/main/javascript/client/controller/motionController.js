@@ -37,7 +37,6 @@ client.loadedTypes.motionController = function (container, canvas, phone, coms) 
     };
 
     MotionController.prototype.enable = function () { //coms, window) {
-           coms.call();
         var thisObject = this;
         //this.coms = coms;
         log.info("Enabling MotionController", true);
@@ -59,7 +58,6 @@ client.loadedTypes.motionController = function (container, canvas, phone, coms) 
             this.orientationListener = false;
         }
     };
-
     var tdObj = new MotionController();
     tdObj.enable();
     return function () {

@@ -5,14 +5,9 @@ describe('the MotionController (client) object', function () {
     var coms;
     var arr;
     var controllerDisabler;
-    
-    sendServerMessage = function(){
-        
-    };
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function () {
-
     });
 
     //Clean it up after each spec
@@ -20,38 +15,42 @@ describe('the MotionController (client) object', function () {
     });
 
     //Specs
-//    describe('MotionController tests', function () {
-//
-//        it('calls coms with the correct method and position parameters on device orientation', function () {
-//            canvas = document.createElement("canvas");
-//            canvas.width = 100;
-//            canvas.height = 100;
-//            coms = {
-//                call: function (method, params, object, callback) {
-//                }
-//            };
-//
-//            client.loadedTypes.motionController(null, canvas, null, coms, 20);
-//
-//            spyOn(coms, 'call');
-//            evt = document.createEvent("Events");
-//
-//            //Aim: initialize it to be the event we want     
-//            evt.initEvent('deviceorientation', true, true); //true for can bubble, true for cancelable
-//            data = {
-//                gamma: 10,
-//                beta: 20,
-//                alpha: 30
-//            };
-//            evt.eventData = data;
-//
-//            canvas.dispatchEvent(evt);
-//            arr = [10, 20, 30];
-//            expect(coms.call).toHaveBeenCalled();
-//            expect(coms.call).toHaveBeenCalledWith('orientation', arr, null, null);
-//
-//        });
-//    });
-    
-   
+    describe('MotionController tests', function () {
+
+        it('calls coms on device orientation', function () {
+            var vanha_deviceOrEvt = window.DeviceOrientationEvent;
+            window.DeviceOrientationEvent = true;
+
+            canvas = document.createElement("canvas");
+            canvas.width = 100;
+            canvas.height = 100;
+            coms = {
+                call: function (method, params, object, callback) {
+                }
+            };
+
+            client.loadedTypes.motionController(null, canvas, null, coms);
+
+            spyOn(coms, 'call');
+            spyOn(window, 'addEventListener');
+
+            evt = document.createEvent("Events");
+
+            evt.initEvent('deviceorientation', true, true, 10, 20, 30, 5); //true for can bubble, true for cancelable
+
+            var data = {
+                gamma : 10,
+                beta : 20,
+                alpha : 30
+            };
+            evt.eventData = data;
+            window.dispatchEvent(evt);
+
+            var arr = [10, 20, 30];
+            expect(coms.call).toHaveBeenCalled();
+
+            window.DeviceOrientationEvent = vanha_deviceOrEvt;
+        });
+    });
+
 });
