@@ -18,7 +18,7 @@ function ConnectionEngineIO(host, port, protocol) {
     this.socket = null;
 }
 
-ConnectionEngineIO.eio = eio;
+//ConnectionEngineIO.eio = eio;
 
 /**
  * 
@@ -38,7 +38,7 @@ ConnectionEngineIO.prototype.connect = function (connectCallback, closeCallback,
     }
     console.info("ConnectionEngineIO connecting to ", hoststr);
 
-    this.socket = ConnectionEngineIO.eio.Socket(
+    this.socket = eio.Socket(
         {host: this.host, port: this.port},
         {transports: ['websocket', 'polling']}
     );

@@ -5,10 +5,6 @@ describe('the MotionController (client) object', function () {
     var coms;
     var arr;
     var controllerDisabler;
-    
-    sendServerMessage = function(){
-        
-    };
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function () {

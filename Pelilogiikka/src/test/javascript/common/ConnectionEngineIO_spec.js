@@ -32,33 +32,6 @@ describe('the ConnectionEngineIO object', function () {
         };
     }
 
-    ConnectionEngineIO.eio = {
-        Socket: function () {
-            return new ConnectionEngineIO.eio.SocketObject();
-        },
-        SocketObject: function () {
-            this.readyState = 'closed'; // not from spec...
-            this.lastSent = null;
-            this.listeners = {};
-        }
-    };
-
-    ConnectionEngineIO.eio.SocketObject.prototype.send = function (msg) {
-        this.lastSent = msg;
-    };
-
-    ConnectionEngineIO.eio.SocketObject.prototype.on = function (event, listener) {
-        this.listeners[event] = listener;
-    };
-
-    ConnectionEngineIO.eio.SocketObject.prototype.close = function () {
-        console.log("closing connection");
-    };
-
-    ConnectionEngineIO.eio.SocketObject.prototype.launchEvent = function (event, args) {
-        this.listeners[event](args);
-    };
-
     describe('constructor', function () {
         it('works', function () {
             var connection;

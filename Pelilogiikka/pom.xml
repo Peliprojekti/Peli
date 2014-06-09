@@ -58,10 +58,8 @@
                     </webDriverCapabilities>
                     <keepServerAlive>true</keepServerAlive>
                     <preloadSources>
-
                         <source>${project.basedir}/src/main/javascript/lib/jquery.js</source>
                         <source>${project.basedir}/src/main/javascript/globalTestVariables.js</source>
-
                     </preloadSources>
                     <sourceExcludes>
                         <exclude>lib/**/*.js</exclude>
