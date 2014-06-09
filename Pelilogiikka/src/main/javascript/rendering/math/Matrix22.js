@@ -75,8 +75,8 @@
     {
         ASSERT_TYPE( Vector2, vec2, "Expected Vector2 for valid transformation by 2x2 Matrix ");
 
-        return new Vector2( vec2.x * this.data[0] + vec2.y * this.data[1] , 
-                            vec2.x * this.data[2] + vec2.y * this.data[3]  );
+        return new Vector2( vec2.x * this.data[0] + vec2.y * this.data[2] , 
+                            vec2.x * this.data[1] + vec2.y * this.data[3]  );
     }
     
     

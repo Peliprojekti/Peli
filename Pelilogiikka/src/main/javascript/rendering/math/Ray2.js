@@ -23,17 +23,15 @@
         var         W = pointB.subtract( pointA );
         
         
-        var    matrix = new Matrix22( [  V.x , -W.x,
-                                         V.y , -W.y ] );
+        var    matrix = new Matrix22( [  V.x , V.y,
+                                        -W.x , -W.y ] );
         
-        var       vec = pointA.subtract( this.origin );
+        var vec       = pointA.subtract( this.origin );
        
         if( !matrix.invertible() ) return false;
         
         var inverted = matrix.invert();
-        
-        var params = new Vector2( vec.x * inverted.data[0] + vec.y * inverted.data[1],
-                                  vec.x * inverted.data[2] + vec.y * inverted.data[2] );    // Column matrix product
+        var params   = inverted.transform( vec );
         
       //  alert( params.x + " " + params.y );
         

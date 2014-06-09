@@ -190,6 +190,7 @@
         
         var nearZ       = zSorted.splice( 0, middleZ        );
         var farZ        = zSorted;
+        
         var xSortedNear = [];            // Lower half sorted
         var xSortedFar  = [];            // Upper half sorted
         
@@ -206,8 +207,10 @@
 
         
  
-        var minZ = zSorted[        0         ].v1.point.z;
-        var maxZ = zSorted[ zSorted.length-1 ].v1.point.z;
+        var minZ =   nearZ[        0         ].v1.point.z;
+        var maxZ =    farZ[    farZ.length-1 ].v1.point.z;
+             
+    
              
         var hax1 = xSortedNear.length-1;
         var hax2 = xSortedFar.length-1;
@@ -252,7 +255,7 @@
     {
       var hits = viewFrustrum.contains( this.boundingRect );
       
-    //    console.info(hits);
+       console.info(hits);
     /*
         if( hits == 4 )
         {

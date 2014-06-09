@@ -14,8 +14,8 @@
         
         var farLook     = this.look.multiply( farPlaneDist );
         
-        var left_Side   = farLook.projected( leftU  );
-        var right_Side  = farLook.projected( rightU );
+        var left_Side   = leftU.multiply( farPlaneDist );//farLook.projected( leftU  );
+        var right_Side  = rightU.multiply( farPlaneDist ); //farLook.projected( rightU );
    
         this.origin     = new Vector2( origin3.x, origin3.z );
         this.left       = this.origin.add( left_Side  );
@@ -40,14 +40,12 @@
             if( testRay.intersects( p1,p2 ) ) hits++;
             if( testRay.intersects( p2,p3 ) ) hits++;
             if( testRay.intersects( p3,p1 ) ) hits++;
-     
-            if( (hits % 2) != 0 ) points_Inside++;
-        
-           // console.info("hits " + hits);
-
+            
+            if( hits != 0 )
+               if( !(hits % 2) ) points_Inside++;    // Simple triangle - No intersections. One intersection - Two intersections
         }
         
-      console.info( points_Inside );
+      //console.info( points_Inside );
         
     return points_Inside;
     }
@@ -66,23 +64,21 @@
 
 function Camera(  position  )
 {
-    this.position    = position;
-    this.orientation = new Matrix33();
-    
-    this.vertical_Fov = 45;
+    this.position     = position;
+    this.orientation  = new Matrix33();
+    this.vertical_Fov = 75;
     this.aspectRatio  = 1.0;// 1.3333;
     this.nearPlane    = 1.0;
-    this.farPlane     = 500;
+    this.farPlane     = 2500;
     
     // vFov / yRes  = hFov / xRes
     // vFov*xRes/yRes = hFov
     
     // Parameters to make viewTriangle creation faster
     this.fov     = this.vertical_Fov * this.aspectRatio; // Does this even make sense? ~ w/h = fov_V / fov_H 
-   
-    
     this.lTrans  = new Matrix22();
     this.rTrans  = new Matrix22();
+    
     this.lTrans.Rotation(  DegToRad(this.fov/2)  );
     this.rTrans.Rotation(  DegToRad(-this.fov/2) );
  

@@ -45,7 +45,7 @@
             var node_Variables           = node_Attributes[0].get_Variables();                 
             
             var node_Description         = read_Node( node_Variables   );
-     //       var node_Name                = node_Variables[0].value;         // HAX HAX HAX. node_Variables bugaa.
+            var node_Name                = node_Variables[0].value;         // HAX HAX HAX. node_Variables bugaa.
            
             var node_Position            = node_Description[0].casted();
             var node_Rotation            = node_Description[1].casted();
@@ -56,7 +56,10 @@
                                                                                      node_Rotation  ,
                                                                                      node_Scale     ); 
            
-            
+            // Hijack special nodes here by Name. 
+            // Detected special nodes will be handled separately,
+            // and will never reach the triangle soup with the rest.
+               
      //      if( node_Name == "Mesh1")
       //     {
      //          alert("ASS");
