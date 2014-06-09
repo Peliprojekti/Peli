@@ -4,3 +4,4 @@ SCREEN_PORT = 1234;
 graphics2d = {};
 message = function() {};
 Audio = function() {};
+eio = null;

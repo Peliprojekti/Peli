@@ -118,7 +118,7 @@ ConnectionWebsocket.prototype.sendMessage = function (message) {
     "use strict";
     if (this.connected === true) {
         //console.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
-        this.connection.send(JSON.stringify(message));
+        this.connection.send(message);
         return true;
     } else {
         console.warn("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
