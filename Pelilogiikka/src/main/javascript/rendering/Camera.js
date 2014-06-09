@@ -62,7 +62,7 @@ function Camera(  position  )
     this.position    = position;
     this.orientation = new Matrix33();
     
-    this.vertical_Fov = 60;
+    this.vertical_Fov = 45;
     this.aspectRatio  = 1.3333;
     this.nearPlane    = 1.0;
     this.farPlane     = 500;

@@ -145,7 +145,7 @@ function main ()
 
 
 
-    testWorld = new World( "Simple" );
+    testWorld = new World( "Fairground" );
 
 
     rendererMain();
@@ -158,7 +158,7 @@ function main ()
 
 function global_Initializer ()
 {
-    new Renderer(new Dimension2(1200, 800));
+    new Renderer(new Dimension2(2600, 800));
 
     register_Inputs();
 

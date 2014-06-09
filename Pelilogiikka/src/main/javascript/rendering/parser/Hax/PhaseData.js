@@ -236,7 +236,7 @@
     {
         var hits = viewFrustrum.contains( this.boundingRect );
         
-     
+     /*
         if( hits == 4 )
         {
             console.info("Entire node inside - Draw and return");
@@ -249,7 +249,7 @@
             }
             else
                 console.info("Node completely outside - Stop query and draw nothing");
-      
+      */
   
     this.batch.render();
     }

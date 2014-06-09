@@ -6,18 +6,20 @@
     {
         ASSERT_SINGLETON( the_Renderer, "Global renderer can only ever be assigned once!" );
         
+        resolution.width  = 1200;
+        resolution.height = 800;
+        
         try
         {   
             this.canvas = document.getElementById("Canvas");
-            this.gl     = this.canvas.getContext("experimental-webgl"); 
             
-            if( VALID( resolution ) )
-            {
-                this.canvas.width  = resolution.width;
-                this.canvas.height = resolution.height;
-            }
+            this.canvas.width  = resolution.width;
+            this.canvas.height = resolution.height;
            
-        this.size = new Dimension2( this.canvas.width, this.canvas.height );
+            this.gl                = this.canvas.getContext("experimental-webgl"); 
+            this.gl.viewportWidth  = this.canvas.width;
+            this.gl.viewportHeight = this.canvas.height;
+            this.size              = resolution;
         }
         catch( error )
         {
@@ -31,22 +33,17 @@
     
      this.gl.enable( this.gl.DEPTH_TEST );      
      
-     
-     
- //    this.gl.frontFace ( this.gl.CW         );
- //    this.gl.enable    ( this.gl.CULL_FACE  );
- //    this.gl.cullFace  ( this.gl.BACK       );
+ //  this.gl.frontFace ( this.gl.CW         );
+ //  this.gl.enable    ( this.gl.CULL_FACE  );
+ //  this.gl.cullFace  ( this.gl.BACK       );
         
-        
-         this.worldMatrix = new Matrix44();
-         this.viewMatrix  = new Matrix44();
-         this.projMatrix  = new Matrix44();
-         this.shader      = null;
-         this.camera      = null;
+     this.worldMatrix = new Matrix44();
+     this.viewMatrix  = new Matrix44();
+     this.projMatrix  = new Matrix44();
+     this.shader      = null;
+     this.camera      = null;
          
-         
-        
-    the_Renderer   = this;  
+    the_Renderer      = this;  
     }
 
 

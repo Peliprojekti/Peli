@@ -34,15 +34,18 @@
         
         var triangleList  = [];
         
+       
+        
         for( var i = 0; i < nodes.length; i++ )
         {  
             var node                     = nodes[i];
             var node_Type                = node.get_Type();
+           
             var node_Attributes          = node.get_Subfields("attributes");
             var node_Variables           = node_Attributes[0].get_Variables();                 
             
             var node_Description         = read_Node( node_Variables   );
-            var node_Name                = node_Variables[0].value;         // HAX HAX HAX. node_Variables bugaa.
+     //       var node_Name                = node_Variables[0].value;         // HAX HAX HAX. node_Variables bugaa.
            
             var node_Position            = node_Description[0].casted();
             var node_Rotation            = node_Description[1].casted();
@@ -54,10 +57,10 @@
                                                                                      node_Scale     ); 
            
             
-           if( node_Name == "Mesh1")
-           {
-               alert("ASS");
-           }
+     //      if( node_Name == "Mesh1")
+      //     {
+     //          alert("ASS");
+      //     }
            
            
             switch( node_Type ) 
