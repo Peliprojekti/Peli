@@ -8,7 +8,6 @@ describe('the MotionController (client) object', function () {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function () {
-
     });
 
     //Clean it up after each spec
@@ -19,6 +18,9 @@ describe('the MotionController (client) object', function () {
     describe('MotionController tests', function () {
 
         it('calls coms on device orientation', function () {
+            var vanha_deviceOrEvt = window.DeviceOrientationEvent;
+            window.DeviceOrientationEvent = true;
+
             canvas = document.createElement("canvas");
             canvas.width = 100;
             canvas.height = 100;
@@ -47,6 +49,7 @@ describe('the MotionController (client) object', function () {
             var arr = [10, 20, 30];
             expect(coms.call).toHaveBeenCalled();
 
+            window.DeviceOrientationEvent = vanha_deviceOrEvt;
         });
     });
 
