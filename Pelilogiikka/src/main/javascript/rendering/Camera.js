@@ -11,7 +11,9 @@
         
         var leftU       = lTrans.transform( this.look );
         var rightU      = rTrans.transform( this.look );
+        
         var farLook     = this.look.multiply( farPlaneDist );
+        
         var left_Side   = farLook.projected( leftU  );
         var right_Side  = farLook.projected( rightU );
    
@@ -27,7 +29,7 @@
         var p1            = this.origin;
         var p2            = this.left;
         var p3            = this.right;
-        var testDir       = new Vector2(1,1).normalized();
+        var testDir       = new Vector2(1,0);
         var points_Inside = 0;
         
         for( var i = 0; i < aabr.points.length; i++ )
@@ -40,7 +42,12 @@
             if( testRay.intersects( p3,p1 ) ) hits++;
      
             if( (hits % 2) != 0 ) points_Inside++;
+        
+           // console.info("hits " + hits);
+
         }
+        
+      console.info( points_Inside );
         
     return points_Inside;
     }
@@ -63,17 +70,21 @@ function Camera(  position  )
     this.orientation = new Matrix33();
     
     this.vertical_Fov = 45;
-    this.aspectRatio  = 1.3333;
+    this.aspectRatio  = 1.0;// 1.3333;
     this.nearPlane    = 1.0;
     this.farPlane     = 500;
     
+    // vFov / yRes  = hFov / xRes
+    // vFov*xRes/yRes = hFov
     
     // Parameters to make viewTriangle creation faster
-    this.fov     = this.vertical_Fov / this.aspectRatio; // Does this even make sense? ~ w/h = fov_V / fov_H 
+    this.fov     = this.vertical_Fov * this.aspectRatio; // Does this even make sense? ~ w/h = fov_V / fov_H 
+   
+    
     this.lTrans  = new Matrix22();
     this.rTrans  = new Matrix22();
-    this.lTrans.Rotation(  DegToRad(this.fov)  );
-    this.rTrans.Rotation(  DegToRad(-this.fov) );
+    this.lTrans.Rotation(  DegToRad(this.fov/2)  );
+    this.rTrans.Rotation(  DegToRad(-this.fov/2) );
  
     this.rebuild_Frustrum();
 }
@@ -82,10 +93,18 @@ function Camera(  position  )
 Camera.prototype.rebuild_Frustrum = function()
 {
     this.frustrum = new ViewTriangle( this.position,
-                                      this.orientation.extract_K(),
+                                      this.orientation.extract_K().normalized(),
                                       this.lTrans,
                                       this.rTrans,
                                       this.farPlane );
+
+
+    var string = "Created a frustrum: ";
+        string += "\nLEFT: < "  +Math.floor(this.frustrum.left.x)  + " , " + Math.floor(this.frustrum.left.y) +" > ";
+        string += "\nRIGHT: < " +Math.floor(this.frustrum.right.x) + " , " + Math.floor(this.frustrum.right.y) +" > ";
+        string += "\nORIGIN: < "+Math.floor(this.frustrum.origin.x)+ " , " + Math.floor(this.frustrum.origin.y) +" > ";
+        
+       //console.info( string );
 }
 
 

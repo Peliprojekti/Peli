@@ -147,6 +147,16 @@
         this.points[1] = new Vector2( maxX, maxZ );
         this.points[2] = new Vector2( minX, minZ );
         this.points[3] = new Vector2( maxX, minZ );
+    
+    
+        var string  = "AABB:";
+            string += "\n<" + Math.floor(minX) + " , " +Math.floor(maxZ) +" >";
+            string += "\n<" + Math.floor(maxX) + " , " +Math.floor(maxZ) +" >";
+            string += "\n<" + Math.floor(minX) + " , " +Math.floor(minZ) +" >";
+            string += "\n<" + Math.floor(maxX) + " , " +Math.floor(minZ) +" >";
+            
+        console.info( string );
+        
     }
     
     
@@ -175,16 +185,13 @@
             return a.v1.point.z - b.v1.point.z;
         });
         
-        var minZ = zSorted[        0         ].v1.point.z;
-        var maxZ = zSorted[ zSorted.length-1 ].v1.point.z;
         
         var middleZ = Math.ceil( zSorted.length/2);
         
-        var nearZ  = zSorted.splice( 0, middleZ        );
-        var farZ   = zSorted;
-        
-        var xSortedNear = [];   // Lower half sorted
-        var xSortedFar  = [];   // Upper half sorted
+        var nearZ       = zSorted.splice( 0, middleZ        );
+        var farZ        = zSorted;
+        var xSortedNear = [];            // Lower half sorted
+        var xSortedFar  = [];            // Upper half sorted
         
         xSortedNear = nearZ.sort( function(a,b)
         {
@@ -196,33 +203,42 @@
             return a.v1.point.x - b.v1.point.x;
         });
         
-        var minX = ( xSortedNear[0].v1.point.x < xSortedFar[0].v1.point.x )  ? 
-                     xSortedNear[0].v1.point.x : xSortedFar[0].v1.point.x;
+
         
+ 
+        var minZ = zSorted[        0         ].v1.point.z;
+        var maxZ = zSorted[ zSorted.length-1 ].v1.point.z;
+             
         var hax1 = xSortedNear.length-1;
         var hax2 = xSortedFar.length-1;
+        
+        var minX = ( xSortedNear[0].v1.point.x < xSortedFar[0].v1.point.x )  ? 
+                     xSortedNear[0].v1.point.x : xSortedFar[0].v1.point.x;
         
         var maxX = ( xSortedNear[hax1].v1.point.x > xSortedFar[hax2].v1.point.x )  ? 
                      xSortedNear[hax1].v1.point.x : xSortedFar[hax2].v1.point.x;
         
         
         
-        var q1 = xSortedFar.splice( 0, Math.ceil( xSortedFar.length/2  )  );
+        var q1 = xSortedFar.splice(  0, Math.ceil( xSortedFar.length/2  )  );
         var q2 = xSortedFar;
         
-        var q3 = xSortedNear.splice( 0, Math.ceil( xSortedNear.length/2)  );
+        var q3 = xSortedNear.splice( 0, Math.ceil( xSortedNear.length/2 )  );
         var q4 = xSortedNear;
         
         var sigma = q1.length + q2.length + q3.length + q4.length;
         
         ASSERT( sigma == triangleCnt , "VITUIX MENI " + sigma + " vs " + triangleCnt );
         
-        this.boundingRect = new AABR( minX,maxX, minZ,maxZ);
         
+        this.boundingRect = new AABR( minX,maxX, minZ,maxZ);
+    
+        /*
         this.q1           = new QuadNode( q1, target_BatchSize, depth );
         this.q2           = new QuadNode( q2, target_BatchSize, depth );
         this.q3           = new QuadNode( q3, target_BatchSize, depth );
         this.q4           = new QuadNode( q4, target_BatchSize, depth );
+        */
     }
     
     
@@ -234,9 +250,10 @@
     
     QuadNode.prototype.render = function( viewFrustrum )
     {
-        var hits = viewFrustrum.contains( this.boundingRect );
-        
-     /*
+      var hits = viewFrustrum.contains( this.boundingRect );
+      
+    //    console.info(hits);
+    /*
         if( hits == 4 )
         {
             console.info("Entire node inside - Draw and return");
@@ -249,7 +266,7 @@
             }
             else
                 console.info("Node completely outside - Stop query and draw nothing");
-      */
+    */
   
     this.batch.render();
     }
@@ -264,11 +281,6 @@
     
     QuadTree.prototype.render = function( viewFrustrum )
     {
-      //  this.rootNode.render( viewFrustrum );
-       
-        this.rootNode.q1.render( viewFrustrum );
-        this.rootNode.q2.render( viewFrustrum );
-        this.rootNode.q3.render( viewFrustrum );
-        this.rootNode.q4.render( viewFrustrum );
-      /*   */
+       this.rootNode.render( viewFrustrum );
+   
     }

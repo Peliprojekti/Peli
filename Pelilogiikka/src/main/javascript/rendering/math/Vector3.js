@@ -36,7 +36,9 @@ Vector3.prototype.multiply = function( scalar )
 
 Vector3.prototype.dot = function( vec3 )
 {
-    return ( this.x *vec3.x + this.y * vec3.y + this.z * vec3.z);
+    return ( this.x * vec3.x + 
+             this.y * vec3.y + 
+             this.z * vec3.z);
 }
 
 Vector3.prototype.cross = function( vec3 )

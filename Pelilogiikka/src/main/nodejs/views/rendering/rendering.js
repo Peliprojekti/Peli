@@ -124,7 +124,7 @@ function rendererMain ()
 
 function main ()
 {
-    testCamera   = new Camera(new Vector3(0, 5, 150));
+    testCamera   = new Camera(new Vector3(0, 5, 0));
 
     testShader   = new SimpleShader(                                    );
     testTexture  = new Texture("data/Textures/concrete.jpg");
@@ -148,6 +148,28 @@ function main ()
     testWorld = new World( "Fairground" );
 
 
+    // TEST IT
+    /*
+    var lTrans = new Matrix22();
+    var rTrans = new Matrix22();
+    
+    lTrans.Rotation( DegToRad( -65 ) );
+    rTrans.Rotation( DegToRad(  65 ) );
+    
+    var testFrustrum = new ViewTriangle( new Vector3(0,0,0), new Vector3(0,0,1), lTrans, rTrans, 1000 );
+
+    var testAABR = new AABR(  -50, 50 , 450, 600 );
+
+    var testRay = new Ray2( testAABR.points[0] , new Vector2(1,0) );
+    
+    var t1 = testRay.intersects( testFrustrum.origin, testFrustrum.left   );
+    var t2 = testRay.intersects( testFrustrum.left  , testFrustrum.right  );
+    var t3 = testRay.intersects( testFrustrum.right , testFrustrum.origin );
+    
+    alert( t1 + " " + t2 + " " + t3 );
+   */ 
+    //ViewTriangle( origin3, look3,  lTrans, rTrans, farPlaneDist )
+
     rendererMain();
 }
 
@@ -158,7 +180,7 @@ function main ()
 
 function global_Initializer ()
 {
-    new Renderer(new Dimension2(2600, 800));
+    new Renderer(new Dimension2(800, 800));
 
     register_Inputs();
 
