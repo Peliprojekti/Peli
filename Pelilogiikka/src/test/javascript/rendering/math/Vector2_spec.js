@@ -27,7 +27,7 @@ describe('the Vector2 object', function() {
         });
         it('subtracts another vector from the vector', function() {
             var res = (
-                new Vector2(5,5)).sub(
+                new Vector2(5,5)).subtract(
                 new Vector2(2,1));
 
             expect(res.x).toBe(3);
@@ -35,7 +35,7 @@ describe('the Vector2 object', function() {
         });
         it('multiplies the vector with a scalar number', function() {
             var res = (
-                new Vector2(1, 2)).mul(4);
+                new Vector2(1, 2)).multiply(4);
             expect(res.x).toBe(4);
             expect(res.y).toBe(8);
         });

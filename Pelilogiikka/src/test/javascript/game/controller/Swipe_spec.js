@@ -132,7 +132,7 @@ describe('the Swipe (game) object', function () {
             var expectedTime = 0.5 + controllerObj.delta;
 
             expect(controllerObj.time).toBe(expectedTime);
-            var currentDir = direction.mul(controllerObj.interpolator.interpolate(controllerObj.time));
+            var currentDir = direction.multiply(controllerObj.interpolator.interpolate(controllerObj.time));
 
             expect(controllerObj.currentDirection).toEqual(currentDir);
             expect(controllerObj.setPosition).toHaveBeenCalledWith(controllerObj.x + currentDir.x * controllerObj.posChangeMul,
@@ -156,7 +156,7 @@ describe('the Swipe (game) object', function () {
             var expectedTime = (time2 - 1) * (controllerObj.delta / 100) + 0.5;
 
             expect(controllerObj.time).toBe(expectedTime);
-            var currentDir = direction.mul(controllerObj.interpolator.interpolate(controllerObj.time));
+            var currentDir = direction.multiply(controllerObj.interpolator.interpolate(controllerObj.time));
 
             expect(controllerObj.currentDirection).toEqual(currentDir);
             expect(controllerObj.setPosition).toHaveBeenCalledWith(controllerObj.x + currentDir.x * controllerObj.posChangeMul,
@@ -174,7 +174,7 @@ describe('the Swipe (game) object', function () {
             controllerObj.calcNewDirection(beginning, end);
             var startVect = new Vector2(beginning[0], beginning[1]);
             var endVect = new Vector2(end[0], end[1]);
-            var newVect = endVect.sub(startVect);
+            var newVect = endVect.subtract(startVect);
 
             expect(controllerObj.time).toBe(0);
             expect(controllerObj.previousDirection).toEqual(newVect);
@@ -198,7 +198,7 @@ describe('the Swipe (game) object', function () {
             var end = [12, 23];
             var startVect = new Vector2(beginning[0], beginning[1]);
             var endVect = new Vector2(end[0], end[1]);
-            var newVect = endVect.sub(startVect);
+            var newVect = endVect.subtract(startVect);
             controllerObj.time = 5;
 
             x = 7;

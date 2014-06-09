@@ -99,7 +99,7 @@ function draw_Frame ()
 
     testWorld.render( testCamera );
     
-     the_Renderer.set_Shader( spriteShader );
+    the_Renderer.set_Shader( spriteShader );
       
     
     var viewI = testCamera.get_ViewMatrix().extract_Orientation().transposed();
@@ -107,9 +107,6 @@ function draw_Frame ()
         trans.embed( viewI );
         
     the_Renderer.set_Matrices( trans, null, null );
-                               
-  //  the_Renderer.draw_Batch(testActor.batch );
-
 }
 
 

@@ -245,12 +245,13 @@
             if( hits > 0 )
             {
                 console.info("Node partially inside - Continue query");
-                 this.batch.render();
+                
             }
             else
                 console.info("Node completely outside - Stop query and draw nothing");
       
-      //  this.batch.render();
+  
+    this.batch.render();
     }
     
     
@@ -263,11 +264,11 @@
     
     QuadTree.prototype.render = function( viewFrustrum )
     {
-        this.rootNode.render( viewFrustrum );
-        /*
+      //  this.rootNode.render( viewFrustrum );
+       
         this.rootNode.q1.render( viewFrustrum );
         this.rootNode.q2.render( viewFrustrum );
         this.rootNode.q3.render( viewFrustrum );
         this.rootNode.q4.render( viewFrustrum );
-        */
+      /*   */
     }

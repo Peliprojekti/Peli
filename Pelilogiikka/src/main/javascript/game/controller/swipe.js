@@ -98,7 +98,7 @@ controller.Swipe.prototype.calcNewPosition = function(timestamp) {
     
     var speedMultiplier = this.interpolator.interpolate(this.time);
     //log.debug(this.time + " " + speedMultiplier);
-    this.currentDirection = this.currentDirection.mul(speedMultiplier);
+    this.currentDirection = this.currentDirection.multiply(speedMultiplier);
     var newX = this.x + this.currentDirection.x * this.posChangeMul;
     var newY = this.y + this.currentDirection.y * this.posChangeMul;
     this.setPosition(
@@ -119,7 +119,7 @@ controller.Swipe.prototype.calcNewDirection = function(beginning, end, timestamp
     //log.debug("BEGINNING: " + beginning[0] + ", " + beginning[1] + " END: " + end[0] + ", " + end[1]);
     var startPos = new Vector2(beginning[0], beginning[1]);
     var endPos = new Vector2(end[0], end[1]);
-    var newVec = endPos.sub(startPos);
+    var newVec = endPos.subtract(startPos);
     //log.debug("newVec: (" + newVec.x + ", " + newVec.y + ")", true);
     
     if (newVec.length() < 0.01) {
