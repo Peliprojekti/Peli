@@ -1,11 +1,10 @@
-
     
     function new_Bank( triangle )
     {
-     return new VertexBank( triangle.material.texture1, 
-                            triangle.material.texture2,
-                            triangle.material.texture3,
-                            triangle.material.texture4 );
+        return new VertexBank( triangle.material.texture1, 
+                               triangle.material.texture2,
+                               triangle.material.texture3,
+                               triangle.material.texture4 );
     }
     
     
@@ -19,9 +18,8 @@
 
     function build_WorldBatch( triangleList )
     {
-        
         // Sort the triangleList by material hash
-        var sorted = triangleList.sort( byMat );
+        var sorted          = triangleList.sort( byMat );
         
         var banks           = [];           
         var bankIndex       = 0;

@@ -156,10 +156,9 @@ function main ()
 
  
 
-
 function global_Initializer ()
 {
-    new Renderer(new Dimension2(800, 600));
+    new Renderer(new Dimension2(1200, 800));
 
     register_Inputs();
 

@@ -1,15 +1,18 @@
 
- 
- 
+    // BUGAA. Ensimmäinen termi sisältää <attributes> roinaa!
     function read_Node( node_Variables )
     {
+        var node_Name;
         var node_Position;
         var node_Rotation
         var node_Scale;
         var node_Mesh = "NULL"
         
+        
         node_Variables.forEach( function( variable )
         {
+            
+            if( variable.label == "Name"    ) node_Name     = variable;
             if( variable.label == "Position") node_Position = variable;
             if( variable.label == "Rotation") node_Rotation = variable; 
             if( variable.label == "Scale"   ) node_Scale    = variable;
@@ -17,7 +20,9 @@
         
         });
         
-    return [ node_Position, node_Rotation, node_Scale, node_Mesh ];
+        node_Name.alert();
+        
+    return [ node_Position, node_Rotation, node_Scale, node_Mesh, node_Name ];
     }
  
  
@@ -39,23 +44,27 @@
             var node_Variables           = node_Attributes[0].get_Variables();                 
             
             var node_Description         = read_Node( node_Variables   );
-            
+           
+            var node_Name                = node_Variables[0].value;         // HAX HAX HAX. node_Variables bugaa.
            
             var node_Position            = node_Description[0].casted();
             var node_Rotation            = node_Description[1].casted();
             var node_Scale               = node_Description[2].casted();
             
-           
             var node_Transformation      = new Matrix44();
                 node_Transformation      = node_Transformation.build_Transformation( node_Position  ,
                                                                                      node_Rotation  ,
                                                                                      node_Scale     ); 
-            
-            
+           if( node_Name == "Mesh1")
+           {
+               alert("ASSFUCK");
+           }
+           
+          
             switch( node_Type ) 
             {
                  case "mesh":   
-                     parse_Mesh( node, node_Description, node_Transformation, triangleList );
+                    parse_Mesh( node, node_Description, node_Transformation, triangleList );
                  break;
                
                 case "light": 

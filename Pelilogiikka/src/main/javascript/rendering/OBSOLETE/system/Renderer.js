@@ -1,6 +1,5 @@
     // LOLZ XXX
     
-    
     function Renderer( canvas )
     {
         this.gl            = null;
@@ -33,9 +32,8 @@
      this.view_Matrix       = mat4.create();
      mat4.identity( this.view_Matrix       );
       
-   
        
-       this.gl.enable(this.gl.DEPTH_TEST );                   /// ELSEWHERE!    
+     this.gl.enable(this.gl.DEPTH_TEST );                   /// ELSEWHERE!    
        
      this.gl.frontFace ( this.gl.CW         );
      this.gl.enable    ( this.gl.CULL_FACE  );
