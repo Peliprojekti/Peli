@@ -7,18 +7,18 @@
  * @param {type} host
  * @param {type} port
  * @param {type} protocol
- * @param {type} persistent
  * @returns {ConnectionEngineIO}
  */
-function ConnectionEngineIO(host, port, protocol, persistent) {
+function ConnectionEngineIO(host, port, protocol) {
     "use strict";
     this.host = host;
     this.port = port;
     this.portocol = protocol;
-    this.persistent = persistent;
     this.connected = false;
     this.socket = null;
 }
+
+ConnectionEngineIO.eio = eio;
 
 /**
  * 
@@ -38,7 +38,7 @@ ConnectionEngineIO.prototype.connect = function (connectCallback, closeCallback,
     }
     console.info("ConnectionEngineIO connecting to ", hoststr);
 
-    this.socket = eio.Socket(
+    this.socket = ConnectionEngineIO.eio.Socket(
         {host: this.host, port: this.port},
         {transports: ['websocket', 'polling']}
     );
@@ -51,29 +51,27 @@ ConnectionEngineIO.prototype.connect = function (connectCallback, closeCallback,
 
     this.socket.on('close', function () {
         console.info("ConnectionEngineIO disconnected from " + hoststr);
+        self.connected = false;
 
         if (typeof closeCallback === 'function') {
-            closeCallback(true);
+            closeCallback();
             closeCallback = null;
         }
     });
 
     this.socket.on('error', function (error) {
         console.warn("ConnectionEngineIO::connect - error connecting ", error);
+        self.connected = false;
+
         if (typeof connectCallback === "function") {
             connectCallback(error, null);
             connectCallback = null;
         }
-        self.connected = false;
         self.close();
     });
 
     this.socket.on('message', function (message) {
         onMessage(message);
-
-        if (!self.persistent) {
-            self.socket.close();
-        }
     });
 };
 
@@ -83,7 +81,8 @@ ConnectionEngineIO.prototype.connect = function (connectCallback, closeCallback,
  */
 ConnectionEngineIO.prototype.isOpen = function () {
     "use strict";
-    return (this.socket.readyState === 'open');
+    return this.connected;
+    //return (this.socket !== null && this.socket.readyState === 'open');
 };
 
 /**
@@ -112,4 +111,9 @@ ConnectionEngineIO.prototype.sendMessage = function (message) {
         //console.debug("ConnectionEngine::sendMessage - sending", message);
         this.socket.send(message);
     }
+};
+
+ConnectionEngineIO.prototype.getSocket = function () {
+    "use strict";
+    return this.socket;
 };
