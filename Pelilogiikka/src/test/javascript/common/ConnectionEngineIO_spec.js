@@ -14,7 +14,10 @@ describe('the ConnectionEngineIO object', function () {
 
     function getSimpleCallbackObject() {
         return {
+            counter: 0,
             lastSent: null,
+            closes: 0,
+            opens: 0,
             lastOpen: {
                 error: null,
                 ok: null
@@ -22,9 +25,12 @@ describe('the ConnectionEngineIO object', function () {
             open: function (error, ok) {
                 this.lastOpen.error = error;
                 this.lastOpen.ok = ok;
+                this.counter += 1;
+                this.opens = this.counter;
             },
             close: function () {
-                console.log("doing nothing");
+                this.counter += 1;
+                this.closes = this.counter;
             },
             onMessage: function (msg) {
                 this.lastSent = msg;
@@ -156,6 +162,33 @@ describe('the ConnectionEngineIO object', function () {
 
             socket.launchEvent('message', "kiva viesti");
             expect(cb.lastSent).toBe("kiva viesti");
+        });
+    });
+    
+    describe('onConnectionClose', function () {
+        it("doesn't call closeCallback more than once", function () {
+            var connection = new ConnectionEngineIO("http://localhost", 8000, "protocol", true),
+                cb = getSimpleCallbackObject(),
+                socket,
+                closes;
+
+            connection.connect(
+                function (er, ok) { cb.open(er, ok); },
+                function (er, ok) { cb.close(er, ok); },
+                function (msg) { cb.onMessage(msg); }
+            );
+            
+            socket = connection.getSocket();
+            closes = cb.closes;
+
+            socket.launchEvent('open');
+            expect(cb.closes).toBe(closes);
+
+            socket.launchEvent('close');
+            expect(cb.closes).not.toBe(closes);
+            closes = cb.closes;
+            socket.launchEvent('close');
+            expect(cb.closes).toBe(closes);
         });
     });
 });

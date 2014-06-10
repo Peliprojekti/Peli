@@ -14,7 +14,10 @@ describe('ConnectionWebsocket', function () {
 
     function getSimpleCallbackObject() {
         return {
+            counter: 0,
             lastSent: null,
+            closes: 0,
+            opens: 0,
             lastOpen: {
                 error: null,
                 ok: null
@@ -22,9 +25,12 @@ describe('ConnectionWebsocket', function () {
             open: function (error, ok) {
                 this.lastOpen.error = error;
                 this.lastOpen.ok = ok;
+                this.counter += 1;
+                this.opens = this.counter;
             },
             close: function () {
-                console.log("doing nothing");
+                this.counter += 1;
+                this.closes = this.counter;
             },
             onMessage: function (msg) {
                 this.lastSent = msg;
@@ -80,6 +86,10 @@ describe('ConnectionWebsocket', function () {
             );
 
             socket = connection.getSocket();
+
+            expect(connection.sendMessage('something')).toBe(false);
+            expect(socket.lastSent).toBe(null);
+
             socket.launchEvent('open');
 
             connection.sendMessage('joku viesti');
@@ -117,12 +127,32 @@ describe('ConnectionWebsocket', function () {
             expect(connection.isOpen()).toBe(false);
         });
 
+        it('recognizes player disconnect notifications', function () {
+              var connection = new ConnectionWebsocket("http://localhost", 8000, "protocol", true),
+                cb = getSimpleCallbackObject(),
+                socket;
+
+            expect(connection.isOpen()).toBe(false);
+            connection.connect(
+                function (er, ok) { cb.open(er, ok); },
+                function (er, ok) { cb.close(er, ok); },
+                function (msg) { cb.onMessage(msg); }
+            );
+
+            socket = connection.getSocket();
+            socket.launchEvent('open');
+
+            expect(cb.closes).toBe(0);
+            socket.launchEvent('message', "-1");
+            expect(cb.lastSent).not.toBe("-1");
+            expect(cb.closes).not.toBe(0);
+        });
+
         it('proplerly handles connections errors', function () {
             var connection = new ConnectionWebsocket("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
                 socket;
 
-            expect(connection.isOpen()).toBe(false);
             connection.connect(
                 function (er, ok) { cb.open(er, ok); },
                 function (er, ok) { cb.close(er, ok); },
@@ -160,6 +190,29 @@ describe('ConnectionWebsocket', function () {
     });
 
     describe('onConnectionClose', function () {
+        it("doesn't call closeCallback more than once", function () {
+            var connection = new ConnectionWebsocket("http://localhost", 8000, "protocol", true),
+                cb = getSimpleCallbackObject(),
+                socket,
+                closes;
 
+            connection.connect(
+                function (er, ok) { cb.open(er, ok); },
+                function (er, ok) { cb.close(er, ok); },
+                function (msg) { cb.onMessage(msg); }
+            );
+            
+            socket = connection.getSocket();
+            closes = cb.closes;
+
+            socket.launchEvent('open');
+            expect(cb.closes).toBe(closes);
+
+            socket.launchEvent('close');
+            expect(cb.closes).not.toBe(closes);
+            closes = cb.closes;
+            socket.launchEvent('close');
+            expect(cb.closes).toBe(closes);
+        });
     });
 });

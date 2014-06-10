@@ -50,11 +50,7 @@ ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback
     };
 
     this.socket.onclose = function () {
-        if (typeof closeCallback === "function") {
-            closeCallback(true);
-            closeCallback = null;
-            self.close();
-        }
+        self.close();
     };
 
     this.socket.onerror = function (error) {
@@ -70,8 +66,6 @@ ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback
         if (e.data === '-1') {
             /* This is a server message notifying of client disconnect */
             console.log("ConnectionWebsocket::onMessage - recieved player disconnect");
-            closeCallback(true);
-            closeCallback = null;
             self.close();
         } else {
             //console.debug("ConnectionWebsocket::connect - onmessage", e.data);

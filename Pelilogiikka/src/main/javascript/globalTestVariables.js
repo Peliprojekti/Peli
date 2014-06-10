@@ -47,18 +47,26 @@ WebSocket.prototype = {
     launchEvent: function (event, args) {
         switch (event) {
             case 'open':
-                this.onopen(args);
+                if (this.onopen !== null) {
+                    this.onopen(args);
+                }
                 break;
             case 'close':
-                this.onclose(args);
+                if (this.onclose !== null) {
+                    this.onclose(args);
+                }
                 break;
             case 'error':
-                this.onerror(args);
+                if (this.onerror !== null) {
+                    this.onerror(args);
+                }
                 break;
             case 'message': 
-                this.onmessage({
-                    data: args
-                });
+                if (this.onmessage !== null) {
+                    this.onmessage({
+                        data: args
+                    });
+                }
                 break;
             default:
                 throw new Error("Unknown event: " + event);

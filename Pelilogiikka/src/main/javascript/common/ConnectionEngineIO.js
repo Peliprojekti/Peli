@@ -82,7 +82,6 @@ ConnectionEngineIO.prototype.connect = function (connectCallback, closeCallback,
 ConnectionEngineIO.prototype.isOpen = function () {
     "use strict";
     return this.connected;
-    //return (this.socket !== null && this.socket.readyState === 'open');
 };
 
 /**
