@@ -31,12 +31,15 @@ controller.AbsPosition.prototype.reset = function(player, rpc) {
     rpc.exposeRpcMethod('shoot', this, this.shoot);
 };
 
-controller.AbsPosition.prototype.update = function() {};
+/*
+controller.AbsPosition.prototype.update = function() {
+};
+*/
 
 controller.AbsPosition.prototype.position = function(x,y) {
     this.player.setPosition(x,y);
 };
 
-controller.AbsPosition.prototype.shoot = function(x,y) {
+controller.AbsPosition.prototype.shoot = function() {
     this.player.shoot();
 };
