@@ -21,6 +21,10 @@ controller.AbsPosition = function(player, rpc) {
     this.reset(player, rpc);
 };
 
+controller.AbsPosition.prototype.update = function () {
+    return false;
+};
+
 controller.AbsPosition.prototype.clear = function() {
     this.player = null;
 };

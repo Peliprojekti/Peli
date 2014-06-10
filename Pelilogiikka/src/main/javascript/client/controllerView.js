@@ -77,9 +77,6 @@ client.controllerView = {
         ctx.fillStyle = 'black';
         ctx.fillRect(10, 10, this.width - 20, this.height - 20);
 
-        if (this.crosshair !== null) 
-            ctx.drawImage(this.crosshair, this.width/2 - 32, this.height/2 - 32);
-
         this.entities.forEach(function (e) {
             if (e.draw) {
                 e.draw(ctx);
@@ -88,14 +85,17 @@ client.controllerView = {
 
         ctx.restore();
     },
+
     add: function (object) {
         "use strict";
         this.entities.push(object);
     },
+
     showCrosshair: function(id) {
+        "use strict";
+
         if (id !== null) {
-            this.crosshair = new Image();
-            this.crosshair.src = "/data/crosshairs/crosshair" + id + ".png";
+            this.entities.push(new client.CrosshairDisplay(canvas, id));
         }
     }
 };
