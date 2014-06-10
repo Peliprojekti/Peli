@@ -56,7 +56,9 @@ WebSocket.prototype = {
                 this.onerror(args);
                 break;
             case 'message': 
-                this.onmessage(args);
+                this.onmessage({
+                    data: args
+                });
                 break;
             default:
                 throw new Error("Unknown event: " + event);

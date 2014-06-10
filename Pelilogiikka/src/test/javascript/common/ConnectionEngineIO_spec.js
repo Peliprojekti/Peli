@@ -44,7 +44,7 @@ describe('the ConnectionEngineIO object', function () {
         });
     });
 
-    describe('connect', function () {
+    describe('connect function', function () {
         it('works', function () {
             var connection;
 
@@ -66,8 +66,29 @@ describe('the ConnectionEngineIO object', function () {
         });
     });
 
-    describe('socket connect/close events events', function () {
-        it('recognizes opened connection', function () {
+    describe('sendMessage function', function () {
+        it('proplerly forwards messages', function () {
+            var connection = new ConnectionEngineIO("http://localhost", 8000, "protocol", true),
+                cb = getSimpleCallbackObject(),
+                socket;
+
+            expect(connection.isOpen()).toBe(false);
+            connection.connect(
+                function (er, ok) { cb.open(er, ok); },
+                function (er, ok) { cb.close(er, ok); },
+                function (msg) { cb.onMessage(msg); }
+            );
+
+            socket = connection.getSocket();
+            socket.launchEvent('open');
+
+            connection.sendMessage('joku viesti');
+            expect(socket.lastSent).toBe('joku viesti');
+        });
+    });
+
+    describe('socket events handlers', function () {
+        it('recognizes opened/closed connection', function () {
             var connection = new ConnectionEngineIO("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
                 socket;
@@ -95,10 +116,8 @@ describe('the ConnectionEngineIO object', function () {
             expect(cb.close).toHaveBeenCalled();
             expect(connection.isOpen()).toBe(false);
         });
-    });
 
-    describe('socket connect/close events events', function () {
-        it('recognizes opened connection', function () {
+        it('handles connection errors', function () {
             var connection = new ConnectionEngineIO("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
                 socket;
@@ -119,10 +138,8 @@ describe('the ConnectionEngineIO object', function () {
             expect(cb.lastOpen.ok).toBe(null);
             expect(connection.isOpen()).toBe(false);
         });
-    });
 
-    describe('socket error events', function () {
-        it('properly handes connection errors', function () {
+        it('properly handes incoming messages', function () {
             var connection = new ConnectionEngineIO("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
                 socket;
@@ -139,27 +156,6 @@ describe('the ConnectionEngineIO object', function () {
 
             socket.launchEvent('message', "kiva viesti");
             expect(cb.lastSent).toBe("kiva viesti");
-        });
-    });
-
-    describe('socket connect/close events events', function () {
-        it('recognizes opened connection', function () {
-            var connection = new ConnectionEngineIO("http://localhost", 8000, "protocol", true),
-                cb = getSimpleCallbackObject(),
-                socket;
-
-            expect(connection.isOpen()).toBe(false);
-            connection.connect(
-                function (er, ok) { cb.open(er, ok); },
-                function (er, ok) { cb.close(er, ok); },
-                function (msg) { cb.onMessage(msg); }
-            );
-
-            socket = connection.getSocket();
-            socket.launchEvent('open');
-
-            connection.sendMessage('joku viesti');
-            expect(socket.lastSent).toBe('joku viesti');
         });
     });
 });

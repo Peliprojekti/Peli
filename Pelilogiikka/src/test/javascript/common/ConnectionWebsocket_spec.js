@@ -1,11 +1,11 @@
-/*global ConnectionEngineIO: true*/
+/*global ConnectionWebsocket: true*/
 /*global console: false*/
 /*global describe: false */
 /*global expect: false */
 /*global it: false */
 /*global spyOn: false */
 
-describe('ConnectionWebsocket', function() {
+describe('ConnectionWebsocket', function () {
     "use strict";
 
     var doNothing = function () {
@@ -66,8 +66,29 @@ describe('ConnectionWebsocket', function() {
         });
     });
 
-   describe('socket connect/close events events', function () {
-        it('recognizes opened connection', function () {
+    describe('sendMessage function', function () {
+        it('properly forwards messages along the socket', function () {
+            var connection = new ConnectionWebsocket("http://localhost", 8000, "protocol", true),
+                cb = getSimpleCallbackObject(),
+                socket;
+
+            expect(connection.isOpen()).toBe(false);
+            connection.connect(
+                function (er, ok) { cb.open(er, ok); },
+                function (er, ok) { cb.close(er, ok); },
+                function (msg) { cb.onMessage(msg); }
+            );
+
+            socket = connection.getSocket();
+            socket.launchEvent('open');
+
+            connection.sendMessage('joku viesti');
+            expect(socket.lastSent).toBe('joku viesti');
+        });
+    });
+
+    describe('socket event handler', function () {
+        it('recognizes opened/closed connections', function () {
             var connection = new ConnectionWebsocket("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
                 socket;
@@ -95,10 +116,8 @@ describe('ConnectionWebsocket', function() {
             expect(cb.close).toHaveBeenCalled();
             expect(connection.isOpen()).toBe(false);
         });
-    });
 
-    describe('socket connect/close events events', function () {
-        it('recognizes opened connection', function () {
+        it('proplerly handles connections errors', function () {
             var connection = new ConnectionWebsocket("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
                 socket;
@@ -119,16 +138,12 @@ describe('ConnectionWebsocket', function() {
             expect(cb.lastOpen.ok).toBe(null);
             expect(connection.isOpen()).toBe(false);
         });
-    });
 
-/*
-    describe('socket error event handler', function () {
-        it('properly handes connection errors', function () {
+        it('properly forwards recieved messages', function () {
             var connection = new ConnectionWebsocket("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
                 socket;
 
-            expect(connection.isOpen()).toBe(false);
             connection.connect(
                 function (er, ok) { cb.open(er, ok); },
                 function (er, ok) { cb.close(er, ok); },
@@ -139,29 +154,12 @@ describe('ConnectionWebsocket', function() {
             socket.launchEvent('open');
 
             socket.launchEvent('message', "kiva viesti");
+            //expect(cb).toBe(null);
             expect(cb.lastSent).toBe("kiva viesti");
         });
     });
-    */
 
-    describe('socket connect/close events events', function () {
-        it('recognizes opened connection', function () {
-            var connection = new ConnectionWebsocket("http://localhost", 8000, "protocol", true),
-                cb = getSimpleCallbackObject(),
-                socket;
+    describe('onConnectionClose', function () {
 
-            expect(connection.isOpen()).toBe(false);
-            connection.connect(
-                function (er, ok) { cb.open(er, ok); },
-                function (er, ok) { cb.close(er, ok); },
-                function (msg) { cb.onMessage(msg); }
-            );
-
-            socket = connection.getSocket();
-            socket.launchEvent('open');
-
-            connection.sendMessage('joku viesti');
-            expect(socket.lastSent).toBe('joku viesti');
-        });
     });
 });

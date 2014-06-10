@@ -38,7 +38,7 @@ ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback
     if (onMessage === null || onMessage === undefined) {
         console.error("no onMessage supplied");
         throw new Error("no onMessage supplied");
-    } 
+    }
 
     this.closeCallback = closeCallback;
 
@@ -124,10 +124,9 @@ ConnectionWebsocket.prototype.sendMessage = function (message) {
         //console.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
         this.socket.send(message);
         return true;
-    } else {
-        console.warn("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
-        return false;
     }
+    console.warn("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
+    return false;
 };
 
 ConnectionWebsocket.prototype.getSocket = function () {
