@@ -40,7 +40,7 @@ controller.ThumbStick.prototype.clear = function () {
 
 controller.ThumbStick.prototype.update = function () {
     var playerPos = new Vector2(this.player.x, this.player.y);
-    var newPos = playerPos.add(this.thumbStickPos.mul(this.posChangeSpeed));
+    var newPos = playerPos.add(this.thumbStickPos.multiply(this.posChangeSpeed));
 
     this.position(newPos);
 };
