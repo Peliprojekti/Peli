@@ -1,4 +1,4 @@
-//describe('the MouseMove object', function() {
+//describe('the Scene object', function() {
 //
 //    //Create an easily-removed container for our tests to play in
 //    beforeEach(function() {
@@ -9,8 +9,7 @@
 //    });
 //
 //    //Specs
-//    describe('MouseMove tests', function() {
-//    });
-//
+////    describe('Scene tests', function() {  
+////    });
 //
 //});
