@@ -32,42 +32,32 @@ dummy.game = {
 
         this.screen.start(canvas);
     },
-    onPlayerJoined: function (player, controller) {
+    onPlayerJoined: function (userID) {
         "use strict";
-        var self = dummy.game,
+        var player = new Player(userID),
+            self = dummy.game,
             crosshair = dummy.game.crosshairManager.requestCrosshair(player);
-        console.info("dummy - New player connected ", player.userID);
+
+        console.info("dummy::onPlayerJoined - New player connected ", userID);
+
         player.setCrosshair(crosshair);
         player.setOnShoot(function (x, y) {
             self.screen.shoot(x, y);
         });
-        self.screen.addController(controller);
+
         self.screen.addPlayer(player);
-        return crosshair.id;
+        return player;
     },
-    onPlayerLeft: function (player, controller) {
+    onPlayerLeft: function (player) {
         "use strict";
         var self = dummy.game;
-        console.info("dummy - Player disconnected ", player.userID);
-        self.screen.removeController(controller);
-        if (typeof player.crossh.id !== 'undefined') {
-            dummy.game.crosshairManager.freeCrosshair(player.crossh.id);
-        }
-        self.screen.removePlayer(player);
+        console.info("dummy::onPlayerLeft - Player disconnected ", player.userID);
 
+        self.screen.removePlayer(player);
     },
     connectToServer: function () {
         "use strict";
-        game.controllerHub.openHub(this.onPlayerJoined, this.onPlayerLeft,
-                {// playerFactory
-                    getPlayer: function (userID) {
-                        return new Player(userID);
-                    },
-                    freePlayer: function (player) {
-                        player.crosshair = null;
-                        player = null;
-                    }
-                }, 100 /* maxPlayers */);
+        game.controllerHub.openHub(this.onPlayerJoined, this.onPlayerLeft, 100);
     },
     initConfigMenu: function() {
         var rightMenu = document.getElementById("rightMenu");

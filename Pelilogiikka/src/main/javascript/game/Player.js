@@ -11,6 +11,10 @@ function Player(userID) {
     this.messagesPerSecond = 0;
 }
 
+Player.prototype.getPlayerData = function () {
+    return (this.crossh !== null ? this.crossh.id : null);
+};
+
 Player.prototype.getID = function() {
     return this.userID;
 };
@@ -44,7 +48,7 @@ Player.prototype.draw = function(ctx) {
 
     if (this.responseTime !== null) {
         ctx.save();
-        ctx.font = 'bold 40pt Calibri';
+        ctx.font = 'bold 40pt Calibri';sequence
         ctx.fillStyle = '#30BB30';
         ctx.strokeStyle = '#209020';
         ctx.fillText(this.messagesPerSecond, 45, this.y * ctx.canvas.height + 20);
