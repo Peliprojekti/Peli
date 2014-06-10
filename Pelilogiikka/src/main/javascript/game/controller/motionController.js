@@ -79,38 +79,21 @@ controller.MotionController.prototype.orientation = function (tiltLR, tiltFB, di
 //            "dir (alpha): " + dir);
 };
 
-controller.MotionController.prototype.direction = function (tiltLR, tiltFB, dir) {
-    var xPos = 0;
-    var rads;
-    if (dir <= 90.0)
-    {
-        rads = (dir * Math.PI) / 180.0;
-        xPos = -Math.sin(rads) / 2.0;
-    }
-    else if (dir >= 270.0)
-    {
-        rads = ((360 - dir) * Math.PI) / 180.0;
-        xPos = Math.sin(rads) / 2.0;
-    }
+//controller.MotionController.prototype.direction = function (tiltLR, tiltFB, dir) {
+//    var xPos = 0;
+//    var rads;
+//    if (dir <= 90.0)
+//    {
+//        rads = (dir * Math.PI) / 180.0;
+//        xPos = -Math.sin(rads) / 2.0;
+//    }
+//    else if (dir >= 270.0)
+//    {
+//        rads = ((360 - dir) * Math.PI) / 180.0;
+//        xPos = Math.sin(rads) / 2.0;
+//    }
+//
+//    this.setPosition(0.5 + xPos, this.y);
+//}
 
-    this.setPosition(0.5 + xPos, this.y);
-}
-
-controller.MotionController.prototype.motion = function (accelerationData) {
-    var acceleration = accelerationData.acceleration;
-    var accelerationIncludingGravity = accelerationData.accelerationIncludingGravity;
-    var rotation = accelerationData.rotationRate;
-    log.info("Acceleration: \n" +
-        "x: " + acceleration.x + "\n" +
-        "y: " + acceleration.y + "\n" +
-        "z: " + acceleration.z + "\n" +
-        "Acceleration including gravity \n" +
-        "x: " + accelerationIncludingGravity.x + "\n" +
-        "y: " + accelerationIncludingGravity.y + "\n" +
-        "z: " + accelerationIncludingGravity.z + "\n" +
-        "Rotation:\n" +
-        "x: " + rotation.x + "\n" +
-        "y: " + rotation.y + "\n" +
-        "z: " + rotation.z);
-};
 

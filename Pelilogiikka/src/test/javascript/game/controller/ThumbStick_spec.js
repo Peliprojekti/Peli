@@ -58,6 +58,21 @@ describe('the ThumbStick (game) object', function () {
 
         });
 
+        it('updates position correctly on update', function () {
+            spyOn(controllerObj, 'position');
+            
+            var playerPos = new Vector2(mockPlayer.x, mockPlayer.y);
+            var newPos = playerPos.add(controllerObj.thumbStickPos.multiply(controllerObj.posChangeSpeed));
+
+            controllerObj.update();
+
+            expect(controllerObj.position).toHaveBeenCalled();
+            expect(controllerObj.position).toHaveBeenCalledWith(newPos);
+
+        });
+
+
+
         it('updates x and thumbstickpos correctly when thumbStickPosition is called with x < 1 && x > 0', function () {
             var x = 0.3;
             var y = 0.7;
