@@ -16,18 +16,50 @@ eio = {
     }
 };
 
-eio.SocketObject.prototype.send = function (msg) {
-    this.lastSent = msg;
+eio.SocketObject.prototype = {
+    send: function (msg) {
+        this.lastSent = msg;
+    },
+    on: function (event, listener) {
+        this.listeners[event] = listener;
+    },
+    close: function () {
+        console.log("closing connection");
+    },
+    launchEvent: function (event, args) {
+        this.listeners[event](args);
+    }
 };
 
-eio.SocketObject.prototype.on = function (event, listener) {
-    this.listeners[event] = listener;
+function WebSocket(hoststr) {
+    this.hoststr = hoststr;
+    this.lastSent = null;
 };
 
-eio.SocketObject.prototype.close = function () {
-    console.log("closing connection");
-};
-
-eio.SocketObject.prototype.launchEvent = function (event, args) {
-    this.listeners[event](args);
+WebSocket.prototype = { 
+    onopen: null,
+    onclose: null,
+    onerror: null,
+    onmessage: null,
+    send: function (msg) {
+        this.lastSent = msg;
+    },
+    launchEvent: function (event, args) {
+        switch (event) {
+            case 'open':
+                this.onopen(args);
+                break;
+            case 'close':
+                this.onclose(args);
+                break;
+            case 'error':
+                this.onerror(args);
+                break;
+            case 'message': 
+                this.onmessage(args);
+                break;
+            default:
+                throw new Error("Unknown event: " + event);
+        }
+    }
 };

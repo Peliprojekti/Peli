@@ -19,7 +19,7 @@ function ConnectionWebsocket(host, port, protocol, persistent) {
     this.protocol = protocol;
     this.persistent = persistent;
     this.connected = false;
-    this.connection = null;
+    this.socket = null;
     this.closeCallback = null;
 }
 
@@ -35,16 +35,21 @@ ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback
     var self = this,
         hoststr = "ws://" + this.host + ":" + this.port; // + "/" + this.protocol;
 
+    if (onMessage === null || onMessage === undefined) {
+        console.error("no onMessage supplied");
+        throw new Error("no onMessage supplied");
+    } 
+
     this.closeCallback = closeCallback;
 
-    this.connection = new WebSocket(hoststr);
+    this.socket = new WebSocket(hoststr);
 
-    this.connection.onopen = function () {
+    this.socket.onopen = function () {
         self.connected = true;
         connectCallback(null, true);
     };
 
-    this.connection.onclose = function () {
+    this.socket.onclose = function () {
         if (typeof closeCallback === "function") {
             closeCallback(true);
             closeCallback = null;
@@ -52,8 +57,8 @@ ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback
         }
     };
 
-    this.connection.onerror = function (error) {
-        console.errror("ConnectionWebsocket::connect - connection error ", hoststr);
+    this.socket.onerror = function (error) {
+        console.error("ConnectionWebsocket::connect - connection error ", hoststr);
         if (typeof connectCallback === "function") {
             connectCallback(error, null);
             connectCallback = null;
@@ -61,7 +66,7 @@ ConnectionWebsocket.prototype.connect = function (connectCallback, closeCallback
         self.close();
     };
 
-    this.connection.onmessage = function (e) {
+    this.socket.onmessage = function (e) {
         if (e.data === '-1') {
             /* This is a server message notifying of client disconnect */
             console.log("ConnectionWebsocket::onMessage - recieved player disconnect");
@@ -98,12 +103,11 @@ ConnectionWebsocket.prototype.close = function () {
             this.closeCallback = null;
         }
 
-        this.connection.close();
-        this.connection.onopen = null;
-        this.connection.onclose = null;
-        this.connection.onerror = null;
-        this.connection.onmessage = null;
-        this.connection = null;
+        this.socket.onopen = null;
+        this.socket.onclose = null;
+        this.socket.onerror = null;
+        this.socket.onmessage = null;
+        this.socket = null;
     }
     this.connected = false;
 };
@@ -118,10 +122,15 @@ ConnectionWebsocket.prototype.sendMessage = function (message) {
     "use strict";
     if (this.connected === true) {
         //console.info("ConnectionWebsocket::sendMessage() " + this.hoststr + "." + JSON.stringify(message));
-        this.connection.send(message);
+        this.socket.send(message);
         return true;
     } else {
         console.warn("ConnectionWebsocket::sendMessage() - trying to send on closed connection");
         return false;
     }
+};
+
+ConnectionWebsocket.prototype.getSocket = function () {
+    "use strict";
+    return this.socket;
 };
