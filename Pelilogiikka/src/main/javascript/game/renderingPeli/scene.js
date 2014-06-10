@@ -9,31 +9,48 @@ var renderingPeli = renderingPeli || {};
 renderingPeli.scene = {
     renderer: null,
     camera: null,
-    players: [],
+    controllers: {},
+    players: {},
+    updatables: [],
+    drawables: [],
     crosshair_id: 0,
     start: function (canvas) {
+        "use strict";
+
         console.log("starting up renderer stuff");
         this.renderer = new Renderer(new Dimension2(canvas.width, canvas.height));
         this.camera = new Camera(new Vector3(0, 5, 150));
 
-        this.animate(Date.now());
+        requestAnimationFrame(this.animate.bind(this));
     },
     animate: function (time) {
+        "use strict";
+
+        var i, playerID;
+
+        for (playerID in this.controllers) {
+            //this.controllers[playerID].update(time);
+        }
+
+        for (i = 0; i < this.updatables.length; i++) {
+            this.updatables[i].update(time);
+        }
+
         this.rendererDraw();
         requestAnimationFrame(this.animate.bind(this));
     },
-    rendererDraw: function (time) {
-        var i;
+    rendererDraw: function () {
+        "use strict";
+
+        var playerID, player;
 
         this.renderer.set_Camera(this.camera);
         this.renderer.begin();
          
         this.renderer.set_Matrices( null, this.camera.get_ViewMatrix(), this.camera.get_ProjectionMatrix() );
         
-        alert("OK");
-        
-        for (i = 0; i < this.players.length; i++) {
-            var player = this.players[i];
+        for (playerID in this.players) {
+            player = this.players[playerID];
 
             this.renderer.set_Shader(player.shader);
             var trans = player.guiItem.get_Transformation();
@@ -42,14 +59,35 @@ renderingPeli.scene = {
         }
     },
     addPlayer: function (player) {
-        //var texture = new Texture('/data/crosshair1.bmp');
-        var texture = new Texture('/data/crosshairs/crosshair' + this.crosshair_id + '.png');
+        "use strict";
+        console.info("scene::addPlayer - attaching player to scene");
+
         this.crosshair_id = (this.crosshair_id + 1) % 8;
+        var texture = new Texture('/data/crosshairs/crosshair' + this.crosshair_id + '.png');
 
         player.shader = new GuiShader();
         player.guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), texture);
-        this.players.push(player);
-        //this.onePlayer = player;
+        this.controllers[player.userID] = controller;
+        this.players[player.userID] = player;
+        return this.crosshair_id;
+    },
+    removePlayer: function (player) {
+        console.debug("REMOVVVVVAIGIDAISDNGSA");
+        delete player.guiItem;
+        delete player.shader;
+        this.players[player.userID] = null;
+        this.controllers[player.userID] = null;
+        delete this.controllers[player.userID];
+        delete this.players[player.userID];
+    },
+    addUpdatable: function (u) {
+        "use strict";
+
+        if (typeof u.update !== undefined) {
+            this.updatables.push(u);
+            return true;
+        }
+        return false;
     }
 };
 /*
