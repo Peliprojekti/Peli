@@ -39,13 +39,12 @@ renderingPeli.game = {
     },
     onPlayerLeft: function (player, controller) {
         "use strict";
-        console.info("renderingPeli::onPlayerLeft - Player left", player.userID);
-        self.scene.removePlayer(player);
-        console.info("renderingPeli - Player disconnected ", player.userID);
+        //console.info("renderingPeli::onPlayerLeft - Player left", player.userID);
+        this.scene.removePlayer(player);
     },
     connectToServer: function () {
         "use strict";
-        game.controllerHub.openHub(this.onPlayerJoined, this.onPlayerLeft,
+        game.controllerHub.openHub(this.onPlayerJoined.bind(this), this.onPlayerLeft.bind(this),
 
                 {// playerFactory
                     getPlayer: function (userID) {
