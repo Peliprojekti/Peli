@@ -44,12 +44,12 @@ client.controllerView = {
     },
     onResize: function () {
         "use strict";
-        this.width = this.canvas.width = this.container.offsetWidth;
-        this.height = this.canvas.height = this.container.offsetHeight;
+        var width = this.width = this.canvas.width = this.container.offsetWidth,
+            height = this.height = this.canvas.height = this.container.offsetHeight;
 
         this.entities.forEach(function (e) {
             if (e.onResize)
-                e.onResize();
+                e.onResize(width, height);
         });
     },
     onOrientationChange: function () {

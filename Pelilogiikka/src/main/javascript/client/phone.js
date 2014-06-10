@@ -82,7 +82,7 @@ client.phone = {
         this.connectingDiv.style.display = 'none';
         client.coms.call('joinGame', [USERID], this,
             function (rpc_id, rpc_error, retval) {
-                this.loadController(retval[0], retval[1]);
+                this.loadController(retval[0], retval[1].crosshairID);
             });
     },
     onConnectionClosed: function() {

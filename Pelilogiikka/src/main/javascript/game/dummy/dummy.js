@@ -3,6 +3,8 @@
 /*global game: false*/
 /*global rpsDisplay: false*/
 /*global fpsDisplay: false*/
+/*global Player: false*/
+/*global crosshair: false*/
 /*jslint browser: true*/
 
 var dummy = dummy || {};
@@ -14,13 +16,14 @@ dummy.game = {
     },
     enablePhsyics: false,
     players: [],
-    crosshairManager: new CrosshairManager(0),
+    width: 0,
+    height: 0,
     screen: null,
     start: function (canvas, container) {
         "use strict";
 
-        canvas.width = container.offsetWidth;
-        canvas.height = container.offsetHeight;
+        this.width = canvas.width = container.offsetWidth;
+        this.height = canvas.height = container.offsetHeight;
 
         this.initConfigMenu();
 
@@ -34,32 +37,39 @@ dummy.game = {
     },
     onPlayerJoined: function (userID) {
         "use strict";
-        var player = new Player(userID),
-            self = dummy.game,
-            crosshair = dummy.game.crosshairManager.requestCrosshair(player);
+        var self = dummy.game,
+            player = new Player(userID),
+            ch = crosshairFactory.createImg();
 
-        console.info("dummy::onPlayerJoined - New player connected ", userID);
+        player.setCrosshairID(ch.getID());
 
-        player.setCrosshair(crosshair);
-        player.setOnShoot(function (x, y) {
-            self.screen.shoot(x, y);
+        player.setOnShoot(function () {
+            console.debug("dummy::onPlayerJoined - player is shooting");
+            //self.screen.shoot(ch.x, ch.y);
         });
+        player.setOnDisconnect(function () {
+            self.screen.removePlayer(player);
+            player.clear();
+        });
+        player.setOnSetPosition(function (x, y) {
+            ch.x = x * self.width;
+            ch.y = y * self.height;
+        });
+
+        player.draw = function (ctx) {
+            ch.draw(ctx, ch.x, ch.y);
+        };
 
         self.screen.addPlayer(player);
         return player;
     },
-    onPlayerLeft: function (player) {
-        "use strict";
-        var self = dummy.game;
-        console.info("dummy::onPlayerLeft - Player disconnected ", player.userID);
-
-        self.screen.removePlayer(player);
-    },
     connectToServer: function () {
         "use strict";
-        game.controllerHub.openHub(this.onPlayerJoined, this.onPlayerLeft, 100);
+        window.setTimeout(function () {
+            game.controllerHub.openHub(dummy.game.onPlayerJoined, 100);
+        }, 500);
     },
-    initConfigMenu: function() {
+    initConfigMenu: function () {
         var rightMenu = document.getElementById("rightMenu");
 
         rightMenu.appendChild(this.createMenuOption(
@@ -167,6 +177,7 @@ dummy.game = {
 
 $(document).ready(function () {
     "use strict";
+    console.debug("STARTING.................");
     var canvas = document.getElementById("canvas"),
         container = document.getElementById("container");
 

@@ -8,7 +8,7 @@
 var renderingPeli = renderingPeli || {};
 renderingPeli.game = {
     players: [],
-    crosshairManager: new CrosshairManager(0),
+    //crosshairManager: new CrosshairManager(0),
     width: 0,
     height: 0,
     scene: null,

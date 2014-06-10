@@ -12,10 +12,11 @@ client.CrosshairDisplay = function (canvas, id) {
     this.y = 0;
 
     if (id !== null) {
+        console.debug("Trying to load crosshair image for id ", id);
+
         this.crosshairImage = new Image();
         this.crosshairImage.src = "/data/crosshairs/crosshair" + id + ".png";
     }
-
 };
 
 client.CrosshairDisplay.prototype = {
@@ -48,5 +49,8 @@ client.CrosshairDisplay.prototype = {
             //ctx.drawImage(this.crosshairImage, this.x), this.y, this.scale, this.scale);
             ctx.drawImage(this.crosshairImage, this.x, this.y, this.size, this.size);
         }
+    },
+    onResize: function (canvas_w, canvas_h) {
+        this.x = canvas_w / 2 - (this.size/2);
     }
 };

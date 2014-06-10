@@ -24,10 +24,10 @@ controller.ThumbStick.prototype.reset = function (player, rpc) {
     this.player = player;
     
     this.x = 0;
+    this.playerPos = new Vector2(0.5, 0.5);
 
     this.posChangeSpeed = 0.01;
     this.thumbStickPos = new Vector2(0, 0);
-    console.debug("yay");
 
     rpc.exposeRpcMethod('thumbStickPosition', this, this.thumbStickPosition);
     rpc.exposeRpcMethod('buttonPushed', this, this.buttonPushed);
@@ -39,9 +39,7 @@ controller.ThumbStick.prototype.clear = function () {
 
 
 controller.ThumbStick.prototype.update = function () {
-    var playerPos = new Vector2(this.player.x, this.player.y);
-    var newPos = playerPos.add(this.thumbStickPos.multiply(this.posChangeSpeed));
-
+    var newPos = this.playerPos.add(this.thumbStickPos.multiply(this.posChangeSpeed));
     this.position(newPos);
 };
 
@@ -65,5 +63,6 @@ controller.ThumbStick.prototype.position = function (newPos) {
         newPos.y = this.player.y;
     }
 
+    this.playerPos = newPos;
     this.player.setPosition(newPos.x, newPos.y);
 };

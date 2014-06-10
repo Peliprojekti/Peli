@@ -10,10 +10,6 @@ describe('the Player object', function() {
         it ('initializes the player correctly, gets id', function() {
             var testPlayer = new Player(1234);
             expect(testPlayer.getID()).toBe(1234);
-            expect(testPlayer.x).toBe(0.5);
-            expect(testPlayer.y).toBe(0.5);
-            expect(testPlayer.gameOn).toBe(false);
-            //expect(testPlayer.currentDirection).toEqual(new Vector2(0, 0));
         });
         it('gets a player from the listing', function() {
             var testPlayer = new Player(1);

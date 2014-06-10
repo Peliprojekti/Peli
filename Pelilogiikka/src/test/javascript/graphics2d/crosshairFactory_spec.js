@@ -1,4 +1,4 @@
-describe('the Crosshair object', function () {
+describe('crosshairFactory', function () {
 
     //Create an easily-removed container for our tests to play in
     beforeEach(function () {
@@ -9,17 +9,17 @@ describe('the Crosshair object', function () {
     });
 
     //Specs
-    describe('Crosshair tests', function () {
+    describe('Crosshair object', function () {
         it('initializes correctly with a set color', function () {
-            var crosshair = new graphics2d.crosshair.Crosshair(0, 0, 20, "rgb(255,255,255)");
-            expect(crosshair.color).toBe("rgb(255,255,255)");
+            var crosshair = new crosshairFactory.Crosshair(20, "rgb(255,255,255)");
+            expect(crosshair.getColor()).toBe("rgb(255,255,255)");
         });
         it('initializes correctly with a random color', function () {
-            var crosshair = new graphics2d.crosshair.createRandomColor(0, 0, 20);
-            expect(crosshair.color).toContain("rgb(");
+            var crosshair = new crosshairFactory.createRandomColor(20);
+            expect(crosshair).not.toBe(null);
         });
         it('draws the crosshair graphic', function () {
-            var crosshair = new graphics2d.crosshair.Crosshair(0, 0, 20, "rgb(255,255,255)");
+            var crosshair = new crosshairFactory.Crosshair(20, "rgb(255,255,255)");
             var mockContext = {
                 save: function () {
                 },
@@ -47,12 +47,29 @@ describe('the Crosshair object', function () {
             expect(mockContext.stroke).toHaveBeenCalled();
             expect(mockContext.restore).toHaveBeenCalled();
         });
-        it('sets the position for the graphic', function () {
-            var crosshair = new graphics2d.crosshair.Crosshair(0, 0, 20, "rgb(255,255,255)");
-            var test = [2, 3];
-            crosshair.setPosition(test);
-            expect(crosshair.x).toBe(2);
-            expect(crosshair.y).toBe(3);
+    });
+
+    describe('CrosshairImg tests', function () {
+        it('initializes the crosshair correctly', function () {
+            var crosshairImg = new crosshairFactory.createImg(2);
+            var string = crosshairImg.img.src.split(/data/);
+            expect(string[1]).toBe("/crosshairs/crosshair2.png");
+            expect(crosshairImg.width).toBe(64);
+            expect(crosshairImg.height).toBe(64);
+            expect(crosshairImg.id).toBe(2);
+        });
+        it('draws the crosshair correctly', function () {
+            var crosshairImg = new crosshairFactory.createImg(1);
+            var mockContext = {
+                drawImage: function () {
+                }
+            };
+            mockContext.canvas = new Object();
+            mockContext.canvas.width = 1;
+            mockContext.canvas.height = 1;
+            spyOn(mockContext, 'drawImage');
+            crosshairImg.draw(mockContext, 0, 0);
+            expect(mockContext.drawImage).toHaveBeenCalled();
         });
     });
 });

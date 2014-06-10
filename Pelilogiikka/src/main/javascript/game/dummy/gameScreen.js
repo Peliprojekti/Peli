@@ -1,5 +1,6 @@
 /*global Box2D: false*/
 /*global console: false*/
+/*global dummy: true*/
 /*global graphics2d: false*/
 /*jslint browser: true*/
 
@@ -17,7 +18,6 @@ dummy.screen = {
     entities: dummy.entities,
     background: [],
     players: [],
-    controllers: [],
     start: function (canvas) {
         "use strict";
         this.height = canvas.height;
@@ -46,22 +46,12 @@ dummy.screen = {
         this.physicsEnabled = enabled;
     },
     setEntitiesEnabled: function(enabled) {
-        "use stridct";
+        "use strict";
         this.entitiesEnabled = enabled;
     },
     setStatsEnabled: function(enabled) {
         "use strict";
         this.statsEnabled = enabled;
-    },
-    addController: function (controller) {
-        "use strict";
-        this.controllers.push(controller);
-    },
-    removeController: function (controller) {
-        "use strict";
-        this.controllers = this.controllers.filter(function (c) {
-            return (c === controller ? false : true);
-        });
     },
     addPlayer: function (player) {
         "use strict";
@@ -94,7 +84,7 @@ dummy.screen = {
             self.entities.drawAll(ctx);
         }
 
-        self.updateControllers(time);
+        self.updatePlayers(time);
         self.drawPlayers(ctx);
 
         setTimeout(self.animate, self.targetFrameTime + self.targetFrameTime - (time - self.previousTime));
@@ -106,10 +96,10 @@ dummy.screen = {
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, this.width, this.height);
     },
-    updateControllers: function (time) {
+    updatePlayers: function (time) {
         "use strict";
-        this.controllers.forEach(function (c) {
-            if (c) c.update(time);
+        this.players.forEach(function (p) {
+            p.update(time);
         });
     },
     drawPlayers: function (ctx) {
@@ -118,7 +108,7 @@ dummy.screen = {
             p.draw(ctx);
         });
     },
-    shoot: function(x,y) {
+    shoot: function (x, y) {
         //this.background.push(graphics2d.bulletHole.create(this.canvas, x, y));
     }
 };
