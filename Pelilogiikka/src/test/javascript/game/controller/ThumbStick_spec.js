@@ -63,6 +63,8 @@ describe('the ThumbStick (game) object', function () {
             
             var playerPos = new Vector2(mockPlayer.x, mockPlayer.y);
             var newPos = playerPos.add(controllerObj.thumbStickPos.multiply(controllerObj.posChangeSpeed));
+            //controllerObj.playerPos = new Vector2(
+            controllerObj.playerPos = new Vector2(mockPlayer.x, mockPlayer.y);
 
             controllerObj.update();
 
