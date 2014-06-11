@@ -85,32 +85,3 @@ Player.prototype = {
         }
     }
 };
-
-/*
-Player.prototype.addResponseTime = function(time, msgs) {
-    this.responseTime = time;
-    this.messagesPerSecond = msgs;
-};
-
-Player.prototype.draw = function(ctx) {
-    this.crossh.draw(ctx, this.x, this.y);
-
-    this.bullets.forEach(function(b) {
-        b.draw(ctx);
-    });
-
-    if (this.responseTime !== null) {
-        ctx.save();
-        ctx.font = 'bold 40pt Calibri';sequence
-        ctx.fillStyle = '#30BB30';
-        ctx.strokeStyle = '#209020';
-        ctx.fillText(this.messagesPerSecond, 45, this.y * ctx.canvas.height + 20);
-        ctx.fillText(Math.floor(this.responseTime), 200, this.y * ctx.canvas.height + 20);
-        ctx.restore();
-    }
-};
-
-Player.prototype.setCrosshair = function(crosshair) {
-    this.crossh = crosshair;
-};
-*/

@@ -7,6 +7,17 @@ describe('crosshairFactory', function () {
     //Clean it up after each spec
     afterEach(function () {
     });
+    describe('the factory functions', function () {
+        it('getNextImgURL returns valid crosshair path', function () {
+            var path = crosshairFactory.getNextImgURL();
+            expect(path).toMatch(new RegExp('/data/crosshairs/.*'));
+        });
+        it('create CrosshairImg object without given id', function () {
+            var ch = crosshairFactory.createImg();
+            expect(ch instanceof crosshairFactory.CrosshairImg).toBeTruthy();
+            expect(ch.getID()).not.toBe(null);
+        });
+    });
 
     //Specs
     describe('Crosshair object', function () {
