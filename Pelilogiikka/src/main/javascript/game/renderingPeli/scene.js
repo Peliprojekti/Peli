@@ -9,8 +9,7 @@ var renderingPeli = renderingPeli || {};
 renderingPeli.scene = {
     renderer: null,
     camera: null,
-    controllers: {},
-    players: {},
+    players: [],
     updatables: [],
     drawables: [],
     crosshair_id: 0,
@@ -28,9 +27,9 @@ renderingPeli.scene = {
 
         var i, playerID;
 
-        for (playerID in this.controllers) {
-            //this.controllers[playerID].update(time);
-        }
+        this.players.forEach(function (p) {
+            p.update(time);
+        });
 
         for (i = 0; i < this.updatables.length; i++) {
             this.updatables[i].update(time);
@@ -42,21 +41,21 @@ renderingPeli.scene = {
     rendererDraw: function () {
         "use strict";
 
-        var playerID, player;
+        var player, i;
 
         this.renderer.set_Camera(this.camera);
         this.renderer.begin();
          
         this.renderer.set_Matrices( null, this.camera.get_ViewMatrix(), this.camera.get_ProjectionMatrix() );
         
-        for (playerID in this.players) {
-            player = this.players[playerID];
+        for (i = 0; i < this.players.length; i++) {
+            player = this.players[i];
 
             this.renderer.set_Shader(player.shader);
             var trans = player.guiItem.get_Transformation();
             this.renderer.set_Matrices(trans, null, null);
             this.renderer.draw_Batch(player.guiItem.batch);
-        }
+        };
     },
     addPlayer: function (player) {
         "use strict";
@@ -68,19 +67,17 @@ renderingPeli.scene = {
         player.shader = new GuiShader();
         player.guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), texture);
         player.setCrosshairID(this.crosshair_id);
-        this.players[player.userID] = player;
+        this.players.push(player);
     },
     removePlayer: function (player) {
         "use strict";
-        console.debug("1------------REMOVVVVVAIGIDAISDNGSA");
+
+        this.players = this.players.filter(function (p) {
+            return (p === player ? false : true);
+        });
+        
         delete player.guiItem;
-        console.debug("2------------REMOVVVVVAIGIDAISDNGSA");
         delete player.shader;
-        console.debug("3------------REMOVVVVVAIGIDAISDNGSA");
-        this.players[player.userID] = null;
-        console.debug("4------------REMOVVVVVAIGIDAISDNGSA");
-        delete this.players[player.userID];
-        console.debug("+++++++++++++REMOVVVVVAIGIDAISDNGSA");
     },
     addUpdatable: function (u) {
         "use strict";
