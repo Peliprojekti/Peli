@@ -7,7 +7,6 @@
 
 
 
-
     // BUGAA. Ensimmäinen termi sisältää <attributes> roinaa!
     function read_Node( node_Variables )
     {
@@ -137,11 +136,9 @@
             
         this.targets.push( new TargetX( batches, begin, end ) );
         }
-        
-        
-        
-        
     }
+    
+    
     
     
     World.prototype.render = function( camera )
@@ -151,7 +148,6 @@
         
         this.quadTree.render( camera.frustrum );
    
-   
         the_Renderer.set_Shader( this.targetShader      );
    
         for( var i = 0; i < this.targets.length; i++ )
@@ -159,3 +155,11 @@
             this.targets[i].render();
         }
     }
+    
+    
+    World.prototype.get_Targets = function()
+    {
+        return this.targets;
+    }
+    
+    

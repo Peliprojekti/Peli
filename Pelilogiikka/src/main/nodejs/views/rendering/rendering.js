@@ -48,6 +48,9 @@ var testWorld = null;
 
 
 
+var t = 0;
+var dir = false;
+
 function draw_Frame ()
 {
     if (key_Down(38))
@@ -77,7 +80,6 @@ function draw_Frame ()
     if (key_Down(34))
         testCamera.down(5.0);
 
-
     the_Renderer.set_Camera(testCamera);
 
     the_Renderer.begin();
@@ -87,9 +89,18 @@ function draw_Frame ()
    //   the_Renderer.set_Shader(guiShader);
    //   the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
    
-
    // the_Renderer.set_Matrices(guiItem.get_Transformation(), null, null);
    // the_Renderer.draw_Batch(guiItem.batch);
+    
+    var targets = testWorld.get_Targets();
+        targets[0].set_Stage( t );
+    
+    
+   if( t > 1.0 ) dir = false;
+   if( t < 0.0 ) dir = true;
+   
+   if( dir  ) t += 0.01;
+   if( !dir ) t -= 0.01;
     
     testWorld.render( testCamera );
   
