@@ -11,6 +11,7 @@ client.phone = {
     isOrienting: false,
     isResizing: false,
     canvas: null,
+    gameJoined: false,
     connectingDiv: null,
     rc: 0,
     oc: 0,
@@ -20,23 +21,37 @@ client.phone = {
         "use strict";
         
         this.connectingDiv = document.getElementById("connecting");
-            this.io = navigator.userAgent.match(/(iPhone)|(iPod)/);
+        this.disconnectedDiv = document.getElementById("disconnected");
+        this.io = navigator.userAgent.match(/(iPhone)|(iPod)/);
 
-            this.controllerView = client.controllerView.create(
-                document.getElementById('container'),
-                document.getElementById('canvas')
+        this.controllerView = client.controllerView.create(
+            document.getElementById('container'),
+            document.getElementById('canvas')
+        );
+        this.onResize();
+
+        this.controllerView.add(new fpsDisplay.create(document.getElementById("canvas")));
+        this.canvas = canvas;
+
+        this.openComs();
+
+        $(window).on("orientationchange", this.onOrientationChange.bind(this));
+        $(window).resize(this.onResize.bind(this));
+
+        this.controllerView.start();
+    },
+    openComs: function(timeout) {
+        var self = this;
+        window.setTimeout(function () {
+            client.coms.open(
+                function(error, ok) {
+                    self.onConnectionOpened(error, ok);
+                },
+                function() {
+                    self.onConnectionClosed();
+                }
             );
-            this.onResize();
-
-            this.controllerView.add(new fpsDisplay.create(document.getElementById("canvas")));
-            this.canvas = canvas;
-
-            client.coms.open(this.onConnectionOpened.bind(this), this.onConnectionClosed.bind(this));
-
-            $(window).on("orientationchange", this.onOrientationChange.bind(this));
-            $(window).resize(this.onResize.bind(this));
-
-            this.controllerView.start();
+        }, (timeout || 100));
     },
     onOrientationChange: function () {
         "use strict";
@@ -77,17 +92,28 @@ client.phone = {
             }, 100);
         }
     },
-    onConnectionOpened: function () {
+    onConnectionOpened: function (error, ok) {
         "use strict";
-        this.connectingDiv.style.display = 'none';
-        client.coms.call('joinGame', [USERID], this,
-            function (rpc_id, rpc_error, retval) {
-                this.loadController(retval[0], retval[1].crosshairID);
-            });
+        if (ok) {
+            client.coms.call('joinGame', [USERID], this,
+                function (rpc_id, rpc_error, retval) {
+                    this.gameJoined = true;
+                    this.connectingDiv.style.display = 'none';
+                    this.disconnectedDiv.style.display = 'none';
+                    this.loadController(retval[0], retval[1].crosshairID);
+                });
+        } else if (this.gameJoined) {
+            console.warn("phone::onConnectionOpened - midgame error", error);
+        } else {
+            this.openComs(200);
+        }
     },
     onConnectionClosed: function() {
         "use strict";
-        this.connectingDiv.style.display = '';
+        console.debug("showing disconnectDiv");
+        //this.connectingDiv.style.display = 'block';
+        this.disconnectedDiv.style.display = 'block';
+        console.debug("showing disconnectDiv");
     },
     addDrawable: function (drawable) {
         "use strict";
@@ -119,7 +145,8 @@ client.phone = {
             this,
             client.coms,
             crosshair);
-    },
+    }
+    /*
     getFingerCoords: function (id, event) {
         var canvas_x = event.targetTouches[id].pageX;
         var canvas_y = event.targetTouches[id].pageY;
@@ -144,6 +171,7 @@ client.phone = {
             "Canvas width: " + canvasDimensions[0] + "\nCanvas height: " + canvasDimensions[1]
             );
     }
+    */
 };
 
 $(document).ready(function(){

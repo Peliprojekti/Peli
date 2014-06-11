@@ -32,7 +32,8 @@ module.exports = new function() {
                     }
                     else {
                         require('util').error("engine.io/controller - client trying to forward to closed screen socket");
-                        gameSocket.requestClose();
+                        socket.close();
+                        //gameSocket.requestClose();
                     }
 				});
 
