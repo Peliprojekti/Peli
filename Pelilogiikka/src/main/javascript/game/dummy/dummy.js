@@ -38,7 +38,15 @@ dummy.game = {
     onPlayerJoined: function (userID) {
         "use strict";
         var self = dummy.game,
-            player = new Player(userID),
+            player = self.createPlayer(userID);
+            ch = crosshairFactory.createImg();
+
+        self.screen.addPlayer(player);
+        return player;
+    },
+    createPlayer: function(userID) {
+        "use strict";
+        var player = new Player(userID),
             ch = crosshairFactory.createImg();
 
         player.setCrosshairID(ch.getID());
@@ -47,10 +55,12 @@ dummy.game = {
             console.debug("dummy::onPlayerJoined - player is shooting");
             //self.screen.shoot(ch.x, ch.y);
         });
+
         player.setOnDisconnect(function () {
-            self.screen.removePlayer(player);
+            this.screen.removePlayer(player);
             player.clear();
         });
+
         player.setOnSetPosition(function (x, y) {
             ch.x = x * self.width;
             ch.y = y * self.height;
@@ -60,7 +70,6 @@ dummy.game = {
             ch.draw(ctx, ch.x, ch.y);
         };
 
-        self.screen.addPlayer(player);
         return player;
     },
     connectToServer: function () {

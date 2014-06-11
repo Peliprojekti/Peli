@@ -122,6 +122,7 @@ game.controllerHub = {
         this.connectionsInUse.push(connection);
         this.openConnectionIfNeeded();
 
+        console.info("ControllerHub::rpcJoinGame - player join complete", userID);
         return [this.controllerType, player.getPlayerData()];
     },
     onConnectionOpened: function (error, ok) {
