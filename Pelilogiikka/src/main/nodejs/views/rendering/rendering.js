@@ -86,17 +86,17 @@ function draw_Frame ()
     //   the_Renderer.draw_Batch( testBatch, testShader, testCamera  );
 
         //the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
+   the_Renderer.set_Shader(guiShader);
+   the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
 
-       //the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
-
-    the_Renderer.set_Shader(guiShader);
+   
    
 
     the_Renderer.set_Matrices(guiItem.get_Transformation(), null, null);
 
     the_Renderer.draw_Batch(guiItem.batch);
 
-
+    
     testWorld.render( testCamera );
     
     the_Renderer.set_Shader( spriteShader );
@@ -136,17 +136,12 @@ function main ()
 
 
     guiShader    = new GuiShader(                                      );
-    guiTex       = new Texture("data/crosshair1.bmp");
+    guiTex       = new Texture("data/crosshairs/crosshair1.png");
     testGui      = testRect(guiTex, 0.007, (0.007) * 1.3333);
 
     guiItem      = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), guiTex);
-    
     testActor    = new Actor( new Vector3(0,0,0), new Dimension2( 10,10), spriteTex );
-
-
-
-    testWorld = new World( "Fairground" );
-
+    testWorld    = new World( "Fairground" );
 
     // TEST IT
     /*
@@ -180,7 +175,7 @@ function main ()
 
 function global_Initializer ()
 {
-    new Renderer(new Dimension2(800, 800));
+    new Renderer( new Dimension2(800, 800) );
 
     register_Inputs();
 

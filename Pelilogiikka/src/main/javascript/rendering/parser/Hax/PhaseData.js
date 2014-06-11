@@ -255,7 +255,7 @@
     {
       var hits = viewFrustrum.contains( this.boundingRect );
       
-       console.info(hits);
+      // console.info(hits);
     /*
         if( hits == 4 )
         {

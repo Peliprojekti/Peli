@@ -5,20 +5,21 @@
     function Renderer( resolution )
     {
         ASSERT_SINGLETON( the_Renderer, "Global renderer can only ever be assigned once!" );
+       
+        resolution.width  = 800;//document.width/2;
+        resolution.height = 600; //document.height/2;
         
-        resolution.width  = 1200;
-        resolution.height = 800;
         
         try
         {   
-            this.canvas = document.getElementById("Canvas");
+            this.canvas            = document.getElementById("Canvas");
             
-            this.canvas.width  = resolution.width;
-            this.canvas.height = resolution.height;
+            this.canvas.width      = resolution.width;
+            this.canvas.height     = resolution.height;
            
             this.gl                = this.canvas.getContext("experimental-webgl"); 
-            this.gl.viewportWidth  = this.canvas.width;
-            this.gl.viewportHeight = this.canvas.height;
+            this.gl.viewportWidth  = resolution.width;
+            this.gl.viewportHeight = resolution.height;
             this.size              = resolution;
         }
         catch( error )
@@ -27,9 +28,8 @@
         }
         
         
-        
-     this.aspectRatio   = this.canvas.width/this.canvas.height;
-     this.fillColor     = new Color( 0.2 , 0.6, 0.7, 1.0 );
+     this.aspectRatio = this.canvas.width/this.canvas.height;
+     this.fillColor   = new Color( 0.2 , 0.6, 0.7, 1.0 );
     
      this.gl.enable( this.gl.DEPTH_TEST );      
      
@@ -81,9 +81,6 @@
         this.gl.drawElements( this.gl.TRIANGLES, batch.iBuffer.data.numItems, this.gl.UNSIGNED_SHORT, 0  );
     }
     
-
-  
-
 
     
     
