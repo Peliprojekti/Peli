@@ -68,17 +68,19 @@ renderingPeli.scene = {
         player.shader = new GuiShader();
         player.guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), texture);
         player.setCrosshairID(this.crosshair_id);
-        this.controllers[player.userID] = controller;
         this.players[player.userID] = player;
     },
     removePlayer: function (player) {
-        console.debug("REMOVVVVVAIGIDAISDNGSA");
+        "use strict";
+        console.debug("1------------REMOVVVVVAIGIDAISDNGSA");
         delete player.guiItem;
+        console.debug("2------------REMOVVVVVAIGIDAISDNGSA");
         delete player.shader;
+        console.debug("3------------REMOVVVVVAIGIDAISDNGSA");
         this.players[player.userID] = null;
-        this.controllers[player.userID] = null;
-        delete this.controllers[player.userID];
+        console.debug("4------------REMOVVVVVAIGIDAISDNGSA");
         delete this.players[player.userID];
+        console.debug("+++++++++++++REMOVVVVVAIGIDAISDNGSA");
     },
     addUpdatable: function (u) {
         "use strict";

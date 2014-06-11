@@ -47,8 +47,8 @@ renderingPeli.game = {
 
             player.guiItem.set_Position(new Vector2(vecX, vecY));
         });
-        player.setOnDisconnect(function (player) {
-            renderingPeli.game.onPlayerLeft(player);
+        player.setOnDisconnect(function () {
+            renderingPeli.game.onPlayerLeft(this);
         });
 
         return player;
