@@ -61,5 +61,59 @@ describe('the MotionController (game) object', function () {
 
         });
 
+        it('sets the correct position when calling the setposition function with invalid values', function () {
+            spyOn(mockPlayer, 'setPosition');
+            var x = 1.5;
+            var y = -0.6;
+
+            var controllerX = 0.1;
+            var controllerY = 0.9;
+
+            controllerObj.x = controllerX;
+            controllerObj.y = controllerY;
+
+            controllerObj.setPosition(x, y);
+
+            expect(mockPlayer.setPosition).toHaveBeenCalled();
+            expect(mockPlayer.setPosition).toHaveBeenCalledWith(controllerX, controllerY);
+
+        });
+
+        it('calls the setPosition method with correct parameters on update', function () {
+            spyOn(controllerObj, 'setPosition');
+
+            var x = 0.4;
+            var y = 0.1;
+            var multiplier = 0.0001;
+            var tiltLR = 50;
+            var tiltFB = 30;
+
+            controllerObj.x = x;
+            controllerObj.y = y;
+            controllerObj.multiplier = multiplier;
+            controllerObj.tiltLR = tiltLR;
+            controllerObj.tiltFB = tiltFB;
+            controllerObj.update();
+
+            expect(controllerObj.setPosition).toHaveBeenCalled();
+            expect(controllerObj.setPosition).toHaveBeenCalledWith(x + tiltFB * multiplier, y + tiltLR * multiplier);
+
+        });
+
+        it('sets tiltLR and tiltFB correctly when the orientation method is called', function () {
+
+            var tiltLR = 50;
+            var tiltFB = 30;
+
+            controllerObj.tiltLR = tiltLR;
+            controllerObj.tiltFB = tiltFB;
+            
+            controllerObj.orientation(25, 88, 0);
+
+            expect(controllerObj.tiltLR).toBe(-25);
+            expect(controllerObj.tiltFB).toBe(88);
+
+        });
+
     });
 });
