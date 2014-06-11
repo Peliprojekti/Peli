@@ -120,6 +120,7 @@
         }
       
       
+        console.debug("triangleList", triangleList);
         this.quadTree = new     QuadTree( triangleList ); 
         this.shader   = new SimpleShader(              );
         

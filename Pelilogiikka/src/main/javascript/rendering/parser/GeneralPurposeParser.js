@@ -3,7 +3,8 @@
     { 
         var clip = full_Path.indexOf( "data" );
         if( clip == -1 ) return "NULL";
-        var string = full_Path.substring( clip, full_Path.length );
+        var string = "/" + full_Path.substring( clip, full_Path.length ).replace(/\\/g, '/');
+
         return string;
     }
     

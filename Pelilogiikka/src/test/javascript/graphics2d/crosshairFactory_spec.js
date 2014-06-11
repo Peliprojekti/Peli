@@ -7,6 +7,8 @@ describe('crosshairFactory', function () {
     //Clean it up after each spec
     afterEach(function () {
     });
+
+    //Specs
     describe('the factory functions', function () {
         it('getNextImgURL returns valid crosshair path', function () {
             var path = crosshairFactory.getNextImgURL();
@@ -19,7 +21,6 @@ describe('crosshairFactory', function () {
         });
     });
 
-    //Specs
     describe('Crosshair object', function () {
         it('initializes correctly with a set color', function () {
             var crosshair = new crosshairFactory.Crosshair(20, "rgb(255,255,255)");
