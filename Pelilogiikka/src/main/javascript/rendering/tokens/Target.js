@@ -2,11 +2,17 @@
 
     function TargetX( batchlist, begin_Transformation, end_Transformation )        
     {
-        this.batches              = batchlist;
-        this.begin_Transformation = begin_Transformation;
-        this.end_Transformation   = end_Transformation;
+        this.batches                = batchlist;
+        this.begin_Transformation   = begin_Transformation;
+        this.end_Transformation     = end_Transformation;
+        this.current_Transformation = this.begin_Transformation;
+       
+        var pos1                    = this.begin_Transformation.get_Translation();
+        var pos2                    = this.end_Transformation.get_Translation();
         
-        alert("Batches loaded " + this.batches.length );
+        var interpolator_X          = new Interpolator( pos1.x, pos2.x );
+        var interpolator_Y          = new Interpolator( pos1.y, pos2.y );
+        var interpolator_Z          = new Interpolator( pos1.z, pos2.z );
     }
 
 
@@ -18,4 +24,15 @@
         {
             the_Renderer.draw_Batch( this.batches[i] );
         }
+    }
+    
+    TargetX.prototype.set_Stage = function ( param_t ) 
+    {  
+        var matrix = this.begin_Transformation;
+        var    pos = new Vector3( interpolator_X.interpolate( param_t ) ,
+                                  interpolator_Y.interpolate( param_t ) ,
+                                  interpolator_Z.interpolate( param_t ) );
+         
+        matrix.embed_Translation( pos );
+        this.begin_Transformation = matrix;
     }
