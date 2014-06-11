@@ -7,8 +7,11 @@
 
 var renderingPeli = renderingPeli || {};
 renderingPeli.scene = {
+    canvas: null,
     renderer: null,
     camera: null,
+    world: null,
+    duckPos: 0,
     players: [],
     updatables: [],
     drawables: [],
@@ -16,9 +19,15 @@ renderingPeli.scene = {
     start: function (canvas) {
         "use strict";
 
+        this.canvas = canvas;
+
         console.log("starting up renderer stuff");
         this.renderer = new Renderer(new Dimension2(canvas.width, canvas.height));
-        this.camera = new Camera(new Vector3(0, 5, 150));
+        this.camera = new Camera(new Vector3(95.65460642017462, 10, -34.54491692528497));
+        this.camera.yaw(180);
+        this.world = new World('Fairground');
+
+        this.registerKeyboardListeners();
 
         requestAnimationFrame(this.animate.bind(this));
     },
@@ -35,12 +44,18 @@ renderingPeli.scene = {
     rendererDraw: function () {
         "use strict";
 
-        var player, i;
+        var duck = this.world.get_Targets()[0],
+            player, 
+            i;
 
         this.renderer.set_Camera(this.camera);
         this.renderer.begin();
-         
+
         this.renderer.set_Matrices( null, this.camera.get_ViewMatrix(), this.camera.get_ProjectionMatrix() );
+
+        this.world.render(this.camera);
+
+        duck.set_Stage((this.duckPos++ % 150) / 150);
         
         for (i = 0; i < this.players.length; i++) {
             player = this.players[i];
@@ -72,5 +87,32 @@ renderingPeli.scene = {
         
         delete player.guiItem;
         delete player.shader;
+    },
+    registerKeyboardListeners: function () {
+        "use strict";
+        var self = this;
+        
+        document.onkeydown = function (e) {
+            switch (e.keyCode) {
+                case 38: 
+                    self.camera.forward(2.0);
+                    break;
+                case 40:
+                    self.camera.backwards(2.0);
+                    break;
+                case 37: 
+                    self.camera.yaw(-2.0);
+                    break;
+                case 39: 
+                    self.camera.yaw(2.0);
+                    break;
+                case 39: 
+                    self.camera.yaw(2.0);
+                    break;
+                case 32: 
+                    console.debug("camera position", self.camera.position.x, self.camera.position.y, self.camera.position.z)
+                    break;
+            }
+        }
     }
 };
