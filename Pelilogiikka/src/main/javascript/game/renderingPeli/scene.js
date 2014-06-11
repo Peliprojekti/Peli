@@ -9,8 +9,7 @@ var renderingPeli = renderingPeli || {};
 renderingPeli.scene = {
     renderer: null,
     camera: null,
-    controllers: {},
-    players: {},
+    players: [],
     updatables: [],
     drawables: [],
     crosshair_id: 0,
@@ -26,15 +25,9 @@ renderingPeli.scene = {
     animate: function (time) {
         "use strict";
 
-        var i, playerID;
-
-        for (playerID in this.controllers) {
-            //this.controllers[playerID].update(time);
-        }
-
-        for (i = 0; i < this.updatables.length; i++) {
-            this.updatables[i].update(time);
-        }
+        this.players.forEach(function (p) {
+            p.update(time);
+        });
 
         this.rendererDraw();
         requestAnimationFrame(this.animate.bind(this));
@@ -42,21 +35,21 @@ renderingPeli.scene = {
     rendererDraw: function () {
         "use strict";
 
-        var playerID, player;
+        var player, i;
 
         this.renderer.set_Camera(this.camera);
         this.renderer.begin();
          
         this.renderer.set_Matrices( null, this.camera.get_ViewMatrix(), this.camera.get_ProjectionMatrix() );
         
-        for (playerID in this.players) {
-            player = this.players[playerID];
+        for (i = 0; i < this.players.length; i++) {
+            player = this.players[i];
 
             this.renderer.set_Shader(player.shader);
             var trans = player.guiItem.get_Transformation();
             this.renderer.set_Matrices(trans, null, null);
             this.renderer.draw_Batch(player.guiItem.batch);
-        }
+        };
     },
     addPlayer: function (player) {
         "use strict";
@@ -68,46 +61,16 @@ renderingPeli.scene = {
         player.shader = new GuiShader();
         player.guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), texture);
         player.setCrosshairID(this.crosshair_id);
-        this.controllers[player.userID] = controller;
-        this.players[player.userID] = player;
+        this.players.push(player);
     },
     removePlayer: function (player) {
-        console.debug("REMOVVVVVAIGIDAISDNGSA");
-        delete player.guiItem;
-        delete player.shader;
-        this.players[player.userID] = null;
-        this.controllers[player.userID] = null;
-        delete this.controllers[player.userID];
-        delete this.players[player.userID];
-    },
-    addUpdatable: function (u) {
         "use strict";
 
-        if (typeof u.update !== undefined) {
-            this.updatables.push(u);
-            return true;
-        }
-        return false;
+        this.players = this.players.filter(function (p) {
+            return (p === player ? false : true);
+        });
+        
+        delete player.guiItem;
+        delete player.shader;
     }
 };
-/*
- 
- testShader = new SimpleShader(                                    );
- testTexture = new Texture("data/Textures/concrete.jpg");
- testBatch = testCube(testTexture);
- 
- spriteShader = new SpriteShader(                                    );
- spriteTex = new Texture("data/Textures/Sprites/Otus.png");
- testSprite = testRect(spriteTex, 2, 4);
- 
- 
- guiShader = new GuiShader(                                      );
- guiTex = new Texture("data/crosshair1.bmp");
- testGui = testRect(guiTex, 0.007, (0.007) * 1.3333);
- 
- guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), guiTex);
- 
- testActor = new Actor( new Vector3(0,0,0), new Dimension2( 10,10), spriteTex );
- 
- rendererMain();
- */

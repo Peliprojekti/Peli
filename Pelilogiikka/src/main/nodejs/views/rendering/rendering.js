@@ -48,13 +48,16 @@ var testWorld = null;
 
 
 
+var t = 0;
+var dir = false;
+
 function draw_Frame ()
 {
     if (key_Down(38))
-        testCamera.forward(5.0);
+        testCamera.forward(2.0);
   
     if (key_Down(40))
-        testCamera.backwards(5.0);
+        testCamera.backwards(2.0);
 
     if (key_Down(37))
         testCamera.yaw(-2.0);
@@ -77,36 +80,30 @@ function draw_Frame ()
     if (key_Down(34))
         testCamera.down(5.0);
 
-
-
     the_Renderer.set_Camera(testCamera);
 
     the_Renderer.begin();
 
-    //   the_Renderer.draw_Batch( testBatch, testShader, testCamera  );
-
-        //the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
-
-       //the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
-
-    the_Renderer.set_Shader(guiShader);
+   //   the_Renderer.draw_Batch( testBatch, testShader, testCamera  );
+   //   the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
+   //   the_Renderer.set_Shader(guiShader);
+   //   the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
    
-
-    the_Renderer.set_Matrices(guiItem.get_Transformation(), null, null);
-
-    the_Renderer.draw_Batch(guiItem.batch);
-
-
+   // the_Renderer.set_Matrices(guiItem.get_Transformation(), null, null);
+   // the_Renderer.draw_Batch(guiItem.batch);
+    
+    var targets = testWorld.get_Targets();
+        targets[0].set_Stage( t );
+    
+    
+   if( t > 1.0 ) dir = false;
+   if( t < 0.0 ) dir = true;
+   
+   if( dir  ) t += 0.01;
+   if( !dir ) t -= 0.01;
+    
     testWorld.render( testCamera );
-    
-    the_Renderer.set_Shader( spriteShader );
-      
-    
-    var viewI = testCamera.get_ViewMatrix().extract_Orientation().transposed();
-    var trans = testActor.get_Transformation(); 
-        trans.embed( viewI );
-        
-    the_Renderer.set_Matrices( trans, null, null );
+  
 }
 
 
@@ -125,7 +122,7 @@ function rendererMain ()
 function main ()
 {
     testCamera   = new Camera(new Vector3(0, 5, 0));
-
+    
     testShader   = new SimpleShader(                                    );
     testTexture  = new Texture("data/Textures/concrete.jpg");
     testBatch    = testCube(testTexture);
@@ -134,22 +131,18 @@ function main ()
     spriteTex    = new Texture("data/Textures/Sprites/Otus.png");
     testSprite   = testRect(spriteTex, 2, 4);
 
-
     guiShader    = new GuiShader(                                      );
-    guiTex       = new Texture("data/crosshair1.bmp");
+    guiTex       = new Texture("data/crosshairs/crosshair1.png");
     testGui      = testRect(guiTex, 0.007, (0.007) * 1.3333);
 
     guiItem      = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), guiTex);
-    
     testActor    = new Actor( new Vector3(0,0,0), new Dimension2( 10,10), spriteTex );
-
-
-
-    testWorld = new World( "Fairground" );
+    testWorld    = new World( "Fairground" );
 
 
     // TEST IT
     /*
+     
     var lTrans = new Matrix22();
     var rTrans = new Matrix22();
     
@@ -167,6 +160,7 @@ function main ()
     var t3 = testRay.intersects( testFrustrum.right , testFrustrum.origin );
     
     alert( t1 + " " + t2 + " " + t3 );
+    
    */ 
     //ViewTriangle( origin3, look3,  lTrans, rTrans, farPlaneDist )
 
@@ -180,7 +174,7 @@ function main ()
 
 function global_Initializer ()
 {
-    new Renderer(new Dimension2(800, 800));
+    new Renderer( new Dimension2(800, 800) );
 
     register_Inputs();
 

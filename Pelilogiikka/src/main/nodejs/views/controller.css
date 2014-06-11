@@ -20,7 +20,7 @@ body,html {
 	overflow: auto;
 }
 
-#connecting {
+.menu {
     z-index: 2;
     position: absolute;
     display: none;
@@ -31,17 +31,21 @@ body,html {
     background: green;
 }
 
-#connecting h1 {
+#connecting {
+    display: block;
+}
+
+.menu h1 {
     text-align: center;
     text-decoration: blink;
     font-size: 300%;
 }
 
-#connecting div {
+.menu div {
     text-align: center;
 }
 
-#connecting button {
+.menu button {
     width: 50%;
     font-size: 250%;
     background-color: #40AA40;

@@ -95,7 +95,6 @@
         this.tangents.push( triangle.v3.tangent.y );
         this.tangents.push( triangle.v3.tangent.z );
     
-        
         // This had better be correct...
         // IF not, perhaps we can render by value without indices?
         this.indices.push( this.runner++ );
@@ -118,21 +117,11 @@
     
     Material.prototype.build_Hash = function()
     {
-        var    string = this.texture1.source + this.texture2.source + this.texture3.source + this.texture4.source;
+        var string    = this.texture1.source + this.texture2.source + this.texture3.source + this.texture4.source;
         this.hash     = string.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
         this.hash    /= 1000000;
-        this.hash     = Math.floor( Math.abs(this.hash) );
-        // Seems legit... Need to see if its good for all possible cases. Seems to end up between [20 and a few k ]
+        this.hash     = Math.floor( Math.abs(this.hash) );     // Seems legit... Need to see if its good for all possible cases. Seems to end up between [20 and a few k ]
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -204,13 +193,10 @@
             return a.v1.point.x - b.v1.point.x;
         });
         
-
-        
  
         var minZ =   nearZ[        0         ].v1.point.z;
         var maxZ =    farZ[    farZ.length-1 ].v1.point.z;
              
-    
              
         var hax1 = xSortedNear.length-1;
         var hax2 = xSortedFar.length-1;
@@ -222,12 +208,11 @@
                      xSortedNear[hax1].v1.point.x : xSortedFar[hax2].v1.point.x;
         
         
+        var q1   = xSortedFar.splice(  0, Math.ceil( xSortedFar.length/2  )  );
+        var q2   = xSortedFar;
         
-        var q1 = xSortedFar.splice(  0, Math.ceil( xSortedFar.length/2  )  );
-        var q2 = xSortedFar;
-        
-        var q3 = xSortedNear.splice( 0, Math.ceil( xSortedNear.length/2 )  );
-        var q4 = xSortedNear;
+        var q3   = xSortedNear.splice( 0, Math.ceil( xSortedNear.length/2 )  );
+        var q4   = xSortedNear;
         
         var sigma = q1.length + q2.length + q3.length + q4.length;
         
@@ -255,7 +240,7 @@
     {
       var hits = viewFrustrum.contains( this.boundingRect );
       
-       console.info(hits);
+      // console.info(hits);
     /*
         if( hits == 4 )
         {
