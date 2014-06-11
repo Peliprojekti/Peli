@@ -55,10 +55,10 @@
     
     
     
+    
     function parse_DiscreteMesh( node, description  )
     {
         var subBatches           = [];
-        
         var transformation       = new Matrix44();      // ID
         
         var materialSets         = node.get_Subfields("materials");                 
@@ -90,8 +90,9 @@
                posBuffer.push( vertex.point.y );
                posBuffer.push( vertex.point.z );
             
-               uvBuffer.push( vertex.uv.x );
-               uvBuffer.push( vertex.uv.y );
+               uvBuffer.push ( vertex.uv.x    );
+               uvBuffer.push ( vertex.uv.y    );
+            
             }
                 
             for( var j = 0; j < indices.length; j++ )
@@ -100,9 +101,8 @@
             }
            
             var matSet  = materials[ m ];
-            var texture = matSet[0];
-            var batch   = new Batch( posBuffer, iBuffer, uvBuffer, texture );       
-            subBatches.push( batch );
+            var texture = matSet.texture1;
+            subBatches.push( new Batch( posBuffer, iBuffer, uvBuffer, texture ) );
         }
    
     return subBatches;

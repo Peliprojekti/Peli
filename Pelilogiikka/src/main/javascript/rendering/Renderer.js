@@ -68,24 +68,17 @@
 
 
 
-
-
     Renderer.prototype.draw_Batch = function( batch ) 
     {
         batch.bind( this.shader );
-        
+   
         this.gl.uniformMatrix4fv( this.shader.program.worldMatrix      , false ,       this.worldMatrix.data );
         this.gl.uniformMatrix4fv( this.shader.program.viewMatrix       , false ,       this.viewMatrix.data  );
         this.gl.uniformMatrix4fv( this.shader.program.projectionMatrix , false ,       this.projMatrix.data  );
  
-        this.gl.drawElements( this.gl.TRIANGLES, batch.iBuffer.data.numItems, this.gl.UNSIGNED_SHORT, 0  );
+        this.gl.drawElements    ( this.gl.TRIANGLES, batch.iBuffer.data.numItems, this.gl.UNSIGNED_SHORT, 0  );
     }
     
-
-    
-    
-
-
 
     Renderer.prototype.set_Matrices = function( world, view, proj )
     {

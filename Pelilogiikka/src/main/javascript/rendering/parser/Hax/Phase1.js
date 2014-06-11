@@ -57,12 +57,11 @@
         
         for( var i = 0; i < nodes.length; i++ )
         {  
+            
             var node                     = nodes[i];
             var node_Type                = node.get_Type();
            
-            // What the hell is this?!?! Bypassing it by hax
             if( node_Type == "dummyTransformation") continue;
-            
             
             var node_Attributes          = node.get_Subfields("attributes");
             var node_Variables           = node_Attributes[0].get_Variables();                 
@@ -108,7 +107,6 @@
             continue;
             }
             
-           
             switch( node_Type ) 
             {
                 case "mesh":   
@@ -122,30 +120,28 @@
             }
         }
       
-    // UV should be fine here!
+      
+        this.quadTree = new     QuadTree( triangleList ); 
+        this.shader   = new SimpleShader(              );
+        
+        this.targets      = [];
+        this.targetShader = new WorldShader();
     
-    this.quadTree =  new     QuadTree( triangleList   ); 
-    this.shader   =  new SimpleShader(                );
-    
-    alert(target_Slots.length + " targets present ");
-    
-    this.targets = [];
-    
-    // Now. populate the world.
+        
         for( var i = 0; i < target_Slots.length; i++ )
         {
-            var index  = target_Slots[ i ];
+            var index   =   target_Slots[   i   ];
+            var batches = target_Batches[ index ];
+            var begin   =  target_Begins[ index ];
+            var end     =    target_Ends[ index ];
             
-            var target = new Target(  target_Batches[ index ],
-                                       target_Begins[ index ],
-                                       target_Ends[ index   ] );
-        
-            this.targets.push( target );
+        this.targets.push( new TargetX( batches, begin, end ) );
         }
-    
-    alert( this.targets.length + " targets pushed ");
+        
+        
+        
+        
     }
-    
     
     
     World.prototype.render = function( camera )
@@ -154,12 +150,9 @@
         the_Renderer.set_Matrices( new Matrix44(), null, null );
         
         this.quadTree.render( camera.frustrum );
-        
+   
         for( var i = 0; i < this.targets.length; i++ )
         {
-            var target = this.targets[i];
-            
-            target.whatTheFuck();
+            this.targets[i].render();
         }
-        
     }

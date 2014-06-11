@@ -1,29 +1,21 @@
 
 
-function Target( batchlist, begin_Transformation, end_Transformation )        
-{
-    this.batches              = batchlist;
-    this.transformation       = begin_Transformation;
-    this.begin_Transformation = begin_Transformation;
-    this.end_Transformation   = end_Transformation;
-}
-
-
-
-Target.prototype.whatTheFuck = function()
-{
-    alert("OK");
-    
-}
-
-Target.prototype.render = function()
-{
- 
-    /*
-    for( var i = 0; i < this.batches.length; i++ )
+    function TargetX( batchlist, begin_Transformation, end_Transformation )        
     {
-        the_Renderer.set_Matrices( this.transformation, null, null );
-        the_Renderer.draw_Batch( this.batches[i] );
+        this.batches              = batchlist;
+        this.begin_Transformation = begin_Transformation;
+        this.end_Transformation   = end_Transformation;
+        
+        alert("Batches loaded " + this.batches.length );
     }
-    */
-}
+
+
+    TargetX.prototype.render = function()
+    {
+        the_Renderer.set_Matrices( this.begin_Transformation, null, null );
+       
+        for( var i = 0; i < this.batches.length; i++ )
+        {
+            the_Renderer.draw_Batch( this.batches[i] );
+        }
+    }
