@@ -125,7 +125,7 @@
         this.shader   = new SimpleShader(              );
         
         this.targets      = [];
-        this.targetShader = new WorldShader();
+        this.targetShader = new DuckShader();
     
         
         for( var i = 0; i < target_Slots.length; i++ )
@@ -150,6 +150,9 @@
         the_Renderer.set_Matrices( new Matrix44(), null, null );
         
         this.quadTree.render( camera.frustrum );
+   
+   
+        the_Renderer.set_Shader( this.targetShader      );
    
         for( var i = 0; i < this.targets.length; i++ )
         {
