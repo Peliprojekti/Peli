@@ -35,7 +35,7 @@ dummy.statsDisplay = {
         this.rpsDisplay.update(time);
 
         this.connectedPlayers = game.controllerHub.playerCount;
-        this.openConnections = game.controllerHub.freeConnections + this.connectedPlayers;
+        this.openConnections = game.controllerHub.connectionCount;
     },
     draw: function (ctx) {
         "use strict";
