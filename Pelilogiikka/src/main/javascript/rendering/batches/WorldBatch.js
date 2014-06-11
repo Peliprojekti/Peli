@@ -37,8 +37,6 @@
         
         for( var i = 0; i < vertexBankList.length; i++ )
         {
-       
-            
             var bank  = vertexBankList[i];
             // UV seems fine up until here
             var batch = new WBatch( bank.points, 

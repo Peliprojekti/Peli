@@ -1,3 +1,11 @@
+    // SIIRRÄ MUUALLE
+    
+    function Target()   
+    {
+    }
+
+
+
 
     // BUGAA. Ensimmäinen termi sisältää <attributes> roinaa!
     function read_Node( node_Variables )
@@ -26,21 +34,34 @@
  
  
  
+ 
+
+ 
+ 
     function World( worldName )
     {
+        // NOT logically part of this, but what the hell.
+        var target_Begins    = [];
+        var target_Ends      = [];
+        var target_Batches   = [];
+        var target_Slots     = [];
+        
+        
         var fullPath      = "/data/"+worldName+"/"+worldName+".irr";
         var parser        = new Parser( fullPath );
         var nodes         = parser.the_Document.get_Subfields("node");
         
         var triangleList  = [];
-        
-       
+                  
         
         for( var i = 0; i < nodes.length; i++ )
         {  
+            
             var node                     = nodes[i];
             var node_Type                = node.get_Type();
            
+            if( node_Type == "dummyTransformation") continue;
+            
             var node_Attributes          = node.get_Subfields("attributes");
             var node_Variables           = node_Attributes[0].get_Variables();                 
             
@@ -60,17 +81,36 @@
             // Detected special nodes will be handled separately,
             // and will never reach the triangle soup with the rest.
                
-     //      if( node_Name == "Mesh1")
-      //     {
-     //          alert("ASS");
-      //     }
+            console.info( node_Name );
            
-           
+            var target = node_Name.indexOf("target");
+               
+            if( target != -1 )
+            {
+                var split  = node_Name.split( "target");
+                var data   = split[1];
+                var parts  = data.split("_");
+                var number = parseInt( parts[0] );
+                var symbol = parts[1];
+                
+                if( symbol == "start")
+                {
+                    target_Slots.push( number );
+                    
+                    target_Begins [ number  ] = node_Transformation;
+                    target_Batches[ number  ] = parse_DiscreteMesh(  node, node_Description ); 
+                }
+                else
+                    target_Ends[ number ] = node_Transformation;
+            
+            continue;
+            }
+            
             switch( node_Type ) 
             {
-                 case "mesh":   
+                case "mesh":   
                     parse_Mesh( node, node_Description, node_Transformation, triangleList );
-                 break;
+                break;
                
                 case "light": 
                 break;
@@ -79,10 +119,23 @@
             }
         }
       
-    // UV should be fine here!
+      
+        this.quadTree = new     QuadTree( triangleList ); 
+        this.shader   = new SimpleShader(              );
+        
+        this.targets      = [];
+        this.targetShader = new DuckShader();
     
-    this.quadTree =  new     QuadTree( triangleList   ); 
-    this.shader   =  new SimpleShader(                );
+        
+        for( var i = 0; i < target_Slots.length; i++ )
+        {
+            var index   =   target_Slots[   i   ];
+            var batches = target_Batches[ index ];
+            var begin   =  target_Begins[ index ];
+            var end     =    target_Ends[ index ];
+            
+        this.targets.push( new TargetX( batches, begin, end ) );
+        }
     }
     
     
@@ -94,4 +147,19 @@
         the_Renderer.set_Matrices( new Matrix44(), null, null );
         
         this.quadTree.render( camera.frustrum );
+   
+        the_Renderer.set_Shader( this.targetShader      );
+   
+        for( var i = 0; i < this.targets.length; i++ )
+        {
+            this.targets[i].render();
+        }
     }
+    
+    
+    World.prototype.get_Targets = function()
+    {
+        return this.targets;
+    }
+    
+    
