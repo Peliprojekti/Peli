@@ -25,15 +25,9 @@ renderingPeli.scene = {
     animate: function (time) {
         "use strict";
 
-        var i, playerID;
-
         this.players.forEach(function (p) {
             p.update(time);
         });
-
-        for (i = 0; i < this.updatables.length; i++) {
-            this.updatables[i].update(time);
-        }
 
         this.rendererDraw();
         requestAnimationFrame(this.animate.bind(this));
@@ -78,35 +72,5 @@ renderingPeli.scene = {
         
         delete player.guiItem;
         delete player.shader;
-    },
-    addUpdatable: function (u) {
-        "use strict";
-
-        if (typeof u.update !== undefined) {
-            this.updatables.push(u);
-            return true;
-        }
-        return false;
     }
 };
-/*
- 
- testShader = new SimpleShader(                                    );
- testTexture = new Texture("data/Textures/concrete.jpg");
- testBatch = testCube(testTexture);
- 
- spriteShader = new SpriteShader(                                    );
- spriteTex = new Texture("data/Textures/Sprites/Otus.png");
- testSprite = testRect(spriteTex, 2, 4);
- 
- 
- guiShader = new GuiShader(                                      );
- guiTex = new Texture("data/crosshair1.bmp");
- testGui = testRect(guiTex, 0.007, (0.007) * 1.3333);
- 
- guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), guiTex);
- 
- testActor = new Actor( new Vector3(0,0,0), new Dimension2( 10,10), spriteTex );
- 
- rendererMain();
- */
