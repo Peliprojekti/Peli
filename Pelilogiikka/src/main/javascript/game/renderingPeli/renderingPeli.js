@@ -24,20 +24,33 @@ renderingPeli.game = {
     },
     onPlayerJoined: function (userID) {
         "use strict";
-        var player = new Player(userID),
-            self = renderingPeli.game;
+        var self = renderingPeli.game,
+            player = self.createPlayer(userID);
+
         console.info("renderingPeli::onPlayerJoined - New player connected", player.userID);
+
+        self.scene.addPlayer(player);
+        console.debug("renderingPeli::onPlayerJoined - Player addition to scene is done", player.userID);
+        return player;
+    },
+    createPlayer: function (userID) {
+        "use strict";
+        var player = new Player(userID);
+
         player.setOnShoot(function () {
             //self.screen.shoot(x, y);
         });
-        player.setOnPosition(function (x, y) {
+
+        player.setOnSetPosition(function (x, y) {
             var vecX = -1 + x*2;
             var vecY = 1 - y*2;
 
             player.guiItem.set_Position(new Vector2(vecX, vecY));
         });
+        player.setOnDisconnect(function (player) {
+            renderingPeli.game.onPlayerLeft(player);
+        });
 
-        self.scene.addPlayer(player, controller);
         return player;
     },
     onPlayerLeft: function (player) {
@@ -47,7 +60,7 @@ renderingPeli.game = {
     },
     connectToServer: function () {
         "use strict";
-        game.controllerHub.openHub(this.onPlayerJoined.bind(this), this.onPlayerLeft.bind(this), 100);
+        game.controllerHub.openHub(this.onPlayerJoined, 100);
     }
 };
 

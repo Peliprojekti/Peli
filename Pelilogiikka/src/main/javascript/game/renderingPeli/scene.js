@@ -67,9 +67,9 @@ renderingPeli.scene = {
 
         player.shader = new GuiShader();
         player.guiItem = new GuiItem(new Vector2(0, 0), new Dimension2(0.07, 0.07), texture);
+        player.setCrosshairID(this.crosshair_id);
         this.controllers[player.userID] = controller;
         this.players[player.userID] = player;
-        return this.crosshair_id;
     },
     removePlayer: function (player) {
         console.debug("REMOVVVVVAIGIDAISDNGSA");
