@@ -28,6 +28,7 @@ renderingPeli.scene = {
         this.world = new World('Fairground');
         renderingPeli.targetManager.initialize(this.world);
 
+
         this.registerKeyboardListeners();
 
         requestAnimationFrame(this.animate.bind(this));
@@ -55,7 +56,7 @@ renderingPeli.scene = {
 
         renderingPeli.targetManager.updateTargetPositions(time);
 
-        for (i = 0; i < this.players.length; i++) {
+        for (i = 0; i < renderingPeli.playerManager.players.length; i++) {
             player = renderingPeli.playerManager.players[i];
 
             this.renderer.set_Shader(player.shader);
@@ -74,25 +75,32 @@ renderingPeli.scene = {
     registerKeyboardListeners: function () {
         "use strict";
         var self = this;
-
+    },
+    registerKeyboardListeners: function () {
+        "use strict";
+        var self = this;
+        
         document.onkeydown = function (e) {
             switch (e.keyCode) {
-                case 38:
+                case 38: 
+
                     self.camera.forward(2.0);
                     break;
                 case 40:
                     self.camera.backwards(2.0);
                     break;
-                case 37:
+
+                case 37: 
                     self.camera.yaw(-2.0);
                     break;
-                case 39:
+                case 39: 
                     self.camera.yaw(2.0);
                     break;
-                case 39:
+                case 39: 
                     self.camera.yaw(2.0);
                     break;
-                case 32:
+                case 32: 
+
                     console.debug("camera position", self.camera.position.x, self.camera.position.y, self.camera.position.z)
                     break;
             }
