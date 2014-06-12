@@ -113,7 +113,7 @@
         }
     }
     
-    
+      
     Field.prototype.get_Type = function( tag )
     {
         if( this.type == "NULL")
