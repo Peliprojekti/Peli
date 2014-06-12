@@ -12,14 +12,12 @@ function Matrix22 (array)
     }
 }
 
-
 Matrix22.prototype.Identity = function ()
 {
     for (var i = 0; i < 2; i++)
         for (var j = 0; j < 2; j++)
             this.data[i * 2 + j] = (i == j) ? 1.0 : 0.0;
 }
-
 
 Matrix22.prototype.Rotation = function (rads)
 {
@@ -28,7 +26,6 @@ Matrix22.prototype.Rotation = function (rads)
     this.data[2] = Math.sin(rads);
     this.data[3] = Math.cos(rads);
 }
-
 
 Matrix22.prototype.Scale = function (scales)
 {
@@ -39,7 +36,6 @@ Matrix22.prototype.Scale = function (scales)
     this.data[2] = 0;
     this.data[3] = scales.y;
 }
-
 
 Matrix22.prototype.multiply = function (mat)
 {
@@ -69,10 +65,6 @@ Matrix22.prototype.scalar_Multiply = function (scalar)
     return ret;
 }
 
-
-
-
-
 Matrix22.prototype.transform = function (vec2)
 {
     ASSERT_TYPE(Vector2, vec2, "Expected Vector2 for valid transformation by 2x2 Matrix ");
@@ -80,20 +72,6 @@ Matrix22.prototype.transform = function (vec2)
     return new Vector2(vec2.x * this.data[0] + vec2.y * this.data[2],
         vec2.x * this.data[1] + vec2.y * this.data[3]);
 }
-
-
-Matrix22.prototype.invertible = function ()
-{
-    return (this.determinant() != 0.0);
-}
-
-Matrix22.prototype.invert = function ()
-{
-    var det = this.determinant();
-    ASSERT(det != 0.0, "Matrix22 is not invertible -> det(M) = 0 ");
-    return this.adjoint().scalar_Multiply(1.0 / det);
-}
-
 
 Matrix22.prototype.determinant = function ()
 {
@@ -106,6 +84,17 @@ Matrix22.prototype.adjoint = function ()
         -this.data[2], this.data[0]]);
 }
 
+Matrix22.prototype.invertible = function ()
+{
+    return (this.determinant() != 0.0);
+}
+
+Matrix22.prototype.invert = function ()
+{
+    var det = this.determinant();
+    ASSERT(det != 0.0, "Matrix22 is not invertible -> det(M) = 0 ");
+    return this.adjoint().scalar_Multiply(1.0 / det);
+}
 
 Matrix22.prototype.alert = function ()
 {
@@ -126,8 +115,6 @@ Matrix22.prototype.alert = function ()
 
     alert(msg);
 }
-
-
 
 Matrix22.prototype.extract_I = function ()
 {

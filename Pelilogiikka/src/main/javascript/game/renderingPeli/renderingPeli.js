@@ -36,16 +36,19 @@ renderingPeli.game = {
     createPlayer: function (userID) {
         "use strict";
         var player = new Player(userID);
+        player.vecPosition = new Vector2(0,0);
 
         player.setOnShoot(function () {
             //self.screen.shoot(x, y);
+            renderingPeli.scene.shoot(this.vecPosition, this);
         });
 
         player.setOnSetPosition(function (x, y) {
-            var vecX = -1 + x*2;
-            var vecY = 1 - y*2;
+            this.vecPosition.x = -1 + x*2;
+            this.vecPosition.y = 1 - y*2;
+            
 
-            player.guiItem.set_Position(new Vector2(vecX, vecY));
+            player.guiItem.set_Position(this.vecPosition);
         });
 
         player.setOnDisconnect(function () {

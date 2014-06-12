@@ -6,7 +6,6 @@ describe('the AbsPosition object', function () {
     var arr;
     var controllerDisabler;
 
-
     //Create an easily-removed container for our tests to play in
     beforeEach(function () {
     });
@@ -26,7 +25,7 @@ describe('the AbsPosition object', function () {
                 call: function (method, params, object, callback) {
                 }
             };
-            
+
             var interval = 20;
             controllerDisabler = client.loadedTypes.absPosition(null, canvas, null, coms, 20);
 
@@ -37,11 +36,9 @@ describe('the AbsPosition object', function () {
             evt.initEvent('touchmove', true, true); //true for can bubble, true for cancelable
             evt.changedTouches = [{clientX: 12, clientY: 10}, {clientX: 12, clientY: 10}];
 
-
             var time = Date.now();
             while (Date.now() - time < interval)
                 ;
-
             canvas.dispatchEvent(evt);
 
             arr = [(12 / canvas.width), (10 / canvas.height)];
@@ -65,7 +62,6 @@ describe('the AbsPosition object', function () {
             arr = [evt.clientX / canvas.width, evt.clientY / canvas.height];
             expect(coms.call).toHaveBeenCalled();
             expect(coms.call).toHaveBeenCalledWith('position', arr, null, null);
-
         });
 
         it('calls coms with the correct method and position parameters on click event', function () {
@@ -81,10 +77,9 @@ describe('the AbsPosition object', function () {
             arr = [];
             expect(coms.call).toHaveBeenCalled();
             expect(coms.call).toHaveBeenCalledWith('shoot', arr, null, null);
-
         });
-        
-        it ('removes listeners', function() {
+
+        it('removes listeners', function () {
             spyOn(canvas, 'removeEventListener');
             controllerDisabler();
             expect(canvas.removeEventListener).toHaveBeenCalled();
@@ -92,6 +87,5 @@ describe('the AbsPosition object', function () {
             expect(canvas.removeEventListener).toHaveBeenCalledWith('click', jasmine.any(Function));
             expect(canvas.removeEventListener).toHaveBeenCalledWith('touchmove', jasmine.any(Function));
         });
-
     });
 });
