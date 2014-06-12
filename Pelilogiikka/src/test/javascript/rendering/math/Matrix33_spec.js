@@ -103,7 +103,7 @@ describe('the Matrix33 object', function () {
         it('transforms', function () {
             var testVector = new Vector3(1, 2, 3);
             var testMatrix = new Matrix33([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-            var result = testMatrix.Scale(testVector);
+            var result = testMatrix.transform(testVector);
             expect(result).not.tobeNull;
         });
         it('extracts the row I', function () {
