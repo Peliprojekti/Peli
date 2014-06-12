@@ -1,14 +1,16 @@
-//describe('the Texture object', function() {
+//describe('the Texture object', function () {
 //
 //    //Create an easily-removed container for our tests to play in
-//    beforeEach(function() {
+//    beforeEach(function () {
 //    });
 //
 //    //Clean it up after each spec
-//    afterEach(function() {
+//    afterEach(function () {
 //    });
 //
 //    //Specs
-//    describe('Texture tests', function() {
+//    describe('Texture tests', function () {
+//        it('initializes the texture', function () {
+//        });
 //    });
 //});
