@@ -10,7 +10,6 @@ describe('the MotionController (client) object', function () {
     beforeEach(function () {
         old_deviceOrEvt = window.DeviceOrientationEvent;
         window.DeviceOrientationEvent = true;
-
         canvas = document.createElement("canvas");
         canvas.width = 100;
         canvas.height = 100;
@@ -18,7 +17,6 @@ describe('the MotionController (client) object', function () {
             call: function (method, params, object, callback) {
             }
         };
-
         controllerDisabler = client.loadedTypes.motionController(null, canvas, null, coms);
     });
 
@@ -29,16 +27,10 @@ describe('the MotionController (client) object', function () {
 
     //Specs
     describe('MotionController tests', function () {
-
         it('calls coms on device orientation event', function () {
-
-
             spyOn(coms, 'call');
-
             evt = document.createEvent("Events");
-
             evt.initEvent('deviceorientation', true, true, 10, 20, 30, 5); //true for can bubble, true for cancelable
-
             var data = {
                 gamma: 10,
                 beta: 20,
@@ -46,19 +38,14 @@ describe('the MotionController (client) object', function () {
             };
             evt.eventData = data;
             window.dispatchEvent(evt);
-
             var arr = [10, 20, 30];
             expect(coms.call).toHaveBeenCalled();
-
         });
 
         it('the disabling function removes the deviceorientationevent listener', function () {
             spyOn(window, 'removeEventListener');
-
             controllerDisabler();
-
             expect(window.removeEventListener).toHaveBeenCalledWith('deviceorientation', jasmine.any(Function));
-
         });
     });
 

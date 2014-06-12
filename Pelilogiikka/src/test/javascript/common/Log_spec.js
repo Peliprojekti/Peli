@@ -5,7 +5,7 @@
 /*global spyOn: true */
 
 
-describe('log', function () {
+describe('the log object', function () {
     "use strict";
 
     describe('lever setter/getter', function () {
