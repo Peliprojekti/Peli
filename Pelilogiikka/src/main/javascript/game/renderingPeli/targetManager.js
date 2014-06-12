@@ -10,6 +10,7 @@ renderingPeli.targetManager = {
         for (i = 0; i < ducks.length; i++) {
             ducks[i].duckIsAlive = true;
             ducks[i].duckPosition = 0;
+            ducks[i].id = i;
         }
         this.world = world;
     },
@@ -26,6 +27,11 @@ renderingPeli.targetManager = {
     
     shoot: function(position){
         //check if any duck was hit and kill the hit one
+        if(true){
+            
+            return true;
+        }
+        return false;
     }
    
 };
