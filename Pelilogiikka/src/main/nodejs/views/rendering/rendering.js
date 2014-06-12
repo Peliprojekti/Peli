@@ -25,26 +25,26 @@ function register_Inputs ()
 }
 
 
-var testCamera = null;
+var testCamera  = null;
 
-var testShader = null;
+var testShader  = null;
 var testTexture = null;
-var testBatch = null;
+var testBatch   = null;
 
 var spriteShader = null;
-var testSprite = null;
-var spriteTex = null;
+var testSprite   = null;
+var spriteTex    = null;
 
-var guiShader = null;
-var testGui = null;
-var guiTex = null;
-
-
-var guiItem = null;
-var testActor = null;
+var guiShader    = null;
+var testGui      = null;
+var guiTex       = null;
 
 
-var testWorld = null;
+var guiItem      = null;
+var testActor    = null;
+
+
+var testWorld    = null;
 
 
 
@@ -102,8 +102,7 @@ function draw_Frame ()
    if( dir  ) t += 0.01;
    if( !dir ) t -= 0.01;
     
-    testWorld.render( testCamera );
-  
+   testWorld.render( testCamera );
 }
 
 
@@ -139,30 +138,7 @@ function main ()
     testActor    = new Actor( new Vector3(0,0,0), new Dimension2( 10,10), spriteTex );
     testWorld    = new World( "Fairground" );
 
-
-    // TEST IT
-    /*
-     
-    var lTrans = new Matrix22();
-    var rTrans = new Matrix22();
     
-    lTrans.Rotation( DegToRad( -65 ) );
-    rTrans.Rotation( DegToRad(  65 ) );
-    
-    var testFrustrum = new ViewTriangle( new Vector3(0,0,0), new Vector3(0,0,1), lTrans, rTrans, 1000 );
-
-    var testAABR = new AABR(  -50, 50 , 450, 600 );
-
-    var testRay = new Ray2( testAABR.points[0] , new Vector2(1,0) );
-    
-    var t1 = testRay.intersects( testFrustrum.origin, testFrustrum.left   );
-    var t2 = testRay.intersects( testFrustrum.left  , testFrustrum.right  );
-    var t3 = testRay.intersects( testFrustrum.right , testFrustrum.origin );
-    
-    alert( t1 + " " + t2 + " " + t3 );
-    
-   */ 
-    //ViewTriangle( origin3, look3,  lTrans, rTrans, farPlaneDist )
 
     rendererMain();
 }
@@ -178,7 +154,15 @@ function global_Initializer ()
 
     register_Inputs();
 
-
+    var testSphere = new Sphere3( new Vector3(0,0,0), 100 );
+    var testRay    = new Ray3( new Vector3(0,50,150), new Vector3(0,0,-1 ) );
+    
+    var hit = testRay.intersects( testSphere );
+    
+    
+    alert("HIT: " + hit );
+    
+    
 
 
     main();

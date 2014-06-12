@@ -164,3 +164,36 @@
     }
     
     
+    
+    World.prototype.get_Hits = function( vec2 )
+    {
+        var width      = the_Renderer.gl.viewportWidth;
+        var height     = the_Renderer.gl.viewportHeight;
+        var camPos     = the_Renderer.camera.position;
+        
+        var worldX     = width/2  + vec2.x * width/2;
+        var worldY     = height/2 + vec2.y * height/2;
+        var worldZ     = camPos;
+        
+        var onPlane    = new Vector3( worldX, worldY, worldZ );
+        var camLook    = the_Renderer.camera.orientation.extract_Orientation.extract_K();
+            camLook    = camLook.multiply( the_Renderer.camera.nearPlane );
+            onPlane    = onPlane.add( camLook )
+        
+        var camToPlane = onPlane.subtract( camPos ).normalized();
+        var ray3       = new Ray3( the_Renderer.camera.position , camToPlane  );     
+        var hitSet     = [];
+        
+        for( var i = 0; i < this.targets.length; i++ )
+        {
+            var target = this.targets[ i ];
+            
+            if( ray3.intersects( target ) )
+            {
+                hitSet.push( target );
+            }
+        }
+        
+    console.info("Hitset contains " + hitSet.length + " hits.");
+    return hitSet;    
+    }
