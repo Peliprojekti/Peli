@@ -39,14 +39,15 @@ dummy.game = {
         "use strict";
         var self = dummy.game,
             player = self.createPlayer(userID);
-            ch = crosshairFactory.createImg();
+            //ch = crosshairFactory.createImg();
 
         self.screen.addPlayer(player);
         return player;
     },
     createPlayer: function(userID) {
         "use strict";
-        var player = new Player(userID),
+        var self = dummy.game,
+            player = new Player(userID),
             ch = crosshairFactory.createImg();
 
         player.setCrosshairID(ch.getID());
@@ -57,7 +58,7 @@ dummy.game = {
         });
 
         player.setOnDisconnect(function () {
-            this.screen.removePlayer(player);
+            self.screen.removePlayer(player);
             player.clear();
         });
 
