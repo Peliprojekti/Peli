@@ -10,15 +10,15 @@ describe('the PlayerManager object', function () {
 
     describe('add player', function () {
         it('initializes the first crosshair with id 1', function () {
-            canvas = document.createElement("canvas");
-
-            var body = document.getElementsByTagName("body")[0];
-           
-            document.body.appendChild(canvas);
-            c = document.getElementById("canvas");
-            canvas.width = 100;
-            canvas.height = 100;
-            expect(canvas).toEqual(c);
+//            canvas = document.createElement("canvas");
+//
+//            var body = document.getElementsByTagName("body")[0];
+//           
+//            document.body.appendChild(canvas);
+//            c = document.getElementById("canvas");
+//            canvas.width = 100;
+//            canvas.height = 100;
+//            expect(canvas).toEqual(c);
 //            new Renderer(new Dimension2(100, 100));
 //            var player = new Player(1);
 //            renderingPeli.playerManager.addPlayer(player);
