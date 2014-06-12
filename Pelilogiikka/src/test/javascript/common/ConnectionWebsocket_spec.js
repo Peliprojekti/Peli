@@ -5,7 +5,7 @@
 /*global it: false */
 /*global spyOn: false */
 
-describe('ConnectionWebsocket', function () {
+describe('the ConnectionWebsocket object', function () {
     "use strict";
 
     var doNothing = function () {
