@@ -1,11 +1,13 @@
 describe('the Matrix33 object', function () {
 
-//Create an easily-removed container for our tests to play in
+    //Create an easily-removed container for our tests to play in
     beforeEach(function () {
     });
+
     //Clean it up after each spec
     afterEach(function () {
     });
+
     //Specs
     describe('Matrix33 tests', function () {
         it('initializes the matrix', function () {
@@ -119,7 +121,6 @@ describe('the Matrix33 object', function () {
             expect(result.data[7]).toBe(2);
             expect(result.data[8]).toBe(3);
         });
-
         it('extracts the row I', function () {
             var testMatrix = new Matrix33([1, 2, 3, 4, 5, 6, 7, 8, 9]);
             var result = testMatrix.extract_I();
