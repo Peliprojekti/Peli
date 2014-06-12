@@ -77,10 +77,10 @@ renderingPeli.scene = {
     registerKeyboardListeners: function () {
         "use strict";
         var self = this;
-        
+
         document.onkeydown = function (e) {
             switch (e.keyCode) {
-                case 38: 
+                case 38:
 
                     self.camera.forward(2.0);
                     break;
@@ -88,33 +88,39 @@ renderingPeli.scene = {
                     self.camera.backwards(2.0);
                     break;
 
-                case 37: 
+                case 37:
                     self.camera.yaw(-2.0);
                     break;
-                case 39: 
+                case 39:
                     self.camera.yaw(2.0);
                     break;
-                case 39: 
+                case 39:
                     self.camera.yaw(2.0);
                     break;
-                case 32: 
+                case 32:
 
                     console.debug("camera position", self.camera.position.x, self.camera.position.y, self.camera.position.z)
+                    break;
+                case 33:
+                    self.camera.up(5);
+                    break;
+                case 34:
+                    self.camera.down(5);
                     break;
             }
         }
     },
-    /**
-     * 
-     * @param {Vector2} position vector of the shot position
-     * @param {Player} the player who shot
-     * @returns {boolean} was it a hit or not
-     */
-    shoot: function (position, player) {
-        if (renderingPeli.targetManager.shoot(position)) {
-            renderingPeli.playerManager.addPlayerScore(player);
-            return true;
+        /**
+         * 
+         * @param {Vector2} position vector of the shot position
+         * @param {Player} the player who shot
+         * @returns {boolean} was it a hit or not
+         */
+        shoot: function (position, player) {
+            if (renderingPeli.targetManager.shoot(position)) {
+                renderingPeli.playerManager.addPlayerScore(player);
+                return true;
+            }
+            return false;
         }
-        return false;
-    }
 };
