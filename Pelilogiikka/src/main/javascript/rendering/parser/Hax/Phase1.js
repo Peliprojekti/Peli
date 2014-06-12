@@ -46,10 +46,9 @@
         var target_Batches   = [];
         var target_Slots     = [];
         
-        
-        var fullPath      = "/data/"+worldName+"/"+worldName+".irr";
-        var parser        = new Parser( fullPath );
-        var nodes         = parser.the_Document.get_Subfields("node");
+        var fullPath         = "/data/"+worldName+"/"+worldName+".irr";
+        var parser           = new Parser( fullPath );
+        var nodes            = parser.the_Document.get_Subfields("node");
         
         var triangleList  = [];
                   
@@ -170,28 +169,31 @@
         var width      = the_Renderer.gl.viewportWidth;
         var height     = the_Renderer.gl.viewportHeight;
         var camPos     = the_Renderer.camera.position;
+           
+        var camRight   = the_Renderer.camera.orientation.extract_I();
+        var camUp      = the_Renderer.camera.orientation.extract_J();
+        var camLook    = the_Renderer.camera.orientation.extract_K();
         
-        var worldX     = width/2  + vec2.x * width/2;
-        var worldY     = height/2 + vec2.y * height/2;
-        var worldZ     = camPos;
+        camLook = camLook.multiply( -1.0 );         // MIKSI!?!??!
         
-        var onPlane    = new Vector3( worldX, worldY, worldZ );
-        var camLook    = the_Renderer.camera.orientation.extract_Orientation.extract_K();
-            camLook    = camLook.multiply( the_Renderer.camera.nearPlane );
-            onPlane    = onPlane.add( camLook )
         
-        var camToPlane = onPlane.subtract( camPos ).normalized();
-        var ray3       = new Ray3( the_Renderer.camera.position , camToPlane  );     
+        var planeX     = vec2.x * width/2;
+        var planeY     = vec2.y * height/2;
+        var planeZ     = the_Renderer.camera.nearPlane;
+        
+        var onPlane    = camRight.multiply( planeX );
+            onPlane    = onPlane.add(   camUp.multiply( planeY  ) );
+            onPlane    = onPlane.add( camLook.multiply( planeZ  ) );
+        
+        var planeHax   = camPos.add( onPlane );
+        var camToPlane = planeHax.subtract( camPos ).normalized();
+        
+        var ray3       = new Ray3( camPos , camLook  );     
         var hitSet     = [];
         
         for( var i = 0; i < this.targets.length; i++ )
         {
-            var target = this.targets[ i ];
-            
-            if( ray3.intersects( target ) )
-            {
-                hitSet.push( target );
-            }
+            if( ray3.intersects( this.targets[ i ].hitShape ) )  hitSet.push( this.targets[ i ] );
         }
         
     console.info("Hitset contains " + hitSet.length + " hits.");

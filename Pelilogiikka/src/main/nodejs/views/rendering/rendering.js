@@ -81,28 +81,27 @@ function draw_Frame ()
         testCamera.down(5.0);
 
     the_Renderer.set_Camera(testCamera);
-
     the_Renderer.begin();
 
    //   the_Renderer.draw_Batch( testBatch, testShader, testCamera  );
-   //   the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
-   //   the_Renderer.set_Shader(guiShader);
-   //   the_Renderer.draw_Batch( testGui, guiShader, testCamera  );
-   
-   // the_Renderer.set_Matrices(guiItem.get_Transformation(), null, null);
-   // the_Renderer.draw_Batch(guiItem.batch);
+ //   the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
+     
+    the_Renderer.set_Shader(guiShader);
+    the_Renderer.set_Matrices(guiItem.get_Transformation(), null, null);
+    the_Renderer.draw_Batch(guiItem.batch);
     
     var targets = testWorld.get_Targets();
         targets[0].set_Stage( t );
     
-    
    if( t > 1.0 ) dir = false;
    if( t < 0.0 ) dir = true;
    
-   if( dir  ) t += 0.01;
-   if( !dir ) t -= 0.01;
+   if( dir  ) t += 0.001;
+   if( !dir ) t -= 0.001;
     
    testWorld.render( testCamera );
+   testWorld.get_Hits( new Vector2(0,0) );
+
 }
 
 
@@ -139,6 +138,7 @@ function main ()
     testWorld    = new World( "Fairground" );
 
     
+    
 
     rendererMain();
 }
@@ -153,7 +153,7 @@ function global_Initializer ()
     new Renderer( new Dimension2(800, 800) );
 
     register_Inputs();
-
+/*
     var testSphere = new Sphere3( new Vector3(0,0,0), 100 );
     var testRay    = new Ray3( new Vector3(0,50,150), new Vector3(0,0,-1 ) );
     
@@ -161,7 +161,7 @@ function global_Initializer ()
     
     
     alert("HIT: " + hit );
-    
+  */  
     
 
 

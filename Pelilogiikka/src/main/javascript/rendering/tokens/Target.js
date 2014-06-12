@@ -15,7 +15,7 @@
         this.interpolator_Z          = new Interpolator( pos1.z, pos2.z );
     
     
-        this.hitShape                = new Sphere3( pos1, 100 );
+        this.hitShape                = new Sphere3( pos1, 5 );
     }
     
     
@@ -47,10 +47,4 @@
     }
     
     
-    
-    TargetX.prototype.get_Hits = function( vec2 ) 
-    {
-                    
-        
-    }
-    
+ 

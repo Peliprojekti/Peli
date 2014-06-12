@@ -53,18 +53,15 @@
                 return false;
             }
             
+            
             var t1 = ( -Y + Math.sqrt( discriminant  ) ) / 2*X;
             var t2 = ( -Y - Math.sqrt( discriminant )  ) / 2*X;
              
-          //  alert(X);
-            
-         //   alert( "Intersecting sphere: " + t1 + " / " + t2 );
-            
+        
             if( t1 > 0 || t2 > 0 )
             {
                 return true;
             }
-            
             
         
         return false;
