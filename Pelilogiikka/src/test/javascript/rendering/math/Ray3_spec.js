@@ -49,5 +49,4 @@ describe('the Ray3 object', function () {
             expect(plane.normal.z).toBe(6);
         });
     });
-
 });
