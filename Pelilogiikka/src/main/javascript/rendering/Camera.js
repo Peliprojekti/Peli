@@ -57,8 +57,8 @@ function Camera (position)
 {
     this.position = position;
     this.orientation = new Matrix33();
-    this.vertical_Fov = 75;
-    this.aspectRatio = 1.0;// 1.3333;
+    this.vertical_Fov = 35;
+    this.aspectRatio = the_Renderer.gl.viewportWidth / the_Renderer.gl.viewportHeight;
     this.nearPlane = 1.0;
     this.farPlane = 2500;
 

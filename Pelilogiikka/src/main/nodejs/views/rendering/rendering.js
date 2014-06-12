@@ -51,8 +51,12 @@ var testWorld    = null;
 var t = 0;
 var dir = false;
 
+
+var cursorPos = new Vector2(0,0);
+
 function draw_Frame ()
 {
+    
     if (key_Down(38))
         testCamera.forward(2.0);
   
@@ -65,20 +69,20 @@ function draw_Frame ()
     if (key_Down(39)) 
         testCamera.yaw(2.0);
 
-    if (key_Down(81))
-        testCamera.roll(-2.0);
-    if (key_Down(69))
-        testCamera.roll(2.0);
+    if (key_Down(81)) cursorPos.x -= 0.01;
+        //testCamera.roll(-2.0);
+    if (key_Down(69)) cursorPos.x += 0.01; 
+        //testCamera.roll(2.0);
 
-    if (key_Down(87))
-        testCamera.pitch(2.0);
-    if (key_Down(83))
-        testCamera.pitch(-2.0);
+    if (key_Down(87)) cursorPos.y += 0.01;
+        //testCamera.pitch(2.0); 
+    if (key_Down(83)) cursorPos.y -= 0.01;
+     ///   testCamera.pitch(-2.0);
 
     if (key_Down(33))
-        testCamera.up(5.0);
+        testCamera.up(2.0);
     if (key_Down(34))
-        testCamera.down(5.0);
+        testCamera.down(2.0);
 
     the_Renderer.set_Camera(testCamera);
     the_Renderer.begin();
@@ -86,13 +90,19 @@ function draw_Frame ()
    //   the_Renderer.draw_Batch( testBatch, testShader, testCamera  );
  //   the_Renderer.draw_Batch( testSprite, spriteShader, testCamera  );
      
+    guiItem.set_Position( cursorPos );
+     
     the_Renderer.set_Shader(guiShader);
     the_Renderer.set_Matrices(guiItem.get_Transformation(), null, null);
     the_Renderer.draw_Batch(guiItem.batch);
     
     var targets = testWorld.get_Targets();
-        targets[0].set_Stage( t );
     
+    
+    for( var i = 0; i < targets.length; i++ )
+    {
+        targets[i].set_Stage( t );
+    }
    if( t > 1.0 ) dir = false;
    if( t < 0.0 ) dir = true;
    
@@ -100,7 +110,9 @@ function draw_Frame ()
    if( !dir ) t -= 0.001;
     
    testWorld.render( testCamera );
-   testWorld.get_Hits( new Vector2(0,0) );
+   
+   
+   testWorld.get_Hits( new Vector2(cursorPos.x,cursorPos.y) );
 
 }
 
@@ -150,7 +162,7 @@ function main ()
 
 function global_Initializer ()
 {
-    new Renderer( new Dimension2(800, 800) );
+    new Renderer( new Dimension2(1024, 768) );
 
     register_Inputs();
 /*

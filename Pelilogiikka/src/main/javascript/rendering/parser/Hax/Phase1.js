@@ -1,10 +1,3 @@
-    // SIIRRÄ MUUALLE
-    
-    function Target()   
-    {
-    }
-
-
 
 
     // BUGAA. Ensimmäinen termi sisältää <attributes> roinaa!
@@ -166,36 +159,37 @@
     
     World.prototype.get_Hits = function( vec2 )
     {
-        var width      = the_Renderer.gl.viewportWidth;
-        var height     = the_Renderer.gl.viewportHeight;
-        var camPos     = the_Renderer.camera.position;
-           
-        var camRight   = the_Renderer.camera.orientation.extract_I();
-        var camUp      = the_Renderer.camera.orientation.extract_J();
-        var camLook    = the_Renderer.camera.orientation.extract_K();
-        
-        camLook = camLook.multiply( -1.0 );         // MIKSI!?!??!
-        
-        
-        var planeX     = vec2.x * width/2;
-        var planeY     = vec2.y * height/2;
-        var planeZ     = the_Renderer.camera.nearPlane;
-        
-        var onPlane    = camRight.multiply( planeX );
-            onPlane    = onPlane.add(   camUp.multiply( planeY  ) );
-            onPlane    = onPlane.add( camLook.multiply( planeZ  ) );
-        
-        var planeHax   = camPos.add( onPlane );
-        var camToPlane = planeHax.subtract( camPos ).normalized();
-        
-        var ray3       = new Ray3( camPos , camLook  );     
         var hitSet     = [];
         
+        var camera       = the_Renderer.camera;
+        var hFovRad      = DegToRad( camera.fov          ) / 2.0;
+        var vFovRad      = DegToRad( camera.vertical_Fov ) / 2.0;
+        
+        var angleX       = hFovRad * -vec2.x;
+        var angleY       = vFovRad * -vec2.y;
+   
+        var rotH        = new Matrix33();
+        var rotV        = new Matrix33();
+       
+        rotH.RotationY( angleX );
+        rotV.RotationX( angleY );   
+       
+        var rot        = rotH.multiply( rotV );
+        var rayVec     = new Vector3(0,0,-1).multiply( camera.nearPlane );
+            rayVec     = rot.transform( rayVec );
+            
+        var viewT      = camera.get_ViewMatrix();
+        var ray3       = new Ray3( new Vector3(0,0,0) , rayVec );    
+       
         for( var i = 0; i < this.targets.length; i++ )
         {
-            if( ray3.intersects( this.targets[ i ].hitShape ) )  hitSet.push( this.targets[ i ] );
+            var sphere = this.targets[ i ].hitShape;
+            
+            sphere.origin = viewT.transform( sphere.origin );
+            
+            if( ray3.intersects( sphere ) )  hitSet.push( this.targets[ i ] );
         }
-        
-    console.info("Hitset contains " + hitSet.length + " hits.");
-    return hitSet;    
+
+      console.info("Hitset contains " + hitSet.length + " hits.");
+      return hitSet;    
     }

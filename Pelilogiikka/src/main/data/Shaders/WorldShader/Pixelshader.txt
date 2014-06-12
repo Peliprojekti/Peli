@@ -13,5 +13,9 @@
     void main( void )  
     {
         vec2 texCoords  = vec2( pixelTexcoord.s, pixelTexcoord.t );
-        gl_FragColor    = texture2D( textureMapSampler, texCoords );
+        vec4 color      = texture2D( textureMapSampler, texCoords );
+
+        if( color.a == 0.0 ) discard;
+
+        gl_FragColor    = color;
     }
