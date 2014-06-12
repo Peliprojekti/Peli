@@ -12,7 +12,7 @@ describe('the ConnectionEngineIO object', function () {
         console.log("doing nothing");
     };
 
-    function getSimpleCallbackObject() {
+    function getSimpleCallbackObject () {
         return {
             counter: 0,
             lastSent: null,
@@ -38,7 +38,7 @@ describe('the ConnectionEngineIO object', function () {
         };
     }
 
-    describe('constructor', function () {
+    describe('constructor tests', function () {
         it('works', function () {
             var connection;
 
@@ -50,7 +50,7 @@ describe('the ConnectionEngineIO object', function () {
         });
     });
 
-    describe('connect function', function () {
+    describe('connect function tests', function () {
         it('works', function () {
             var connection;
 
@@ -72,7 +72,7 @@ describe('the ConnectionEngineIO object', function () {
         });
     });
 
-    describe('sendMessage function', function () {
+    describe('sendMessage function tests', function () {
         it('proplerly forwards messages', function () {
             var connection = new ConnectionEngineIO("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
@@ -80,9 +80,15 @@ describe('the ConnectionEngineIO object', function () {
 
             expect(connection.isOpen()).toBe(false);
             connection.connect(
-                function (er, ok) { cb.open(er, ok); },
-                function (er, ok) { cb.close(er, ok); },
-                function (msg) { cb.onMessage(msg); }
+                function (er, ok) {
+                    cb.open(er, ok);
+                },
+                function (er, ok) {
+                    cb.close(er, ok);
+                },
+                function (msg) {
+                    cb.onMessage(msg);
+                }
             );
 
             socket = connection.getSocket();
@@ -93,7 +99,7 @@ describe('the ConnectionEngineIO object', function () {
         });
     });
 
-    describe('socket events handlers', function () {
+    describe('socket events handler tests', function () {
         it('recognizes opened/closed connection', function () {
             var connection = new ConnectionEngineIO("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
@@ -104,9 +110,15 @@ describe('the ConnectionEngineIO object', function () {
 
             expect(connection.isOpen()).toBe(false);
             connection.connect(
-                function (er, ok) { cb.open(er, ok); },
-                function (er, ok) { cb.close(er, ok); },
-                function (msg) { cb.onMessage(msg); }
+                function (er, ok) {
+                    cb.open(er, ok);
+                },
+                function (er, ok) {
+                    cb.close(er, ok);
+                },
+                function (msg) {
+                    cb.onMessage(msg);
+                }
             );
 
             socket = connection.getSocket();
@@ -130,9 +142,15 @@ describe('the ConnectionEngineIO object', function () {
 
             expect(connection.isOpen()).toBe(false);
             connection.connect(
-                function (er, ok) { cb.open(er, ok); },
-                function (er, ok) { cb.close(er, ok); },
-                function (msg) { cb.onMessage(msg); }
+                function (er, ok) {
+                    cb.open(er, ok);
+                },
+                function (er, ok) {
+                    cb.close(er, ok);
+                },
+                function (msg) {
+                    cb.onMessage(msg);
+                }
             );
 
             socket = connection.getSocket();
@@ -152,9 +170,15 @@ describe('the ConnectionEngineIO object', function () {
 
             expect(connection.isOpen()).toBe(false);
             connection.connect(
-                function (er, ok) { cb.open(er, ok); },
-                function (er, ok) { cb.close(er, ok); },
-                function (msg) { cb.onMessage(msg); }
+                function (er, ok) {
+                    cb.open(er, ok);
+                },
+                function (er, ok) {
+                    cb.close(er, ok);
+                },
+                function (msg) {
+                    cb.onMessage(msg);
+                }
             );
 
             socket = connection.getSocket();
@@ -164,8 +188,8 @@ describe('the ConnectionEngineIO object', function () {
             expect(cb.lastSent).toBe("kiva viesti");
         });
     });
-    
-    describe('onConnectionClose', function () {
+
+    describe('onConnectionClose tests', function () {
         it("doesn't call closeCallback more than once", function () {
             var connection = new ConnectionEngineIO("http://localhost", 8000, "protocol", true),
                 cb = getSimpleCallbackObject(),
@@ -173,11 +197,17 @@ describe('the ConnectionEngineIO object', function () {
                 closes;
 
             connection.connect(
-                function (er, ok) { cb.open(er, ok); },
-                function (er, ok) { cb.close(er, ok); },
-                function (msg) { cb.onMessage(msg); }
+                function (er, ok) {
+                    cb.open(er, ok);
+                },
+                function (er, ok) {
+                    cb.close(er, ok);
+                },
+                function (msg) {
+                    cb.onMessage(msg);
+                }
             );
-            
+
             socket = connection.getSocket();
             closes = cb.closes;
 

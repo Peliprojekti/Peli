@@ -3,36 +3,50 @@ renderingPeli.targetManager = {
     world: null,
     ducks: null,
 
-    initialize: function(world){
+    initialize: function (world) {
         "use strict";
-        ducks = this.world.get_Targets(),
-            i;
-        for (i = 0; i < ducks.length; i++) {
-            ducks[i].duckIsAlive = true;
-            ducks[i].duckPosition = 0;
-            ducks[i].id = i;
-        }
+        var i;
+
         this.world = world;
+        this.ducks = world.get_Targets();
+
+        for (i = 0; i < this.ducks.length; i++) {
+            this.ducks[i].duckIsAlive = true;
+            this.ducks[i].duckPosition = 0;
+        }
     },
     
-    updateTargetPositions: function(time){
+    updateTargetPositions: function (time) {
         "use strict";
-        for (i = 0; i < ducks.length; i++) {
-            if(ducks[i].duckIsAlive){
-                ((ducks[i].duckPos++ % 150) / 150);
-                ducks[i].set_Stage(ducks[i].duckPos);
+        var i;
+
+        for (i = 0; i < this.ducks.length; i++) {
+            if(this.ducks[i].duckIsAlive){
+                this.ducks[i].set_Stage(
+                    ((this.ducks[i].duckPosition++ % 150) / 150)
+                );
+
+                //console.debug(this.ducks[i].duck
+                //console.debug( (this.ducks[i].duckPos++ % 150) / 150 );
             }
         }
     },
-    
+
     shoot: function(position){
-        //check if any duck was hit and kill the hit one
-        if(true){
-            
+        var hits = this.world.get_Hits(position);
+        if( hits.length > 0 ){
+            this.killHitDucks(hits);           
             return true;
         }
         return false;
+    },
+    
+    killHitDucks: function(hits){
+        for (i = 0; i < hits.length; i++) {
+            this.ducks[i].duckIsAlive = false;
+        }
     }
+    
    
 };
 

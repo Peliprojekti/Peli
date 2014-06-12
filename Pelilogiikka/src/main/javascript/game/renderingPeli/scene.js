@@ -37,6 +37,7 @@ renderingPeli.scene = {
         "use strict";
 
         renderingPeli.playerManager.updatePlayers(time);
+        renderingPeli.targetManager.updateTargetPositions(time);
 
         this.rendererDraw();
         requestAnimationFrame(this.animate.bind(this));
@@ -54,8 +55,6 @@ renderingPeli.scene = {
 
         this.world.render(this.camera);
 
-        renderingPeli.targetManager.updateTargetPositions(time);
-
         for (i = 0; i < renderingPeli.playerManager.players.length; i++) {
             player = renderingPeli.playerManager.players[i];
 
@@ -64,7 +63,6 @@ renderingPeli.scene = {
             this.renderer.set_Matrices(trans, null, null);
             this.renderer.draw_Batch(player.guiItem.batch);
         }
-        ;
     },
     addPlayer: function (player) {
         renderingPeli.playerManager.addPlayer(player);
