@@ -96,5 +96,4 @@ describe('the Vector2 object', function() {
            expect( vec.angleWith(baseVec).toFixed(5) ).toBe( (135).toFixed(5) );
         });
     });
-
 });

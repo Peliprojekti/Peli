@@ -19,13 +19,15 @@ describe('the Ray3 object', function () {
             expect(ray.direction.y).toBe(new Vector3(1, 1, 1).normalized().y);
             expect(ray.direction.z).toBe(new Vector3(1, 1, 1).normalized().z);
         });
-        it('recognizes that rays intersect', function () {
-            var ray = new Ray2(new Vector2(0, 0, 0), new Vector2(1, 1, 0));
-            expect(ray.intersects(new Vector2(1, 0, 0), new Vector2(0, 1, 0))).toBe(true);
+        it('recognizes that ray intersects an object', function () {
+            var ray = new Ray3(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
+            var sphere = new Sphere3(new Vector3(0, 0, 0), 1.5);
+            expect(ray.intersects(sphere)).toBe(true);
         });
-        it('recognizes that rays do not intersect', function () {
-            var ray = new Ray2(new Vector2(0, 0, 0), new Vector2(0, 0, 0));
-            expect(ray.intersects(new Vector2(1, 1, 1), new Vector2(1, 1, 1))).toBe(false);
+        it('recognizes that ray does not intersect an object', function () {
+            var ray = new Ray3(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
+            var sphere = new Sphere3(new Vector3(0, 1, 0), 0);
+            expect(ray.intersects(sphere)).toBe(false);
         });
     });
     describe('Plane3 tests', function () {
@@ -47,5 +49,4 @@ describe('the Ray3 object', function () {
             expect(plane.normal.z).toBe(6);
         });
     });
-
 });
