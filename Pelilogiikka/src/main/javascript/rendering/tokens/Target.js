@@ -20,7 +20,6 @@
     
     
 
-
     TargetX.prototype.render = function()
     {
         the_Renderer.set_Matrices( this.begin_Transformation, null, null );
