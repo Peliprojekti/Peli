@@ -1,12 +1,12 @@
 describe('the ThumbStick object', function () {
-    //Create an easily-removed container for our tests to play in
+
     var canvas;
     var evt;
     var coms;
     var disabler;
 
+    //Create an easily-removed container for our tests to play in
     beforeEach(function () {
-
     });
 
     //Clean it up after each spec
@@ -40,10 +40,7 @@ describe('the ThumbStick object', function () {
 
             expect(coms.call).toHaveBeenCalled();
             expect(coms.call).toHaveBeenCalledWith('thumbStickPosition', arr, null, null);
-
-
         });
-
 
         it('calls coms with the correct method and position parameters on touch move', function () {
             spyOn(coms, 'call');
@@ -68,7 +65,6 @@ describe('the ThumbStick object', function () {
 
             expect(coms.call).toHaveBeenCalled();
             expect(coms.call).toHaveBeenCalledWith('thumbStickPosition', arr, null, null);
-
         });
 
         it('disables all the event listeners when the disable function is called', function () {
@@ -78,7 +74,6 @@ describe('the ThumbStick object', function () {
             expect(canvas.removeEventListener).toHaveBeenCalledWith("touchstart", jasmine.any(Function), false);
             expect(canvas.removeEventListener).toHaveBeenCalledWith("touchend", jasmine.any(Function), false);
             expect(canvas.removeEventListener).toHaveBeenCalledWith("touchmove", jasmine.any(Function), false);
-
         });
 
         it('draws correctly', function () {

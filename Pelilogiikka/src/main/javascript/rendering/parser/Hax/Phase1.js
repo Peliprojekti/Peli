@@ -46,10 +46,9 @@
         var target_Batches   = [];
         var target_Slots     = [];
         
-        
-        var fullPath      = "/data/"+worldName+"/"+worldName+".irr";
-        var parser        = new Parser( fullPath );
-        var nodes         = parser.the_Document.get_Subfields("node");
+        var fullPath         = "/data/"+worldName+"/"+worldName+".irr";
+        var parser           = new Parser( fullPath );
+        var nodes            = parser.the_Document.get_Subfields("node");
         
         var triangleList  = [];
                   
@@ -164,3 +163,39 @@
     }
     
     
+    
+    World.prototype.get_Hits = function( vec2 )
+    {
+        var width      = the_Renderer.gl.viewportWidth;
+        var height     = the_Renderer.gl.viewportHeight;
+        var camPos     = the_Renderer.camera.position;
+           
+        var camRight   = the_Renderer.camera.orientation.extract_I();
+        var camUp      = the_Renderer.camera.orientation.extract_J();
+        var camLook    = the_Renderer.camera.orientation.extract_K();
+        
+        camLook = camLook.multiply( -1.0 );         // MIKSI!?!??!
+        
+        
+        var planeX     = vec2.x * width/2;
+        var planeY     = vec2.y * height/2;
+        var planeZ     = the_Renderer.camera.nearPlane;
+        
+        var onPlane    = camRight.multiply( planeX );
+            onPlane    = onPlane.add(   camUp.multiply( planeY  ) );
+            onPlane    = onPlane.add( camLook.multiply( planeZ  ) );
+        
+        var planeHax   = camPos.add( onPlane );
+        var camToPlane = planeHax.subtract( camPos ).normalized();
+        
+        var ray3       = new Ray3( camPos , camLook  );     
+        var hitSet     = [];
+        
+        for( var i = 0; i < this.targets.length; i++ )
+        {
+            if( ray3.intersects( this.targets[ i ].hitShape ) )  hitSet.push( this.targets[ i ] );
+        }
+        
+    console.info("Hitset contains " + hitSet.length + " hits.");
+    return hitSet;    
+    }

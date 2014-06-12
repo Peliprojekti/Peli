@@ -7,7 +7,7 @@
 describe('the PeliRPC object', function () {
     "use strict";
 
-    function getConnection() {
+    function getConnection () {
         return {
             connected: false,
             send: null,
@@ -30,12 +30,12 @@ describe('the PeliRPC object', function () {
         };
     }
 
-    function getTestObj() {
+    function getTestObj () {
         return {
             id: null,
             error: null,
             result: null,
-            func: function(r_id, r_error, r_result) {
+            func: function (r_id, r_error, r_result) {
                 this.id = r_id;
                 this.error = r_error;
                 this.result = r_result;
@@ -43,7 +43,7 @@ describe('the PeliRPC object', function () {
         };
     }
 
-    function emptyFunc(x) {
+    function emptyFunc (x) {
         return x + 2;
     }
 
@@ -173,9 +173,9 @@ describe('the PeliRPC object', function () {
                     "jsonrpc": "2.0",
                     "notRecognized": "x"
                 }),
-                unrecMsg = function () {
-                    rpc.onMessage(msg);
-                },
+            unrecMsg = function () {
+                rpc.onMessage(msg);
+            },
                 retval;
 
 
@@ -278,7 +278,7 @@ describe('the PeliRPC object', function () {
                     id: null
                 }));
             }).not.toThrow();
-            
+
             expect(connection.getSentJSON()).toBe(null);
 
             expect(function () {
@@ -339,11 +339,11 @@ describe('the PeliRPC object', function () {
                 id, first_id;
 
             // Test function callback with return value
-            first_id = rpc.callRpc('tester', [1,2], null, function (id, error, value) {
+            first_id = rpc.callRpc('tester', [1, 2], null, function (id, error, value) {
                 retval = value;
             });
 
-            expect(function() {
+            expect(function () {
                 rpc.onMessage(JSON.stringify({
                     "jsonrpc": "2.0",
                     "result": 'yay',
@@ -357,7 +357,7 @@ describe('the PeliRPC object', function () {
             id = rpc.callRpc('tester', null, testObj, testObj.func);
             expect(id).toBe(first_id + 1);
 
-            expect(function() {
+            expect(function () {
                 rpc.onMessage(JSON.stringify({
                     "jsonrpc": "2.0",
                     "id": id
@@ -371,7 +371,7 @@ describe('the PeliRPC object', function () {
             // Test method callback with return value
             id = rpc.callRpc('tester', null, testObj, testObj.func);
             expect(id).toBe(first_id + 2);
-            expect(function() {
+            expect(function () {
                 rpc.onMessage(JSON.stringify({
                     "jsonrpc": "2.0",
                     "result": "testerResult",
@@ -446,7 +446,7 @@ describe('the PeliRPC object', function () {
             sender = peliRPC.create(sendConnection),
             reciever = peliRPC.create(resConnection),
             testObj = getTestObj(),
-            count = (2*peliRPC.maxCallbacks) + 10,
+            count = (2 * peliRPC.maxCallbacks) + 10,
             i,
             id;
 
@@ -455,13 +455,13 @@ describe('the PeliRPC object', function () {
         });
 
         for (i = 0; i < count; i++) {
-            expect(function() {
+            expect(function () {
                 id = sender.callRpc('someFunction', [i, 10000], testObj, testObj.func);
             }).not.toThrow();
 
             expect(sendConnection.getSentJSON().id).toBe(id);
 
-            expect(function() {
+            expect(function () {
                 reciever.onMessage(sendConnection.getSent());
             }).not.toThrow();
 
@@ -470,10 +470,10 @@ describe('the PeliRPC object', function () {
             expect(resConnection.getSentJSON().error).toBe(undefined);
             expect(resConnection.getSentJSON().jsonrpc).toBe("2.0");
 
-            expect(function() {
+            expect(function () {
                 sender.onMessage(resConnection.getSent());
             }).not.toThrow();
-            
+
             expect(testObj.error).toBe(null);
             expect(testObj.id).toBe(id);
             expect(testObj.result).toBe(i + 10000);

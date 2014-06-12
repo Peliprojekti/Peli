@@ -1,7 +1,10 @@
 DEBUG = true;
 CONTROLLER = "touchDrag";
 SCREEN_PORT = 1234;
+CLIENT_PORT = 1234;
+JSONRPC_PROTOCOL = "protocol";
 graphics2d = {};
+
 message = function() {};
 Audio = function() {};
 

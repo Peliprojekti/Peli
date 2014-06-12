@@ -6,8 +6,10 @@
     {
         ASSERT_SINGLETON( the_Renderer, "Global renderer can only ever be assigned once!" );
        
+       /*
         resolution.width  = 800;//document.width/2;
         resolution.height = 600; //document.height/2;
+        */
         
         
         try
