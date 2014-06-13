@@ -40,6 +40,7 @@ renderingPeli.targetManager = {
     },
     killHitDucks: function (hits) {
         "use strict";
+        var i;
         for (i = 0; i < hits.length; i++) {
             hits[i].duckPosition = 0;
         }
