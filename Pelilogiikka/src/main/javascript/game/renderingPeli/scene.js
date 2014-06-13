@@ -28,7 +28,6 @@ renderingPeli.scene = {
         this.world = new World('Fairground');
         renderingPeli.targetManager.initialize(this.world);
 
-
         this.registerKeyboardListeners();
 
         requestAnimationFrame(this.animate.bind(this));
@@ -63,12 +62,6 @@ renderingPeli.scene = {
             this.renderer.set_Matrices(trans, null, null);
             this.renderer.draw_Batch(player.guiItem.batch);
         }
-    },
-    addPlayer: function (player) {
-        renderingPeli.playerManager.addPlayer(player);
-    },
-    removePlayer: function (player) {
-        renderingPeli.playerManager.removePlayer(player);
     },
     registerKeyboardListeners: function () {
         "use strict";
@@ -110,17 +103,6 @@ renderingPeli.scene = {
             }
         }
     },
-        /**
-         * 
-         * @param {Vector2} position vector of the shot position
-         * @param {Player} the player who shot
-         * @returns {boolean} was it a hit or not
-         */
-        shoot: function (position, player) {
-            if (renderingPeli.targetManager.shoot(position)) {
-                renderingPeli.playerManager.addPlayerScore(player);
-                return true;
-            }
-            return false;
-        }
+
+
 };
